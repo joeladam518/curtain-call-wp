@@ -1,3 +1,0 @@
-# build the plugin and zip it for installation
-
-# TODO: ...
