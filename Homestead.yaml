@@ -1,26 +1,37 @@
-ip: 192.168.10.10
+ip: 192.168.200.15
+
 memory: 2048
-cpus: 2
+
+cpus: 1
+
 provider: virtualbox
+
 authorize: ~/.ssh/id_rsa.pub
+
 keys:
     - ~/.ssh/id_rsa
+
 folders:
     -
         map: /home/jhaker/repos/CurtainCallWP
-        to: /home/vagrant/code
+        to: /home/vagrant/CurtainCallWP
+
 sites:
     -
-        map: homestead.test
-        to: /home/vagrant/code/public
+        map: wpsite.test
+        to: /home/vagrant/CurtainCallWP/public
+
 databases:
     - homestead
+
 features:
     -
-        mariadb: false
+        mariadb: true
     -
         ohmyzsh: false
     -
         webdriver: false
-name: curtaincallwp
-hostname: curtaincallwp
+
+name: wpsite
+
+hostname: wpsite

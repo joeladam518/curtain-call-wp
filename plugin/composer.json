@@ -1,5 +1,5 @@
 {
-    "name": "CurtainCallWP",
+    "name": "joeladam518/curtain-call-wp",
     "description": "CMS for theatres looking to create productions, cast, and crew custom posts.",
     "keywords": ["WordPress", "theatre", "theater", "productions", "plays", "cast", "crew"],
     "license": "MIT",
@@ -10,6 +10,9 @@
     "autoload": {
         "psr-4": {
             "CurtainCallWP\\": [ "src/" ]
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     }
 }

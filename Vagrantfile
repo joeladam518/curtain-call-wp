@@ -9,7 +9,6 @@ confDir = $confDir ||= File.expand_path("vendor/laravel/homestead", File.dirname
 
 homesteadYamlPath = File.expand_path("Homestead.yaml", File.dirname(__FILE__))
 homesteadJsonPath = File.expand_path("Homestead.json", File.dirname(__FILE__))
-wordpressInstallationScriptPath = "utils/install-wp.sh"
 afterScriptPath = "after.sh"
 customizationScriptPath = "user-customizations.sh"
 aliasesPath = "aliases"
@@ -35,10 +34,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     Homestead.configure(config, settings)
-
-    if File.exist? wordpressInstallationScriptPath then
-        config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true
-    end
 
     if File.exist? afterScriptPath then
         config.vm.provision "shell", path: afterScriptPath, privileged: false, keep_color: true
