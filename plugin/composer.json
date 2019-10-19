@@ -4,15 +4,22 @@
     "keywords": ["WordPress", "theatre", "theater", "productions", "plays", "cast", "crew"],
     "license": "MIT",
     "type": "project",
+    "prefer-stable": true,
     "require": {
-        "nesbot/carbon": "^1.25"
+        "php": "^7.1",
+        "nesbot/carbon": "^2.25.2"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
             "CurtainCallWP\\": [ "src/" ]
         },
         "files": [
-            "src/helpers.php"
+          "src/plugin_helpers.php"
         ]
     }
 }
