@@ -1,8 +1,8 @@
 <?php
 
-namespace CurtainCallWP\includes;
+namespace CurtainCallWP\Helpers;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable as Carbon;
 
 class CurtainCallHelpers 
 {
@@ -27,66 +27,46 @@ class CurtainCallHelpers
         return $stripped_url;
     }
     
-    public static function sortCastAndCrew($cast_and_crew_array)
+    public static function sortCastAndCrew(array $cast_and_crew_array)
     {
-        if (!is_array($cast_and_crew_array) || !count($cast_and_crew_array)) {
-            throw new \Exception('cast_and_crew_array must be an array and not empty... (#' . __LINE__ . ')');
-            return false;
-        }
-            
-        $success = usort ($cast_and_crew_array, function($a, $b){
-            if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
-                if ($a['custom_order'] == $b['custom_order']) {
-                    return 0;
+        if (count($cast_and_crew_array) > 1) {
+            usort($cast_and_crew_array, function($a, $b){
+                if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
+                    if ($a['custom_order'] == $b['custom_order']) {
+                        return 0;
+                    }
+                    return ($a < $b) ? -1 : 1;
+                } else if (!empty($a['custom_order']) && empty($b['custom_order'])) {
+                    return 1;
+                } else if (empty($a['custom_order']) && !empty($b['custom_order'])) {
+                    return -1;
+                } else {
+                    return strcmp($a['role'], $b['role']); // TODO: Change to use cast and crew member last name...
                 }
-                return ($a < $b) ? -1 : 1;
-            } else if (!empty($a['custom_order']) && empty($b['custom_order'])) {
-                return 1;
-            } else if (empty($a['custom_order']) && !empty($b['custom_order'])) {
-                return -1;
-            } else {
-                return strcmp($a['role'], $b['role']); // TODO: Change to use cast and crew member last name...
-            }
-        });
-        
-        /*
-        if (!$success){
-            throw new \Exception('Could not sort cast & crew. (#' . __LINE__ . ')');
-            return false;
+            });
         }
-        */
         
         return $cast_and_crew_array;
     }
     
-    public static function sortProductions($productions_array)
+    public static function sortProductions(array $productions_array)
     {
-        if (!is_array($productions_array) || !count($productions_array)) {
-            throw new \Exception('productions_array must be an array and not empty... (#' . __LINE__ . ')');
-            return false;
-        }
-            
-        $success = usort ($productions_array, function($a, $b) {
-            if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
-                if ($a['custom_order'] == $b['custom_order']) {
-                    return 0;
+        if (count($productions_array) > 1) {
+            usort($productions_array, function($a, $b) {
+                if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
+                    if ($a['custom_order'] == $b['custom_order']) {
+                        return 0;
+                    }
+                    return ($a < $b) ? -1 : 1;
+                } else if (!empty($a['custom_order']) && empty($b['custom_order'])) {
+                    return 1;
+                } else if (empty($a['custom_order']) && !empty($b['custom_order'])) {
+                    return -1;
+                } else {
+                    return strcmp($a['role'], $b['role']); // TODO: Change to use production title
                 }
-                return ($a < $b) ? -1 : 1;
-            } else if (!empty($a['custom_order']) && empty($b['custom_order'])) {
-                return 1;
-            } else if (empty($a['custom_order']) && !empty($b['custom_order'])) {
-                return -1;
-            } else {
-                return strcmp($a['role'], $b['role']); // TODO: Change to use production title
-            }
-        });
-        
-        /*
-        if (!$success){
-            throw new \Exception('Could not sort productions... (#' . __LINE__ . ')');
-            return false;
+            });
         }
-        */
         
         return $productions_array;
     }
