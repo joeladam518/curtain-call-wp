@@ -19,7 +19,7 @@
             "CurtainCallWP\\": [ "src/" ]
         },
         "files": [
-          "src/plugin_helpers.php"
+          "src/functions.php"
         ]
     }
 }
