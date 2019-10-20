@@ -48,9 +48,9 @@ class CurtainCallLoader
      * @param int    $accepted_args Optional. The number of arguments that should be passed to the $callback.
      * @return void
      */
-    public function add_action(string $tag, $component, $callback, int $priority = 10, int $accepted_args = 1)
+    public function add_action($tag, $component, $callback, $priority = 10, $accepted_args = 1)
     {
-        $this->actions[$tag] = $this->add($component, $callback, $priority, $accepted_args);
+        $this->actions[] = $this->add($tag, $component, $callback, $priority, $accepted_args);
     }
     
     /**
@@ -63,9 +63,9 @@ class CurtainCallLoader
      * @param int    $accepted_args Optional. The number of arguments that should be passed to the $callback.
      * @return void
      */
-    public function add_filter(string $tag, $component, $callback, int $priority = 10, int $accepted_args = 1)
+    public function add_filter($tag, $component, $callback, $priority = 10, $accepted_args = 1)
     {
-        $this->filters[$tag] = $this->add($component, $callback, $priority, $accepted_args);
+        $this->filters[] = $this->add($tag, $component, $callback, $priority, $accepted_args);
     }
     
     /**
@@ -76,9 +76,10 @@ class CurtainCallLoader
      * @param string $callback
      * @return void
      */
-    public function add_shortcode(string $tag, $component, $callback)
+    public function add_shortcode($tag, $component, $callback)
     {
-        $this->shortcodes[$tag] = [
+        $this->shortcodes[] = [
+            'tag'       => $tag,
             'component' => $component,
             'callback'  => $callback,
         ];
@@ -88,15 +89,18 @@ class CurtainCallLoader
      * A utility function that is used to register the actions and hooks into a single
      * collection.
      *
-     * @param  object   $component     A reference to the instance of the object on which the filter is defined.
-     * @param  string   $callback      The name of the function definition on the $component.
-     * @param  int      $priority      The priority at which the function should be fired.
-     * @param  int      $accepted_args The number of arguments that should be passed to the $callback.
+     * @param string $tag          The name of the WordPress filter that is being registered.
+     * @param object $component     A reference to the instance of the object on which the filter is defined.
+     * @param string $callback      The name of the function definition on the $component.
+     * @param int    $priority      The priority at which the function should be fired.
+     * @param int    $accepted_args The number of arguments that should be passed to the $callback.
+     *
      * @return array
      */
-    private function add($component, $callback, $priority, $accepted_args)
+    private function add($tag, $component, $callback, $priority, $accepted_args)
     {
         return [
+            'tag'           => $tag,
             'component'     => $component,
             'callback'      => $callback,
             'priority'      => $priority,
@@ -110,27 +114,27 @@ class CurtainCallLoader
      */
     public function run()
     {
-        foreach($this->filters as $tag => $filter) {
+        foreach($this->filters as $filter) {
             add_filter(
-                $tag,
+                $filter['tag'],
                 array($filter['component'], $filter['callback']),
                 $filter['priority'],
                 $filter['accepted_args']
             );
         }
         
-        foreach($this->actions as $tag => $action) {
+        foreach($this->actions as $action) {
             add_action(
-                $tag,
+                $action['tag'],
                 array($action['component'], $action['callback']),
                 $action['priority'],
                 $action['accepted_args']
             );
         }
         
-        foreach($this->shortcodes as $tag => $shortcode) {
+        foreach($this->shortcodes as $shortcode) {
             add_shortcode(
-                $tag,
+                $shortcode['tag'],
                 array($shortcode['component'], $shortcode['callback'])
             );
         }

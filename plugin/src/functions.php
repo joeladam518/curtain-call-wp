@@ -1,5 +1,63 @@
 <?php
 
+if (!function_exists('ccwp_assets_url')) {
+    /**
+     * Get the url path of CurtainCallWP's minified assets
+     * @return string
+     */
+    function ccwp_assets_url(): string
+    {
+        return ccwp_plugin_url('dist/');
+    }
+}
+
+if (!function_exists('ccwp_assets_path')) {
+    /**
+     * Get the dir path of CurtainCallWP's minified assets
+     * @return string
+     */
+    function ccwp_assets_path(): string
+    {
+        return ccwp_plugin_path('dist/');
+    }
+}
+
+if (!function_exists('ccwp_plugin_url')) {
+    /**
+     * return the plugin dir url
+     * @param string $path
+     * @return string
+     */
+    function ccwp_plugin_url(string $path = ''): string
+    {
+        $url_path = plugin_dir_url(dirname(__FILE__));
+        
+        if ($path !== '') {
+            $url_path = $url_path . $path;
+        }
+        
+        return $url_path;
+    }
+}
+
+if (!function_exists('ccwp_plugin_path')) {
+    /**
+     * return the plugin dir path
+     * @param string $path
+     * @return string
+     */
+    function ccwp_plugin_path(string $path = ''): string
+    {
+        $dir_path = plugin_dir_path(dirname(__FILE__));
+        
+        if ($path !== '') {
+            $dir_path = $dir_path . $path;
+        }
+        
+        return $dir_path;
+    }
+}
+
 if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
     if (!function_exists('fnln')) {
         /**

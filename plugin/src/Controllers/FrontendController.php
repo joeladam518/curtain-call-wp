@@ -5,40 +5,18 @@ namespace CurtainCallWP\Controllers;
 class FrontendController extends CurtainCallController
 {
     /**
-     *  The ID of this plugin.
-     *
-     *  @since      0.0.1
-     *  @access   private
-     *  @var      string    $plugin_name    The ID of this plugin.
-     **/
-    private $plugin_name;
-    
-    /**
-     *  The version of this plugin.
-     *
-     *  @since    0.0.1
-     *  @access   private
-     *  @var      string    $version    The current version of this plugin.
-     **/
-    private $version;
-    
-    /**
      *  Initialize the class and set its properties.
      *
-     *  @since      0.0.1
-     *  @param      string    $plugin_name       The name of the plugin.
-     *  @param      string    $version    The version of this plugin.
-     **/
-    public function __construct($plugin_name, $version)
+     * @param string $plugin_name    The name of this plugin.
+     * @param string $plugin_version The version of this plugin.
+     */
+    public function __construct(string $plugin_name, string $plugin_version)
     {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        parent::__construct($plugin_name, $plugin_version);
     }
     
     /**
      * Register the stylesheets for the public-facing side of the site.
-     *
-     * @since      0.0.1
      */
     public function enqueue_styles()
     {
@@ -54,13 +32,11 @@ class FrontendController extends CurtainCallController
          * class.
          **/
         
-        wp_enqueue_style($this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/curtain-call-wp-public.css', array(), $this->version, 'all');
+        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/curtain-call-wp-public.css', array(), $this->plugin_version, 'all');
     }
     
     /**
      * Register the JavaScript for the public-facing side of the site.
-     *
-     * @since      0.0.1
     **/
     public function enqueue_scripts()
     {
@@ -76,9 +52,14 @@ class FrontendController extends CurtainCallController
          * class.
          **/
         
-        wp_enqueue_script($this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/curtain-call-wp-public.js', array('jquery'), $this->version, false);
+        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/curtain-call-wp-public.js', array('jquery'), $this->plugin_version, false);
     }
     
+    /**
+     * @global $post
+     * @param $template
+     * @return string
+     */
     public function load_ccwp_page_templates($template)
     {
         global $post;
@@ -94,6 +75,11 @@ class FrontendController extends CurtainCallController
         return $template;
     }
     
+    /**
+     * @global $post
+     * @param $template
+     * @return string
+     */
     public function load_ccwp_archive_templates($template)
     {
         global $post;

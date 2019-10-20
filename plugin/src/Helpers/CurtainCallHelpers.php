@@ -92,8 +92,6 @@ class CurtainCallHelpers
                 castcrew_posts.post_title ASC
         ";
         
-        //pr($query,1);
-        
         $cast_and_crew = $wpdb->get_results($query, ARRAY_A);
         
         return $cast_and_crew;
@@ -202,13 +200,11 @@ class CurtainCallHelpers
         }
         
         // Set custom LIMIT
-        if (!isset($args['limit']) && is_int($args['limit'])) {
+        if (isset($args['limit']) && is_int($args['limit'])) {
             $query .= "
             LIMIT ". $args['limit'] ."
             ";
         }
-        
-        //pr($query,1);
 
         $cast_and_crews = $wpdb->get_results($query, ARRAY_A);
         

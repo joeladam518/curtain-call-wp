@@ -2,47 +2,28 @@
 
 namespace CurtainCallWP\Controllers;
 
+use CurtainCallWP\PostTypes\Production;
+use CurtainCallWP\PostTypes\CastAndCrew;
 use Carbon\CarbonImmutable as Carbon;
 use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
+use CurtainCallWP\View;
 
 class AdminController extends CurtainCallController
 {
     /**
-     *  The ID of this plugin.
-     *
-     * @since    0.0.1
-     * @access   private
-     * @var      string $plugin_name The ID of this plugin.
-     **/
-    private $plugin_name;
-    
-    /**
-     *  The version of this plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string $version The current version of this plugin.
-     **/
-    private $version;
-    
-    /**
      *  Initialize the class and set its properties.
      *
-     * @param string $plugin_name The name of this plugin.
-     * @param string $version     The version of this plugin.
-     *                            *@since  1.0.0
+     * @param string $plugin_name    The name of this plugin.
+     * @param string $plugin_version The version of this plugin.
      */
-    public function __construct($plugin_name, $version)
+    public function __construct(string $plugin_name, string $plugin_version)
     {
-        $this->plugin_name = $plugin_name;
-        $this->version     = $version;
+        parent::__construct($plugin_name, $plugin_version);
     }
     
     /**
-     *  Register the stylesheets for the admin area.
-     *
-     * @since    0.0.1
-     **/
+     * Register the stylesheets for the admin area.
+     */
     public function enqueue_styles()
     {
         /**
@@ -58,17 +39,15 @@ class AdminController extends CurtainCallController
          **/
         
         wp_enqueue_style($this->plugin_name . '_datepicker',
-            plugin_dir_url(__FILE__) . 'js/ccwp_datepicker/jquery-ui.css', array(), $this->version, 'all');
+            plugin_dir_url(__FILE__) . 'js/ccwp_datepicker/jquery-ui.css', array(), $this->plugin_version, 'all');
         
         wp_enqueue_style($this->plugin_name . '_general', plugin_dir_url(__FILE__) . 'css/curtian-call-wp-admin.css',
-            array(), $this->version, 'all');
+            array(), $this->plugin_version, 'all');
     }
     
     /**
      * Register the JavaScript for the admin area.
-     *
-     * @since    0.0.1
-     **/
+     */
     public function enqueue_scripts()
     {
         /**
@@ -81,14 +60,23 @@ class AdminController extends CurtainCallController
          * The Plugin_Name_Loader will then create the relationship
          * between the defined hooks and the functions defined in this
          * class.
-         **/
+        **/
         
-        wp_enqueue_script($this->plugin_name . '_datepicker',
-            plugin_dir_url(__FILE__) . 'js/ccwp_datepicker/jquery-ui.min.js', array('jquery'), $this->version, true);
+        wp_enqueue_script(
+            $this->plugin_name . '_datepicker',
+            plugin_dir_url(__FILE__) . 'js/ccwp_datepicker/jquery-ui.min.js',
+            array('jquery'),
+            $this->plugin_version,
+            true
+        );
         
-        wp_enqueue_script($this->plugin_name . '_general', plugin_dir_url(__FILE__) . 'js/curtian-call-wp-admin.js',
-            array('jquery', $this->plugin_name . '_datepicker'), $this->version, true);
-        
+        wp_enqueue_script(
+            $this->plugin_name . '_general',
+            plugin_dir_url(__FILE__) . 'js/curtian-call-wp-admin.js',
+            array('jquery', $this->plugin_name . '_datepicker'),
+            $this->plugin_version,
+            true
+        );
     }
     
     //  ----------------------------------------------------------------------------------------------------------------
@@ -157,85 +145,27 @@ class AdminController extends CurtainCallController
     
     /**
      *  Register the production custom post type.
-     *
-     * @since    0.0.1
-     **/
+     */
     public function create_production_custom_post_type()
     {
-        $args = [
-            'description'   => 'Displays your theatre company\'s productions and their relevant data',
-            'labels'        => [
-                'name'               => _x('Productions', 'post type general name'),
-                'singular_name'      => _x('Production', 'post type singular name'),
-                'add_new'            => _x('Add New', 'Production'),
-                'add_new_item'       => __('Add New Production'),
-                'edit_item'          => __('Edit Production'),
-                'new_item'           => __('New Production'),
-                'all_items'          => __('All Productions'),
-                'view_item'          => __('View Production'),
-                'search_items'       => __('Search productions'),
-                'not_found'          => __('No productions found'),
-                'not_found_in_trash' => __('No productions found in the Trash'),
-                'parent_item_colon'  => '',
-                'menu_name'          => 'Productions',
-            ],
-            'public'        => true,
-            'menu_position' => 2.5,
-            'supports'      => [
-                'title',
-                'editor',
-                'thumbnail',
-            ],
-            'taxonomies'    => [
-                'ccwp_production_seasons'
-            ],
-            'has_archive'   => true,
-            'rewrite'       => [
-                'slug' => 'productions',
-            ],
-        ];
-        register_post_type('ccwp_production', $args);
+        register_post_type('ccwp_production', Production::getConfig());
     }
     
     /**
      *  Create the production custom post type taxonomies.
-     *
-     * @since    0.0.1
-     **/
+     */
     public function create_production_custom_taxonomies()
     {
-        // Add new taxonomy, make it hierarchical (like categories)
-        $args = [
-            'hierarchical'      => true,
-            'labels'            => [
-                'name'              => _x('Seasons', 'taxonomy general name', 'curtain-call-wp'),
-                'singular_name'     => _x('Season', 'taxonomy singular name', 'curtain-call-wp'),
-                'search_items'      => __('Search Seasons', 'curtain-call-wp'),
-                'all_items'         => __('All Seasons', 'curtain-call-wp'),
-                'parent_item'       => __('Parent Season', 'curtain-call-wp'),
-                'parent_item_colon' => __('Parent Season:', 'curtain-call-wp'),
-                'edit_item'         => __('Edit Season', 'curtain-call-wp'),
-                'update_item'       => __('Update Season', 'curtain-call-wp'),
-                'add_new_item'      => __('Add New Season', 'curtain-call-wp'),
-                'new_item_name'     => __('New Season Title', 'curtain-call-wp'),
-                'menu_name'         => __('Seasons', 'curtain-call-wp'),
-            ],
-            'show_ui'           => true,
-            'show_admin_column' => true,
-            'query_var'         => true,
-            'rewrite'           => [
-                'slug' => 'seasons',
-            ],
-        ];
-        
-        register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
+        register_taxonomy(
+            'ccwp_production_seasons',
+            array('ccwp_production'),
+            Production::getSeasonsTaxonomyConfig()
+        );
     }
     
     /**
      *  Creation of all custom fields for the production custom post type
-     *
-     *  since 0.0.1
-     **/
+     */
     public function add_custom_meta_boxes_for_production_post_type()
     {
         add_meta_box(
@@ -411,7 +341,7 @@ class AdminController extends CurtainCallController
     
     /**
      *  On the creation of a production post insert a create a custom production taxonomy for cast and crew.
-     **/
+     */
     public function on_insert_production_post($post_id, $post, $update)
     {
         if (wp_is_post_revision($post_id)) {

@@ -38,6 +38,12 @@ class CurtainCall
     protected $version;
     
     /**
+     * The root dir path of
+     * @var string
+     */
+    protected $plugin_dir_path;
+    
+    /**
      * Define the core functionality of the plugin.
      *
      * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -50,8 +56,11 @@ class CurtainCall
      * CurtainCall_i18n  - Defines internationalization functionality.
      * CurtainCallAdmin  - Defines all hooks for the admin area.
      * CurtainCallPublic - Defines all hooks for the public side of the site.
+     *
+     * @param string $plugin_dir_path
+     * @return void
      */
-    public function __construct()
+    public function __construct(string $plugin_dir_path = '')
     {
         $this->version     = CCWP_VERSION;
         $this->plugin_name = CCWP_PLUGIN_NAME;
