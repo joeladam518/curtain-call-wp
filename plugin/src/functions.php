@@ -1,13 +1,5 @@
 <?php
 
-if (!function_exists('ccwpView'))
-{
-    function ccwp_view(string $path, ...$data)
-    {
-        return;
-    }
-}
-
 if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
     if (!function_exists('fnln')) {
         /**
@@ -67,4 +59,3 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
         }
     }
 }
-
