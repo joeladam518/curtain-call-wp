@@ -9,7 +9,7 @@ class Activator implements PluginLifeCycleHook
     public static function run(): void
     {
         self::createPluginTables();
-        add_option('ccwp_db_version', CCWP_VERSION);
+        add_option('ccwp_db_version', CCWP_PLUGIN_VERSION);
         flush_rewrite_rules(false);
     }
     
