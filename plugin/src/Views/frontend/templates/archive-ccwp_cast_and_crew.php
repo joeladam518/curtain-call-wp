@@ -2,8 +2,7 @@
 
 use Carbon\Carbon;
 
-// File Security Check
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     exit;
 }
 
