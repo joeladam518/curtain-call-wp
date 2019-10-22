@@ -4,7 +4,6 @@ namespace CurtainCallWP;
 
 use CurtainCallWP\Controllers\AdminController;
 use CurtainCallWP\Controllers\FrontendController;
-use CurtainCallWP\Localization\CurtainCall_i18n;
 use CurtainCallWP\LifeCycle\Activator;
 use CurtainCallWP\LifeCycle\Deactivator;
 use CurtainCallWP\LifeCycle\Uninstaller;
@@ -35,13 +34,7 @@ class CurtainCall
      *
      * @var string
      */
-    protected $version;
-    
-    /**
-     * The root dir path of
-     * @var string
-     */
-    protected $plugin_dir_path;
+    protected $plugin_version;
     
     /**
      * Define the core functionality of the plugin.
@@ -57,27 +50,21 @@ class CurtainCall
      * CurtainCallAdmin  - Defines all hooks for the admin area.
      * CurtainCallPublic - Defines all hooks for the public side of the site.
      *
-     * @param string $plugin_dir_path
      * @return void
      */
-    public function __construct(string $plugin_dir_path = '')
+    public function __construct()
     {
-        $this->version     = CCWP_VERSION;
-        $this->plugin_name = CCWP_PLUGIN_NAME;
+        $this->plugin_name    = CCWP_PLUGIN_NAME;
+        $this->plugin_version = CCWP_PLUGIN_VERSION;
         
-        $this->setPluginLoader();
-        $this->setPluginLocale();
-        $this->defineAdminHooks();
-        $this->definePublicHooks();
-    }
-    
-    /**
-     * Run the loader to execute all of the hooks with WordPress.
-     * @return void
-     */
-    public function run()
-    {
-        $this->loader->run();
+        $this->initPluginLoader();
+        $this->initPluginLocale();
+        
+        if(is_admin()) {
+            $this->defineAdminHooks();
+        } else {
+            $this->definePublicHooks();
+        }
     }
     
     /**
@@ -93,29 +80,19 @@ class CurtainCall
     }
     
     /**
-     * The name of the plugin used to uniquely identify it within the context of
-     * WordPress and to define internationalization functionality.
-     * @return string
+     * Run the loader to execute all of the hooks with WordPress.
+     * @return void
      */
-    public function getPluginName()
+    public function run()
     {
-        return $this->plugin_name;
-    }
-    
-    /**
-     * Retrieve the version number of the plugin.
-     * @return string
-     */
-    public function getPluginVersion()
-    {
-        return $this->version;
+        $this->loader->run();
     }
     
     /**
      * Set the loader that manager the hooks
      * @return void
      */
-    protected function setPluginLoader()
+    protected function initPluginLoader()
     {
         $this->loader = new CurtainCallLoader();
     }
@@ -124,10 +101,9 @@ class CurtainCall
      * Define the locale for this plugin for internationalization.
      * @return void
      */
-    protected function setPluginLocale()
+    protected function initPluginLocale()
     {
-        $plugin_i18n = new CurtainCall_i18n();
-        $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+        load_plugin_textdomain(CCWP_PLUGIN_NAME, false, plugin_dir_path(__FILE__) . 'languages/');
     }
     
     /**
@@ -136,7 +112,7 @@ class CurtainCall
      */
     protected function defineAdminHooks()
     {
-        $plugin_admin = new AdminController($this->getPluginName(), $this->getPluginVersion());
+        $plugin_admin = new AdminController();
         
         // All Actions and Filters on the Production custom post type
         $this->loader->add_action('init', $plugin_admin, 'create_production_custom_post_type');
