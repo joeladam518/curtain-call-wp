@@ -3,6 +3,9 @@
  * included in this file.
 **/
 
+//@import './datepicker';
+
+@import '~pikaday/css/pikaday.css';
 
 #ccwp_production_details .inside,
 #ccwp_cast_and_cast_details .inside {
@@ -37,7 +40,6 @@
 .ccwp-form-help-text p {
     margin-top: -5px;
 }
-
 
 /* Date Pickers!!!! */
 
