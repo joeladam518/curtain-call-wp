@@ -2,6 +2,8 @@
 
 namespace CurtainCallWP\Controllers;
 
+use CurtainCallWP\CurtainCallView;
+
 /**
  * Class FrontendController
  * @package CurtainCallWP\Controllers
@@ -47,11 +49,11 @@ class FrontendController extends CurtainCallController
         global $post;
         
         if ($post->post_type == 'ccwp_production' && $template !== locate_template(['single-ccwp_production.php'])) {
-            return plugin_dir_path( __FILE__ ) . 'templates/single-ccwp_production.php';
+            return CurtainCallView::dirPath('frontend/') . 'templates/single-ccwp_production.php';
         }
         
         if ($post->post_type == 'ccwp_cast_and_crew' && $template !== locate_template(['single-ccwp_cast_and_crew.php'])) {
-            return plugin_dir_path( __FILE__ ) . 'templates/single-ccwp_cast_and_crew.php';
+            return CurtainCallView::dirPath('frontend/') . 'templates/single-ccwp_cast_and_crew.php';
         }
         
         return $template;
@@ -67,11 +69,11 @@ class FrontendController extends CurtainCallController
         global $post;
         
         if (is_post_type_archive('ccwp_production') && $template !== locate_template(['single-ccwp_production.php'])) {
-            return plugin_dir_path(__FILE__) . 'templates/archive-ccwp_production.php';
+            return CurtainCallView::dirPath('frontend/') . 'templates/archive-ccwp_production.php';
         }
         
         if (is_post_type_archive('ccwp_cast_and_crew') && $template !== locate_template(['single-ccwp_cast_and_crew.php'])) {
-            return plugin_dir_path(__FILE__) . 'templates/archive-ccwp_cast_and_crew.php';
+            return CurtainCallView::dirPath('frontend/') . 'templates/archive-ccwp_cast_and_crew.php';
         }
         
         return $template;

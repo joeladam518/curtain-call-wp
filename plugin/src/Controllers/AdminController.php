@@ -28,11 +28,13 @@ class AdminController extends CurtainCallController
      */
     public function enqueue_styles()
     {
-        wp_enqueue_style($this->plugin_name . '_datepicker',
-            plugin_dir_url(__FILE__) . 'js/ccwp_datepicker/jquery-ui.css', array(), $this->plugin_version, 'all');
-        
-        wp_enqueue_style($this->plugin_name . '_general', plugin_dir_url(__FILE__) . 'css/curtian-call-wp-admin.css',
-            array(), $this->plugin_version, 'all');
+        wp_enqueue_style(
+            $this->plugin_name . '_general',
+            $this->assets_url . 'css/curtain-call-wp-admin.css',
+            array(),
+            $this->plugin_version,
+            'all'
+        );
     }
     
     /**
@@ -41,17 +43,9 @@ class AdminController extends CurtainCallController
     public function enqueue_scripts()
     {
         wp_enqueue_script(
-            $this->plugin_name . '_datepicker',
-            plugin_dir_url(__FILE__) . 'js/ccwp_datepicker/jquery-ui.min.js',
-            array('jquery'),
-            $this->plugin_version,
-            true
-        );
-        
-        wp_enqueue_script(
             $this->plugin_name . '_general',
-            plugin_dir_url(__FILE__) . 'js/curtian-call-wp-admin.js',
-            array('jquery', $this->plugin_name . '_datepicker'),
+            $this->assets_url . 'js/curtain-call-wp-admin.js',
+            array('jquery'),
             $this->plugin_version,
             true
         );
@@ -63,6 +57,8 @@ class AdminController extends CurtainCallController
     
     public function ccwp_set_post_type_title_on_post_submit(array $data)
     {
+        //pr($data,1);
+        
         $title_arr = [];
         if ($data['post_type'] === 'ccwp_production') {
             
@@ -102,7 +98,7 @@ class AdminController extends CurtainCallController
             }
             
             if (empty($title_arr)) {
-                $title_arr[] = 'Untitled Curtain Call Cast/Crew - ' . $data['ID'];
+                $title_arr[] = 'Untitled Curtain Call Cast/Crew';
             }
         }
         
@@ -189,13 +185,13 @@ class AdminController extends CurtainCallController
         <div class="ccwp-form-group">
             <label for="ccwp_date_start"><strong>Production Dates - Opened*</strong></label>
             <input type="text" class="ccwp_datepicker_input" id="ccwp_date_start" name="ccwp_date_start"
-                   value="<?php echo $prod_date_start ?>">
+                   value="<?php echo $prod_date_start ?>" autocomplete="off">
         </div>
         
         <div class="ccwp-form-group">
             <label for="ccwp_date_end"><strong>Production Dates - Closed*</strong></label>
             <input type="text" class="ccwp_datepicker_input" id="ccwp_date_end" name="ccwp_date_end"
-                   value="<?php echo $prod_date_end; ?>">
+                   value="<?php echo $prod_date_end; ?>" autocomplete="off">
         </div>
         
         <div class="ccwp-form-help-text">
@@ -621,8 +617,10 @@ class AdminController extends CurtainCallController
         $cast_crew_name_first     = get_post_meta($post->ID, '_ccwp_cast_crew_name_first', true);
         $cast_crew_name_last      = get_post_meta($post->ID, '_ccwp_cast_crew_name_last', true);
         $cast_crew_self_title     = get_post_meta($post->ID, '_ccwp_cast_crew_self_title', true);
-        $cast_crew_birthday       = Carbon::parse(get_post_meta($post->ID, '_ccwp_cast_crew_birthday',
-            true))->format('m/d/Y');
+        $cast_crew_birthday       = get_post_meta($post->ID, '_ccwp_cast_crew_birthday',true);
+        $cast_crew_birthday       = !empty($cast_crew_birthday)
+                                    ? Carbon::parse($cast_crew_birthday)->format('m/d/Y')
+                                    : '';
         $cast_crew_hometown       = get_post_meta($post->ID, '_ccwp_cast_crew_hometown', true);
         $cast_crew_website_link   = get_post_meta($post->ID, '_ccwp_cast_crew_website_link', true);
         $cast_crew_facebook_link  = get_post_meta($post->ID, '_ccwp_cast_crew_facebook_link', true);
@@ -659,7 +657,7 @@ class AdminController extends CurtainCallController
         <div class="ccwp-form-group">
             <label for="ccwp_birthday">Birthday</label>
             <input type="text" class="ccwp_datepicker_input" id="ccwp_birthday" name="ccwp_birthday"
-                   value="<?php echo $cast_crew_birthday; ?>">
+                   value="<?php echo $cast_crew_birthday; ?>" autocomplete="off">
         </div>
         <div class="ccwp-form-help-text">
             <p>Must be in MM/DD/YYYY format.</p>
