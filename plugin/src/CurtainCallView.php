@@ -2,13 +2,17 @@
 
 namespace CurtainCallWP;
 
-class View
+/**
+ * Class CurtainCallView
+ * @package CurtainCallWP
+ */
+class CurtainCallView
 {
     /**
      * The file path for the views dir
      * @var string
      */
-    protected $views_dir_path;
+    protected $views_path;
     
     /**
      * View file to include
@@ -29,7 +33,7 @@ class View
      */
     public function __construct(string $file_path, array $data = [])
     {
-        $this->views_dir_path = self::dirPath();
+        $this->views_path = self::dirPath();
         $this->file_path = $file_path;
         $this->data = $data;
     }
@@ -42,14 +46,14 @@ class View
     public function render(): string
     {
         if (!file_exists($this->getTemplatePath())) {
-            echo $this->getTemplatePath() . '<br>' . PHP_EOL;
-            throw new \Exception('View template is not found.');
-            //return '';
+            //TODO: Change this back to an empty string
+            return '<h3 style="color:red;">Couldn\'t find view template path: "'. $this->getTemplatePath() .'"</h3>';
         }
         
         if (count($this->data) > 0) {
             if (!$this->validateDataArray()) {
-                return '';
+                //TODO: Change this back to an empty string
+                return '<h3 style="color:red;">View template didn\'t pass validation.</h3>';
             }
             extract($this->data);
         }
@@ -68,11 +72,12 @@ class View
     
     public function getTemplatePath(): string
     {
-        return $this->views_dir_path . $this->file_path;
+        return $this->views_path . $this->file_path;
     }
     
     private function validateDataArray(): bool
     {
+        // Checks to see if $this->data is an associative array;
         if(array_keys($this->data) !== range(0, count($this->data) - 1)) {
             return true;
         } else {
