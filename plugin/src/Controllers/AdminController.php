@@ -6,6 +6,10 @@ use CurtainCallWP\PostTypes\Production;
 use Carbon\CarbonImmutable as Carbon;
 use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
 
+/**
+ * Class AdminController
+ * @package CurtainCallWP\Controllers
+ */
 class AdminController extends CurtainCallController
 {
     /**

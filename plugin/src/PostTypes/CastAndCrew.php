@@ -2,6 +2,10 @@
 
 namespace CurtainCallWP\PostTypes;
 
+/**
+ * Class CastAndCrew
+ * @package CurtainCallWP\PostTypes
+ */
 class CastAndCrew extends CurtainCallPostType
 {
     public static function getConfig(): array

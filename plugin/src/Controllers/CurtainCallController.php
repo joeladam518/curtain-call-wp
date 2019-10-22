@@ -2,6 +2,10 @@
 
 namespace CurtainCallWP\Controllers;
 
+/**
+ * Class CurtainCallController
+ * @package CurtainCallWP\Controllers
+ */
 class CurtainCallController
 {
     protected $plugin_name;

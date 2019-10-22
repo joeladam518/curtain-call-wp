@@ -405,12 +405,11 @@ class CurtainCallHelpers
             $post_id = isset($args['post_id']) ? $args['post_id'] : null; 
         } else {
             throw new \Exception('You must pass the proper arguments to get_cast_and_crew_by_production() function');
-            return false;
         }
         
         $get_post_meta = isset($options['get_post_meta']) ? $options['get_post_meta'] : false;
         
-        $query .= "
+        $query = "
             SELECT
             	production_posts.*,
             	ccwp_join.production_id AS ccwp_production_post_id,

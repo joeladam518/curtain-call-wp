@@ -2,6 +2,10 @@
 
 namespace CurtainCallWP\Controllers;
 
+/**
+ * Class FrontendController
+ * @package CurtainCallWP\Controllers
+ */
 class FrontendController extends CurtainCallController
 {
     /**
