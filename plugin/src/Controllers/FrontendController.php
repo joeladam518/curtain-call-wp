@@ -6,13 +6,13 @@ class FrontendController extends CurtainCallController
 {
     /**
      *  Initialize the class and set its properties.
-     *
-     * @param string $plugin_name    The name of this plugin.
-     * @param string $plugin_version The version of this plugin.
      */
-    public function __construct(string $plugin_name, string $plugin_version)
+    public function __construct()
     {
-        parent::__construct($plugin_name, $plugin_version);
+        parent::__construct();
+    
+        $this->assets_url = ccwp_assets_url() . 'frontend/';
+        $this->assets_path = ccwp_assets_path() . 'frontend/';
     }
     
     /**
@@ -20,19 +20,8 @@ class FrontendController extends CurtainCallController
      */
     public function enqueue_styles()
     {
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Plugin_Name_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Plugin_Name_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         **/
-        
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/curtain-call-wp-public.css', array(), $this->plugin_version, 'all');
+        $frontend_css_url = $this->assets_url . 'css/curtain-call-wp-public.css';
+        wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $this->plugin_version, 'all');
     }
     
     /**
@@ -40,19 +29,8 @@ class FrontendController extends CurtainCallController
     **/
     public function enqueue_scripts()
     {
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Plugin_Name_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Plugin_Name_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         **/
-        
-        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/curtain-call-wp-public.js', array('jquery'), $this->plugin_version, false);
+        $frontend_js_url = $this->assets_url . 'js/curtain-call-wp-public.js';
+        wp_enqueue_script($this->plugin_name, $frontend_js_url, array('jquery'), $this->plugin_version, false);
     }
     
     /**
