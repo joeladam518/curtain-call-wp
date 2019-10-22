@@ -1,5 +1,24 @@
 <?php
 
+use CurtainCallWP\CurtainCallView;
+
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
+
+if (!function_exists('ccwp_view')) {
+    /**
+     * Return a CurtainCall View to render templates
+     * @param string $file_path
+     * @param array  $data
+     * @return CurtainCallView
+     */
+    function ccwp_view(string $file_path, array $data): CurtainCallView
+    {
+        return new CurtainCallView($file_path, $data);
+    }
+}
+
 if (!function_exists('ccwp_assets_url')) {
     /**
      * Get the url path of CurtainCallWP's minified assets
