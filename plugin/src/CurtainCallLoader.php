@@ -2,8 +2,6 @@
 
 namespace CurtainCallWP;
 
-use Closure;
-
 /**
  * Class CurtainCallLoader
  * @package CurtainCallWP
