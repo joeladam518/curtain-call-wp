@@ -1,4 +1,16 @@
-<?php wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce'); ?>
+<?php
+/**
+ * @var string $prod_name
+ * @var string $prod_date_start
+ * @var string $prod_date_end
+ * @var string $prod_show_times
+ * @var string $prod_ticket_url
+ * @var string $prod_venue
+ * @var string $prod_press
+ */
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce');
+?>
 
 <div class="ccwp-form-group">
     <label for="ccwp_production_name">Production Name</label>
@@ -43,13 +55,6 @@
 <div class="ccwp-form-help-text">
     <p>Where the show was performed.</p>
 </div>
-
-<!--
-    <div class="ccwp-form-group">
-        <label for="description">Production Description</label>
-        <textarea id="description" name="description"><?php echo $prod_description; ?></textarea>
-    </div>
--->
 
 <div class="ccwp-form-group">
     <label for="ccwp_press">Press Highlights</label>
