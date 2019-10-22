@@ -6,12 +6,14 @@ class CurtainCallController
 {
     protected $plugin_name;
     protected $plugin_version;
-    protected $assets_dir;
     
-    public function __construct(string $plugin_name, string $plugin_version)
+    protected $assets_url;
+    protected $assets_path;
+    
+    public function __construct()
     {
-        $this->plugin_name = $plugin_name;
-        $this->plugin_version = $plugin_version;
+        $this->plugin_name    = CCWP_PLUGIN_NAME;
+        $this->plugin_version = CCWP_PLUGIN_VERSION;
     }
 }
 
