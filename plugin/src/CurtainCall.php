@@ -59,11 +59,10 @@ class CurtainCall
         
         $this->initPluginLoader();
         $this->initPluginLocale();
+        $this->definePublicHooks();
         
         if(is_admin()) {
             $this->defineAdminHooks();
-        } else {
-            $this->definePublicHooks();
         }
     }
     
@@ -147,7 +146,7 @@ class CurtainCall
      */
     protected function definePublicHooks()
     {
-        $plugin_public = new FrontendController($this->getPluginName(), $this->getPluginVersion());
+        $plugin_public = new FrontendController();
         
         $this->loader->add_filter('single_template', $plugin_public, 'load_ccwp_page_templates');
         $this->loader->add_filter('archive_template', $plugin_public, 'load_ccwp_archive_templates');
