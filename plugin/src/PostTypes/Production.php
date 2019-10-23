@@ -128,9 +128,7 @@ class Production extends CurtainCallPostType
         if (!empty($new_castcrew_ids)) {
             foreach ($castcrew as $new_castcrew_member) {
                 if (in_array($new_castcrew_member['cast_and_crew_id'], $current_castcrew_ids)) {
-                
                     # if in both the new c/c array and the current c/c array update
-                
                     $result = $wpdb->update($ccwp_join_tablename, [
                         // Data to be updated
                         'role' => !empty($new_castcrew_member['role']) ? sanitize_text_field($new_castcrew_member['role']) : null,
@@ -145,7 +143,7 @@ class Production extends CurtainCallPostType
                         '%s',
                         '%d',
                     ], [
-                        // Fomatting of where clause data
+                        // Formatting of where clause data
                         '%d',
                         '%d',
                         '%s',
@@ -161,11 +159,8 @@ class Production extends CurtainCallPostType
                     */
                 
                     $wpdb->flush();
-                
                 } else {
-                
                     # if in the new c/c array but not in the current c/c array insert
-                
                     $result = $wpdb->insert($ccwp_join_tablename, [
                         // Data to be inserted
                         'production_id'    => $production_id,
@@ -196,7 +191,7 @@ class Production extends CurtainCallPostType
             }
         }
     
-        # array_diff() the current c/c array with new c/c array. this give the cast crew to be deleted
+        # array_diff() the current c/c array with new c/c array. this gives us the cast crew to be deleted
         if (!empty($current_castcrew_ids) && !empty($new_castcrew_ids)) {
             $todelete_castcrew_ids = array_values(array_diff($current_castcrew_ids, $new_castcrew_ids));
         } else if (!empty($current_castcrew_ids) && empty($new_castcrew_ids)) {
@@ -206,15 +201,13 @@ class Production extends CurtainCallPostType
         }
     
         if (!empty($todelete_castcrew_ids) && is_array($todelete_castcrew_ids)) {
-        
             # if in the current c/c array but not in the to be saved array delete
-        
             foreach ($todelete_castcrew_ids as $todelete_castcrew_member_id) {
-                $result = $wpdb->delete( $ccwp_join_tablename, [
+                $result = $wpdb->delete($ccwp_join_tablename, [
                     // Where Clauses
                     'production_id' => $production_id,
                     'cast_and_crew_id' => $todelete_castcrew_member_id,
-                    'type' => $castcrew_type,
+                    'type' => $type,
                 ], [
                     // Format of where clauses data
                     '%d',
