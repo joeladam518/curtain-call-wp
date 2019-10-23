@@ -27,10 +27,10 @@ class CurtainCallHelpers
         return $stripped_url;
     }
     
-    public static function sortCastAndCrew(array $cast_and_crew_array)
+    public static function sortCastAndCrew(array $cast_and_crew)
     {
-        if (count($cast_and_crew_array) > 1) {
-            usort($cast_and_crew_array, function($a, $b){
+        if (count($cast_and_crew) > 1) {
+            usort($cast_and_crew, function($a, $b){
                 if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
                     if ($a['custom_order'] == $b['custom_order']) {
                         return 0;
@@ -46,12 +46,12 @@ class CurtainCallHelpers
             });
         }
         
-        return $cast_and_crew_array;
+        return $cast_and_crew;
     }
     
-    public static function sortProductions(array $productions_array)
+    public static function sortProductions(array $productions)
     {
-        if (count($productions_array) > 1) {
+        if (count($productions) > 1) {
             usort($productions_array, function($a, $b) {
                 if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
                     if ($a['custom_order'] == $b['custom_order']) {
@@ -68,7 +68,7 @@ class CurtainCallHelpers
             });
         }
         
-        return $productions_array;
+        return $productions;
     }
     
     public static function get_all_cast_and_crew_for_select()
@@ -118,7 +118,7 @@ class CurtainCallHelpers
         
         $query = "";
         if (isset($args['select'])) {
-            
+
             if (is_array($args['select'])) {
                 $query .= "SELECT " . implode(', ', $args['select']);
             } else if (empty($args['select'])) {
@@ -227,8 +227,8 @@ class CurtainCallHelpers
         global $wpdb; 
        
         $ccwp_join_tablename = $wpdb->prefix . 'ccwp_castandcrew_production';
-       
-        $query .= "
+    
+        $query = "
             SELECT
                 ccwp_join.production_id,
                 ccwp_join.cast_and_crew_id,
@@ -236,19 +236,19 @@ class CurtainCallHelpers
                 ccwp_join.role,
                 ccwp_join.custom_order
             FROM 
-                ". $wpdb->posts ." AS production_posts
+                " . $wpdb->posts . " AS production_posts
             LEFT JOIN 
-                ". $ccwp_join_tablename ." AS ccwp_join
+                " . $ccwp_join_tablename . " AS ccwp_join
             ON 
                 production_posts.ID = ccwp_join.production_id
             LEFT JOIN
-                ". $wpdb->posts ." AS castcrew_posts
+                " . $wpdb->posts . " AS castcrew_posts
             ON
                 castcrew_posts.ID = ccwp_join.cast_and_crew_id
             WHERE 
-                ccwp_join.production_id = ". $production_id ."
+                ccwp_join.production_id = " . $production_id . "
             AND
-                ccwp_join.type = '". $castcrew_type ."'
+                ccwp_join.type = '" . $castcrew_type . "'
         ";
         
         $cast_and_crew = $wpdb->get_results($query, ARRAY_A);
@@ -408,23 +408,23 @@ class CurtainCallHelpers
         }
         
         $get_post_meta = isset($options['get_post_meta']) ? $options['get_post_meta'] : false;
-        
+    
         $query = "
             SELECT
-            	production_posts.*,
-            	ccwp_join.production_id AS ccwp_production_post_id,
-            	ccwp_join.cast_and_crew_id AS ccwp_castcrew_post_id,
-            	ccwp_join.type AS ccwp_type,
-            	ccwp_join.role AS ccwp_role,
-            	ccwp_join.custom_order AS ccwp_custom_order       
-            FROM ". $wpdb->posts ." AS castcrew_posts
-            INNER JOIN ". $ccwp_join_tablename ." AS ccwp_join
+                production_posts.*,
+                ccwp_join.production_id AS ccwp_production_post_id,
+                ccwp_join.cast_and_crew_id AS ccwp_castcrew_post_id,
+                ccwp_join.type AS ccwp_type,
+                ccwp_join.role AS ccwp_role,
+                ccwp_join.custom_order AS ccwp_custom_order
+            FROM " . $wpdb->posts . " AS castcrew_posts
+            INNER JOIN " . $ccwp_join_tablename . " AS ccwp_join
             ON castcrew_posts.ID = ccwp_join.cast_and_crew_id
-            INNER JOIN ". $wpdb->posts ." AS production_posts
+            INNER JOIN " . $wpdb->posts . " AS production_posts
             ON production_posts.ID = ccwp_join.production_id
             WHERE (ccwp_join.type = 'cast' OR ccwp_join.type = 'crew') 
-            AND castcrew_posts.ID = ". $post_id ." 
-            ORDER BY production_posts.post_title ASC
+            AND castcrew_posts.ID = " . $post_id . "
+            ORDER BY production_posts.post_title
         ";
         
         // Set custom LIMIT
@@ -433,8 +433,6 @@ class CurtainCallHelpers
             LIMIT ". $args['limit'] ."
             ";
         }
-        
-        //pr($query,1);
 
         $productions = $wpdb->get_results($query, ARRAY_A);
         
