@@ -38,9 +38,9 @@ class CurtainCallView
         $this->data = $data;
     }
     
-    public static function dirPath(): string
+    public static function dirPath(string $path = ''): string
     {
-        return ccwp_plugin_path('resources/views/');
+        return ccwp_plugin_path('src/Views/') . $path;
     }
     
     public function render(): string
