@@ -98,11 +98,11 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * Debug print:
          * print_r() a data structure to the output buffer inside of pre tags.
          *
-         * @param  mixed   &$obj The data structure to be dumped... (string, array, stdClass etc.)
+         * @param  mixed   $obj The data structure to be dumped... (string, array, stdClass etc.)
          * @param  boolean $exit If true, exit after outputting.
          * @return void
          */
-        function pr(&$obj, $exit = false): void
+        function pr($obj, $exit = false): void
         {
             ob_start();
             print_r($obj);
@@ -120,11 +120,11 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * Debug dump:
          * var_dump() a data structure to the output buffer inside of pre tags.
          *
-         * @param  mixed   &$obj The data structure to be dumped... (string, array, stdClass etc.)
+         * @param  mixed   $obj The data structure to be dumped... (string, array, stdClass etc.)
          * @param  boolean $exit $exit If true, exit after outputting.
          * @return void
          */
-        function dmp(&$obj, $exit = false): void
+        function dmp($obj, $exit = false): void
         {
             ob_start();
             var_dump($obj);
