@@ -36,6 +36,7 @@ class Production extends CurtainCallPostType
             'has_archive'   => true,
             'rewrite'       => [
                 'slug' => 'productions',
+                'with_front' => true
             ],
         ];
     }
@@ -63,6 +64,7 @@ class Production extends CurtainCallPostType
             'query_var'         => true,
             'rewrite'           => [
                 'slug' => 'seasons',
+                'with_front' => true,
             ],
         ];
     }

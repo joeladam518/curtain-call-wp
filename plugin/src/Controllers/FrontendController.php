@@ -49,11 +49,11 @@ class FrontendController extends CurtainCallController
         global $post;
         
         if ($post->post_type == 'ccwp_production' && $template !== locate_template(['single-ccwp_production.php'])) {
-            return CurtainCallView::dirPath('frontend/') . 'templates/single-ccwp_production.php';
+            return CurtainCallView::dirPath('frontend/') . '/templates/single-ccwp_production.php';
         }
         
         if ($post->post_type == 'ccwp_cast_and_crew' && $template !== locate_template(['single-ccwp_cast_and_crew.php'])) {
-            return CurtainCallView::dirPath('frontend/') . 'templates/single-ccwp_cast_and_crew.php';
+            return CurtainCallView::dirPath('frontend') . '/templates/single-ccwp_cast_and_crew.php';
         }
         
         return $template;
@@ -77,5 +77,17 @@ class FrontendController extends CurtainCallController
         }
         
         return $template;
+    }
+    
+    public function register_ccwp_rewrite_rules($rules)
+    {
+        $new = [
+            'productions/?$'        => 'index.php?post_type=ccwp_production',
+            'productions/(.+)/?$'   => 'index.php?ccwp_production=$matches[1]',
+            'cast-and-crew/?$'      => 'index.php?post_type=ccwp_cast_and_crew',
+            'cast-and-crew/(.+)/?$' => 'index.php?ccwp_cast_and_crew=$matches[1]',
+        ];
+        
+        return array_merge($new, $rules);
     }
 }

@@ -40,6 +40,7 @@ class CastAndCrew extends CurtainCallPostType
             'has_archive'   => true,
             'rewrite'       => [
                 'slug' => 'cast-and-crew',
+                'with_front' => true,
             ],
         ];
     }
@@ -72,6 +73,7 @@ class CastAndCrew extends CurtainCallPostType
             'query_var'             => true,
             'rewrite'               => [
                 'slug' => 'cast-and-crew-productions',
+                'with_front' => true,
             ],
         ];
     }

@@ -313,6 +313,9 @@ class AdminController extends CurtainCallController
     
     /**
      *  On the creation of a production post insert a create a custom production taxonomy for cast and crew.
+     * @param $post_id
+     * @param $post
+     * @param $update
      */
     public function on_insert_production_post($post_id, $post, $update)
     {
