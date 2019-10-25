@@ -59,11 +59,12 @@ class CurtainCall
         
         $this->initPluginLoader();
         $this->initPluginLocale();
+        
         $this->definePublicHooks();
         
-        if(is_admin()) {
+        //if(is_admin()) {
             $this->defineAdminHooks();
-        }
+        //}
     }
     
     /**
