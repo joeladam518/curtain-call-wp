@@ -48,7 +48,13 @@ class CurtainCallLoader
      */
     public function add_action($tag, $component, $callback, $priority = 10, $accepted_args = 1)
     {
-        $this->actions[] = $this->add($tag, $component, $callback, $priority, $accepted_args);
+        $this->actions[] = [
+            'tag'           => $tag,
+            'component'     => $component,
+            'callback'      => $callback,
+            'priority'      => $priority,
+            'accepted_args' => $accepted_args,
+        ];
     }
     
     /**
@@ -63,7 +69,13 @@ class CurtainCallLoader
      */
     public function add_filter($tag, $component, $callback, $priority = 10, $accepted_args = 1)
     {
-        $this->filters[] = $this->add($tag, $component, $callback, $priority, $accepted_args);
+        $this->filters[] = [
+            'tag'           => $tag,
+            'component'     => $component,
+            'callback'      => $callback,
+            'priority'      => $priority,
+            'accepted_args' => $accepted_args,
+        ];
     }
     
     /**
@@ -80,29 +92,6 @@ class CurtainCallLoader
             'tag'       => $tag,
             'component' => $component,
             'callback'  => $callback,
-        ];
-    }
-    
-    /**
-     * A utility function that is used to register the actions and hooks into a single
-     * collection.
-     *
-     * @param string $tag          The name of the WordPress filter that is being registered.
-     * @param object $component     A reference to the instance of the object on which the filter is defined.
-     * @param string $callback      The name of the function definition on the $component.
-     * @param int    $priority      The priority at which the function should be fired.
-     * @param int    $accepted_args The number of arguments that should be passed to the $callback.
-     *
-     * @return array
-     */
-    private function add($tag, $component, $callback, $priority, $accepted_args)
-    {
-        return [
-            'tag'           => $tag,
-            'component'     => $component,
-            'callback'      => $callback,
-            'priority'      => $priority,
-            'accepted_args' => $accepted_args,
         ];
     }
     
