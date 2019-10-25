@@ -3,7 +3,7 @@
  *  Curtain Call WP Post Type.
 **/
 
-use CurtainCallWP\includes\CurtainCallHelpers as Helpers;
+use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
 use Carbon\Carbon;
 
 if (!defined('ABSPATH')) {
