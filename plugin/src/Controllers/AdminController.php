@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\Controllers;
 
+use CurtainCallWP\PostTypes\CastAndCrew;
 use CurtainCallWP\PostTypes\Production;
 use Carbon\CarbonImmutable as Carbon;
 use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
@@ -130,11 +131,8 @@ class AdminController extends CurtainCallController
      */
     public function create_production_custom_taxonomies()
     {
-        register_taxonomy(
-            'ccwp_production_seasons',
-            array('ccwp_production'),
-            Production::getSeasonsTaxonomyConfig()
-        );
+        $args = Production::getSeasonsTaxonomyConfig();
+        register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
     }
     
     /**
@@ -176,7 +174,7 @@ class AdminController extends CurtainCallController
         $prod_venue       = get_post_meta($post->ID, '_ccwp_production_venue', true);
         $prod_description = get_post_meta($post->ID, '_ccwp_production_description', true);
         $prod_press       = get_post_meta($post->ID, '_ccwp_production_press', true);
-        ?>
+    ?>
         <div class="ccwp-form-group">
             <label for="ccwp_production_name">Production Name</label>
             <input type="text" id="ccwp_production_name" name="ccwp_production_name" value="<?php echo $prod_name; ?>">
@@ -232,7 +230,7 @@ class AdminController extends CurtainCallController
             <label for="ccwp_press">Press Highlights</label>
             <textarea id="ccwp_press" name="ccwp_press"><?php echo $prod_press; ?></textarea>
         </div>
-        <?php
+    <?php
     }
     
     public function ccwp_production_details_save($post_id)
@@ -357,7 +355,7 @@ class AdminController extends CurtainCallController
                 return ($castcrew_member['ccwp_type'] == 'crew');
             });
         }
-        ?>
+    ?>
         <div class="ccwp-add-castcrew-to-production-wrap">
             <div class="ccwp-select-wrap">
                 <label for="ccwp-add-cast-to-production-select">Add Cast: </label>
@@ -465,7 +463,7 @@ class AdminController extends CurtainCallController
                 </table>
             <?php endif; ?>
         </div>
-        <?php
+    <?php
     }
     
     public function ccwp_add_cast_and_crew_to_production_save($post_id)
@@ -511,40 +509,7 @@ class AdminController extends CurtainCallController
      **/
     public function create_cast_crew_custom_post_type()
     {
-        $args = [
-            'description'   => 'The Cast and Crew for you productions',
-            'labels'        => [
-                'name'               => _x('Cast and Crew', 'post type general name'),
-                'singular_name'      => _x('Cast or Crew', 'post type singular name'),
-                'add_new'            => _x('Add New', 'Cast or Crew'),
-                'add_new_item'       => __('Add New cast or crew'),
-                'edit_item'          => __('Edit cast or crew'),
-                'new_item'           => __('New cast or crew'),
-                'all_items'          => __('All cast and crew'),
-                'view_item'          => __('View cast and crew'),
-                'search_items'       => __('Search cast and crew'),
-                'not_found'          => __('No cast or crew found'),
-                'not_found_in_trash' => __('No cast or crew found in the Trash'),
-                'parent_item_colon'  => '',
-                'menu_name'          => 'Cast and Crew',
-            ],
-            'public'        => true,
-            'menu_position' => 2.6,
-            'supports'      => [
-                'title',
-                'editor',
-                'thumbnail',
-            ],
-            'taxonomies'    => [
-                'ccwp_cast_crew_productions',
-            ],
-            'has_archive'   => true,
-            'rewrite'       => [
-                'slug' => 'cast-and-crew',
-            ],
-        ];
-        
-        register_post_type('ccwp_cast_and_crew', $args);
+        register_post_type('ccwp_cast_and_crew', CastAndCrew::getConfig());
     }
     
     /**
@@ -555,35 +520,7 @@ class AdminController extends CurtainCallController
     public function create_cast_crew_custom_taxonomies()
     {
         // Add new taxonomy, NOT hierarchical (like tags)
-        $args = [
-            'hierarchical'          => false,
-            'labels'                => [
-                'name'                       => _x('C&C Productions', 'taxonomy general name', 'curtain-call-wp'),
-                'singular_name'              => _x('C&C Production', 'taxonomy singular name', 'curtain-call-wp'),
-                'search_items'               => __('Search Productions', 'curtain-call-wp'),
-                'popular_items'              => __('Popular Productions', 'curtain-call-wp'),
-                'all_items'                  => __('All Productions', 'curtain-call-wp'),
-                'parent_item'                => null,
-                'parent_item_colon'          => null,
-                'edit_item'                  => __('Edit Production', 'curtain-call-wp'),
-                'update_item'                => __('Update Production', 'curtain-call-wp'),
-                'add_new_item'               => __('Add New Production', 'curtain-call-wp'),
-                'new_item_name'              => __('New Production Name', 'curtain-call-wp'),
-                'separate_items_with_commas' => __('Separate productions with commas', 'curtain-call-wp'),
-                'add_or_remove_items'        => __('Add or remove productions', 'curtain-call-wp'),
-                'choose_from_most_used'      => __('Choose from the most used productions', 'curtain-call-wp'),
-                'not_found'                  => __('No productions found.', 'curtain-call-wp'),
-                'menu_name'                  => __('Productions', 'curtain-call-wp'),
-            ],
-            'show_ui'               => true,
-            'show_admin_column'     => true,
-            'update_count_callback' => '_update_post_term_count',
-            'query_var'             => true,
-            'rewrite'               => [
-                'slug' => 'cast-and-crew-productions',
-            ],
-        ];
-        
+        $args = CastAndCrew::getProductionsTaxonomyConfig();
         register_taxonomy('ccwp_cast_crew_productions', array('ccwp_cast_and_crew'), $args);
     }
     
@@ -601,17 +538,12 @@ class AdminController extends CurtainCallController
             'ccwp_cast_and_crew', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
-        //[ 'example' => 'arguments you can place into the meta_box renderer' ]
+            //[ 'example' => 'arguments you can place into the meta_box renderer' ]
         );
     }
     
     public function ccwp_cast_and_crew_details_box_html($post, $metabox)
-    { ?>
-        <?php //echo '<pre>'; print_r($post); echo '</pre>';
-        ?>
-        <?php //echo '<pre>'; print_r($metabox); echo '</pre>';
-        ?>
-        <?php
+    {
         wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce');
         
         $cast_crew_name_first     = get_post_meta($post->ID, '_ccwp_cast_crew_name_first', true);
@@ -627,8 +559,7 @@ class AdminController extends CurtainCallController
         $cast_crew_twitter_link   = get_post_meta($post->ID, '_ccwp_cast_crew_twitter_link', true);
         $cast_crew_instagram_link = get_post_meta($post->ID, '_ccwp_cast_crew_instagram_link', true);
         $cast_crew_fun_fact       = get_post_meta($post->ID, '_ccwp_cast_crew_fun_fact', true);
-        ?>
-        
+    ?>
         <div class="ccwp-form-group">
             <label for="ccwp_name_first"><strong>First Name*</strong></label>
             <input type="text" id="ccwp_name_first" name="ccwp_name_first" value="<?php echo $cast_crew_name_first; ?>">
@@ -699,8 +630,8 @@ class AdminController extends CurtainCallController
         <div class="ccwp-form-help-text">
             <p>This should be kept to one sentence.</p>
         </div>
-    
-    <?php }
+    <?php
+    }
     
     
     public function ccwp_cast_and_crew_details_save($post_id)

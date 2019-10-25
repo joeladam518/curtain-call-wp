@@ -83,12 +83,19 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * Return the file name and line number from where this function was called
          * in a pretty format. Mainly for log messaging.
          *
+         * @param bool $return
          * @return string
          */
-        function ccwp_fnln(): string
+        function fnln(bool $return = true): string
         {
             $backtrace = debug_backtrace()[0];
-            return basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
+            $out = basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
+            
+            if ($return) {
+                return $out;
+            }
+            
+            echo $out;
         }
     }
     
@@ -102,7 +109,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * @param  boolean $exit If true, exit after outputting.
          * @return void
          */
-        function pr($obj, $exit = false): void
+        function pr($obj, bool $exit = false): void
         {
             ob_start();
             print_r($obj);
@@ -124,7 +131,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * @param  boolean $exit $exit If true, exit after outputting.
          * @return void
          */
-        function dmp($obj, $exit = false): void
+        function dmp($obj, bool $exit = false): void
         {
             ob_start();
             var_dump($obj);
