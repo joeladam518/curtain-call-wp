@@ -27,17 +27,18 @@
 
 # Variables
 repo_dir="${HOME}/CurtainCallWP"
-plugin_dir="${repo_dir}/plugin"
+repo_plugin_dir="${repo_dir}/plugin"
 wp_dir="${repo_dir}/public"
 wp_plugin_dir="${wp_dir}/wp-content/plugins"
 
 echo "Installing wordpres into ${wp_dir}"
 
 # download Wordpress and create wp-config.php
-cd "${wp_dir}" && wp core download && wp config create --dbname=homestead --dbuser=homestead --dbpass=secret
+cd "${wp_dir}" && wp core download
+cd "${wp_dir}" && wp config create --dbname=homestead --dbuser=homestead --dbpass=secret
 
 # link the plugin to the wordpress site
-cd "${wp_plugin_dir}" && ln -sf ${plugin_dir} CurtainCallWP
+#cd "${wp_plugin_dir}" && ln -sf ${repo_plugin_dir} CurtainCallWP
 
 # return HOME
 cd "${HOME}"
