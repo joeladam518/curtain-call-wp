@@ -63,13 +63,13 @@ get_header( 'single' );
         $show_end_date_format = $show_start_date_format;
         $today = Carbon::now();
         // if the show is in the current year don't show the year
-        if ($production_display_type == 'past' || $show_start_date->format('Y') != $today->format('Y')) {
+        if ($today->lt($show_end_date) || $show_start_date->format('Y') != $today->format('Y')) {
             // only show end date year if both dates are in the same year
             if ($show_start_date->format('Y') != $show_end_date->format('Y')) {
                 $show_start_date_format .= ' Y';
             }
         }
-        if ($production_display_type == 'past' || $show_end_date->format('Y') != $today->format('Y')) {
+        if ($today->lt($show_end_date) || $show_end_date->format('Y') != $today->format('Y')) {
             $show_end_date_format .= ' Y';
         }
         $show_start_date_formatted = $show_start_date->format($show_start_date_format);

@@ -149,6 +149,8 @@ class CurtainCall
     {
         $plugin_public = new FrontendController();
         
+        $this->loader->add_filter('rewrite_rules_array', $plugin_public, 'register_ccwp_rewrite_rules');
+        
         $this->loader->add_filter('single_template', $plugin_public, 'load_ccwp_page_templates');
         $this->loader->add_filter('archive_template', $plugin_public, 'load_ccwp_archive_templates');
         

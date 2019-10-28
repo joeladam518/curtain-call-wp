@@ -123,7 +123,8 @@ class AdminController extends CurtainCallController
      */
     public function create_production_custom_post_type()
     {
-        register_post_type('ccwp_production', Production::getConfig());
+        $args = Production::getConfig();
+        register_post_type('ccwp_production', $args);
     }
     
     /**
@@ -512,7 +513,8 @@ class AdminController extends CurtainCallController
      **/
     public function create_cast_crew_custom_post_type()
     {
-        register_post_type('ccwp_cast_and_crew', CastAndCrew::getConfig());
+        $args = CastAndCrew::getConfig();
+        register_post_type('ccwp_cast_and_crew', $args);
     }
     
     /**
