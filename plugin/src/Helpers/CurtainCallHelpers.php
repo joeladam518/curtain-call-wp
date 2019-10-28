@@ -428,7 +428,7 @@ class CurtainCallHelpers
         ";
         
         // Set custom LIMIT
-        if (!isset($args['limit']) && is_int($args['limit'])) {
+        if (isset($args['limit']) && is_int($args['limit'])) {
             $query .= "
             LIMIT ". $args['limit'] ."
             ";
