@@ -1,29 +1,4 @@
-#!/usr/bin/env bash
-
-# If you would like to do some extra provisioning you may
-# add any commands you wish to this file and they will
-# be run after the Homestead machine is provisioned.
-#
-# If you have user-specific configurations you would like
-# to apply, you may also create user-customizations.sh,
-# which will be run after this script.
-
-# If you're not quite ready for Node 12.x
-# Uncomment these lines to roll back to
-# v11.x or v10.x
-
-# Remove Node.js v12.x:
-#sudo apt-get -y purge nodejs
-#sudo rm -rf /usr/lib/node_modules/npm/lib
-#sudo rm -rf //etc/apt/sources.list.d/nodesource.list
-
-# Install Node.js v11.x
-#curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
-#sudo apt-get install -y nodejs
-
-# Install Node.js v10.x
-#curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-#sudo apt-get install -y nodejs
+#!/bin/bash
 
 # Variables
 repo_dir="${HOME}/CurtainCallWP"
@@ -33,11 +8,24 @@ wp_plugin_dir="${wp_dir}/wp-content/plugins"
 
 echo "Installing wordpres into ${wp_dir}"
 
-# download Wordpress and create wp-config.php
+# Download WordPress and create wp-config.php
 cd "${wp_dir}" && wp core download
 cd "${wp_dir}" && wp config create --dbname=homestead --dbuser=homestead --dbpass=secret
 
-# link the plugin to the wordpress site
+# Write debug constants into the wp-config.php file
+if ! grep -q "WP_DEBUG" "${wp_dir}/wp-config.php"; then
+cd "${wp_dir}" && sed -i "/^\$table_prefix/ r /dev/stdin" ${wp_dir}/wp-config.php <<EOL
+
+// Set WordPress into debug mode
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', true );
+define( 'SCRIPT_DEBUG', false );
+define( 'SAVEQUERIES', false );
+EOL
+fi
+
+# Link the plugin to the wordpress site
 #cd "${wp_plugin_dir}" && ln -sf ${repo_plugin_dir} CurtainCallWP
 
 # return HOME
