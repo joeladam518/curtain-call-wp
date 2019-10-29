@@ -2,7 +2,7 @@
 /**
  *  Curtain Call WP Post Type.
 **/
-
+use CurtainCallWP\PostTypes\Production;
 use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
 use Carbon\Carbon;
 
@@ -184,28 +184,14 @@ get_header( 'single' );
                             <div class="ccwp-detail-page-production-gallery">                                            
                                 <h2>Gallery</h2>
                                 <div class="production-gallery-flex-container">
-		                        	<?php echo $post_gallery; ?>
+                                    <?php echo $post_gallery; ?>
                                 </div>
                             </div>
                         <?php endif; ?>
                         
                         <?php
-                            $cast = Helpers::get_cast_and_crew([
-                                // Arguments
-                                'post_id' => get_the_ID(),
-                                'type' => 'cast',
-                            ], [
-                                // Options
-                                'get_post_meta' => true,
-                            ]);
-                            $crew = Helpers::get_cast_and_crew([
-                                // Arguments
-                                'post_id' => get_the_ID(),
-                                'type' => 'crew',
-                            ], [
-                                // Options
-                                'get_post_meta' => true,
-                            ]);
+                            $cast = Production::getCastAndCrew(get_the_ID(), 'cast', true);
+                            $crew = Production::getCastAndCrew(get_the_ID(), 'crew', true);
                         ?>
                         <?php if (!empty($cast) || !empty($crew)) : ?>
                             <div class="ccwp-detail-page-cross-db-directory production-cc-directory">

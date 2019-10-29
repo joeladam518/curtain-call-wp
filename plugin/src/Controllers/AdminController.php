@@ -58,8 +58,6 @@ class AdminController extends CurtainCallController
     
     public function ccwp_set_post_type_title_on_post_submit(array $data)
     {
-        //pr($data,1);
-        
         $title_arr = [];
         if ($data['post_type'] === 'ccwp_production') {
             
@@ -125,6 +123,8 @@ class AdminController extends CurtainCallController
     {
         $args = Production::getConfig();
         register_post_type('ccwp_production', $args);
+    
+        flush_rewrite_rules(false);
     }
     
     /**
@@ -148,7 +148,7 @@ class AdminController extends CurtainCallController
             'ccwp_production', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
-        //[ 'example' => 'arguments you can place into the meta_box renderer' ]
+            //[ 'example' => 'arguments you can place into the meta_box renderer' ]
         );
         
         add_meta_box(
@@ -158,7 +158,7 @@ class AdminController extends CurtainCallController
             'ccwp_production', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
-        //[ example' => 'arguments you can place into the meta_box renderer' ]
+            //[ example' => 'arguments you can place into the meta_box renderer' ]
         );
     }
     
@@ -342,14 +342,12 @@ class AdminController extends CurtainCallController
         wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce');
         
         // Get all castcrew by id and name
-        $all_castcrew_members = Helpers::get_all_cast_and_crew_for_select();
+        $all_castcrew_members = Production::getCastAndCrewForSelectBox();
         
-        // Get all related cast and crew membery to this production
-        $production_castcrew_members = Helpers::get_cast_and_crew([
-            'post_id' => $post->ID,
-        ]);
+        // Get all related cast and crew members to this production
+        $production_castcrew_members = Production::getCastAndCrew($post->ID, 'both', false);
         
-        // Sort them into cast then crew memebers
+        // Sort them into cast then crew members
         if ( ! empty($production_castcrew_members) && is_array($production_castcrew_members)) {
             $cast_members = array_filter($production_castcrew_members, function ($castcrew_member) {
                 return ($castcrew_member['ccwp_type'] == 'cast');
@@ -495,11 +493,11 @@ class AdminController extends CurtainCallController
         //pr($_POST['ccwp_add_cast_to_production']);
         //pr($_POST['ccwp_add_cast_to_production']);
         
-        $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : null;
-        $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : null;
+        $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
+        $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
         
-        Helpers::save_cast_and_crew_to_production($post_id, $production_cast, 'cast');
-        Helpers::save_cast_and_crew_to_production($post_id, $production_crew, 'crew');
+        Production::addCastAndCrew($post_id, 'cast', $production_cast);
+        Production::addCastAndCrew($post_id, 'crew', $production_crew);
     }
     
     //----------------------------------------------------------------------------------------------------------------
@@ -515,6 +513,8 @@ class AdminController extends CurtainCallController
     {
         $args = CastAndCrew::getConfig();
         register_post_type('ccwp_cast_and_crew', $args);
+    
+        flush_rewrite_rules(false);
     }
     
     /**

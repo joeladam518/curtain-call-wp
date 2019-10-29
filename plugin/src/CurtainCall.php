@@ -58,13 +58,9 @@ class CurtainCall
         $this->plugin_version = CCWP_PLUGIN_VERSION;
         
         $this->initPluginLoader();
-        $this->initPluginLocale();
-        
+        //$this->initPluginLocale();
+        $this->defineAdminHooks();
         $this->definePublicHooks();
-        
-        //if(is_admin()) {
-            $this->defineAdminHooks();
-        //}
     }
     
     /**
@@ -116,29 +112,24 @@ class CurtainCall
         
         // All Actions and Filters on the Production custom post type
         $this->loader->add_action('init', $plugin_admin, 'create_production_custom_post_type');
-        $this->loader->add_action('init', $plugin_admin, 'create_production_custom_taxonomies');
-        $this->loader->add_action('wp_insert_post', $plugin_admin, 'on_insert_production_post', 10, 3);
-        $this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_custom_meta_boxes_for_production_post_type', 10,
-            3);
-        $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'ccwp_production_details_save', 10, 2);
-        $this->loader->add_action('save_post_ccwp_production', $plugin_admin,
-            'ccwp_add_cast_and_crew_to_production_save', 10, 2);
+        //$this->loader->add_action('init', $plugin_admin, 'create_production_custom_taxonomies');
+        //$this->loader->add_action('wp_insert_post', $plugin_admin, 'on_insert_production_post', 10, 3);
+        //$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_custom_meta_boxes_for_production_post_type', 10, 3);
+        //$this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'ccwp_production_details_save', 10, 2);
+        //$this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'ccwp_add_cast_and_crew_to_production_save', 10, 2);
         
         // All Actions and Filters on the Cast and Crew custom post type
-        $this->loader->add_action('init', $plugin_admin, 'create_cast_crew_custom_post_type');
-        $this->loader->add_action('init', $plugin_admin, 'create_cast_crew_custom_taxonomies');
-        $this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_custom_meta_box_for_cast_and_crew_post_type',
-            10, 3);
-        $this->loader->add_action('save_post_ccwp_cast_and_crew', $plugin_admin, 'ccwp_cast_and_crew_details_save', 10,
-            2);
+        //$this->loader->add_action('init', $plugin_admin, 'create_cast_crew_custom_post_type');
+        //$this->loader->add_action('init', $plugin_admin, 'create_cast_crew_custom_taxonomies');
+        //$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_custom_meta_box_for_cast_and_crew_post_type', 10, 3);
+        //$this->loader->add_action('save_post_ccwp_cast_and_crew', $plugin_admin, 'ccwp_cast_and_crew_details_save', 10, 2);
         
         // All Actions and Filters that concern both post types
-        $this->loader->add_filter('wp_insert_post_data', $plugin_admin, 'ccwp_set_post_type_title_on_post_submit', 99,
-            1);
-        
-        // Scripts and style to be loaded for the admin area in the WordPress backend
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        //$this->loader->add_filter('wp_insert_post_data', $plugin_admin, 'ccwp_set_post_type_title_on_post_submit', 10, 1);
+
+        //// Scripts and style to be loaded for the admin area in the WordPress backend
+        //$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+        //$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
     }
     
     /**
@@ -150,11 +141,11 @@ class CurtainCall
         $plugin_public = new FrontendController();
         
         $this->loader->add_filter('rewrite_rules_array', $plugin_public, 'register_ccwp_rewrite_rules');
-        
-        $this->loader->add_filter('single_template', $plugin_public, 'load_ccwp_page_templates');
-        $this->loader->add_filter('archive_template', $plugin_public, 'load_ccwp_archive_templates');
-        
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+        //
+        //$this->loader->add_filter('single_template', $plugin_public, 'load_ccwp_page_templates');
+        //$this->loader->add_filter('archive_template', $plugin_public, 'load_ccwp_archive_templates');
+        //
+        //$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+        //$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
     }
 }

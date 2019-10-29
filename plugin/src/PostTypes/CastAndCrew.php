@@ -2,12 +2,16 @@
 
 namespace CurtainCallWP\PostTypes;
 
+use CurtainCallWP\PostTypes\Traits\CastAndCrewHelpers;
+
 /**
  * Class CastAndCrew
  * @package CurtainCallWP\PostTypes
  */
 class CastAndCrew extends CurtainCallPostType
 {
+    use CastAndCrewHelpers;
+    
     public static function getConfig(): array
     {
         return [
@@ -28,15 +32,15 @@ class CastAndCrew extends CurtainCallPostType
                 'menu_name'          => 'Cast and Crew',
             ],
             'public'        => true,
-            'menu_position' => 2.6,
+            'menu_position' => 6,
             'supports'      => [
                 'title',
                 'editor',
                 'thumbnail',
             ],
-            'taxonomies'    => [
-                'ccwp_cast_crew_productions',
-            ],
+            //'taxonomies'    => [
+            //    'ccwp_cast_crew_productions',
+            //],
             'has_archive'   => true,
             'rewrite'       => [
                 'slug' => 'cast-and-crew',

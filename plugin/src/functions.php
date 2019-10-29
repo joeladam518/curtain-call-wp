@@ -2,8 +2,19 @@
 
 use CurtainCallWP\CurtainCallView;
 
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+if (!defined('ABSPATH')) {
     die;
+}
+
+if (!function_exists('ccwp_get_custom_field')) {
+    function ccwp_get_custom_field(string $field_name, ?int $post_id = null)
+    {
+        if (!empty($post_id)) {
+            return get_post_meta($post_id, $field_name, true);
+        }
+        
+        return get_post_meta(get_the_ID(), $field_name, true);
+    }
 }
 
 if (!function_exists('ccwp_view')) {

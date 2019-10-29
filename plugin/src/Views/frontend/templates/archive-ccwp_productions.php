@@ -1,9 +1,9 @@
-<?php
+<?php echo "YOU MADE IT TO THE PRODUCTION PAGE"; die;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable as Carbon;
 
 // File Security Check
-if ( ! defined( 'ABSPATH' ) ) { 
+if (!defined('ABSPATH')) {
     exit; 
 }
 

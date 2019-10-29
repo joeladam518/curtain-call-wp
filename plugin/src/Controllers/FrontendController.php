@@ -88,47 +88,47 @@ class FrontendController extends CurtainCallController
      */
     public function register_ccwp_rewrite_rules($rules)
     {
-        $first_rules_part = [];
-        $last_rules_part  = [];
-        $productions_rules = [];
-        $cast_and_crew_rules = [];
-        $inserted_production_rule = false;
-        $inserted_cast_and_crew_rule = false;
-        $found_start_of_ccwp_post_types = false;
-        foreach($rules as $rule_key => $rule_value) {
-            if (preg_match('~^production(?:s|-seasons)~', $rule_key)) {
-                $productions_rules[$rule_key] = $rule_value;
-                $found_start_of_ccwp_post_types = true;
-                if (! $inserted_production_rule && preg_match('~^productions/page/~', $rule_key)) {
-                    $productions_rules['productions/(.+)/?$'] = 'index.php?ccwp_production=$matches[1]';
-                    $inserted_production_rule = true;
-                }
-                continue;
-            }
+        //$first_rules_part = [];
+        //$last_rules_part  = [];
+        //$productions_rules = [];
+        //$cast_and_crew_rules = [];
+        //$inserted_production_rule = false;
+        //$inserted_cast_and_crew_rule = false;
+        //$found_start_of_ccwp_post_types = false;
+        //foreach($rules as $rule_key => $rule_value) {
+        //    if (preg_match('~^production(?:s|-seasons)~', $rule_key)) {
+        //        $productions_rules[$rule_key] = $rule_value;
+        //        $found_start_of_ccwp_post_types = true;
+        //        if (! $inserted_production_rule && preg_match('~^productions/page/~', $rule_key)) {
+        //            $productions_rules['productions/(.+)/?$'] = 'index.php?ccwp_production=$matches[1]';
+        //            $inserted_production_rule = true;
+        //        }
+        //        continue;
+        //    }
+        //
+        //    if (preg_match('~^cast-and-crew(?:-productions)?~', $rule_key)) {
+        //        $cast_and_crew_rules[$rule_key] = $rule_value;
+        //        $found_start_of_ccwp_post_types = true;
+        //        if (! $inserted_cast_and_crew_rule && preg_match('~^cast-and-crew/page/~', $rule_key)) {
+        //            $cast_and_crew_rules['cast-and-crew/(.+)/?$'] = 'index.php?ccwp_cast_and_crew=$matches[1]';
+        //            $inserted_cast_and_crew_rule = true;
+        //        }
+        //        continue;
+        //    }
+        //
+        //    if (! $found_start_of_ccwp_post_types) {
+        //        $first_rules_part[$rule_key] = $rule_value;
+        //        continue;
+        //    }
+        //
+        //    $last_rules_part[$rule_key] = $rule_value;
+        //}
+        //
+        //$new_rules = array_merge($first_rules_part, $productions_rules, $cast_and_crew_rules, $last_rules_part);
+        //
+        //$new_rules['productions/?$'] = 'index.php?post_type=ccwp_production';
         
-            if (preg_match('~^cast-and-crew(?:-productions)?~', $rule_key)) {
-                $cast_and_crew_rules[$rule_key] = $rule_value;
-                $found_start_of_ccwp_post_types = true;
-                if (! $inserted_cast_and_crew_rule && preg_match('~^cast-and-crew/page/~', $rule_key)) {
-                    $cast_and_crew_rules['cast-and-crew/(.+)/?$'] = 'index.php?ccwp_cast_and_crew=$matches[1]';
-                    $inserted_cast_and_crew_rule = true;
-                }
-                continue;
-            }
-        
-            if (! $found_start_of_ccwp_post_types) {
-                $first_rules_part[$rule_key] = $rule_value;
-                continue;
-            }
-        
-            $last_rules_part[$rule_key] = $rule_value;
-        }
-        
-        $new_rules = array_merge($first_rules_part, $productions_rules, $cast_and_crew_rules, $last_rules_part);
-    
-        $new_rules['productions/?$'] = 'index.php?post_type=ccwp_production';
-        
-        //pr($new_rules, true);
-        return $new_rules;
+        pr($rules, true);
+        return $rules;
     }
 }

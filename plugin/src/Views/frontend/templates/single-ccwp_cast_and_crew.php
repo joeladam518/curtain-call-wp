@@ -1,7 +1,7 @@
 <?php
 
-use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
 use Carbon\Carbon;
+use CurtainCallWP\PostTypes\CastAndCrew;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -165,13 +165,7 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
                         </div>
                         
                         <?php
-                            $result = Helpers::get_productions([
-                                // Arguments
-                                'post_id' => get_the_ID(),
-                            ], [ 
-                                // Options
-                                'get_post_meta' => true,
-                            ]);
+                            $result = CastAndCrew::getProductions(get_the_ID(), true);
                             $roles = $result['roles'];
                             $productions = $result['productions'];
                             $roles_by_pid = [];
