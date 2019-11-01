@@ -6,7 +6,7 @@ namespace CurtainCallWP\Controllers;
  * Class CurtainCallController
  * @package CurtainCallWP\Controllers
  */
-class CurtainCallController
+class CurtainCallHookController
 {
     protected $plugin_name;
     protected $plugin_version;

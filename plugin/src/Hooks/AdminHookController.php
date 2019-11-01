@@ -11,7 +11,7 @@ use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
  * Class AdminController
  * @package CurtainCallWP\Controllers
  */
-class AdminController extends CurtainCallController
+class AdminHookController extends CurtainCallHookController
 {
     /**
      *  Initialize the class and set its properties.
@@ -123,8 +123,10 @@ class AdminController extends CurtainCallController
     {
         $args = Production::getConfig();
         register_post_type('ccwp_production', $args);
-    
-        flush_rewrite_rules(false);
+        add_rewrite_rule('productions/?$', 'index.php?post_type=ccwp_production', 'top');
+        add_rewrite_rule('productions/page/([0-9]{1,})/?$', 'index.php?post_type=ccwp_production&paged=$matches[1]', 'top');
+        add_rewrite_rule('productions/([^/]+)/?$', 'index.php?ccwp_production=$matches[1]', 'top');
+        flush_rewrite_rules();
     }
     
     /**
@@ -134,6 +136,7 @@ class AdminController extends CurtainCallController
     {
         $args = Production::getSeasonsTaxonomyConfig();
         register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
+        flush_rewrite_rules();
     }
     
     /**
@@ -173,7 +176,6 @@ class AdminController extends CurtainCallController
         $prod_show_times  = get_post_meta($post->ID, '_ccwp_production_show_times', true);
         $prod_ticket_url  = get_post_meta($post->ID, '_ccwp_production_ticket_url', true);
         $prod_venue       = get_post_meta($post->ID, '_ccwp_production_venue', true);
-        $prod_description = get_post_meta($post->ID, '_ccwp_production_description', true);
         $prod_press       = get_post_meta($post->ID, '_ccwp_production_press', true);
     ?>
         <div class="ccwp-form-group">
@@ -219,13 +221,6 @@ class AdminController extends CurtainCallController
         <div class="ccwp-form-help-text">
             <p>Where the show was performed.</p>
         </div>
-        
-        <!--
-        <div class="ccwp-form-group">
-            <label for="description">Production Description</label>
-            <textarea id="description" name="description"><?php echo $prod_description; ?></textarea>
-        </div>
-        -->
         
         <div class="ccwp-form-group">
             <label for="ccwp_press">Press Highlights</label>
@@ -293,12 +288,6 @@ class AdminController extends CurtainCallController
             update_post_meta($post_id, '_ccwp_production_venue', sanitize_text_field($_POST['ccwp_venue']));
         } else {
             delete_post_meta($post_id, '_ccwp_production_venue');
-        }
-        
-        if (!empty($_REQUEST['ccwp_description'])) {
-            update_post_meta($post_id, '_ccwp_production_description', sanitize_text_field($_POST['ccwp_description']));
-        } else {
-            delete_post_meta($post_id, '_ccwp_production_description');
         }
         
         if (!empty($_REQUEST['ccwp_press'])) {
@@ -513,8 +502,7 @@ class AdminController extends CurtainCallController
     {
         $args = CastAndCrew::getConfig();
         register_post_type('ccwp_cast_and_crew', $args);
-    
-        flush_rewrite_rules(false);
+        flush_rewrite_rules();
     }
     
     /**
@@ -527,6 +515,7 @@ class AdminController extends CurtainCallController
         // Add new taxonomy, NOT hierarchical (like tags)
         $args = CastAndCrew::getProductionsTaxonomyConfig();
         register_taxonomy('ccwp_cast_crew_productions', array('ccwp_cast_and_crew'), $args);
+        flush_rewrite_rules();
     }
     
     /**
