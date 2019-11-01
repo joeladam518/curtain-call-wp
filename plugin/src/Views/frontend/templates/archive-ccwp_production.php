@@ -1,4 +1,4 @@
-<?php echo "YOU MADE IT TO THE PRODUCTION PAGE"; die;
+<?php
 
 use Carbon\CarbonImmutable as Carbon;
 
