@@ -19,32 +19,34 @@ class Production extends CurtainCallPostType
             'labels'        => [
                 'name'               => __('Productions'),
                 'singular_name'      => __('Production'),
-                //'add_new'            => __('Add New'),
-                //'add_new_item'       => __('Add New Production'),
-                //'edit_item'          => __('Edit Production'),
-                //'new_item'           => __('New Production'),
-                //'all_items'          => __('All Productions'),
-                //'view_item'          => __('View Production'),
-                //'search_items'       => __('Search productions'),
-                //'not_found'          => __('No productions found'),
-                //'not_found_in_trash' => __('No productions found in the Trash'),
-                //'parent_item_colon'  => '',
-                //'menu_name'          => 'Productions',
+                'add_new'            => __('Add New'),
+                'add_new_item'       => __('Add New Production'),
+                'edit_item'          => __('Edit Production'),
+                'new_item'           => __('New Production'),
+                'all_items'          => __('All Productions'),
+                'view_item'          => __('View Production'),
+                'search_items'       => __('Search productions'),
+                'not_found'          => __('No productions found'),
+                'not_found_in_trash' => __('No productions found in the Trash'),
+                'parent_item_colon'  => '',
+                'menu_name'          => 'Productions',
             ],
             'public'        => true,
-            //'menu_position' => 5,
-            //'supports'      => [
-            //    'title',
-            //    'editor',
-            //    'thumbnail',
-            //],
-            //'taxonomies'    => [
-            //    'ccwp_production_seasons'
-            //],
+            'menu_position' => 5,
+            'show_in_nav_menus' => true,
+            'supports'      => [
+                'title',
+                'editor',
+                'thumbnail',
+            ],
+            'taxonomies'    => [
+                'ccwp_production_seasons'
+            ],
             'has_archive' => true,
-            'rewrite'       => [
-                'slug' => 'shows',
-                'with_front' => true
+            'rewrite' => [
+                'slug' => 'productions',
+                'with_front' => true,
+                'feeds' => false,
             ],
         ];
     }

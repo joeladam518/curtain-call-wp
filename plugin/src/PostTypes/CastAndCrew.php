@@ -33,18 +33,20 @@ class CastAndCrew extends CurtainCallPostType
             ],
             'public'        => true,
             'menu_position' => 6,
+            'show_in_nav_menus' => true,
             'supports'      => [
                 'title',
                 'editor',
                 'thumbnail',
             ],
-            //'taxonomies'    => [
-            //    'ccwp_cast_crew_productions',
-            //],
+            'taxonomies'    => [
+                'ccwp_cast_crew_productions',
+            ],
             'has_archive'   => true,
             'rewrite'       => [
                 'slug' => 'cast-and-crew',
                 'with_front' => true,
+                'feeds' => false,
             ],
         ];
     }
@@ -74,11 +76,9 @@ class CastAndCrew extends CurtainCallPostType
             'show_ui'               => true,
             'show_admin_column'     => true,
             'update_count_callback' => '_update_post_term_count',
-            'query_var'             => true,
-            'rewrite'               => [
-                'slug' => 'cast-and-crew-productions',
-                'with_front' => true,
-            ],
+            'publicly_queryable'    => false,
+            'query_var'             => false,
+            'rewrite'               => false,
         ];
     }
 }
