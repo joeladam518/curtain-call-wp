@@ -60,7 +60,7 @@ class CurtainCallView
         
         ob_start();
         
-        include($this->getTemplatePath());
+        include $this->getTemplatePath();
         
         return ob_get_clean();
     }
@@ -78,10 +78,6 @@ class CurtainCallView
     private function validateDataArray(): bool
     {
         // Checks to see if $this->data is an associative array;
-        if(array_keys($this->data) !== range(0, count($this->data) - 1)) {
-            return true;
-        } else {
-            return false;
-        }
+        return array_keys($this->data) !== range(0, count($this->data) - 1);
     }
 }
