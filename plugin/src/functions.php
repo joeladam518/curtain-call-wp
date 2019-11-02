@@ -48,7 +48,7 @@ if (!function_exists('ccwp_assets_path')) {
      */
     function ccwp_assets_path(): string
     {
-        return ccwp_plugin_path('dist/');
+        return ccwp_plugin_path('assets/');
     }
 }
 
