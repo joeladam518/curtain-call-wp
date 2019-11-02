@@ -24,10 +24,10 @@ define('CCWP_TEXT_DOMAIN', 'curtain-call-wp');
 define('CCWP_DEBUG', true);
 
 // Load composer dependencies
-require_once 'vendor/autoload.php';
+require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 // Register Plugin Life Cycle Hooks
-CurtainCallWP\CurtainCall::registerLifeCycleHooks(__FILE__);
+\CurtainCallWP\CurtainCall::registerLifeCycleHooks(__FILE__);
 
 /**
  * Begins execution of the plugin.
@@ -36,5 +36,5 @@ CurtainCallWP\CurtainCall::registerLifeCycleHooks(__FILE__);
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
 **/
-$plugin = new CurtainCallWP\CurtainCall();
-$plugin->run();
+$ccwp_plugin = new \CurtainCallWP\CurtainCall();
+$ccwp_plugin->run();

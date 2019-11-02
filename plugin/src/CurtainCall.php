@@ -60,7 +60,7 @@ class CurtainCall
         $this->initPluginLoader();
         $this->initPluginLocale();
         $this->defineAdminHooks();
-        $this->definePublicHooks();
+        $this->defineFrontendHooks();
     }
     
     /**
