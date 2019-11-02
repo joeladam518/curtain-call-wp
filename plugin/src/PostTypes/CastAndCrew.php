@@ -12,6 +12,21 @@ class CastAndCrew extends CurtainCallPostType
 {
     use CastAndCrewHelpers;
     
+    protected static $metaKeyPrefix = '_ccwp_cast_crew';
+    
+    protected static $meta = [
+        'name_first',
+        'name_last',
+        'self_title',
+        'birthday',
+        'hometown',
+        'website_link',
+        'facebook_link',
+        'twitter_link',
+        'instagram_link',
+        'fun_fact',
+    ];
+    
     public static function getConfig(): array
     {
         return [
@@ -48,37 +63,6 @@ class CastAndCrew extends CurtainCallPostType
                 'with_front' => true,
                 'feeds' => false,
             ],
-        ];
-    }
-    
-    public static function getProductionsTaxonomyConfig(): array
-    {
-        return [
-            'hierarchical'          => false,
-            'labels'                => [
-                'name'                       => _x('C&C Productions', 'taxonomy general name', 'curtain-call-wp'),
-                'singular_name'              => _x('C&C Production', 'taxonomy singular name', 'curtain-call-wp'),
-                'search_items'               => __('Search Productions', 'curtain-call-wp'),
-                'popular_items'              => __('Popular Productions', 'curtain-call-wp'),
-                'all_items'                  => __('All Productions', 'curtain-call-wp'),
-                'parent_item'                => null,
-                'parent_item_colon'          => null,
-                'edit_item'                  => __('Edit Production', 'curtain-call-wp'),
-                'update_item'                => __('Update Production', 'curtain-call-wp'),
-                'add_new_item'               => __('Add New Production', 'curtain-call-wp'),
-                'new_item_name'              => __('New Production Name', 'curtain-call-wp'),
-                'separate_items_with_commas' => __('Separate productions with commas', 'curtain-call-wp'),
-                'add_or_remove_items'        => __('Add or remove productions', 'curtain-call-wp'),
-                'choose_from_most_used'      => __('Choose from the most used productions', 'curtain-call-wp'),
-                'not_found'                  => __('No productions found.', 'curtain-call-wp'),
-                'menu_name'                  => __('Productions', 'curtain-call-wp'),
-            ],
-            'show_ui'               => true,
-            'show_admin_column'     => true,
-            'update_count_callback' => '_update_post_term_count',
-            'publicly_queryable'    => false,
-            'query_var'             => false,
-            'rewrite'               => false,
         ];
     }
 }
