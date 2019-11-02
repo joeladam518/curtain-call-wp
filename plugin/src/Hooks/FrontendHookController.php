@@ -24,7 +24,7 @@ class FrontendHookController extends CurtainCallHookController
     /**
      * Register the stylesheets for the public-facing side of the site.
      */
-    public function enqueue_styles()
+    public function enqueueStyles()
     {
         $frontend_css_url = $this->assets_url . 'css/curtain-call-wp-public.css';
         wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $this->plugin_version, 'all');
@@ -33,7 +33,7 @@ class FrontendHookController extends CurtainCallHookController
     /**
      * Register the JavaScript for the public-facing side of the site.
     **/
-    public function enqueue_scripts()
+    public function enqueueScripts()
     {
         $frontend_js_url = $this->assets_url . 'js/curtain-call-wp-public.js';
         wp_enqueue_script($this->plugin_name, $frontend_js_url, array('jquery'), $this->plugin_version, false);
@@ -44,7 +44,7 @@ class FrontendHookController extends CurtainCallHookController
      * @param $template
      * @return string
      */
-    public function load_ccwp_page_templates($template)
+    public function loadSingleTemplates($template)
     {
         global $post;
         
@@ -64,7 +64,7 @@ class FrontendHookController extends CurtainCallHookController
      * @param $template
      * @return string
      */
-    public function load_ccwp_archive_templates($template)
+    public function loadArchiveTemplates($template)
     {
         global $post;
         

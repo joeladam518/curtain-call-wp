@@ -27,36 +27,28 @@ class AdminHookController extends CurtainCallHookController
     /**
      * Register the stylesheets for the admin area.
      */
-    public function enqueue_styles()
+    public function enqueueStyles()
     {
-        wp_enqueue_style(
-            $this->plugin_name . '_general',
-            $this->assets_url . 'css/curtain-call-wp-admin.css',
-            array(),
-            $this->plugin_version,
-            'all'
-        );
+        $handle = $this->plugin_name . '_admin';
+        $admin_css_url = $this->assets_url . 'css/curtain-call-wp-admin.css';
+        wp_enqueue_style($handle, $admin_css_url, array(), $this->plugin_version, 'all');
     }
     
     /**
      * Register the JavaScript for the admin area.
      */
-    public function enqueue_scripts()
+    public function enqueueScripts()
     {
-        wp_enqueue_script(
-            $this->plugin_name . '_general',
-            $this->assets_url . 'js/curtain-call-wp-admin.js',
-            array('jquery'),
-            $this->plugin_version,
-            true
-        );
+        $handle = $this->plugin_name . '_admin';
+        $admin_js_url = $this->assets_url . 'css/curtain-call-wp-admin.css';
+        wp_enqueue_script($handle, $admin_js_url, array('jquery'), $this->plugin_version, true);
     }
     
     //  ----------------------------------------------------------------------------------------------------------------
     //  Global Functions
     //  ----------------------------------------------------------------------------------------------------------------
     
-    public function ccwp_set_post_type_title_on_post_submit(array $data)
+    public function setPostTitleOnPostSave(array $data)
     {
         $title_arr = [];
         if ($data['post_type'] === 'ccwp_production') {
@@ -119,7 +111,7 @@ class AdminHookController extends CurtainCallHookController
     /**
      *  Register the production custom post type.
      */
-    public function create_production_custom_post_type()
+    public function createProductionPostType()
     {
         $args = Production::getConfig();
         register_post_type('ccwp_production', $args);
@@ -132,7 +124,7 @@ class AdminHookController extends CurtainCallHookController
     /**
      *  Create the production custom post type taxonomies.
      */
-    public function create_production_custom_taxonomies()
+    public function createProductionSeasonsTaxonomy()
     {
         $args = Production::getSeasonsTaxonomyConfig();
         register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
@@ -142,7 +134,7 @@ class AdminHookController extends CurtainCallHookController
     /**
      *  Creation of all custom fields for the production custom post type
      */
-    public function add_custom_meta_boxes_for_production_post_type()
+    public function addProductionPostMetaBoxes()
     {
         add_meta_box(
             'ccwp_add_cast_and_crew_to_production', // Unique ID
@@ -229,7 +221,7 @@ class AdminHookController extends CurtainCallHookController
     <?php
     }
     
-    public function ccwp_production_details_save($post_id)
+    public function saveProductionPostDetails($post_id)
     {
         # Verify meta box nonce
         if (
@@ -307,7 +299,7 @@ class AdminHookController extends CurtainCallHookController
      * @param $post
      * @param $update
      */
-    public function on_insert_production_post($post_id, $post, $update)
+    public function onInsertProductionPost($post_id, $post, $update)
     {
         if (wp_is_post_revision($post_id)) {
             return;
@@ -457,7 +449,7 @@ class AdminHookController extends CurtainCallHookController
     <?php
     }
     
-    public function ccwp_add_cast_and_crew_to_production_save($post_id)
+    public function saveProductionPostCastAndCrew($post_id)
     {
         # Verify meta box nonce
         if (
@@ -478,10 +470,6 @@ class AdminHookController extends CurtainCallHookController
         }
         
         # Store custom fields values
-        
-        //pr($_POST['ccwp_add_cast_to_production']);
-        //pr($_POST['ccwp_add_cast_to_production']);
-        
         $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
         $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
         
@@ -498,7 +486,7 @@ class AdminHookController extends CurtainCallHookController
      *
      * @since    0.0.1
      **/
-    public function create_cast_crew_custom_post_type()
+    public function createCastAndCrewPostType()
     {
         $args = CastAndCrew::getConfig();
         register_post_type('ccwp_cast_and_crew', $args);
@@ -506,28 +494,15 @@ class AdminHookController extends CurtainCallHookController
     }
     
     /**
-     *  Create the cast/crew custom post type taxonomies.
-     *
-     * @since    0.0.1
-     **/
-    public function create_cast_crew_custom_taxonomies()
-    {
-        // Add new taxonomy, NOT hierarchical (like tags)
-        $args = CastAndCrew::getProductionsTaxonomyConfig();
-        register_taxonomy('ccwp_cast_crew_productions', array('ccwp_cast_and_crew'), $args);
-        flush_rewrite_rules();
-    }
-    
-    /**
      *  Creation of all custom fields for the production custom post type
      *
      *  since 0.0.1
-     **/
-    public function add_custom_meta_box_for_cast_and_crew_post_type()
+    **/
+    public function addCastAndCrewPostMetaBoxes()
     {
         add_meta_box(
             'ccwp_cast_and_cast_details', // Unique ID
-            __('Cast and Crew Details', 'curtain-call-wp'), // Box title
+            __('Cast and Crew Details', CCWP_TEXT_DOMAIN), // Box title
             array($this, 'ccwp_cast_and_crew_details_box_html'), // Content callback
             'ccwp_cast_and_crew', // Post type
             'normal', // Context: (normal, side, advanced)
@@ -628,7 +603,7 @@ class AdminHookController extends CurtainCallHookController
     }
     
     
-    public function ccwp_cast_and_crew_details_save($post_id)
+    public function saveCastAndCrewPostDetails($post_id)
     {
         # Verify meta box nonce
         if (
