@@ -132,6 +132,31 @@ class AdminHookController extends CurtainCallHookController
     }
     
     /**
+     *  On the creation of a production post insert a create a custom production taxonomy for cast and crew.
+     * @param $post_id
+     * @param $post
+     * @param $update
+     */
+    public function onInsertProductionPost($post_id, $post, $update)
+    {
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
+        
+        if ($post->post_type !== 'ccwp_production') {
+            return;
+        }
+        
+        // Check if the taxonomy exists
+        $tax_id = term_exists($post->post_title, 'ccwp_cast_crew_productions', 0);
+        
+        // Create it if it doesn't exists
+        if ( ! $tax_id) {
+            $tax_id = wp_insert_term($post->post_title, 'ccwp_cast_crew_productions', array('parent' => 0));
+        }
+    }
+    
+    /**
      *  Creation of all custom fields for the production custom post type
      */
     public function addProductionPostMetaBoxes()
@@ -139,7 +164,7 @@ class AdminHookController extends CurtainCallHookController
         add_meta_box(
             'ccwp_add_cast_and_crew_to_production', // Unique ID
             __('Add Cast And Crew to Production', 'curtain-call-wp'), // Box title
-            array($this, 'ccwp_add_cast_and_crew_to_production_box_html'), // Content callback
+            array($this, 'renderAddCastAndCrewMetaBox'), // Content callback
             'ccwp_production', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
@@ -149,7 +174,7 @@ class AdminHookController extends CurtainCallHookController
         add_meta_box(
             'ccwp_production_details', // Unique ID
             __('Production Details', 'curtain-call-wp'), // Box title
-            array($this, 'ccwp_production_details_box_html'), // Content callback
+            array($this, 'renderProductionDetailsMetaBox'), // Content callback
             'ccwp_production', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
@@ -157,68 +182,89 @@ class AdminHookController extends CurtainCallHookController
         );
     }
     
-    public function ccwp_production_details_box_html($post, $metabox)
+    public function renderAddCastAndCrewMetaBox($post, $metabox)
     {
-        wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce');
+        $wp_nonce = wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false);
         
-        $prod_name        = get_post_meta($post->ID, '_ccwp_production_name', true);
-        $prod_date_start  = Carbon::parse(get_post_meta($post->ID, '_ccwp_production_date_start',
-            true))->format('m/d/Y');
-        $prod_date_end    = Carbon::parse(get_post_meta($post->ID, '_ccwp_production_date_end', true))->format('m/d/Y');
-        $prod_show_times  = get_post_meta($post->ID, '_ccwp_production_show_times', true);
-        $prod_ticket_url  = get_post_meta($post->ID, '_ccwp_production_ticket_url', true);
-        $prod_venue       = get_post_meta($post->ID, '_ccwp_production_venue', true);
-        $prod_press       = get_post_meta($post->ID, '_ccwp_production_press', true);
-    ?>
-        <div class="ccwp-form-group">
-            <label for="ccwp_production_name">Production Name</label>
-            <input type="text" id="ccwp_production_name" name="ccwp_production_name" value="<?php echo $prod_name; ?>">
-        </div>
+        // Get all castcrew by id and name
+        $all_cast_and_crew_members = Production::getCastAndCrewForSelectBox();
         
-        <div class="ccwp-form-group">
-            <label for="ccwp_date_start"><strong>Production Dates - Opened*</strong></label>
-            <input type="text" class="ccwp_datepicker_input" id="ccwp_date_start" name="ccwp_date_start"
-                   value="<?php echo $prod_date_start ?>" autocomplete="off">
-        </div>
+        // Get all related cast and crew members to this production
+        $production_cast_and_crew_members = Production::getCastAndCrew($post->ID, 'both', false);
+        $cast_members = [];
+        $crew_members = [];
         
-        <div class="ccwp-form-group">
-            <label for="ccwp_date_end"><strong>Production Dates - Closed*</strong></label>
-            <input type="text" class="ccwp_datepicker_input" id="ccwp_date_end" name="ccwp_date_end"
-                   value="<?php echo $prod_date_end; ?>" autocomplete="off">
-        </div>
+        // Sort them into cast then crew members
+        if (!empty($production_cast_and_crew_members) && is_array($production_cast_and_crew_members)) {
+            $cast_members = array_filter($production_cast_and_crew_members, function ($castcrew_member) {
+                return ($castcrew_member['ccwp_type'] == 'cast');
+            });
+            $cast_members = array_values($cast_members);
+            
+            $crew_members = array_filter($production_cast_and_crew_members, function ($castcrew_member) {
+                return ($castcrew_member['ccwp_type'] == 'crew');
+            });
+            $crew_members = array_values($crew_members);
+        }
         
-        <div class="ccwp-form-help-text">
-            <p>*Required. Productions will not be displayed without opening AND closing dates. Must be in MM/DD/YYYY format.</p>
-        </div>
+        ccwp_view('admin/metaboxes/production-add-cast-and-crew.php', [
+            'wp_nonce'   => $wp_nonce,
+            'post'       => $post,
+            'metabox'    => $metabox,
+            'all_cast_and_crew_members' => $all_cast_and_crew_members,
+            'cast_members' => $cast_members,
+            'crew_members' => $crew_members,
+        ])->render();
+    }
+    
+    public function renderProductionDetailsMetaBox($post, $metabox)
+    {
+        $wp_nonce = wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false);
+        $date_start = get_post_meta($post->ID, '_ccwp_production_date_start', true);
+        $date_start = Carbon::parse($date_start)->format('m/d/Y');
+        $date_end = get_post_meta($post->ID, '_ccwp_production_date_end', true);
+        $date_end = Carbon::parse($date_end)->format('m/d/Y');
+
+        ccwp_view('admin/metaboxes/production-details.php', [
+            'wp_nonce'   => $wp_nonce,
+            'post'       => $post,
+            'metabox'    => $metabox,
+            'name'       => get_post_meta($post->ID, '_ccwp_production_name', true),
+            'date_start' => $date_start,
+            'date_end'   => $date_end,
+            'show_times' => get_post_meta($post->ID, '_ccwp_production_show_times', true),
+            'ticket_url' => get_post_meta($post->ID, '_ccwp_production_ticket_url', true),
+            'venue'      => get_post_meta($post->ID, '_ccwp_production_venue', true),
+            'press'      => get_post_meta($post->ID, '_ccwp_production_venue', true),
+        ])->render();
+    }
+    
+    public function saveProductionPostCastAndCrew($post_id)
+    {
+        # Verify meta box nonce
+        if (
+            ! isset($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'])
+            || ! wp_verify_nonce($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'], basename(__FILE__))
+        ) {
+            return;
+        }
         
-        <div class="ccwp-form-group">
-            <label for="ccwp_show_times">Show Times</label>
-            <input type="text" id="ccwp_show_times" name="ccwp_show_times" value="<?php echo $prod_show_times; ?>">
-        </div>
+        # Return if autosave
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
         
-        <div class="ccwp-form-group">
-            <label for="ccwp_ticket_url">URL for Online Ticket Sales</label>
-            <input type="text" id="ccwp_ticket_url" name="ccwp_ticket_url" value="<?php echo $prod_ticket_url; ?>">
-        </div>
+        # Check the user's permissions.
+        if ( ! current_user_can('edit_post', $post_id)) {
+            return;
+        }
         
-        <div class="ccwp-form-help-text">
-            <p>Defaults to rutheckerdhall.com/events if left blank.
-        </div>
+        # Store custom fields values
+        $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
+        $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
         
-        <div class="ccwp-form-group">
-            <label for="ccwp_venue">Venue</label>
-            <input type="text" id="ccwp_venue" name="ccwp_venue" value="<?php echo $prod_venue; ?>">
-        </div>
-        
-        <div class="ccwp-form-help-text">
-            <p>Where the show was performed.</p>
-        </div>
-        
-        <div class="ccwp-form-group">
-            <label for="ccwp_press">Press Highlights</label>
-            <textarea id="ccwp_press" name="ccwp_press"><?php echo $prod_press; ?></textarea>
-        </div>
-    <?php
+        Production::addCastAndCrew($post_id, 'cast', $production_cast);
+        Production::addCastAndCrew($post_id, 'crew', $production_crew);
     }
     
     public function saveProductionPostDetails($post_id)
@@ -291,190 +337,6 @@ class AdminHookController extends CurtainCallHookController
         if (empty($title_arr)) {
             $title_arr[] = 'Untitled Curtain Call Production';
         }
-    }
-    
-    /**
-     *  On the creation of a production post insert a create a custom production taxonomy for cast and crew.
-     * @param $post_id
-     * @param $post
-     * @param $update
-     */
-    public function onInsertProductionPost($post_id, $post, $update)
-    {
-        if (wp_is_post_revision($post_id)) {
-            return;
-        }
-        
-        if ($post->post_type !== 'ccwp_production') {
-            return;
-        }
-        
-        // Check if the taxonomy exists
-        $tax_id = term_exists($post->post_title, 'ccwp_cast_crew_productions', 0);
-        
-        // Create it if it doesn't exists
-        if ( ! $tax_id) {
-            $tax_id = wp_insert_term($post->post_title, 'ccwp_cast_crew_productions', array('parent' => 0));
-        }
-    }
-    
-    public function ccwp_add_cast_and_crew_to_production_box_html($post, $metabox)
-    {
-        wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce');
-        
-        // Get all castcrew by id and name
-        $all_castcrew_members = Production::getCastAndCrewForSelectBox();
-        
-        // Get all related cast and crew members to this production
-        $production_castcrew_members = Production::getCastAndCrew($post->ID, 'both', false);
-        
-        // Sort them into cast then crew members
-        if ( ! empty($production_castcrew_members) && is_array($production_castcrew_members)) {
-            $cast_members = array_filter($production_castcrew_members, function ($castcrew_member) {
-                return ($castcrew_member['ccwp_type'] == 'cast');
-            });
-            
-            $crew_members = array_filter($production_castcrew_members, function ($castcrew_member) {
-                return ($castcrew_member['ccwp_type'] == 'crew');
-            });
-        }
-    ?>
-        <div class="ccwp-add-castcrew-to-production-wrap">
-            <div class="ccwp-select-wrap">
-                <label for="ccwp-add-cast-to-production-select">Add Cast: </label>
-                <select id="ccwp-add-cast-to-production-select" class="ccwp-admin-dropdown-field">
-                    <option value="0">Select Cast</option>
-                    <?php foreach ($all_castcrew_members as $castcrew_member): ?>
-                        <option value="<?php echo $castcrew_member['ID']; ?>"><?php echo $castcrew_member['post_title']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="button" id="ccwp-add-cast-to-production-button">Add Cast</button>
-        </div>
-        
-        <div id="ccwp-production-cast-wrap">
-            <?php if ( ! empty($cast_members) && is_array($cast_members)): ?>
-                <table class="ccwp-admin-field-table">
-                    <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Billing</th>
-                        <th></th>
-                    </tr>
-                    <?php foreach ($cast_members as $cast_member): ?>
-                        <tr class="form-group ccwp-production-castcrew-form-group"
-                            id="ccwp-production-cast-member-<?php echo $cast_member['ID']; ?>">
-                            <input type="hidden"
-                                   name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][cast_and_crew_id]"
-                                   value="<?php echo $cast_member['ID']; ?>">
-                            <input type="hidden"
-                                   name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][production_id]"
-                                   value="<?php echo $post->ID; ?>">
-                            <input type="hidden"
-                                   name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][type]"
-                                   value="cast">
-                            <td class="ccwp-castcrew-name"><?php echo $cast_member['post_title']; ?></td>
-                            <td><input type="text"
-                                       name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][role]"
-                                       placeholder="role" value="<?php echo $cast_member['ccwp_role']; ?>"></td>
-                            <td><input type="text"
-                                       name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][custom_order]"
-                                       placeholder="custom order"
-                                       value="<?php echo $cast_member['ccwp_custom_order']; ?>"></td>
-                            <td>
-                                <button type="button" class="ccwp-remove-castcrew-from-production"
-                                        data-target="ccwp-production-cast-member-<?php echo $cast_member['ID']; ?>">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
-        </div>
-        
-        <div class="ccwp-add-castcrew-to-production-wrap" style="margin-top: 25px;">
-            <div class="ccwp-select-wrap">
-                <label for="ccwp-add-crew-to-production-select">Add Crew: </label>
-                <select id="ccwp-add-crew-to-production-select" class="ccwp-admin-dropdown-field">
-                    <option value="0">Select Crew</option>
-                    <?php foreach ($all_castcrew_members as $castcrew_member): ?>
-                        <option value="<?php echo $castcrew_member['ID']; ?>"><?php echo $castcrew_member['post_title']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <button type="button" id="ccwp-add-crew-to-production-button">Add Crew</button>
-        </div>
-        
-        <div id="ccwp-production-crew-wrap">
-            <?php if ( ! empty($crew_members) && is_array($crew_members)): ?>
-                <table class="ccwp-admin-field-table">
-                    <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Billing</th>
-                        <th></th>
-                    </tr>
-                    <?php foreach ($crew_members as $crew_member): ?>
-                        <tr class="form-group ccwp-production-castcrew-form-group"
-                            id="ccwp-production-crew-member-<?php echo $crew_member['ID']; ?>">
-                            <input type="hidden"
-                                   name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][cast_and_crew_id]"
-                                   value="<?php echo $crew_member['ID']; ?>">
-                            <input type="hidden"
-                                   name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][production_id]"
-                                   value="<?php echo $post->ID; ?>">
-                            <input type="hidden"
-                                   name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][type]"
-                                   value="crew">
-                            <td class="ccwp-castcrew-name"><?php echo $crew_member['post_title']; ?></td>
-                            <td><input type="text"
-                                       name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][role]"
-                                       placeholder="role" value="<?php echo $crew_member['ccwp_role']; ?>"></td>
-                            <td><input type="text"
-                                       name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][custom_order]"
-                                       placeholder="custom order"
-                                       value="<?php echo $crew_member['ccwp_custom_order']; ?>"></td>
-                            <td>
-                                <button type="button" class="ccwp-remove-castcrew-from-production"
-                                        data-target="ccwp-production-crew-member-<?php echo $crew_member['ID']; ?>">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </table>
-            <?php endif; ?>
-        </div>
-    <?php
-    }
-    
-    public function saveProductionPostCastAndCrew($post_id)
-    {
-        # Verify meta box nonce
-        if (
-            ! isset($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'])
-            || ! wp_verify_nonce($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'], basename(__FILE__))
-        ) {
-            return;
-        }
-        
-        # Return if autosave
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-        
-        # Check the user's permissions.
-        if ( ! current_user_can('edit_post', $post_id)) {
-            return;
-        }
-        
-        # Store custom fields values
-        $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
-        $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
-        
-        Production::addCastAndCrew($post_id, 'cast', $production_cast);
-        Production::addCastAndCrew($post_id, 'crew', $production_crew);
     }
     
     //----------------------------------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ if (!function_exists('ccwp_assets_url')) {
      */
     function ccwp_assets_url(): string
     {
-        return ccwp_plugin_url('dist/');
+        return ccwp_plugin_url('assets/');
     }
 }
 
