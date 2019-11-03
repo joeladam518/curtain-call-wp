@@ -8,8 +8,6 @@ trait ProductionHelpers
     {
         global $wpdb;
         
-        $ccwp_join_tablename = $wpdb->prefix . 'ccwp_castandcrew_production';
-        
         $query = "
             SELECT
                 ccwp_join.production_id,
@@ -20,7 +18,7 @@ trait ProductionHelpers
             FROM
                 ". $wpdb->posts ." AS production_posts
             LEFT JOIN
-                ". $ccwp_join_tablename ." AS ccwp_join
+                ". static::getJoinTableName() ." AS ccwp_join
             ON
                 production_posts.ID = ccwp_join.production_id
             LEFT JOIN
@@ -53,12 +51,10 @@ trait ProductionHelpers
                 break;
         }
         
-        $cast_and_crew = $wpdb->get_results($query, ARRAY_A);
-        
-        return $cast_and_crew;
+        return $wpdb->get_results($query, ARRAY_A);
     }
     
-    public static function getCastAndCrewForSelectBox()
+    public static function getAllCastAndCrewForSelectBox()
     {
         global $wpdb;
         
@@ -79,9 +75,7 @@ trait ProductionHelpers
                 castcrew_posts.post_title ASC
         ";
         
-        $cast_and_crew = $wpdb->get_results($query, ARRAY_A);
-        
-        return $cast_and_crew;
+        return $wpdb->get_results($query, ARRAY_A);
     }
     
     public static function getCastAndCrew(int $post_id, string $type = 'both', bool $include_post_meta = true): array
@@ -89,7 +83,6 @@ trait ProductionHelpers
         global $wpdb;
         
         $cast_and_crew = null;
-        $ccwp_join_tablename = $wpdb->prefix . 'ccwp_castandcrew_production';
         
         $query = "
             SELECT
@@ -102,7 +95,7 @@ trait ProductionHelpers
             FROM
                 ". $wpdb->posts ." AS production_posts
             LEFT JOIN
-                ". $ccwp_join_tablename ." AS ccwp_join
+                ". static::getJoinTableName() ." AS ccwp_join
             ON
                 production_posts.ID = ccwp_join.production_id
             LEFT JOIN

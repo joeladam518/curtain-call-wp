@@ -185,7 +185,7 @@ class AdminHookController extends CurtainCallHookController
     public function renderAddCastAndCrewMetaBox($post, $metabox)
     {
         // Get all castcrew by id and name
-        $all_cast_and_crew_members = Production::getCastAndCrewForSelectBox();
+        $all_cast_and_crew_members = Production::getAllCastAndCrewForSelectBox();
         
         // Get all related cast and crew members to this production
         $production_cast_and_crew_members = Production::getCastAndCrew($post->ID, 'both', false);
