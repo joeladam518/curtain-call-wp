@@ -1,13 +1,17 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 /**
+ * @var string $wp_nonce
+ * @var WP_Post $post
+ * @var array $metabox
  * @var array $all_cast_and_crew_members
  * @var array $cast_members
  * @var array $crew_members
  */
 ?>
 
-<?php /* Cast Section */ ?>
+<?php echo $wp_nonce; ?>
 
+<!-- Add Cast -->
 <div class="ccwp-add-castcrew-to-production-wrap">
     <div class="ccwp-select-wrap">
         <label for="ccwp-add-cast-to-production-select">Add Cast: </label>
@@ -77,8 +81,7 @@
     <?php endif; ?>
 </div>
 
-<?php /* Crew Section */ ?>
-
+<!-- Add Crew -->
 <div class="ccwp-add-castcrew-to-production-wrap" style="margin-top: 25px;">
     <div class="ccwp-select-wrap">
         <label for="ccwp-add-crew-to-production-select">Add Crew: </label>

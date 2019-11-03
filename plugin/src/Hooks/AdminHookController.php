@@ -232,7 +232,7 @@ class AdminHookController extends CurtainCallHookController
             'show_times' => get_post_meta($post->ID, '_ccwp_production_show_times', true),
             'ticket_url' => get_post_meta($post->ID, '_ccwp_production_ticket_url', true),
             'venue' => get_post_meta($post->ID, '_ccwp_production_venue', true),
-            'press' => get_post_meta($post->ID, '_ccwp_production_venue', true),
+            'press' => get_post_meta($post->ID, '_ccwp_production_press', true),
         ])->render();
     }
     
@@ -240,8 +240,8 @@ class AdminHookController extends CurtainCallHookController
     {
         # Verify meta box nonce
         if (
-            ! isset($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'])
-            || ! wp_verify_nonce($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'], basename(__FILE__))
+            !isset($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'])
+        ||  !wp_verify_nonce($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'], basename(__FILE__))
         ) {
             return;
         }
@@ -250,7 +250,7 @@ class AdminHookController extends CurtainCallHookController
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
-        
+    
         # Check the user's permissions.
         if ( ! current_user_can('edit_post', $post_id)) {
             return;
@@ -260,8 +260,8 @@ class AdminHookController extends CurtainCallHookController
         $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
         $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
         
-        Production::addCastAndCrew($post_id, 'cast', $production_cast);
-        Production::addCastAndCrew($post_id, 'crew', $production_crew);
+        Production::saveCastAndCrew($post_id, 'cast', $production_cast);
+        Production::saveCastAndCrew($post_id, 'crew', $production_crew);
     }
     
     public function saveProductionPostDetails($post_id)
