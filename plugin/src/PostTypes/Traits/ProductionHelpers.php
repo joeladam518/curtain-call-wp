@@ -283,26 +283,4 @@ trait ProductionHelpers
     
         $wpdb->flush();
     }
-    
-    public static function sortCastAndCrew(array $cast_and_crew)
-    {
-        if (count($cast_and_crew) > 1) {
-            usort($cast_and_crew, function($a, $b){
-                if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
-                    if ($a['custom_order'] == $b['custom_order']) {
-                        return 0;
-                    }
-                    return ($a < $b) ? -1 : 1;
-                } else if (!empty($a['custom_order']) && empty($b['custom_order'])) {
-                    return 1;
-                } else if (empty($a['custom_order']) && !empty($b['custom_order'])) {
-                    return -1;
-                } else {
-                    return strcmp($a['role'], $b['role']); // TODO: Change to use cast and crew member last name...
-                }
-            });
-        }
-        
-        return $cast_and_crew;
-    }
 }
