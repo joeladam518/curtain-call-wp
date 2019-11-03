@@ -52,7 +52,6 @@ class AdminHookController extends CurtainCallHookController
     {
         $title_arr = [];
         if ($data['post_type'] === 'ccwp_production') {
-            
             if (isset($_POST['ccwp_production_name'])) {
                 $title_arr[] = sanitize_text_field($_POST['ccwp_production_name']);
             }
@@ -60,7 +59,7 @@ class AdminHookController extends CurtainCallHookController
             /**
              * TODO: If, attached to a single season (post term), append the Season to the post title.
              *       Else, attach the start_date year to the production title.
-             **/
+            **/
             
             if (isset($_POST['ccwp_date_start'])) {
                 if ( ! empty($title_arr)) {
@@ -77,9 +76,7 @@ class AdminHookController extends CurtainCallHookController
             if (empty($title_arr)) {
                 $title_arr[] = 'Untitled Curtain Call Production';
             }
-            
-        } elseif ($data['post_type'] === 'ccwp_cast_and_crew') {
-            
+        } else if ($data['post_type'] === 'ccwp_cast_and_crew') {
             if (isset($_POST['ccwp_name_first'])) {
                 $title_arr[] = sanitize_text_field($_POST['ccwp_name_first']);
             }
