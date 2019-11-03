@@ -4,7 +4,7 @@ namespace CurtainCallWP\PostTypes\Traits;
 
 trait ProductionHelpers
 {
-    public static function getCurrentCastAndCrewIds(int $production_id, string $type = 'cast')
+    public static function getCurrentCastAndCrewIds(int $production_id, string $type = 'both')
     {
         global $wpdb;
         
