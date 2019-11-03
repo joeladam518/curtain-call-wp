@@ -184,8 +184,6 @@ class AdminHookController extends CurtainCallHookController
     
     public function renderAddCastAndCrewMetaBox($post, $metabox)
     {
-        $wp_nonce = wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false);
-        
         // Get all castcrew by id and name
         $all_cast_and_crew_members = Production::getCastAndCrewForSelectBox();
         
@@ -208,9 +206,9 @@ class AdminHookController extends CurtainCallHookController
         }
         
         ccwp_view('admin/metaboxes/production-add-cast-and-crew.php', [
-            'wp_nonce'   => $wp_nonce,
-            'post'       => $post,
-            'metabox'    => $metabox,
+            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false),
+            'post' => $post,
+            'metabox' => $metabox,
             'all_cast_and_crew_members' => $all_cast_and_crew_members,
             'cast_members' => $cast_members,
             'crew_members' => $crew_members,
@@ -219,23 +217,22 @@ class AdminHookController extends CurtainCallHookController
     
     public function renderProductionDetailsMetaBox($post, $metabox)
     {
-        $wp_nonce = wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false);
         $date_start = get_post_meta($post->ID, '_ccwp_production_date_start', true);
         $date_start = Carbon::parse($date_start)->format('m/d/Y');
         $date_end = get_post_meta($post->ID, '_ccwp_production_date_end', true);
         $date_end = Carbon::parse($date_end)->format('m/d/Y');
 
         ccwp_view('admin/metaboxes/production-details.php', [
-            'wp_nonce'   => $wp_nonce,
-            'post'       => $post,
-            'metabox'    => $metabox,
-            'name'       => get_post_meta($post->ID, '_ccwp_production_name', true),
+            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
+            'post' => $post,
+            'metabox' => $metabox,
+            'name' => get_post_meta($post->ID, '_ccwp_production_name', true),
             'date_start' => $date_start,
-            'date_end'   => $date_end,
+            'date_end' => $date_end,
             'show_times' => get_post_meta($post->ID, '_ccwp_production_show_times', true),
             'ticket_url' => get_post_meta($post->ID, '_ccwp_production_ticket_url', true),
-            'venue'      => get_post_meta($post->ID, '_ccwp_production_venue', true),
-            'press'      => get_post_meta($post->ID, '_ccwp_production_venue', true),
+            'venue' => get_post_meta($post->ID, '_ccwp_production_venue', true),
+            'press' => get_post_meta($post->ID, '_ccwp_production_venue', true),
         ])->render();
     }
     
