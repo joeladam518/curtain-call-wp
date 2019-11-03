@@ -11,7 +11,6 @@ trait CastAndCrewHelpers
         global $wpdb;
         
         $productions = null;
-        $ccwp_join_tablename = $wpdb->prefix . 'ccwp_castandcrew_production';
         
         $query = "
             SELECT
@@ -22,7 +21,7 @@ trait CastAndCrewHelpers
                 ccwp_join.role AS ccwp_role,
                 ccwp_join.custom_order AS ccwp_custom_order
             FROM " . $wpdb->posts . " AS castcrew_posts
-            INNER JOIN " . $ccwp_join_tablename . " AS ccwp_join
+            INNER JOIN " . static::getJoinTableName() . " AS ccwp_join
             ON castcrew_posts.ID = ccwp_join.cast_and_crew_id
             INNER JOIN " . $wpdb->posts . " AS production_posts
             ON production_posts.ID = ccwp_join.production_id
@@ -42,7 +41,6 @@ trait CastAndCrewHelpers
                 }
             }
             
-            // Carbon::parse($production['post_meta']['_ccwp_production_date_start'])->toFormattedDateString();
             usort($productions , function($a, $b) {
                 if (empty($a['post_meta']['_ccwp_production_date_start']) && !empty($b['post_meta']['_ccwp_production_date_start'])) {
                     return -1;
@@ -65,44 +63,7 @@ trait CastAndCrewHelpers
                 }
             });
         }
-        
-        $roles = [];
-        // TODO: what does this do?
-        //foreach($productions as $key => $production) {
-        //    if ($production['ID'] === $productions[$key + 1]['ID']) {
-        //        $roles[$production['ID']][] = $production['ccwp_role'];
-        //        $roles[$production['ID']][] = $production[$key + 1]['ccwp_role'];
-        //    } else {
-        //        $roles[$production['ID']][] = $production['ccwp_role'];
-        //    }
-        //    $roles = array_unique(array_values($roles[$production['ID']]));
-        //}
-        
-        return [
-            'roles' => $roles,
-            'productions' => $productions,
-        ];
-    }
-    
-    public static function sortProductions(array $productions)
-    {
-        if (count($productions) > 1) {
-            usort($productions_array, function($a, $b) {
-                if (!empty($a['custom_order']) && !empty($b['custom_order'])) {
-                    if ($a['custom_order'] == $b['custom_order']) {
-                        return 0;
-                    }
-                    return ($a < $b) ? -1 : 1;
-                } else if (!empty($a['custom_order']) && empty($b['custom_order'])) {
-                    return 1;
-                } else if (empty($a['custom_order']) && !empty($b['custom_order'])) {
-                    return -1;
-                } else {
-                    return strcmp($a['role'], $b['role']); // TODO: Change to use production title
-                }
-            });
-        }
-        
+
         return $productions;
     }
 }

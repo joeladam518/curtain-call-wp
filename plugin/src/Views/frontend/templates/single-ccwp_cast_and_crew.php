@@ -165,9 +165,7 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
                         </div>
                         
                         <?php
-                            $result = CastAndCrew::getProductions(get_the_ID(), true);
-                            $roles = $result['roles'];
-                            $productions = $result['productions'];
+                            $productions = CastAndCrew::getProductions(get_the_ID(), true);
                             $roles_by_pid = [];
                             foreach($productions as $p){
 	                            if(!isset($roles_by_pid[$p['ID']])){ $roles_by_pid[$p['ID']] = []; }
