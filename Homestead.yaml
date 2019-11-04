@@ -20,7 +20,6 @@ sites:
     -
         map: wpsite.test
         to: /home/vagrant/CurtainCallWP/public
-        type: "apache"
 
 databases:
     - homestead

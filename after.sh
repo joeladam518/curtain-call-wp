@@ -22,11 +22,12 @@ define( 'WP_DEBUG_LOG', true );
 define( 'WP_DEBUG_DISPLAY', true );
 define( 'SCRIPT_DEBUG', false );
 define( 'SAVEQUERIES', false );
+define('FS_METHOD','direct');
 EOL
 fi
 
 # Link the plugin to the wordpress site
-#cd "${wp_plugin_dir}" && ln -sf ${repo_plugin_dir} CurtainCallWP
+cd "${wp_plugin_dir}" && ln -sf ${repo_plugin_dir} CurtainCallWP
 
 # return HOME
 cd "${HOME}"
