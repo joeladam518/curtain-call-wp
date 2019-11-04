@@ -1,0 +1,46 @@
+#ccwp_production_details,
+#ccwp_cast_and_cast_details {
+    .inside {
+        padding: 15px 30px 20px;
+    }
+
+    .ccwp-form-group {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        margin-bottom: 10px;
+
+        label {
+            padding-right: 20px;
+            text-align: right;
+        }
+
+        input,
+        textarea {
+            flex-grow: 1;
+        }
+    }
+
+    .ccwp-form-help-text {
+        color: rgba(0, 0, 0, .5);
+        p {
+            margin-top: -5px;
+        }
+    }
+}
+
+#ccwp_production_details {
+    .ccwp-form-group {
+        label {
+            flex-basis: 200px;
+        }
+    }
+}
+
+#ccwp_cast_and_cast_details {
+    .ccwp-form-group {
+        label {
+            flex-basis: 100px;
+        }
+    }
+}

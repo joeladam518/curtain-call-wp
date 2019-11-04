@@ -12,23 +12,29 @@
 <?php echo $wp_nonce; ?>
 
 <!-- Add Cast -->
-<div class="ccwp-add-castcrew-to-production-wrap">
-    <div class="ccwp-select-wrap">
-        <label for="ccwp-add-cast-to-production-select">Add Cast: </label>
-        <select id="ccwp-add-cast-to-production-select" class="ccwp-admin-dropdown-field">
+<div class="ccwp-production-castcrew-select-wrap">
+    <div class="ccwp-select-form-group">
+        <label for="ccwp-production-cast-select">Add Cast: </label>
+        <select id="ccwp-production-cast-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Cast</option>
             <?php foreach ($all_cast_and_crew_members as $castcrew_member): ?>
             <option value="<?php echo $castcrew_member['ID']; ?>"><?php echo $castcrew_member['post_title']; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
-    <button type="button" id="ccwp-add-cast-to-production-button">Add Cast</button>
+    <button class="button ccwp-production-castcrew-add-btn" type="button" id="ccwp-production-cast-add-btn">Add Cast</button>
 </div>
 
 <div id="ccwp-production-cast-wrap">
     <?php if (!empty($cast_members) && is_array($cast_members)): ?>
-        <?php foreach($cast_members as $index => $cast_member): ?>
-            <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-cast-member-<?php echo $cast_member['ID']; ?>">
+        <div class="ccwp-row label-row">
+            <div class="ccwp-col name-col">Name</div>
+            <div class="ccwp-col role-col">Role</div>
+            <div class="ccwp-col billing-col">Billing</div>
+            <div class="ccwp-col action-col">&nbsp;</div>
+        </div>
+        <?php foreach($cast_members as $cast_member): ?>
+            <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-cast-<?php echo $cast_member['ID']; ?>">
                 <input
                     type="hidden"
                     name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][cast_and_crew_id]"
@@ -44,34 +50,32 @@
                     name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][type]"
                     value="cast"
                 >
-                <div class="row">
-                    <div class="col">
-                        <span class="label">Name</span>
+                <div class="ccwp-row">
+                    <div class="ccwp-col name-col">
                         <div class="ccwp-castcrew-name"><?php echo $cast_member['post_title']; ?></div>
                     </div>
-                    <div class="col">
-                        <label for="ccwp-production-cast-role-<?php echo $index ?>">Role</label>
+                    <div class="ccwp-col role-col">
                         <input
                             type="text"
-                            id="ccwp-production-cast-role-<?php echo $index ?>"
+                            id="ccwp-production-cast-role-<?php echo $cast_member['ID']; ?>"
                             name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][role]"
-                            placeholder="role" value="<?php echo $cast_member['ccwp_role']; ?>"
+                            placeholder="role"
+                            value="<?php echo $cast_member['ccwp_role']; ?>"
                         >
                     </div>
-                    <div class="col">
-                        <label for="ccwp-production-cast-custom-order-<?php echo $index ?>">Billing</label>
+                    <div class="ccwp-col billing-col">
                         <input
                             type="text"
-                            id="ccwp-production-cast-custom-order-<?php echo $index ?>"
+                            id="ccwp-production-cast-custom-order-<?php $cast_member['ID']; ?>"
                             name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][custom_order]"
                             placeholder="custom order"
                             value="<?php echo $cast_member['ccwp_custom_order']; ?>"
                         >
                     </div>
-                    <div class="col">
+                    <div class="ccwp-col action-col">
                         <button
                             type="button"
-                            class="ccwp-remove-castcrew-from-production"
+                            class="button ccwp-production-castcrew-remove-btn"
                             data-target="ccwp-production-cast-member-<?php echo $cast_member['ID']; ?>"
                         >Delete</button>
                     </div>
@@ -82,23 +86,30 @@
 </div>
 
 <!-- Add Crew -->
-<div class="ccwp-add-castcrew-to-production-wrap" style="margin-top: 25px;">
-    <div class="ccwp-select-wrap">
-        <label for="ccwp-add-crew-to-production-select">Add Crew: </label>
-        <select id="ccwp-add-crew-to-production-select" class="ccwp-admin-dropdown-field">
+<div class="ccwp-production-castcrew-select-wrap" style="margin-top: 25px;">
+    <div class="ccwp-select-form-group">
+        <label for="ccwp-production-crew-select">Add Crew: </label>
+        <select id="ccwp-production-crew-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Crew</option>
-            <?php foreach ($all_castcrew_members as $castcrew_member): ?>
+            <?php foreach ($all_cast_and_crew_members as $castcrew_member): ?>
             <option value="<?php echo $castcrew_member['ID']; ?>"><?php echo $castcrew_member['post_title']; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
-    <button type="button" id="ccwp-add-crew-to-production-button">Add Crew</button>
+    <button class="button ccwp-production-castcrew-add-btn" type="button" id="ccwp-production-crew-add-btn">Add Crew</button>
 </div>
 
 <div id="ccwp-production-crew-wrap">
-    <?php if ( ! empty($crew_members) && is_array($crew_members)): ?>
-        <?php foreach($crew_members as $index => $crew_member): ?>
-            <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-crew-member-<?php echo $crew_member['ID']; ?>">
+    <?php if (!empty($crew_members) && is_array($crew_members)): ?>
+        <div class="ccwp-row label-row">
+            <div class="ccwp-col name-col">Name</div>
+            <div class="ccwp-col role-col">Role</div>
+            <div class="ccwp-col billing-col">Billing</div>
+            <div class="ccwp-col action-col">&nbsp;</div>
+        </div>
+        
+        <?php foreach($crew_members as $crew_member): ?>
+            <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-crew-<?php echo $crew_member['ID']; ?>">
                 <input
                     type="hidden"
                     name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][cast_and_crew_id]"
@@ -114,36 +125,33 @@
                     name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][type]"
                     value="crew"
                 >
-                <div class="row">
-                    <div class="col">
-                        <span class="label">Name</span>
-                        <div class="ccwp-castcrew-name">
-                            <?php echo $crew_member['post_title']; ?>
-                        </div>
+                <div class="ccwp-row">
+                    <div class="ccwp-col name-col">
+                        <div class="ccwp-castcrew-name"><?php echo $crew_member['post_title']; ?></div>
                     </div>
-                    <div class="col">
-                        <label for="ccwp-production-crew-role-<?php echo $index ?>">Role</label>
+                    <div class="ccwp-col role-col">
                         <input
                             type="text"
-                            id="ccwp-production-crew-role-<?php echo $index ?>"
+                            id="ccwp-production-crew-role-<?php echo $crew_member['ID']; ?>"
                             name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][role]"
-                            placeholder="role" value="<?php echo $crew_member['ccwp_role']; ?>"
+                            placeholder="role"
+                            value="<?php echo $crew_member['ccwp_role']; ?>"
                         >
                     </div>
-                    <div class="col">
-                        <label for="ccwp-production-crew-role-<?php echo $index ?>">Billing</label>
+                    <div class="ccwp-col billing-col">
                         <input
                             type="text"
+                            id="ccwp-production-crew-custom-order-<?php echo $crew_member['ID']; ?>"
                             name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][custom_order]"
                             placeholder="custom order"
                             value="<?php echo $crew_member['ccwp_custom_order']; ?>"
                         >
                     </div>
-                    <div class="col">
+                    <div class="ccwp-col action-col">
                         <button
                             type="button"
-                            class="ccwp-remove-castcrew-from-production"
-                            data-target="ccwp-production-crew-member-<?php echo $crew_member['ID']; ?>"
+                            class="button ccwp-production-castcrew-remove-btn"
+                            data-target="ccwp-production-crew-<?php echo $crew_member['ID']; ?>"
                         >Delete</button>
                     </div>
                 </div>

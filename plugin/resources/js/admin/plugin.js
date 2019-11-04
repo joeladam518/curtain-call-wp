@@ -1,43 +1,45 @@
-import {
-    ccwpRemoveCastCrewFromProduction,
-    ccwpAddCastToProduction,
-    ccwpAddCrewToProduction,
-} from './functions.js';
+import {addProductionCast, addProductionCrew, removeProductionCastCrew} from './functions.js';
+const Pikaday = require('pikaday');
+require('select2');
 
-import 'jquery-ui/ui/widgets/datepicker.js';
-//const Pikaday = require('pikaday');
+//import 'jquery-ui/ui/widgets/datepicker.js';
 
 $(function() {
+    const $castcrew_post_title_input = $('body.post-type-ccwp_cast_and_crew input[name="post_title"]');
+    const $production_post_title_input = $('body.post-type-ccwp_production input[name="post_title"]');
+    const $date_picker_input = $('.ccwp_datepicker_input');
+    const $select_box = $('.ccwp-admin-select-box');
+
     // Disable post title input box for production posts
-    if ($('body.post-type-ccwp_production input[name="post_title"]').length){
-        $('body.post-type-ccwp_production input[name="post_title"]').prop('disabled', true);
-        $('body.post-type-ccwp_production input[name="post_title"]').after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Production details section.</p>')
+    if ($production_post_title_input.length){
+        $production_post_title_input.prop('disabled', true);
+        $production_post_title_input.after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Production details section.</p>')
     }
     // Disable post title input box for cast and crew posts
-    if ($('body.post-type-ccwp_cast_and_crew input[name="post_title"]').length){
-        $('body.post-type-ccwp_cast_and_crew input[name="post_title"]').prop('disabled', true);
-        $('body.post-type-ccwp_cast_and_crew input[name="post_title"]').after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Cast and Crew details section.</p>')
+    if ($castcrew_post_title_input.length){
+        $castcrew_post_title_input.prop('disabled', true);
+        $castcrew_post_title_input.after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Cast and Crew details section.</p>')
     }
 
-    // Inject jQuery UI datepicker into admin forms
-    if ($('.ccwp_datepicker_input').length) {
-        $('.ccwp_datepicker_input').each(function(index, ele) {
-            $(ele).datepicker({
-                dateFormat: 'mm/dd/yy',
-                beforeShow: function(input, inst) {
-                    $('#ui-datepicker-div').addClass('ccwp_datepicker');
-                },
+    // Inject datepicker into admin forms
+    if ($date_picker_input.length) {
+        $date_picker_input.each(function(index, ele) {
+            const picker = new Pikaday({
+                field: ele,
+                format: 'M/D/YYYY',
             });
-            // let picker = new Pikaday({
-            //     field: ele,
-            //     format: 'M/D/YYYY',
-            // });
+        });
+    }
+
+    if ($select_box.length) {
+        $select_box.select2({
+            width: 'resolve',
         });
     }
 
     if ($('#ccwp_add_cast_and_crew_to_production').length) {
-        $('#ccwp-add-cast-to-production-button').click(ccwpAddCastToProduction);
-        $('#ccwp-add-crew-to-production-button').click(ccwpAddCrewToProduction);
-        $('.ccwp-remove-castcrew-from-production').click(ccwpRemoveCastCrewFromProduction);
+        $('#ccwp-production-cast-add-btn').click(addProductionCast);
+        $('#ccwp-production-crew-add-btn').click(addProductionCrew);
+        $('.ccwp-production-castcrew-remove-btn').click(removeProductionCastCrew);
     }
 });

@@ -1,0 +1,12 @@
+.ccwp-row {
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 15px;
+
+    .ccwp-col {
+        display: flex;
+        flex-flow: column nowrap;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

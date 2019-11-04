@@ -31,7 +31,8 @@ class AdminHookController extends CurtainCallHookController
     {
         $handle = $this->plugin_name . '_admin';
         $admin_css_url = $this->assets_url . 'css/curtain-call-wp-admin.css';
-        wp_enqueue_style($handle, $admin_css_url, array(), $this->plugin_version, 'all');
+        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
+        wp_enqueue_style($handle, $admin_css_url, array(), $version, 'all');
     }
     
     /**
@@ -40,8 +41,9 @@ class AdminHookController extends CurtainCallHookController
     public function enqueueScripts()
     {
         $handle = $this->plugin_name . '_admin';
-        $admin_js_url = $this->assets_url . 'css/curtain-call-wp-admin.css';
-        wp_enqueue_script($handle, $admin_js_url, array('jquery'), $this->plugin_version, true);
+        $admin_js_url = $this->assets_url . 'js/curtain-call-wp-admin.js';
+        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
+        wp_enqueue_script($handle, $admin_js_url, array('jquery'), $version, true);
     }
     
     //  ----------------------------------------------------------------------------------------------------------------
@@ -457,7 +459,6 @@ class AdminHookController extends CurtainCallHookController
         </div>
     <?php
     }
-    
     
     public function saveCastAndCrewPostDetails($post_id)
     {
