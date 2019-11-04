@@ -52,8 +52,17 @@ class AdminHookController extends CurtainCallHookController
     
     public function setPostTitleOnPostSave(array $data)
     {
+        // if this is not a save from the edit post page dont do anything
+        if (!isset($_POST['action'])
+        ||  $_POST['action'] !== 'editpost'
+        || ($data['post_type'] !== 'ccwp_production' && $data['post_type'] !== 'ccwp_cast_and_crew')
+        ) {
+            return $data;
+        }
+        
         $title_arr = [];
         if ($data['post_type'] === 'ccwp_production') {
+            
             if (isset($_POST['ccwp_production_name'])) {
                 $title_arr[] = sanitize_text_field($_POST['ccwp_production_name']);
             }
