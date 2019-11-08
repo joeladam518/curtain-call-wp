@@ -1,21 +1,19 @@
+import $ from 'jquery';
+
 function generateFormGroupHtml({production_id, castcrew_id, type = '', name = ''}) {
     castcrew_id = parseInt(castcrew_id, 10);
     production_id = parseInt(production_id, 10);
     let passed_validation = true;
     if (!production_id) {
-        console.log('Failed on production_id');
         passed_validation = false;
     }
     if (!castcrew_id) {
-        console.log('Failed on castcrew_id');
         passed_validation = false;
     }
     if (type !== 'cast' && type !== 'crew') {
-        console.log('Failed on type');
         passed_validation = false;
     }
     if (!passed_validation) {
-        console.error('Failed to generate production castcrew html.');
         return '';
     }
 

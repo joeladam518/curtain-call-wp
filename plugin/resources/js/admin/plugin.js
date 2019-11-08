@@ -1,8 +1,7 @@
-import {addProductionCast, addProductionCrew, removeProductionCastCrew} from './functions.js';
-const Pikaday = require('pikaday');
-require('select2');
-
-//import 'jquery-ui/ui/widgets/datepicker.js';
+import $ from 'jquery';
+import { addProductionCast, addProductionCrew, removeProductionCastCrew } from './functions.js';
+import Pikaday from 'pikaday';
+import 'select2';
 
 $(function() {
     const $castcrew_post_title_input = $('body.post-type-ccwp_cast_and_crew input[name="post_title"]');
@@ -12,13 +11,15 @@ $(function() {
 
     // Disable post title input box for production posts
     if ($production_post_title_input.length){
-        $production_post_title_input.prop('disabled', true);
-        $production_post_title_input.after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Production details section.</p>')
+        $production_post_title_input
+            .prop('disabled', true)
+            .after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Production details section.</p>');
     }
     // Disable post title input box for cast and crew posts
     if ($castcrew_post_title_input.length){
-        $castcrew_post_title_input.prop('disabled', true);
-        $castcrew_post_title_input.after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Cast and Crew details section.</p>')
+        $castcrew_post_title_input
+            .prop('disabled', true)
+            .after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Cast and Crew details section.</p>');
     }
 
     // Inject datepicker into admin forms
@@ -38,8 +39,11 @@ $(function() {
     }
 
     if ($('#ccwp_add_cast_and_crew_to_production').length) {
-        $('#ccwp-production-cast-add-btn').click(addProductionCast);
-        $('#ccwp-production-crew-add-btn').click(addProductionCrew);
-        $('.ccwp-production-castcrew-remove-btn').click(removeProductionCastCrew);
+        $('#ccwp-production-cast-add-btn')
+            .on('click', addProductionCast);
+        $('#ccwp-production-crew-add-btn')
+            .on('click', addProductionCrew);
+        $('.ccwp-production-castcrew-remove-btn')
+            .on('click', removeProductionCastCrew);
     }
 });

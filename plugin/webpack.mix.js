@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const webpackConfig = require('./webpack.config.js');
 
 /*
  |--------------------------------------------------------------------------
@@ -13,18 +14,8 @@ const mix = require('laravel-mix');
 
 /**
  * Override webpack.config.js, without editing the file directly.
- **/
-mix.webpackConfig({
-    externals: {
-        "jquery": "jQuery"
-    },
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'resources/js'),
-            '>': path.resolve(__dirname, 'resources/sass'),
-        },
-    },
-});
+**/
+mix.webpackConfig(webpackConfig);
 
 /**
  *  mix.options({
