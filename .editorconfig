@@ -6,7 +6,7 @@ indent_style = space
 insert_final_newline = false
 max_line_length = 120
 tab_width = 4
-ij_continuation_indent_size = 8
+ij_continuation_indent_size = 4
 ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
 ij_formatter_tags_enabled = false
@@ -104,7 +104,6 @@ ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
 [{*.ats,*.ts}]
-ij_continuation_indent_size = 4
 ij_typescript_align_imports = false
 ij_typescript_align_multiline_array_initializer_expression = false
 ij_typescript_align_multiline_binary_operation = false
@@ -269,7 +268,6 @@ ij_typescript_while_on_new_line = false
 ij_typescript_wrap_comments = false
 
 [{*.cjs,*.js}]
-ij_continuation_indent_size = 4
 ij_javascript_align_imports = false
 ij_javascript_align_multiline_array_initializer_expression = false
 ij_javascript_align_multiline_binary_operation = false
@@ -431,9 +429,6 @@ ij_javascript_while_on_new_line = false
 ij_javascript_wrap_comments = false
 
 [{*.cjsx,*.coffee}]
-indent_size = 2
-tab_width = 2
-ij_continuation_indent_size = 2
 ij_coffeescript_align_function_body = false
 ij_coffeescript_align_imports = false
 ij_coffeescript_align_multiline_array_initializer_expression = true
@@ -525,7 +520,6 @@ ij_coffeescript_use_semicolon_after_statement = false
 ij_coffeescript_var_declaration_wrap = normal
 
 [{*.module,*.hphp,*.phtml,*.php5,*.php4,*.php,*.ctp,*.inc}]
-ij_continuation_indent_size = 4
 ij_php_align_assignments = true
 ij_php_align_class_constants = false
 ij_php_align_group_field_declarations = false
@@ -754,8 +748,6 @@ ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
 
 [{*.yml,*.yaml}]
-indent_size = 2
-ij_continuation_indent_size = 2
 ij_yaml_keep_indents_on_empty_lines = false
 ij_yaml_keep_line_breaks = true
 
@@ -767,7 +759,6 @@ ij_shell_redirect_followed_by_space = false
 ij_shell_switch_cases_indented = false
 
 [{.eslintrc,.babelrc,jest.config,.stylelintrc,*.bowerrc,*.jsb3,*.jsb2,*.json}]
-indent_size = 2
 ij_json_keep_blank_lines_in_code = 0
 ij_json_keep_indents_on_empty_lines = false
 ij_json_keep_line_breaks = true
