@@ -37,8 +37,9 @@ class AdminHookController extends CurtainCallHookController
     
     /**
      * Register the JavaScript for the admin area.
+     * @param $hook
      */
-    public function enqueueScripts()
+    public function enqueueScripts($hook)
     {
         $handle = $this->plugin_name . '_admin';
         $admin_js_url = $this->assets_url . 'js/curtain-call-wp-admin.js';
@@ -145,24 +146,24 @@ class AdminHookController extends CurtainCallHookController
      * @param $post
      * @param $update
      */
-    public function onInsertProductionPost($post_id, $post, $update)
-    {
-        if (wp_is_post_revision($post_id)) {
-            return;
-        }
-        
-        if ($post->post_type !== 'ccwp_production') {
-            return;
-        }
-        
-        // Check if the taxonomy exists
-        $tax_id = term_exists($post->post_title, 'ccwp_cast_crew_productions', 0);
-        
-        // Create it if it doesn't exists
-        if ( ! $tax_id) {
-            $tax_id = wp_insert_term($post->post_title, 'ccwp_cast_crew_productions', array('parent' => 0));
-        }
-    }
+    //public function onInsertProductionPost($post_id, $post, $update)
+    //{
+    //    if (wp_is_post_revision($post_id)) {
+    //        return;
+    //    }
+    //
+    //    if ($post->post_type !== 'ccwp_production') {
+    //        return;
+    //    }
+    //
+    //    // Check if the taxonomy exists
+    //    $tax_id = term_exists($post->post_title, 'ccwp_cast_crew_productions', 0);
+    //
+    //    // Create it if it doesn't exists
+    //    if ( ! $tax_id) {
+    //        $tax_id = wp_insert_term($post->post_title, 'ccwp_cast_crew_productions', array('parent' => 0));
+    //    }
+    //}
     
     /**
      *  Creation of all custom fields for the production custom post type

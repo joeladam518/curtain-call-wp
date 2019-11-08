@@ -76,7 +76,7 @@
                         <button
                             type="button"
                             class="button ccwp-production-castcrew-remove-btn"
-                            data-target="ccwp-production-cast-member-<?php echo $cast_member['ID']; ?>"
+                            data-target="ccwp-production-cast-<?php echo $cast_member['ID']; ?>"
                         >Delete</button>
                     </div>
                 </div>

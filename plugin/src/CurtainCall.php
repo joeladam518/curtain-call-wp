@@ -113,7 +113,7 @@ class CurtainCall
         // All Actions and Filters on the Production custom post type
         $this->loader->add_action('init', $plugin_admin, 'createProductionPostType', 10, 0);
         $this->loader->add_action('init', $plugin_admin, 'createProductionSeasonsTaxonomy', 10, 0);
-        $this->loader->add_action('wp_insert_post', $plugin_admin, 'onInsertProductionPost', 10, 3);
+        //$this->loader->add_action('wp_insert_post', $plugin_admin, 'onInsertProductionPost', 10, 3);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addProductionPostMetaBoxes', 10, 0);
         $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostDetails', 10, 2);
         $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostCastAndCrew', 10, 2);
