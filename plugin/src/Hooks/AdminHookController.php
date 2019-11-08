@@ -51,7 +51,7 @@ class AdminHookController extends CurtainCallHookController
     //  Global Functions
     //  ----------------------------------------------------------------------------------------------------------------
     
-    public function setPostTitleOnPostSave(array $data)
+    public function setPostTitleOnPostSave(array $data, array $postarr)
     {
         // if this is not a save from the edit post page dont do anything
         if (!isset($_POST['action'])
@@ -139,31 +139,6 @@ class AdminHookController extends CurtainCallHookController
         register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
         flush_rewrite_rules();
     }
-    
-    /**
-     *  On the creation of a production post insert a create a custom production taxonomy for cast and crew.
-     * @param $post_id
-     * @param $post
-     * @param $update
-     */
-    //public function onInsertProductionPost($post_id, $post, $update)
-    //{
-    //    if (wp_is_post_revision($post_id)) {
-    //        return;
-    //    }
-    //
-    //    if ($post->post_type !== 'ccwp_production') {
-    //        return;
-    //    }
-    //
-    //    // Check if the taxonomy exists
-    //    $tax_id = term_exists($post->post_title, 'ccwp_cast_crew_productions', 0);
-    //
-    //    // Create it if it doesn't exists
-    //    if ( ! $tax_id) {
-    //        $tax_id = wp_insert_term($post->post_title, 'ccwp_cast_crew_productions', array('parent' => 0));
-    //    }
-    //}
     
     /**
      *  Creation of all custom fields for the production custom post type

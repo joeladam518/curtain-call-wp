@@ -113,18 +113,17 @@ class CurtainCall
         // All Actions and Filters on the Production custom post type
         $this->loader->add_action('init', $plugin_admin, 'createProductionPostType', 10, 0);
         $this->loader->add_action('init', $plugin_admin, 'createProductionSeasonsTaxonomy', 10, 0);
-        //$this->loader->add_action('wp_insert_post', $plugin_admin, 'onInsertProductionPost', 10, 3);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addProductionPostMetaBoxes', 10, 0);
         $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostDetails', 10, 2);
         $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostCastAndCrew', 10, 2);
-        
+        postarr
         // All Actions and Filters on the Cast and Crew custom post type
         $this->loader->add_action('init', $plugin_admin, 'createCastAndCrewPostType', 10, 0);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addCastAndCrewPostMetaBoxes', 10, 0);
         $this->loader->add_action('save_post_ccwp_cast_and_crew', $plugin_admin, 'saveCastAndCrewPostDetails', 10, 2);
         
         // All Actions and Filters that concern both post types
-        $this->loader->add_filter('wp_insert_post_data', $plugin_admin, 'setPostTitleOnPostSave', 10, 1);
+        $this->loader->add_filter('wp_insert_post_data', $plugin_admin, 'setPostTitleOnPostSave', 10, 2);
         
         // Scripts and style to be loaded for the admin area in the WordPress backend
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueueStyles');
