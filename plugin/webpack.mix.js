@@ -34,13 +34,13 @@ mix.options({
 /**
  * Mix the Admin Resources
 **/
-mix.js('resources/js/admin/plugin.js', 'admin/js/curtain-call-wp-admin.js');
-mix.sass('resources/sass/admin/plugin.scss', 'admin/css/curtain-call-wp-admin.css');
+mix.js('resources/js/admin/plugin.js', 'admin/curtain-call-wp-admin.js');
+mix.sass('resources/sass/admin/plugin.scss', 'admin/curtain-call-wp-admin.css');
 
 /**
  * Mix the Frontend Resources
 **/
-mix.js('resources/js/frontend/plugin.js', 'frontend/js/curtain-call-wp-frontend.js');
-mix.sass('resources/sass/frontend/plugin.scss', 'frontend/css/curtain-call-wp-frontend.css');
+mix.js('resources/js/frontend/plugin.js', 'frontend/curtain-call-wp-frontend.js');
+mix.sass('resources/sass/frontend/plugin.scss', 'frontend/curtain-call-wp-frontend.css');
 
 mix.setPublicPath('assets');

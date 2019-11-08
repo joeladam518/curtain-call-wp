@@ -30,7 +30,7 @@ class AdminHookController extends CurtainCallHookController
     public function enqueueStyles()
     {
         $handle = $this->plugin_name . '_admin';
-        $admin_css_url = $this->assets_url . 'css/curtain-call-wp-admin.css';
+        $admin_css_url = $this->assets_url . 'curtain-call-wp-admin.css';
         $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
         wp_enqueue_style($handle, $admin_css_url, array(), $version, 'all');
     }
@@ -42,7 +42,7 @@ class AdminHookController extends CurtainCallHookController
     public function enqueueScripts($hook)
     {
         $handle = $this->plugin_name . '_admin';
-        $admin_js_url = $this->assets_url . 'js/curtain-call-wp-admin.js';
+        $admin_js_url = $this->assets_url . 'curtain-call-wp-admin.js';
         $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
         wp_enqueue_script($handle, $admin_js_url, array('jquery'), $version, true);
     }

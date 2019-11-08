@@ -26,7 +26,7 @@ class FrontendHookController extends CurtainCallHookController
      */
     public function enqueueStyles()
     {
-        $frontend_css_url = $this->assets_url . 'css/curtain-call-wp-frontend.css';
+        $frontend_css_url = $this->assets_url . 'curtain-call-wp-frontend.css';
         wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $this->plugin_version, 'all');
     }
     
@@ -35,7 +35,7 @@ class FrontendHookController extends CurtainCallHookController
     **/
     public function enqueueScripts()
     {
-        $frontend_js_url = $this->assets_url . 'js/curtain-call-wp-frontend.js';
+        $frontend_js_url = $this->assets_url . 'curtain-call-wp-frontend.js';
         wp_enqueue_script($this->plugin_name, $frontend_js_url, array('jquery'), $this->plugin_version, false);
     }
     

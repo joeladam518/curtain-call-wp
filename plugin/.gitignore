@@ -1,5 +1,4 @@
 /.vagrant
 /vendor
 /node_modules
-
-dist/mix-manifest.json
+/assets/mix-manifest.json
