@@ -116,7 +116,7 @@ class CurtainCall
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addProductionPostMetaBoxes', 10, 0);
         $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostDetails', 10, 2);
         $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostCastAndCrew', 10, 2);
-        postarr
+
         // All Actions and Filters on the Cast and Crew custom post type
         $this->loader->add_action('init', $plugin_admin, 'createCastAndCrewPostType', 10, 0);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addCastAndCrewPostMetaBoxes', 10, 0);
