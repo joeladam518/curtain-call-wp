@@ -7,9 +7,8 @@
  * @var array $cast_members
  * @var array $crew_members
  */
+echo $wp_nonce;
 ?>
-
-<?php echo $wp_nonce; ?>
 
 <!-- Add Cast -->
 <div class="ccwp-production-castcrew-select-wrap">

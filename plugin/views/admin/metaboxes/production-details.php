@@ -10,10 +10,9 @@
  * @var string $ticket_url
  * @var string $venue
  * @var string $press
- */
+**/
+echo $wp_nonce;
 ?>
-
-<?php echo $wp_nonce; ?>
 
 <div class="ccwp-form-group">
     <label for="ccwp_production_name">Production Name</label>

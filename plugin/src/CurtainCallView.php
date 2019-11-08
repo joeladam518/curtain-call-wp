@@ -40,7 +40,7 @@ class CurtainCallView
     
     public static function dirPath(string $path = ''): string
     {
-        return ccwp_plugin_path('src/Views/') . $path;
+        return ccwp_plugin_path('views/') . $path;
     }
     
     /**
