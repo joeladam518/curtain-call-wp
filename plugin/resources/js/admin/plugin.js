@@ -6,8 +6,6 @@ import 'select2';
 $(function() {
     const $castcrew_post_title_input = $('body.post-type-ccwp_cast_and_crew input[name="post_title"]');
     const $production_post_title_input = $('body.post-type-ccwp_production input[name="post_title"]');
-    const $date_picker_input = $('.ccwp_datepicker_input');
-    const $select_box = $('.ccwp-admin-select-box');
 
     // Disable post title input box for production posts
     if ($production_post_title_input.length){
@@ -23,8 +21,9 @@ $(function() {
     }
 
     // Inject datepicker into admin forms
-    if ($date_picker_input.length) {
-        $date_picker_input.each(function(index, ele) {
+    const $datepicker_input = $('.ccwp_datepicker_input');
+    if ($datepicker_input.length) {
+        $datepicker_input.each(function(index, ele) {
             const picker = new Pikaday({
                 field: ele,
                 format: 'M/D/YYYY',
@@ -32,9 +31,12 @@ $(function() {
         });
     }
 
-    if ($select_box.length) {
-        $select_box.select2({
-            width: 'resolve',
+    const $admin_select_box = $('.ccwp-admin-select-box');
+    if ($admin_select_box.length) {
+        $admin_select_box.each(function (index, ele) {
+            $(ele).select2({
+                width: 'resolve',
+            });
         });
     }
 
