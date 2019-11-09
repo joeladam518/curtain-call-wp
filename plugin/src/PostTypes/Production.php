@@ -2,7 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
-use CurtainCallWP\PostTypes\Traits\ProductionHelpers;
+use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
 
 /**
  * Class Production
@@ -10,7 +10,7 @@ use CurtainCallWP\PostTypes\Traits\ProductionHelpers;
  */
 class Production extends CurtainCallPostType
 {
-    use ProductionHelpers;
+    use HasCastAndCrew;
     
     protected static $metaKeyPrefix = '_ccwp_production';
     

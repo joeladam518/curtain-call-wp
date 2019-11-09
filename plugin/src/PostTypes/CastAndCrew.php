@@ -2,7 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
-use CurtainCallWP\PostTypes\Traits\CastAndCrewHelpers;
+use CurtainCallWP\PostTypes\Traits\HasProductions;
 
 /**
  * Class CastAndCrew
@@ -10,7 +10,7 @@ use CurtainCallWP\PostTypes\Traits\CastAndCrewHelpers;
  */
 class CastAndCrew extends CurtainCallPostType
 {
-    use CastAndCrewHelpers;
+    use HasProductions;
     
     protected static $metaKeyPrefix = '_ccwp_cast_crew';
     

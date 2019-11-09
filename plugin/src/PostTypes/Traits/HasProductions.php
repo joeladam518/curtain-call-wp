@@ -4,7 +4,7 @@ namespace CurtainCallWP\PostTypes\Traits;
 
 use Carbon\CarbonImmutable as Carbon;
 
-trait CastAndCrewHelpers
+trait HasProductions
 {
     public static function getProductions(int $post_id, $include_post_meta = true)
     {

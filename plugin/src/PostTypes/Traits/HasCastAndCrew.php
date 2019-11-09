@@ -2,7 +2,7 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
-trait ProductionHelpers
+trait HasCastAndCrew
 {
     public static function getCurrentCastAndCrewIds(int $production_id, string $type = 'both')
     {
