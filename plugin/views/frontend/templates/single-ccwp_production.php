@@ -1,21 +1,7 @@
-<?php
-/**
- *  Curtain Call WP Post Type.
-**/
+<?php if (!defined('ABSPATH')) die;
+
 use CurtainCallWP\PostTypes\Production;
-use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
-use Carbon\Carbon;
-
-if (!defined('ABSPATH')) {
-    exit;
-}
-
-if (!function_exists('get_custom_field')) {
-    function get_custom_field($field_name = null) {
-        if (empty($field_name)) return false;
-        return get_post_meta(get_the_ID(),$field_name,true);
-    }
-}
+use Carbon\CarbonImmutable as Carbon;
 
 function  strip_shortcode_gallery( $content ) {
     preg_match_all( '/'. get_shortcode_regex() .'/s', $content, $matches, PREG_SET_ORDER );

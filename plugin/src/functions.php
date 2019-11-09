@@ -6,8 +6,13 @@ if (!defined('ABSPATH')) {
     die;
 }
 
-if (!function_exists('ccwp_get_custom_field')) {
-    function ccwp_get_custom_field(string $field_name, ?int $post_id = null)
+if (!function_exists('get_custom_field')) {
+    /**
+     * @param string   $field_name
+     * @param int|null $post_id
+     * @return mixed
+     */
+    function get_custom_field(string $field_name, int $post_id = null)
     {
         if (!empty($post_id)) {
             return get_post_meta($post_id, $field_name, true);
@@ -97,7 +102,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * @param bool $return
          * @return string
          */
-        function fnln(bool $return = true): string
+        function fnln($return = true): string
         {
             $backtrace = debug_backtrace()[0];
             $out = basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
@@ -120,7 +125,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * @param  boolean $exit If true, exit after outputting.
          * @return void
          */
-        function pr($obj, bool $exit = false): void
+        function pr($obj, $exit = false): void
         {
             ob_start();
             print_r($obj);
@@ -142,7 +147,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * @param  boolean $exit $exit If true, exit after outputting.
          * @return void
          */
-        function dmp($obj, bool $exit = false): void
+        function dmp($obj, $exit = false): void
         {
             ob_start();
             var_dump($obj);

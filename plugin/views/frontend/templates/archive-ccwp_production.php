@@ -1,18 +1,6 @@
-<?php
+<?php if (!defined('ABSPATH')) die;
 
 use Carbon\CarbonImmutable as Carbon;
-
-// File Security Check
-if (!defined('ABSPATH')) {
-    exit; 
-}
-
-if (!function_exists('get_custom_field')) {
-    function get_custom_field($field_name = null) {
-        if (empty($field_name)) return false;
-        return get_post_meta(get_the_ID(),$field_name,true);
-    }
-}
 
 $args_asc = [
     'post_type' => [

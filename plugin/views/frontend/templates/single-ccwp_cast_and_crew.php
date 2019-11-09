@@ -1,18 +1,7 @@
-<?php
+<?php if (!defined('ABSPATH')) die;
 
-use Carbon\Carbon;
 use CurtainCallWP\PostTypes\CastAndCrew;
-
-if (!defined('ABSPATH')) {
-    exit;
-}
-
-if (!function_exists('get_custom_field')) {
-    function get_custom_field($field_name = null) {
-        if (empty($field_name)) return false;
-        return get_post_meta(get_the_ID(),$field_name,true);
-    }
-}
+use Carbon\CarbonImmutable as Carbon;
 
 function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
     $show_start_date = new Carbon($prod_start_date);

@@ -1,17 +1,4 @@
-<?php
-
-use Carbon\Carbon;
-
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    exit;
-}
-
-if (!function_exists('get_custom_field')) {
-    function get_custom_field($field_name = null) {
-        if (empty($field_name)) return false;
-        return get_post_meta(get_the_ID(),$field_name,true);
-    }
-}
+<?php if (!defined('ABSPATH')) die;
 
 $args = [
     'post_type' => [
