@@ -7,14 +7,24 @@ use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
 /**
  * Class Production
  * @package CurtainCallWP\PostTypes
+ * @property string $name
+ * @property string $date_start
+ * @property string $date_end
+ * @property string $show_times
+ * @property string $venue
+ * @property string $press
  */
-class Production extends CurtainCallPostType
+class Production extends CurtainCallPost
 {
     use HasCastAndCrew;
     
-    protected static $metaKeyPrefix = '_ccwp_production';
+    const POST_TYPE = 'ccwp_production';
+    const META_PREFIX = '_ccwp_production_';
     
-    protected static $meta = [
+    /**
+     * @var array
+     */
+    protected $ccwp_meta_keys = [
         'name',
         'date_start',
         'date_end',
