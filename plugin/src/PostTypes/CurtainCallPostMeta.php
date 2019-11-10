@@ -3,8 +3,6 @@
 
 namespace CurtainCallWP\PostTypes;
 
-use mysql_xdevapi\Exception;
-use \WP_Post;
 use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 
 /**
