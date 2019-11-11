@@ -61,32 +61,26 @@ abstract class CurtainCallPost implements Arrayable
     
     /**
      * CurtainCallPost constructor.
-     * @param null $post
+     * @param null|int|WP_Post $post
      * @throws Throwable
      */
     private function __construct($post = null)
     {
-        if (isset($post)) {
-            if ($post instanceof WP_Post) {
-                $this->setPost($post);
-            } else if (intval($post) > 0) {
-                $post = $this->fetchPost(intval($post));
-                $this->setPost($post);
-            } else {
-                throw new \InvalidArgumentException('$post must be an int or an instance of WP_Post.');
-            }
-        
-            $this->setPostProperties();
+        if (!empty($post)) {
+            $this->loadPost($post);
+            $this->loadMeta();
         }
-    
-        $this->setPostMeta();
     }
     
+    /**
+     * Get the config array used when creating a WP custom post type
+     * @return array
+     */
     abstract public static function getConfig(): array;
     
     /**
      * @param int $id
-     * @return static
+     * @return CurtainCallPost
      * @throws Throwable
      */
     public static function find(int $id): self
@@ -96,7 +90,7 @@ abstract class CurtainCallPost implements Arrayable
     
     /**
      * @param WP_Post|null $post
-     * @return static
+     * @return CurtainCallPost
      * @throws Throwable
      */
     public static function make(WP_Post $post = null): self
@@ -116,14 +110,18 @@ abstract class CurtainCallPost implements Arrayable
     /**
      * @return $this
      */
-    protected function setPostMeta(): self
+    public function loadMeta(): self
     {
         if (empty($this->wp_post->ID)) {
             $this->meta = null;
+            return $this;
+        }
+        
+        if (isset($this->meta) && $this->meta instanceof CurtainCallPostMeta) {
+            return $this;
         }
         
         $this->meta = CurtainCallPostMeta::make(static::class, $this->wp_post->ID, $this->ccwp_meta_keys);
-        
         return $this;
     }
     
@@ -137,7 +135,7 @@ abstract class CurtainCallPost implements Arrayable
             return $this->wp_post->$key;
         }
     
-        if (isset($this->meta->$key)) {
+        if ($this->meta->has($key)) {
             return $this->meta->$key;
         }
     
@@ -203,7 +201,7 @@ abstract class CurtainCallPost implements Arrayable
     
     /**
      * Save everything attached to this post
-     * 
+     *
      * @return bool
      */
     public function save(): bool

@@ -26,6 +26,24 @@ trait HasWordPressPost
     }
     
     /**
+     * @param  int|WP_Post $post
+     * @throws \Exception
+     */
+    protected function loadPost($post): void
+    {
+        if ($post instanceof WP_Post) {
+            $this->setPost($post);
+        } else if (intval($post) > 0) {
+            $post = $this->fetchPost(intval($post));
+            $this->setPost($post);
+        } else {
+            throw new \InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
+        }
+    
+        $this->setPostProperties();
+    }
+    
+    /**
      * @param int $post_id
      * @return WP_Post
      * @throws \Exception
@@ -37,7 +55,7 @@ trait HasWordPressPost
         $_post = $wpdb->get_row($sql);
     
         if (!$_post) {
-            throw new \Exception("Failed to find post. id #{$post_id} post_type: ". static::POST_TYPE);
+            throw new \Exception("Failed to fetch post. id #{$post_id} post_type: ". static::POST_TYPE);
         }
     
         $_post = sanitize_post( $_post, 'raw' );

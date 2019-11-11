@@ -55,15 +55,6 @@ class CurtainCallPostMeta implements Arrayable
         $this->ccwp_meta_keys = $ccwp_meta_keys;
         $this->ccwp_meta_key_match_pattern = "~^{$this->meta_prefix}([_a-zA-Z0-9]+)$~";
         $this->load();
-    
-        if (empty($this->ccwp_meta_keys)) {
-            foreach ($this->meta as $key => $meta) {
-                if (preg_match($this->ccwp_meta_key_match_pattern, $key)) {
-                    $stripedKey = str_replace($this->meta_prefix, '', $key);
-                    $this->ccwp_meta_keys[] = $stripedKey;
-                }
-            }
-        }
     }
     
     /**
@@ -89,28 +80,6 @@ class CurtainCallPostMeta implements Arrayable
     /**
      * @param string $key
      * @param bool   $hidden
-     * @return string
-     */
-    protected function getMetaKey(string $key, $hidden = true): string
-    {
-        if ($this->isCCWPMeta($key)) {
-            return $this->meta_prefix . $key;
-        }
-        
-        if ($hidden) {
-            if (substr($key, 0, 1) === '_') {
-                return $key;
-            }
-    
-            return '_' . $key;
-        }
-
-        return $key;
-    }
-    
-    /**
-     * @param string $key
-     * @param bool   $hidden
      * @return boolean
      */
     public function has(string $key, $hidden = true): bool
@@ -126,7 +95,20 @@ class CurtainCallPostMeta implements Arrayable
         return metadata_exists('post', $this->post_id, $this->getMetaKey($key, $hidden));
     }
     
-    protected function load(): self
+    /**
+     * @param string $key
+     * @return string
+     */
+    protected function getMetaKey(string $key): string
+    {
+        if ($this->isCCWPMeta($key)) {
+            return $this->meta_prefix . $key;
+        }
+        
+        return $key;
+    }
+    
+    public function load(): self
     {
         $this->meta = array_map(function($item){
             return $item[0] ?? null;
@@ -137,12 +119,11 @@ class CurtainCallPostMeta implements Arrayable
     
     /**
      * @param string $key
-     * @param bool   $hidden
      * @return false|mixed
      */
-    protected function fetch(string $key, $hidden = true)
+    protected function fetch(string $key)
     {
-        return get_post_meta($this->post_id, $this->getMetaKey($key, $hidden), true);
+        return get_post_meta($this->post_id, $this->getMetaKey($key), true);
     }
     
     /**
@@ -168,12 +149,11 @@ class CurtainCallPostMeta implements Arrayable
     
     /**
      * @param string $key
-     * @param bool   $hidden
      * @return null|mixed
      */
-    protected function getMeta(string $key, $hidden = true)
+    protected function getMeta(string $key)
     {
-        $meta_value = $this->meta[$this->getMetaKey($key, $hidden)] ?? null;
+        $meta_value = $this->meta[$this->getMetaKey($key)] ?? null;
         
         if (isset($meta_value)) {
             return $meta_value;
@@ -200,8 +180,8 @@ class CurtainCallPostMeta implements Arrayable
     }
     
     /**
-     * @param  string $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
      * @return CurtainCallPostMeta
      */
     protected function setMeta(string $key, $value): self
@@ -250,6 +230,7 @@ class CurtainCallPostMeta implements Arrayable
     }
     
     /**
+     * Restricted to only updating ccwp postmeta fields
      * true  = something was created in the meta array was created or updated
      * false = nothing was created or updated. It doesn't mean something went wrong.
      *
@@ -259,7 +240,7 @@ class CurtainCallPostMeta implements Arrayable
     {
         $something_updated = false;
         foreach ($this->meta as $key => $value) {
-            // only update ccwp post meta
+            // only ccwp postmeta
             if (preg_match($this->ccwp_meta_key_match_pattern, $key)) {
                 $result = update_post_meta($this->post_id, $key, sanitize_text_field((string)$value));
                 if ($result) {
