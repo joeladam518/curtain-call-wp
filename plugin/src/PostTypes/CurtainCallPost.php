@@ -202,8 +202,9 @@ abstract class CurtainCallPost implements Arrayable
     public function toArray(): array
     {
         $ccwp_post = isset($this->wp_post) ? $this->wp_post->to_array() : [];
-        $ccwp_post['ccwp_attributes'] = $this->attributes;
         $ccwp_post['meta'] = isset($this->meta) ? $this->meta->toArray() : [];
+        $ccwp_post['ccwp_attributes'] = $this->attributes;
+        
         
         return $ccwp_post;
     }
@@ -224,7 +225,7 @@ abstract class CurtainCallPost implements Arrayable
     
     public function __call($key, $args)
     {
-        if (in_array($key, ['updateMeta', 'saveMeta', 'deleteMeta']) && (isset($this->meta) && $this->meta instanceof CurtainCallPostMeta)) {
+        if (in_array($key, ['updateMeta', 'saveMeta', 'deleteMeta']) && $this->meta instanceof CurtainCallPostMeta) {
             $method = str_replace('Meta', '', $key);
             if (method_exists($this->meta, $method) && is_callable(array($this->meta, $method))) {
                 return call_user_func_array(array($this->meta, $method), $args);

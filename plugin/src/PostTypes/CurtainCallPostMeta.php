@@ -210,6 +210,10 @@ class CurtainCallPostMeta implements Arrayable
         return $this;
     }
     
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
     public function __set($key, $value)
     {
         if (!$this->isCCWPMeta($key)) {

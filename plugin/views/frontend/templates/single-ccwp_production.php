@@ -249,14 +249,11 @@ get_header( 'single' );
                                                     
                                                 </div>
                                             <?php endforeach; ?>
-                                        </div> 
-                                       
+                                        </div>
                                     </section>
                                 <?php endif; ?>
-                                
                             </div>
                         <?php endif; ?>
-                        
                     </div>
                 </div>
             </div>
