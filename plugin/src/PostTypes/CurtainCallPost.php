@@ -39,9 +39,6 @@ use Throwable;
  * @property-read string $page_template
  * @property-read string $post_category
  * @property-read string $tags_input
- * @method int|bool updateMeta(string $key, mixed $value)
- * @method bool     saveMeta()
- * @method int|bool deleteMeta(string $key)
  */
 abstract class CurtainCallPost implements Arrayable
 {
@@ -84,6 +81,8 @@ abstract class CurtainCallPost implements Arrayable
     
         $this->setPostMeta();
     }
+    
+    abstract public static function getConfig(): array;
     
     /**
      * @param int $id
@@ -170,6 +169,47 @@ abstract class CurtainCallPost implements Arrayable
         
         $this->setAttribute($key, $value);
     }
+
+    /**
+     * Restricted to only updating ccwp postmeta
+     *
+     * @param string $key
+     * @param mixed  $value
+     * @return bool
+     */
+    public function updateMeta(string $key, $value)
+    {
+        if (!in_array($key, $this->ccwp_meta_keys)) {
+            return false;
+        }
+        
+        return $this->meta->update($key, $value);
+    }
+    
+    /**
+     * Restricted to only deleting ccwp postmeta
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function deleteMeta(string $key)
+    {
+        if (!in_array($key, $this->ccwp_meta_keys)) {
+            return false;
+        }
+        
+        return $this->meta->delete($key);
+    }
+    
+    /**
+     * Save everything attached to this post
+     * 
+     * @return bool
+     */
+    public function save(): bool
+    {
+        return $this->meta->save();
+    }
     
     /**
      * @param $key
@@ -197,6 +237,20 @@ abstract class CurtainCallPost implements Arrayable
     }
     
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $result = json_encode($this->toArray());
+        
+        if (empty($result)) {
+            return '';
+        }
+        
+        return $result;
+    }
+    
+    /**
      * @return array
      */
     public function toArray(): array
@@ -205,35 +259,6 @@ abstract class CurtainCallPost implements Arrayable
         $ccwp_post['meta'] = isset($this->meta) ? $this->meta->toArray() : [];
         $ccwp_post['ccwp_attributes'] = $this->attributes;
         
-        
         return $ccwp_post;
     }
-    
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $result = json_encode($this->toArray());
-    
-        if (empty($result)) {
-            return '';
-        }
-    
-        return $result;
-    }
-    
-    public function __call($key, $args)
-    {
-        if (in_array($key, ['updateMeta', 'saveMeta', 'deleteMeta']) && $this->meta instanceof CurtainCallPostMeta) {
-            $method = str_replace('Meta', '', $key);
-            if (method_exists($this->meta, $method) && is_callable(array($this->meta, $method))) {
-                return call_user_func_array(array($this->meta, $method), $args);
-            }
-        }
-        
-        throw new \BadMethodCallException(static::class . ' doesnt have method: '. $key .'()');
-    }
-    
-    abstract public static function getConfig(): array;
 }

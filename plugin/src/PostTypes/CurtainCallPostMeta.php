@@ -227,34 +227,19 @@ class CurtainCallPostMeta implements Arrayable
     /**
      * @param  string $key
      * @param  mixed  $value
-     * @return boolean
+     * @return bool
      */
     public function update(string $key, $value): bool
     {
         if ($result = update_post_meta($this->post_id, $this->getMetaKey($key), $value)) {
             $this->setMeta($key, $value);
         }
-        return $result;
-    }
-    
-    /**
-     * @return bool
-     */
-    public function save(): bool
-    {
-        foreach ($this->meta as $key => $value) {
-            // only update ccwp post meta
-            if (preg_match($this->ccwp_meta_key_match_pattern, $key)) {
-                update_post_meta($this->post_id, $key, sanitize_text_field((string)$value));
-            }
-        }
-    
-        return true;
+        return (bool)$result;
     }
     
     /**
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function delete(string $key): bool
     {
@@ -262,6 +247,28 @@ class CurtainCallPostMeta implements Arrayable
             $this->__unset($key);
         }
         return $result;
+    }
+    
+    /**
+     * true  = something was created in the meta array was created or updated
+     * false = nothing was created or updated. It doesn't mean something went wrong.
+     *
+     * @return bool
+     */
+    public function save(): bool
+    {
+        $something_updated = false;
+        foreach ($this->meta as $key => $value) {
+            // only update ccwp post meta
+            if (preg_match($this->ccwp_meta_key_match_pattern, $key)) {
+                $result = update_post_meta($this->post_id, $key, sanitize_text_field((string)$value));
+                if ($result) {
+                    $something_updated = true;
+                }
+            }
+        }
+        
+        return $something_updated;
     }
     
     /**
