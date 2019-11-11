@@ -211,9 +211,7 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __isset($key)
     {
-        return (isset($this->meta) && isset($this->meta->$key))
-               || isset($this->attributes[$key])
-               || isset($this->wp_post->$key);
+        return isset($this->wp_post->$key) || (isset($this->meta) && isset($this->meta->$key));
     }
     
     /**
@@ -221,13 +219,11 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __unset($key)
     {
-        if (isset($this->meta->$key)) {
+        if ($this->meta->has($key)) {
             unset($this->meta->$key);
         }
         
-        if (isset($this->attributes[$key])) {
-            unset($this->attributes[$key]);
-        }
+        unset($this->attributes[$key]);
     }
     
     /**

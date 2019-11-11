@@ -231,7 +231,7 @@ class CurtainCallPostMeta implements Arrayable
     
     /**
      * Restricted to only updating ccwp postmeta fields
-     * true  = something was created in the meta array was created or updated
+     * true  = something in the meta array was created or updated
      * false = nothing was created or updated. It doesn't mean something went wrong.
      *
      * @return bool
