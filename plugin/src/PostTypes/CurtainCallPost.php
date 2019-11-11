@@ -114,14 +114,10 @@ abstract class CurtainCallPost implements Arrayable
     {
         if (empty($this->wp_post->ID)) {
             $this->meta = null;
-            return $this;
+        } else {
+            $this->meta = CurtainCallPostMeta::make(static::class, $this->wp_post->ID, $this->ccwp_meta_keys);
         }
         
-        if (isset($this->meta) && $this->meta instanceof CurtainCallPostMeta) {
-            return $this;
-        }
-        
-        $this->meta = CurtainCallPostMeta::make(static::class, $this->wp_post->ID, $this->ccwp_meta_keys);
         return $this;
     }
     
