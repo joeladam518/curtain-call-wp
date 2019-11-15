@@ -89,7 +89,7 @@ trait HasCastAndCrew
         return $wpdb->get_results($query, ARRAY_A);
     }
     
-    public function getCastAndCrew(string $type = 'both'): array
+    public function getCastAndCrew(string $type = 'both', $include_post_meta = true): array
     {
         global $wpdb;
         
@@ -143,8 +143,20 @@ trait HasCastAndCrew
         ORDER BY
             ccwp_join.custom_order DESC, castcrew_posts.post_title ASC
         ";
-        
-        return $wpdb->get_results($query, ARRAY_A);
+    
+        $cast_and_crew = $wpdb->get_results($query, ARRAY_A);
+    
+        if ($include_post_meta && count($cast_and_crew) > 0) {
+            foreach ($cast_and_crew as &$castcrew) {
+                $castcrew_post_meta = get_post_meta($castcrew['ccwp_castcrew_post_id']);
+                $castcrew['post_meta'] = [];
+                foreach ($castcrew_post_meta as $key2 => $the_post_meta){
+                    $castcrew['post_meta'][$key2] = $the_post_meta[0];
+                }
+            }
+        }
+    
+        return $cast_and_crew;
     }
     
     public function saveCastAndCrew(string $type, array $castcrew_to_upsert = []): void
