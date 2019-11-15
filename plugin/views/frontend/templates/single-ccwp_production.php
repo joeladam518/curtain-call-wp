@@ -237,12 +237,8 @@ get_header( 'single' );
             </div>
         </div>
     </div>
-    
-    
 
-    <?php endif; // content is visible
-        pr($production->toArray(),1);
-    ?>
+    <?php endif; // content is visible?>
 
 <?php endwhile; endif; // end of the loop. ?>
 
