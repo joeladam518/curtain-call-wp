@@ -34,7 +34,9 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
 
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
-    <?php 
+    <?php
+        $castcrew = CastAndCrew::make(get_post());
+        
         //$current_post = get_post();
         //$current_post_custom_fields = get_post_meta($current_post->ID);
 
@@ -154,7 +156,7 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
                         </div>
                         
                         <?php
-                            $productions = CastAndCrew::getProductions(get_the_ID(), true);
+                            $productions = $castcrew->getProductions();
                             $roles_by_pid = [];
                             foreach($productions as $p){
 	                            if(!isset($roles_by_pid[$p['ID']])){ $roles_by_pid[$p['ID']] = []; }

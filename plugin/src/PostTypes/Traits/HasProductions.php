@@ -6,7 +6,7 @@ use Carbon\CarbonImmutable as Carbon;
 
 trait HasProductions
 {
-    public static function getProductions(int $post_id, $include_post_meta = true)
+    public function getProductions($include_post_meta = true)
     {
         global $wpdb;
         
@@ -26,7 +26,7 @@ trait HasProductions
             INNER JOIN " . $wpdb->posts . " AS production_posts
             ON production_posts.ID = ccwp_join.production_id
             WHERE (ccwp_join.type = 'cast' OR ccwp_join.type = 'crew')
-            AND castcrew_posts.ID = " . $post_id . "
+            AND castcrew_posts.ID = " . $this->ID . "
             ORDER BY production_posts.post_title
         ";
         
