@@ -168,11 +168,14 @@ class AdminHookController extends CurtainCallHookController
     
     public function renderAddCastAndCrewMetaBox($post, $metabox)
     {
+        /** @var Production $production */
+        $production = Production::make($post);
+        
         // Get all castcrew by id and name
-        $all_cast_and_crew_members = Production::getAllCastAndCrewForSelectBox();
+        $all_cast_and_crew_members = $production->getSelectBoxCastCrew();
         
         // Get all related cast and crew members to this production
-        $production_cast_and_crew_members = Production::getCastAndCrew($post->ID, 'both', false);
+        $production_cast_and_crew_members = $production->getCastAndCrew();
         $cast_members = [];
         $crew_members = [];
         
@@ -244,8 +247,9 @@ class AdminHookController extends CurtainCallHookController
         $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
         $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
         
-        Production::saveCastAndCrew($post_id, 'cast', $production_cast);
-        Production::saveCastAndCrew($post_id, 'crew', $production_crew);
+        $production = Production::find($post_id); //
+        $production->saveCastAndCrew('cast', $production_cast);
+        $production->saveCastAndCrew('crew', $production_crew);
     }
     
     public function saveProductionPostDetails($post_id)

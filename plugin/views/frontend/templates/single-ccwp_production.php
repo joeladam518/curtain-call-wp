@@ -34,6 +34,8 @@ get_header( 'single' );
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
     <?php 
+        $production = Production::make(get_post());
+
         //$current_post = get_post();
         //$current_post_custom_fields = get_post_meta($current_post->ID);
         
@@ -176,8 +178,8 @@ get_header( 'single' );
                         <?php endif; ?>
                         
                         <?php
-                            $cast = Production::getCastAndCrew(get_the_ID(), 'cast', true);
-                            $crew = Production::getCastAndCrew(get_the_ID(), 'crew', true);
+                            $cast = $production->getCastAndCrew('cast');
+                            $crew = $production->getCastAndCrew('crew');
                         ?>
                         <?php if (!empty($cast) || !empty($crew)) : ?>
                             <div class="ccwp-detail-page-cross-db-directory production-cc-directory">
