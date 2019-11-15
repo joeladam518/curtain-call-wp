@@ -2,9 +2,7 @@
 
 namespace CurtainCallWP\Helpers;
 
-use Carbon\CarbonImmutable as Carbon;
-
-class CurtainCallHelpers 
+class CurtainCallHelper
 {
     public static function strip_http($str = null)
     {

@@ -2,8 +2,8 @@
 
 namespace CurtainCallWP;
 
-use CurtainCallWP\Controllers\AdminHookController;
-use CurtainCallWP\Controllers\FrontendHookController;
+use CurtainCallWP\Hooks\AdminHookController;
+use CurtainCallWP\Hooks\FrontendHookController;
 use CurtainCallWP\LifeCycle\Activator;
 use CurtainCallWP\LifeCycle\Deactivator;
 use CurtainCallWP\LifeCycle\Uninstaller;

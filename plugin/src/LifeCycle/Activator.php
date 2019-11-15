@@ -2,9 +2,7 @@
 
 namespace CurtainCallWP\LifeCycle;
 
-use CurtainCallWP\LifeCycle\Contracts\PluginLifeCycleHook;
-
-class Activator implements PluginLifeCycleHook
+class Activator implements LifeCycleHook
 {
     public static function run(): void
     {

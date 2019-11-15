@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\Controllers;
+namespace CurtainCallWP\Hooks;
 
 use CurtainCallWP\CurtainCallView;
 

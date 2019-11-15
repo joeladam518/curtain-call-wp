@@ -1,11 +1,11 @@
 <?php
 
-namespace CurtainCallWP\Controllers;
+namespace CurtainCallWP\Hooks;
 
 use CurtainCallWP\PostTypes\CastAndCrew;
 use CurtainCallWP\PostTypes\Production;
 use Carbon\CarbonImmutable as Carbon;
-use CurtainCallWP\Helpers\CurtainCallHelpers as Helpers;
+use CurtainCallWP\Helpers\CurtainCallHelper as Helper;
 
 /**
  * Class AdminController
@@ -444,7 +444,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_website_link'])) {
             // update data
-            $link = Helpers::strip_http($_POST['ccwp_website_link']);
+            $link = Helper::strip_http($_POST['ccwp_website_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_website_link', $link);
         } else {
@@ -454,7 +454,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_facebook_link'])) {
             // update data
-            $link = Helpers::strip_http($_POST['ccwp_facebook_link']);
+            $link = Helper::strip_http($_POST['ccwp_facebook_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_facebook_link', $link);
         } else {
@@ -464,7 +464,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_twitter_link'])) {
             // update data
-            $link = Helpers::strip_http($_POST['ccwp_twitter_link']);
+            $link = Helper::strip_http($_POST['ccwp_twitter_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_twitter_link', $link);
         } else {
@@ -474,7 +474,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_instagram_link'])) {
             // update data
-            $link = Helpers::strip_http($_POST['ccwp_instagram_link']);
+            $link = Helper::strip_http($_POST['ccwp_instagram_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_instagram_link', $link);
         } else {

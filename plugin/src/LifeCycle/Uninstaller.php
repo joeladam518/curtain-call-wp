@@ -2,9 +2,7 @@
 
 namespace CurtainCallWP\LifeCycle;
 
-use CurtainCallWP\LifeCycle\Contracts\PluginLifeCycleHook;
-
-class Uninstaller implements PluginLifeCycleHook
+class Uninstaller implements LifeCycleHook
 {
     public static function run(): void
     {
