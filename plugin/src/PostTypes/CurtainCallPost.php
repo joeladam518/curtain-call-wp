@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
+use CurtainCallWP\Exceptions\UndefinedPropertyException;
 use \WP_Post;
 use CurtainCallWP\PostTypes\Traits\HasAttributes;
 use CurtainCallWP\PostTypes\Traits\HasWordPressPost;
@@ -124,6 +125,7 @@ abstract class CurtainCallPost implements Arrayable
     /**
      * @param  string $key
      * @return mixed
+     * @throws Throwable
      */
     public function __get($key)
     {
@@ -138,8 +140,8 @@ abstract class CurtainCallPost implements Arrayable
         if (array_key_exists($key, $this->attributes)) {
             return $this->getAttribute($key);
         }
-    
-        trigger_error('Undefined property: '. static::class .'::$'. $key, E_USER_ERROR);
+        
+        throw new UndefinedPropertyException('Undefined property: '. static::class .'::$'. $key);
     }
     
     /**

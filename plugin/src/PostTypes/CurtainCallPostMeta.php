@@ -3,7 +3,10 @@
 
 namespace CurtainCallWP\PostTypes;
 
+use CurtainCallWP\Exceptions\UndefinedPropertyException;
+use CurtainCallWP\Exceptions\UnsettableException;
 use CurtainCallWP\PostTypes\Interfaces\Arrayable;
+use Throwable;
 
 /**
  * Class CurtainCallPostMeta
@@ -92,7 +95,7 @@ class CurtainCallPostMeta implements Arrayable
             return true;
         }
         
-        return metadata_exists('post', $this->post_id, $this->getMetaKey($key, $hidden));
+        return metadata_exists('post', $this->post_id, $this->getMetaKey($key));
     }
     
     /**
@@ -170,10 +173,15 @@ class CurtainCallPostMeta implements Arrayable
         return $meta_value;
     }
     
+    /**
+     * @param $key
+     * @return mixed|null
+     * @throws Throwable
+     */
     public function __get($key)
     {
         if (!$this->has($key)) {
-            trigger_error('Undefined property: '. $this->post_class .'::$'. $key, E_USER_ERROR);
+            throw new UndefinedPropertyException('Undefined property: '. $this->post_class .'::$'. $key);
         }
         
         return $this->getMeta($key);
@@ -193,12 +201,12 @@ class CurtainCallPostMeta implements Arrayable
     /**
      * @param string $key
      * @param mixed $value
+     * @throws Throwable
      */
     public function __set($key, $value)
     {
         if (!$this->isCCWPMeta($key)) {
-            trigger_error('Can not set: '. $this->post_class .'::$'. $key .' as it is not ccwp meta field.', E_USER_WARNING);
-            return;
+            throw new UnsettableException('Can not set: '. $this->post_class .'::$'. $key .' as it is not ccwp meta field.');
         }
         
         $this->setMeta($key, $value);
