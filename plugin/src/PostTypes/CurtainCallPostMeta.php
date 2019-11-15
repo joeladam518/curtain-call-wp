@@ -156,17 +156,13 @@ class CurtainCallPostMeta implements Arrayable
      */
     protected function getMeta(string $key)
     {
-        $meta_value = $this->meta[$this->getMetaKey($key)] ?? null;
+        $meta_key = $this->getMetaKey($key);
         
-        if (isset($meta_value)) {
-            return $meta_value;
+        if (array_key_exists($meta_key, $this->meta)) {
+            return $this->meta[$meta_key];
         }
         
         $meta_value = $this->fetch($key);
-        
-        if (empty($meta_value)) {
-            return null;
-        }
         
         $this->setMeta($key, $meta_value);
         

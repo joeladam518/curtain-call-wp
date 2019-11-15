@@ -11,6 +11,7 @@ use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
  * @property string $date_start
  * @property string $date_end
  * @property string $show_times
+ * @property string $ticket_url
  * @property string $venue
  * @property string $press
  */
