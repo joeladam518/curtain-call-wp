@@ -4,7 +4,19 @@ namespace CurtainCallWP\PostTypes\Traits;
 
 trait HasAttributes
 {
+    /**
+     * @var array
+     */
     protected $attributes = [];
+    
+    /**
+     * @param string $key
+     * @return bool
+     */
+    protected function isAttribute(string $key): bool
+    {
+        return array_key_exists($key, $this->attributes);
+    }
     
     /**
      * @param string $key
@@ -12,7 +24,7 @@ trait HasAttributes
      */
     protected function getAttribute(string $key)
     {
-        return $this->attributes[$key] ?? null;
+        return $this->attributes[$key];
     }
     
     /**

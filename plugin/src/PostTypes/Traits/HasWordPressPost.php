@@ -18,7 +18,7 @@ trait HasWordPressPost
     /**
      * @var array
      */
-    protected $wp_post_properties = [];
+    protected $wp_post_attributes = [];
     
     /**
      * @return WP_Post
@@ -28,8 +28,14 @@ trait HasWordPressPost
         return $this->wp_post;
     }
     
+    protected function isWordPressPostAttribute(string $key)
+    {
+        return in_array($key, $this->wp_post_attributes);
+    }
+    
     /**
-     * @param  int|WP_Post $post
+     * @param int|WP_Post $post
+     * @return void
      * @throws Throwable
      */
     protected function loadPost($post): void
@@ -43,13 +49,13 @@ trait HasWordPressPost
             throw new InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
         }
     
-        $this->setPostProperties();
+        $this->setWordPressPostAttributes();
     }
     
     /**
      * @param int $post_id
      * @return WP_Post
-     * @throws Throwable
+     * @throws PostNotFoundException
      */
     protected function fetchPost(int $post_id): WP_Post
     {
@@ -84,10 +90,10 @@ trait HasWordPressPost
     /**
      * @return CurtainCallPost
      */
-    protected function setPostProperties(): self
+    protected function setWordPressPostAttributes(): self
     {
         $object_vars = get_object_vars($this->wp_post);
-        $this->wp_post_properties = array_keys($object_vars);
+        $this->wp_post_attributes = array_keys($object_vars);
         
         return $this;
     }

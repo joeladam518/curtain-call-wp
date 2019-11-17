@@ -3,8 +3,10 @@
 namespace CurtainCallWP\PostTypes;
 
 use CurtainCallWP\Exceptions\UndefinedPropertyException;
+use CurtainCallWP\Exceptions\UnsettableException;
 use \WP_Post;
 use CurtainCallWP\PostTypes\Traits\HasWordPressPost;
+use CurtainCallWP\PostTypes\Traits\HasMeta;
 use CurtainCallWP\PostTypes\Traits\HasAttributes;
 use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 use Throwable;
@@ -43,24 +45,15 @@ use Throwable;
  */
 abstract class CurtainCallPost implements Arrayable
 {
-    use HasAttributes;
     use HasWordPressPost;
+    use HasMeta;
+    use HasAttributes;
     
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
     const JOIN_TABLE_NAME = 'ccwp_castandcrew_production';
     
     protected static $join_table_name;
-    
-    /**
-     * @var null|CurtainCallPostMeta
-     */
-    protected $meta;
-    
-    /**
-     * @var array
-     */
-    protected $ccwp_meta_keys = [];
     
     /**
      * CurtainCallPost constructor.
@@ -115,35 +108,21 @@ abstract class CurtainCallPost implements Arrayable
     }
     
     /**
-     * @return $this
-     */
-    public function loadMeta(): self
-    {
-        if (empty($this->wp_post->ID)) {
-            $this->meta = null;
-        } else {
-            $this->meta = CurtainCallPostMeta::make(static::class, $this->wp_post->ID, $this->ccwp_meta_keys);
-        }
-        
-        return $this;
-    }
-    
-    /**
      * @param  string $key
      * @return mixed
-     * @throws Throwable
+     * @throws UndefinedPropertyException
      */
     public function __get($key)
     {
-        if (in_array($key, $this->wp_post_properties)){
+        if ($this->isWordPressPostAttribute($key)){
             return $this->wp_post->$key;
         }
     
-        if ($this->meta->has($key)) {
-            return $this->meta->$key;
+        if ($this->isMetaAttribute($key)) {
+            return $this->getMeta($key);
         }
     
-        if (array_key_exists($key, $this->attributes)) {
+        if ($this->isAttribute($key)) {
             return $this->getAttribute($key);
         }
         
@@ -153,64 +132,24 @@ abstract class CurtainCallPost implements Arrayable
     /**
      * @param string $key
      * @param mixed  $value
+     * @throws UnsettableException;
      */
     public function __set($key, $value)
     {
         if ($key === 'meta') {
-            return;
+            throw new UnsettableException('You can not set the meta property.');
         }
         
-        if (in_array($key, $this->wp_post_properties)) {
-            return;
+        if ($this->isWordPressPostAttribute($key)) {
+            throw new UnsettableException('You can not set "'. $key .'" it is a WordPress post attribute.');
         }
         
-        if ($this->meta->has($key)) {
-            $this->meta->$key = $value;
+        if ($this->isMetaAttribute($key)) {
+            $this->setMeta($key, $value);
             return;
         }
         
         $this->setAttribute($key, $value);
-    }
-
-    /**
-     * Restricted to only updating ccwp postmeta
-     *
-     * @param string $key
-     * @param mixed  $value
-     * @return bool
-     */
-    public function updateMeta(string $key, $value)
-    {
-        if (!in_array($key, $this->ccwp_meta_keys)) {
-            return false;
-        }
-        
-        return $this->meta->update($key, $value);
-    }
-    
-    /**
-     * Restricted to only deleting ccwp postmeta
-     *
-     * @param string $key
-     * @return bool
-     */
-    public function deleteMeta(string $key)
-    {
-        if (!in_array($key, $this->ccwp_meta_keys)) {
-            return false;
-        }
-        
-        return $this->meta->delete($key);
-    }
-    
-    /**
-     * Save everything attached to this post
-     *
-     * @return bool
-     */
-    public function save(): bool
-    {
-        return $this->meta->save();
     }
     
     /**
@@ -219,12 +158,12 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __isset($key)
     {
-        if (in_array($key, $this->wp_post_properties)) {
+        if ($this->isWordPressPostAttribute($key)) {
             return isset($this->wp_post->$key);
         }
         
-        if ($this->meta->has($key)) {
-            return isset($this->meta->$key);
+        if ($this->isMetaAttribute($key)) {
+            return isset($this->meta[$key]);
         }
 
         return isset($this->attributes[$key]);
@@ -235,25 +174,11 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __unset($key)
     {
-        if ($this->meta->has($key)) {
-            unset($this->meta->$key);
+        if ($this->isMetaAttribute($key)) {
+            unset($this->meta[$key]);
         }
         
         unset($this->attributes[$key]);
-    }
-    
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        $result = json_encode($this->toArray());
-        
-        if (empty($result)) {
-            return '';
-        }
-        
-        return $result;
     }
     
     /**
@@ -261,10 +186,10 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function toArray(): array
     {
-        $ccwp_post = isset($this->wp_post) ? $this->wp_post->to_array() : [];
-        $ccwp_post['meta'] = isset($this->meta) ? $this->meta->toArray() : [];
-        $ccwp_post['ccwp_attributes'] = $this->attributes;
+        $data = isset($this->wp_post) ? $this->wp_post->to_array() : [];
+        $data['attributes'] = $this->attributes;
+        $data['meta'] = $this->meta;
         
-        return $ccwp_post;
+        return $data;
     }
 }
