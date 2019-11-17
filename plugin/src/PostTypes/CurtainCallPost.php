@@ -50,6 +50,8 @@ abstract class CurtainCallPost implements Arrayable
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
     
+    protected static $join_table_name;
+    
     /**
      * @var null|CurtainCallPostMeta
      */
@@ -104,8 +106,12 @@ abstract class CurtainCallPost implements Arrayable
      */
     public static function getJoinTableName(): string
     {
+        if (isset(self::$join_table_name)) {
+            return self::$join_table_name;
+        }
+        
         global $wpdb;
-        return $wpdb->prefix . self::JOIN_TABLE;
+        return self::$join_table_name = ($wpdb->prefix . self::JOIN_TABLE);
     }
     
     /**
