@@ -4,8 +4,8 @@ namespace CurtainCallWP\PostTypes;
 
 use CurtainCallWP\Exceptions\UndefinedPropertyException;
 use \WP_Post;
-use CurtainCallWP\PostTypes\Traits\HasAttributes;
 use CurtainCallWP\PostTypes\Traits\HasWordPressPost;
+use CurtainCallWP\PostTypes\Traits\HasAttributes;
 use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 use Throwable;
 
@@ -46,9 +46,9 @@ abstract class CurtainCallPost implements Arrayable
     use HasAttributes;
     use HasWordPressPost;
     
-    const JOIN_TABLE = 'ccwp_castandcrew_production';
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
+    const JOIN_TABLE_NAME = 'ccwp_castandcrew_production';
     
     protected static $join_table_name;
     
@@ -106,12 +106,12 @@ abstract class CurtainCallPost implements Arrayable
      */
     public static function getJoinTableName(): string
     {
-        if (isset(self::$join_table_name)) {
-            return self::$join_table_name;
+        if (empty(static::$join_table_name)) {
+            global $wpdb;
+            static::$join_table_name = $wpdb->prefix . static::JOIN_TABLE_NAME;
         }
         
-        global $wpdb;
-        return self::$join_table_name = ($wpdb->prefix . self::JOIN_TABLE);
+        return static::$join_table_name;
     }
     
     /**
