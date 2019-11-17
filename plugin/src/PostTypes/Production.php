@@ -3,6 +3,7 @@
 namespace CurtainCallWP\PostTypes;
 
 use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
+use Carbon\CarbonImmutable as Carbon;
 
 /**
  * Class Production
@@ -14,6 +15,7 @@ use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
  * @property string $ticket_url
  * @property string $venue
  * @property string $press
+ * @property string $chronological_state
  */
 class Production extends CurtainCallPost
 {
@@ -100,5 +102,63 @@ class Production extends CurtainCallPost
                 'with_front' => true,
             ],
         ];
+    }
+    
+    #
+    # Functions
+    #
+    
+    /**
+     * @return string
+     */
+    public function getChronologicalState(): string
+    {
+        if (isset($this->chronological_state)) {
+            return $this->chronological_state;
+        }
+        
+        $now = Carbon::now();
+        $start_date = Carbon::parse($this->date_start);
+        $end_date = Carbon::parse($this->date_end);
+        
+        if ($now->gt($end_date)) {
+            $this->chronological_state = 'past';
+        } else if ($now->lt($start_date)) {
+            $this->chronological_state = 'future';
+        } else {
+            $this->chronological_state = 'current';
+        }
+        
+        return $this->chronological_state;
+    }
+    
+    public function getFormattedShowDates()
+    {
+        $start_date = new Carbon($this->date_start);
+        $end_date = new Carbon($this->date_end);
+        
+        $start_date_format = 'F jS';
+        $end_date_format   = '';
+    
+        // Don't show start date year if both dates are in the same year
+        if ($start_date->format('Y') != $end_date->format('Y')) {
+            $start_date_format .= ', Y';
+        }
+        
+        // Don't show end date month if both dates are in the same month
+        if ($start_date->format('F') != $end_date->format('F')) {
+            $end_date_format .= 'F ';
+        }
+        $end_date_format .= 'jS, Y';
+    
+        $formatted_dates = $start_date->format($start_date_format);
+        $formatted_end_date = $end_date->format($end_date_format);
+        
+        // Only show one date if the dates are identical
+        if ($formatted_dates != $formatted_end_date) {
+            $formatted_dates .= ' - ' . $formatted_end_date;
+        }
+        
+        return $formatted_dates;
     }
 }

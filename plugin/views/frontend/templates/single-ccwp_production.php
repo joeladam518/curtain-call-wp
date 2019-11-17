@@ -53,27 +53,6 @@ get_header( 'single' );
             // TODO: 2019-11-15: change this to an option setting
             $ticket_link = 'https://www.rutheckerdhall.com/events';
         }
-        
-        // date formatting
-        $show_start_date_format = 'F jS';
-        $show_end_date_format = $show_start_date_format;
-        $today = Carbon::now();
-        // if the show is in the current year don't show the year
-        if ($today->lt($show_end_date) || $show_start_date->format('Y') != $today->format('Y')) {
-            // only show end date year if both dates are in the same year
-            if ($show_start_date->format('Y') != $show_end_date->format('Y')) {
-                $show_start_date_format .= ' Y';
-            }
-        }
-        if ($today->lt($show_end_date) || $show_end_date->format('Y') != $today->format('Y')) {
-            $show_end_date_format .= ' Y';
-        }
-        $show_start_date_formatted = $show_start_date->format($show_start_date_format);
-        $show_end_date_formatted = $show_end_date->format($show_end_date_format);
-        $show_dates_formatted = $show_start_date_formatted;
-        if ($show_start_date_formatted != $show_end_date_formatted) {
-            $show_dates_formatted .= ' - ' . $show_end_date_formatted;
-        }
     
         $post_gallery = get_post_gallery();
         if (empty($post_gallery)) {
@@ -111,9 +90,9 @@ get_header( 'single' );
                                             <?php if ($show_temporal_state == 'current'): ?>
                                                 <span class="now-showing">Now Showing</span>
                                             <?php endif; ?>
-                                            <span class="show-dates">
-                                                <?php echo $show_dates_formatted; ?>
-                                            </span>
+                                            <div class="show-dates">
+                                                <?php echo $production->getFormattedShowDates(); ?>
+                                            </div>
                                         </span>
                                         <?php if ($show_temporal_state != 'past'): ?>
                                             <a href="<?php echo $ticket_link ?>" class="show-tickets" target="_blank">
