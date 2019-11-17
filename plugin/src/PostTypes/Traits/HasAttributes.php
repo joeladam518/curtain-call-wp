@@ -20,7 +20,7 @@ trait HasAttributes
     
     /**
      * @param string $key
-     * @return mixed|null
+     * @return mixed
      */
     protected function getAttribute(string $key)
     {

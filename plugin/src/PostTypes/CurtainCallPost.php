@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
+use ArrayAccess;
 use CurtainCallWP\Exceptions\UndefinedPropertyException;
 use CurtainCallWP\Exceptions\UnsettableException;
 use \WP_Post;
@@ -43,7 +44,7 @@ use Throwable;
  * @property-read string $post_category
  * @property-read string $tags_input
  */
-abstract class CurtainCallPost implements Arrayable
+abstract class CurtainCallPost implements ArrayAccess, Arrayable
 {
     use HasWordPressPost;
     use HasMeta;
@@ -177,6 +178,43 @@ abstract class CurtainCallPost implements Arrayable
         }
         
         unset($this->attributes[$key]);
+    }
+    
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->$offset);
+    }
+    
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->$offset;
+    }
+    
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->$offset = $value;
+    }
+    
+    /**
+     * @param mixed $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->$offset);
     }
     
     /**
