@@ -17,7 +17,7 @@ class FrontendHookController extends CurtainCallHookController
     {
         parent::__construct();
     
-        $this->assets_url = ccwp_assets_url() . 'frontend/';
+        $this->assets_url = ccwpAssetsUrl() . 'frontend/';
         $this->assets_path = ccwp_assets_path() . 'frontend/';
     }
     
