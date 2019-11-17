@@ -41,6 +41,9 @@ class CastAndCrew extends CurtainCallPost
         'fun_fact',
     ];
     
+    /**
+     * @return array
+     */
     public static function getConfig(): array
     {
         return [

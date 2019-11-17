@@ -28,65 +28,42 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
     return $show_dates_formatted;
 }
 
+get_header( 'single' );
 ?>
 
-<?php get_header( 'single' ); ?>
-
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-
     <?php
-        $castcrew = CastAndCrew::make(get_post());
-        
-        //$current_post = get_post();
-        //$current_post_custom_fields = get_post_meta($current_post->ID);
+        $post_classes = []; // You can dynamically add classes to the article by adding to this array...
 
-        // You can dynamically add classes to the article by adding to this array...
-        $post_classes = [];
-        
-        // required
-        $cast_crew_name_first = get_custom_field('_ccwp_cast_crew_name_first');
-        $cast_crew_name_last = get_custom_field('_ccwp_cast_crew_name_last');
-        $cast_crew_self_title = get_custom_field('_ccwp_cast_crew_self_title');
-        // optional
-        $cast_crew_birthday = get_custom_field('_ccwp_cast_crew_birthday');
-        $cast_crew_hometown = get_custom_field('_ccwp_cast_crew_hometown');
-        $cast_crew_website_link = get_custom_field('_ccwp_cast_crew_website_link');
-        $cast_crew_facebook_link = get_custom_field('_ccwp_cast_crew_facebook_link');
-        $cast_crew_twitter_link = get_custom_field('_ccwp_cast_crew_twitter_link');
-        $cast_crew_instagram_link = get_custom_field('_ccwp_cast_crew_instagram_link');
-        $cast_crew_fun_fact = get_custom_field('_ccwp_cast_crew_fun_fact');
+        $castcrew = CastAndCrew::make(get_post());
+        $castcrew_name = "{$castcrew->name_first} {$castcrew->name_last}";
         
         $talent_birthplace = '';
-        if (!empty($cast_crew_birthday)) {
-            $talent_birthplace .= 'Born on ' . Carbon::parse($cast_crew_birthday)->toFormattedDateString();
-            if (!empty($cast_crew_hometown)) {
-                $talent_birthplace .= ' in ' . $cast_crew_hometown;
+        if (isset($castcrew->birthday)) {
+            $talent_birthplace .= 'Born on ' . Carbon::parse($castcrew->birthday)->toFormattedDateString();
+            if (isset($castcrew->hometown)) {
+                $talent_birthplace .= ' in ' . $castcrew->hometown;
             }
             $talent_birthplace .= '.';
-        } elseif (!empty($cast_crew_hometown)) {
-            $talent_birthplace .= 'Born in ' . $cast_crew_hometown . '.';
+        } else if (isset($castcrew->hometown)) {
+            $talent_birthplace .= 'Born in ' . $castcrew->hometown . '.';
         }
     ?>
     
-    <?php if (get_post_status() == 'publish'): ?>
+    <?php if (get_post_status($castcrew->getPost()) == 'publish'): ?>
    
     <div id="main" class="sidebar-none sidebar-divider-off">	
         <div class="wf-wrap">
             <div class="wf-container-main">
                 <div id="content" class="content talent-content-container" role="main">
-                    
                     <div class="ccwp-detail-page-breadcrumbs">
                         <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                         <a href="/cast-and-crew">Cast &amp; Crew</a>&nbsp;&nbsp;/&nbsp;
-                        <span>
-                            <?php echo $cast_crew_name_first . ' ' . $cast_crew_name_last; ?>
-                        </span>
+                        <span><?php echo $castcrew_name; ?></span>
                     </div>
                     
-                    <div id="post-<?php the_ID(); ?>" <?php post_class( $post_classes ); ?>>
-                        
+                    <div id="post-<?php echo $castcrew->ID; ?>" <?php post_class( $post_classes ); ?>>
                         <div class="talent-bio-container">
-                            
                             <?php if (has_post_thumbnail()) : ?>
                                 <div class="talent-profile-image">
                                     <?php the_post_thumbnail('full'); ?>
@@ -94,65 +71,62 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
                             <?php endif; ?>
                             
                             <div class="talent-profile-details">
+                                <h1><?php echo $castcrew_name ?></h1>
                                 
-                                <h1><?php echo $cast_crew_name_first . ' ' . $cast_crew_name_last; ?></h1>
-                                
-                                <?php if (!empty($cast_crew_self_title)) : ?>
-                                    <h3><?php echo $cast_crew_self_title; ?></h3>
+                                <?php if (isset($castcrew->self_title)): ?>
+                                    <h3><?php echo $castcrew->self_title; ?></h3>
                                 <?php endif; ?>
                                 
                                 <?php if ($talent_birthplace != '') : ?>
                                     <p class="talent-birthplace"><?php echo $talent_birthplace; ?></p>
                                 <?php endif; ?>
                                 
-                                <?php if (!empty($cast_crew_fun_fact)) : ?>
-                                    <p class="talent-fun-fact"><?php echo $cast_crew_fun_fact; ?></p>
+                                <?php if (isset($castcrew->fun_fact)) : ?>
+                                    <p class="talent-fun-fact"><?php echo $castcrew->fun_fact; ?></p>
                                 <?php endif; ?>
                                 
                                 <div class="talent-bio-section">
                                     <?php if (!empty(get_the_content())) : ?>
                                         <?php the_content(); ?>
-                                    <?php else : ?>
-                                        <p>No bio has been written for this cast or crew member yet.</p>
                                     <?php endif; ?>
                                 </div>
                                                             
-                                <?php if (!empty($cast_crew_website_link) || !empty($cast_crew_facebook_link) || !empty($cast_crew_twitter_link) || !empty($cast_crew_instagram_link)) : ?>
+                                <?php if (isset($castcrew->website_link) || isset($castcrew->facebook_link) || isset($castcrew->instagram_link) || isset($castcrew->twitter_link)): ?>
                                     <h4 class="connect-with-talent-title">
-                                        Connect with <?php echo $cast_crew_name_first; ?>!
+                                        Connect with <?php echo $castcrew->name_first; ?>!
                                     </h4>
                                 <?php endif; ?>
                                 
-                                <?php if (!empty($cast_crew_website_link)) :?>
+                                <?php if (isset($castcrew->website_link)) :?>
                                     <p class="talent-website-link">
-                                        <a href="http://<?php echo $cast_crew_website_link; ?>">
-                                            <?php echo $cast_crew_website_link; ?>
+                                        <a href="http://<?php echo $castcrew->website_link; ?>">
+                                            <?php echo $castcrew->website_link; ?>
                                         </a>
                                     </p>
                                 <?php endif; ?>
                                 
-                                <?php if (!empty($cast_crew_facebook_link) || !empty($cast_crew_twitter_link) || !empty($cast_crew_instagram_link)) : ?>
+                                <?php if (isset($castcrew->facebook_link) || isset($castcrew->instagram_link) || isset($castcrew->twitter_link)): ?>
                                     <div class="talent-social">
-                                        <?php if (!empty($cast_crew_facebook_link)) : ?>
-                                        <a href="http://<?php echo $cast_crew_facebook_link; ?>">
+                                        <?php if (isset($castcrew->facebook_link)) : ?>
+                                        <a href="http://<?php echo $castcrew->facebook_link; ?>">
                                             <i class="fab fa-facebook-f"></i>
                                         </a>
                                         <?php endif; ?>
-                                        <?php if (!empty($cast_crew_twitter_link)) : ?>
-                                        <a href="http://<?php echo $cast_crew_twitter_link; ?>">
-                                            <i class="fab fa-twitter"></i>
-                                        </a>
-                                        <?php endif; ?>
-                                        <?php if (!empty($cast_crew_instagram_link)) : ?>
-                                        <a href="http://<?php echo $cast_crew_instagram_link; ?>">
+
+                                        <?php if (isset($castcrew->instagram_link)) : ?>
+                                        <a href="http://<?php echo $castcrew->instagram_link; ?>">
                                             <i class="fab fa-instagram"></i>
                                         </a>
                                         <?php endif; ?>
+    
+                                        <?php if (isset($castcrew->twitter_link)) : ?>
+                                            <a href="http://<?php echo $castcrew->twitter_link; ?>">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
-                                
                             </div>
-         
                         </div>
                         
                         <?php
@@ -164,6 +138,7 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
                             }
                             $productions_shown = [];
                         ?>
+                        
                         <?php if (!empty($productions)): ?>
                             <div class="ccwp-detail-page-cross-db-directory cast-prod-directory">
                                 <h2>Productions</h2>
@@ -199,17 +174,15 @@ function ccwp_cast_prod_format_dates($prod_start_date, $prod_end_date) {
                                                         <p><?php echo $cast_prod_dates; ?></p>
                                                     </div>
                                                 </div>
-                                                
                                             </div>
                                         <?php 
 	                                        $productions_shown[] = $production['ID'];
-	                                        endforeach; ?>
+	                                        endforeach;
+	                                    ?>
                                     </div>
-                                    
                                 </section>
                             </div>
                         <?php endif; ?>
-
                     </div>
                 </div>
             </div>
