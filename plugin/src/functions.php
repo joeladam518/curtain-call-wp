@@ -42,7 +42,7 @@ if (!function_exists('ccwpAssetsUrl')) {
      */
     function ccwpAssetsUrl(): string
     {
-        return ccwp_plugin_url('assets/');
+        return ccwpPluginUrl('assets/');
     }
 }
 
@@ -57,13 +57,13 @@ if (!function_exists('ccwpAssetsPath')) {
     }
 }
 
-if (!function_exists('ccwp_plugin_url')) {
+if (!function_exists('ccwpPluginUrl')) {
     /**
      * return the plugin dir url
      * @param string $path
      * @return string
      */
-    function ccwp_plugin_url(string $path = ''): string
+    function ccwpPluginUrl(string $path = ''): string
     {
         $url_path = plugin_dir_url(dirname(__FILE__));
         
