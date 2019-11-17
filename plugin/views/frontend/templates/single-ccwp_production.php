@@ -87,14 +87,14 @@ get_header( 'single' );
                                     
                                     <div class="show-title-container">
                                         <span class="show-title-content">
-                                            <?php if ($show_temporal_state == 'current'): ?>
+                                            <?php if ($production->getChronologicalState() == 'current'): ?>
                                                 <span class="now-showing">Now Showing</span>
                                             <?php endif; ?>
-                                            <div class="show-dates">
+                                            <span class="show-dates">
                                                 <?php echo $production->getFormattedShowDates(); ?>
-                                            </div>
+                                            </sp>
                                         </span>
-                                        <?php if ($show_temporal_state != 'past'): ?>
+                                        <?php if ($production->getChronologicalState() != 'past'): ?>
                                             <a href="<?php echo $ticket_link ?>" class="show-tickets" target="_blank">
                                                 Get Tickets
                                             </a>
