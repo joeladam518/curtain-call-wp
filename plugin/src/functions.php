@@ -6,13 +6,13 @@ if (!defined('ABSPATH')) {
     die;
 }
 
-if (!function_exists('get_custom_field')) {
+if (!function_exists('getCustomField')) {
     /**
      * @param string   $field_name
      * @param int|null $post_id
      * @return mixed
      */
-    function get_custom_field(string $field_name, int $post_id = null)
+    function getCustomField(string $field_name, int $post_id = null)
     {
         if (!empty($post_id)) {
             return get_post_meta($post_id, $field_name, true);
@@ -21,6 +21,8 @@ if (!function_exists('get_custom_field')) {
         return get_post_meta(get_the_ID(), $field_name, true);
     }
 }
+
+if (!function_exists('ccwp'))
 
 if (!function_exists('ccwpView')) {
     /**
@@ -53,7 +55,7 @@ if (!function_exists('ccwpAssetsPath')) {
      */
     function ccwpAssetsPath(): string
     {
-        return ccwp_plugin_path('assets/');
+        return ccwpPluginPath('assets/');
     }
 }
 
@@ -75,13 +77,13 @@ if (!function_exists('ccwpPluginUrl')) {
     }
 }
 
-if (!function_exists('ccwp_plugin_path')) {
+if (!function_exists('ccwpPluginPath')) {
     /**
      * return the plugin dir path
      * @param string $path
      * @return string
      */
-    function ccwp_plugin_path(string $path = ''): string
+    function ccwpPluginPath(string $path = ''): string
     {
         $dir_path = plugin_dir_path(dirname(__FILE__));
         

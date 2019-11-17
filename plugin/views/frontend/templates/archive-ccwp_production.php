@@ -89,8 +89,8 @@ if (!function_exists('ccwp_display_productions_of_type')) {
                 $result->the_post();
                 
                 // date formatting
-                $show_start_date = Carbon::parse(get_custom_field('_ccwp_production_date_start'));
-                $show_end_date = Carbon::parse(get_custom_field('_ccwp_production_date_end'));
+                $show_start_date = Carbon::parse(getCustomField('_ccwp_production_date_start'));
+                $show_end_date = Carbon::parse(getCustomField('_ccwp_production_date_end'));
                 $show_start_date_format = 'F jS';
                 $show_end_date_format = $show_start_date_format;
                 $today = Carbon::now();
@@ -139,8 +139,8 @@ if (!function_exists('ccwp_display_productions_of_type')) {
                     echo '<h3 class="show-title">';
                     echo '<a href="'.get_post_permalink().'">';
                     
-                    if (!empty(get_custom_field('_ccwp_production_name'))) {
-                        echo get_custom_field('_ccwp_production_name');
+                    if (!empty(getCustomField('_ccwp_production_name'))) {
+                        echo getCustomField('_ccwp_production_name');
                     } else {
                         the_title();
                     }
@@ -150,8 +150,8 @@ if (!function_exists('ccwp_display_productions_of_type')) {
                     
                     if ($production_display_type != 'past') {
                         $ticket_link = 'https://www.rutheckerdhall.com/events';
-                        if (!empty(get_custom_field('_ccwp_production_ticket_url'))) {
-                            $ticket_link = get_custom_field('_ccwp_production_ticket_url');
+                        if (!empty(getCustomField('_ccwp_production_ticket_url'))) {
+                            $ticket_link = getCustomField('_ccwp_production_ticket_url');
                         }
                         echo '<a href="'.$ticket_link.'" class="show-tickets" target="_blank">Get Tickets</a>';
                     }
@@ -171,15 +171,15 @@ if (!function_exists('ccwp_display_productions_of_type')) {
                         echo '<div>';  
                     }
                     
-                    if (!empty(get_custom_field('_ccwp_production_show_times'))) {
+                    if (!empty(getCustomField('_ccwp_production_show_times'))) {
                         echo '<span class="show-times">';
-                        echo get_custom_field('_ccwp_production_show_times');
+                        echo getCustomField('_ccwp_production_show_times');
                         echo '</span>';
                     }
                     
-                    if (!empty(get_custom_field('_ccwp_production_venue'))) {
+                    if (!empty(getCustomField('_ccwp_production_venue'))) {
                         echo '<span class="show-venue">';
-                        echo get_custom_field('_ccwp_production_venue');
+                        echo getCustomField('_ccwp_production_venue');
                         echo '</span>';
                     }
                     

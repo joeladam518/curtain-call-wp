@@ -22,9 +22,9 @@ $prev_cast_alpha_index = null;
 if ($result->have_posts()) {
     while ($result->have_posts()) {
         $result->the_post();
-        $cast_crew_name_first = get_custom_field('_ccwp_cast_crew_name_first');
-        $cast_crew_name_last = get_custom_field('_ccwp_cast_crew_name_last');
-        $cast_crew_self_title = get_custom_field('_ccwp_cast_crew_self_title');
+        $cast_crew_name_first = getCustomField('_ccwp_cast_crew_name_first');
+        $cast_crew_name_last = getCustomField('_ccwp_cast_crew_name_last');
+        $cast_crew_self_title = getCustomField('_ccwp_cast_crew_self_title');
         if (!empty($cast_crew_name_first) && !empty($cast_crew_name_last) && !empty($cast_crew_self_title)) {
             $cast_alpha_indexes[] = strtoupper(substr($cast_crew_name_last, 0, 1));
         }
@@ -61,9 +61,9 @@ if ($result->have_posts()) {
             <?php  
                 //$current_post = get_post();
                 //$current_post_custom_fields = get_post_meta($current_post->ID);
-                $cast_crew_name_first = get_custom_field('_ccwp_cast_crew_name_first');
-                $cast_crew_name_last = get_custom_field('_ccwp_cast_crew_name_last');
-                $cast_crew_self_title = get_custom_field('_ccwp_cast_crew_self_title');
+                $cast_crew_name_first = getCustomField('_ccwp_cast_crew_name_first');
+                $cast_crew_name_last = getCustomField('_ccwp_cast_crew_name_last');
+                $cast_crew_self_title = getCustomField('_ccwp_cast_crew_self_title');
             ?>
             
             <?php if (get_post_status() == 'publish' && !empty($cast_crew_name_first) && !empty($cast_crew_name_last) && !empty($cast_crew_self_title)): ?>
