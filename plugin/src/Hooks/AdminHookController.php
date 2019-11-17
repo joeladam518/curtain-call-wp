@@ -192,7 +192,7 @@ class AdminHookController extends CurtainCallHookController
             $crew_members = array_values($crew_members);
         }
         
-        ccwp_view('admin/metaboxes/production-add-cast-and-crew.php', [
+        ccwpView('admin/metaboxes/production-add-cast-and-crew.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
@@ -209,7 +209,7 @@ class AdminHookController extends CurtainCallHookController
         $date_end = get_post_meta($post->ID, '_ccwp_production_date_end', true);
         $date_end = Carbon::parse($date_end)->format('m/d/Y');
 
-        ccwp_view('admin/metaboxes/production-details.php', [
+        ccwpView('admin/metaboxes/production-details.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
@@ -365,7 +365,7 @@ class AdminHookController extends CurtainCallHookController
         $cast_crew_birthday       = !empty($cast_crew_birthday)
                                     ? Carbon::parse($cast_crew_birthday)->format('m/d/Y')
                                     : '';
-        ccwp_view('admin/metaboxes/castcrew-details.php', [
+        ccwpView('admin/metaboxes/castcrew-details.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,

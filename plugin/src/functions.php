@@ -22,14 +22,14 @@ if (!function_exists('get_custom_field')) {
     }
 }
 
-if (!function_exists('ccwp_view')) {
+if (!function_exists('ccwpView')) {
     /**
      * Return a CurtainCall View to render templates
      * @param string $file_path
      * @param array  $data
      * @return CurtainCallView
      */
-    function ccwp_view(string $file_path, array $data): CurtainCallView
+    function ccwpView(string $file_path, array $data): CurtainCallView
     {
         return new CurtainCallView($file_path, $data);
     }
