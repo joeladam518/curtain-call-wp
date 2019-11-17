@@ -22,8 +22,6 @@ if (!function_exists('getCustomField')) {
     }
 }
 
-if (!function_exists('ccwp'))
-
 if (!function_exists('ccwpView')) {
     /**
      * Return a CurtainCall View to render templates
