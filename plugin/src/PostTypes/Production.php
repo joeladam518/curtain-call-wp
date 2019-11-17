@@ -4,6 +4,7 @@ namespace CurtainCallWP\PostTypes;
 
 use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
 use Carbon\CarbonImmutable as Carbon;
+use Throwable;
 
 /**
  * Class Production
@@ -132,7 +133,11 @@ class Production extends CurtainCallPost
         return $this->chronological_state;
     }
     
-    public function getFormattedShowDates()
+    /**
+     * @return string
+     * @throws Throwable
+     */
+    public function getFormattedShowDates(): string
     {
         $start_date = new Carbon($this->date_start);
         $end_date = new Carbon($this->date_end);

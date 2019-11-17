@@ -2,10 +2,7 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
-use BadMethodCallException;
-use CurtainCallWP\Exceptions\UndefinedPropertyException;
 use CurtainCallWP\PostTypes\CurtainCallPostMeta;
-use Throwable;
 
 trait HasMeta
 {

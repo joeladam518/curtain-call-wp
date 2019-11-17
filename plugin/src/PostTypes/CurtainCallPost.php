@@ -57,15 +57,13 @@ abstract class CurtainCallPost implements Arrayable
     
     /**
      * CurtainCallPost constructor.
-     * @param null|int|WP_Post $post
+     * @param int|WP_Post $post
      * @throws Throwable
      */
-    private function __construct($post = null)
+    private function __construct($post)
     {
-        if (!empty($post)) {
-            $this->loadPost($post);
-            $this->loadMeta();
-        }
+        $this->loadPost($post);
+        $this->loadMeta();
     }
     
     /**
@@ -89,7 +87,7 @@ abstract class CurtainCallPost implements Arrayable
      * @return CurtainCallPost
      * @throws Throwable
      */
-    public static function make(WP_Post $post = null): self
+    public static function make(WP_Post $post): self
     {
         return new static($post);
     }

@@ -36,7 +36,7 @@ trait HasWordPressPost
     /**
      * @param int|WP_Post $post
      * @return void
-     * @throws Throwable
+     * @throws PostNotFoundException|InvalidArgumentException
      */
     protected function loadPost($post): void
     {
