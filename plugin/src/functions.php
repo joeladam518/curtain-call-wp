@@ -46,12 +46,12 @@ if (!function_exists('ccwpAssetsUrl')) {
     }
 }
 
-if (!function_exists('ccwp_assets_path')) {
+if (!function_exists('ccwpAssetsPath')) {
     /**
      * Get the dir path of CurtainCallWP's minified assets
      * @return string
      */
-    function ccwp_assets_path(): string
+    function ccwpAssetsPath(): string
     {
         return ccwp_plugin_path('assets/');
     }

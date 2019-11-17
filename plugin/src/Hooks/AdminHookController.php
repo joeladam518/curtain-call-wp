@@ -21,7 +21,7 @@ class AdminHookController extends CurtainCallHookController
         parent::__construct();
         
         $this->assets_url = ccwpAssetsUrl() . 'admin/';
-        $this->assets_path = ccwp_assets_path() . 'admin/';
+        $this->assets_path = ccwpAssetsPath() . 'admin/';
     }
     
     /**
