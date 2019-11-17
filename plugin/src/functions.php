@@ -22,6 +22,13 @@ if (!function_exists('getCustomField')) {
     }
 }
 
+if (!function_exists('ccwpStripHttp')) {
+    function ccwpStripHttp(string $str)
+    {
+        return preg_replace('#^https?://#', '', $str);
+    }
+}
+
 if (!function_exists('ccwpView')) {
     /**
      * Return a CurtainCall View to render templates

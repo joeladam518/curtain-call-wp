@@ -5,7 +5,6 @@ namespace CurtainCallWP\Hooks;
 use CurtainCallWP\PostTypes\CastAndCrew;
 use CurtainCallWP\PostTypes\Production;
 use Carbon\CarbonImmutable as Carbon;
-use CurtainCallWP\Helpers\CurtainCallHelper as Helper;
 
 /**
  * Class AdminController
@@ -172,7 +171,7 @@ class AdminHookController extends CurtainCallHookController
         $production = Production::make($post);
         
         // Get all castcrew by id and name
-        $all_cast_and_crew_members = $production->getSelectBoxCastCrew();
+        $all_cast_crew_names = $production->getCastCrewNames();
         
         // Get all related cast and crew members to this production
         $production_cast_and_crew_members = $production->getCastAndCrew();
@@ -196,7 +195,7 @@ class AdminHookController extends CurtainCallHookController
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
-            'all_cast_and_crew_members' => $all_cast_and_crew_members,
+            'all_cast_crew_names' => $all_cast_crew_names,
             'cast_members' => $cast_members,
             'crew_members' => $crew_members,
         ])->render();
@@ -448,7 +447,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_website_link'])) {
             // update data
-            $link = Helper::strip_http($_POST['ccwp_website_link']);
+            $link = ccwpStripHttp($_POST['ccwp_website_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_website_link', $link);
         } else {
@@ -458,7 +457,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_facebook_link'])) {
             // update data
-            $link = Helper::strip_http($_POST['ccwp_facebook_link']);
+            $link = ccwpStripHttp($_POST['ccwp_facebook_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_facebook_link', $link);
         } else {
@@ -468,7 +467,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_twitter_link'])) {
             // update data
-            $link = Helper::strip_http($_POST['ccwp_twitter_link']);
+            $link = ccwpStripHttp($_POST['ccwp_twitter_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_twitter_link', $link);
         } else {
@@ -478,7 +477,7 @@ class AdminHookController extends CurtainCallHookController
         
         if ( ! empty($_REQUEST['ccwp_instagram_link'])) {
             // update data
-            $link = Helper::strip_http($_POST['ccwp_instagram_link']);
+            $link = ccwpStripHttp($_POST['ccwp_instagram_link']);
             $link = sanitize_text_field($link);
             update_post_meta($post_id, '_ccwp_cast_crew_instagram_link', $link);
         } else {
