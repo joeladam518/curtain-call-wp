@@ -2,8 +2,11 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
+use WP_Post;
 use CurtainCallWP\PostTypes\CurtainCallPost;
-use \WP_Post;
+use CurtainCallWP\Exceptions\PostNotFoundException;
+use InvalidArgumentException;
+use Throwable;
 
 trait HasWordPressPost
 {
@@ -27,7 +30,7 @@ trait HasWordPressPost
     
     /**
      * @param  int|WP_Post $post
-     * @throws \Exception
+     * @throws Throwable
      */
     protected function loadPost($post): void
     {
@@ -37,7 +40,7 @@ trait HasWordPressPost
             $post = $this->fetchPost(intval($post));
             $this->setPost($post);
         } else {
-            throw new \InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
+            throw new InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
         }
     
         $this->setPostProperties();
@@ -46,21 +49,21 @@ trait HasWordPressPost
     /**
      * @param int $post_id
      * @return WP_Post
-     * @throws \Exception
+     * @throws Throwable
      */
     protected function fetchPost(int $post_id): WP_Post
     {
         global $wpdb;
         $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE `ID` = %d AND `post_type` = %s LIMIT 1", $post_id, static::POST_TYPE);
-        $_post = $wpdb->get_row($sql);
+        $post = $wpdb->get_row($sql);
     
-        if (!$_post) {
-            throw new \Exception("Failed to fetch post. id #{$post_id} post_type: ". static::POST_TYPE);
+        if (!$post) {
+            throw new PostNotFoundException("Failed to fetch post. id #{$post_id} post_type: ". static::POST_TYPE);
         }
     
-        $_post = sanitize_post( $_post, 'raw' );
+        $post = sanitize_post($post, 'raw');
     
-        return new WP_Post($_post);
+        return new WP_Post($post);
     }
     
     /**
@@ -70,7 +73,7 @@ trait HasWordPressPost
     protected function setPost(WP_Post $post): self
     {
         if ($post->post_type !== static::POST_TYPE) {
-            throw new \InvalidArgumentException('Can\'t set wp_post.  post_type: "'. $post->post_type .'" is incompatible with '. static::class);
+            throw new InvalidArgumentException('Can\'t set wp_post.  post_type: "'. $post->post_type .'" is incompatible with '. static::class);
         }
 
         $this->wp_post = $post;
