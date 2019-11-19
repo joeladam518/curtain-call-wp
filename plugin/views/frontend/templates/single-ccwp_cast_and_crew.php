@@ -131,11 +131,7 @@ get_header( 'single' );
                         
                         <?php
                             $productions = $castcrew->getProductions();
-                            $roles_by_pid = [];
-                            foreach($productions as $p){
-	                            if(!isset($roles_by_pid[$p['ID']])){ $roles_by_pid[$p['ID']] = []; }
-	                            $roles_by_pid[$p['ID']][] = $p['ccwp_role'];
-                            }
+                            $roles_by_pid = CastAndCrew::rolesByProductionId($productions);
                             $productions_shown = [];
                         ?>
                         
@@ -145,13 +141,18 @@ get_header( 'single' );
                                 
                                 <section class="cast-productions-section">
                                     <div class="cast-prod-flex-container">
-                                        <?php foreach($productions as $production) : ?>
-                                        <?php if(in_array($production['ID'], $productions_shown)){ continue; } ?>
+                                        <?php foreach($productions as $production): ?>
                                             <?php
-                                                $cast_prod_dates = ccwp_cast_prod_format_dates($production['post_meta']['_ccwp_production_date_start'], $production['post_meta']['_ccwp_production_date_end']);
+                                                if (in_array($production['ID'], $productions_shown)) {
+                                                    continue;
+                                                }
+                                                $castcrew_prod_dates = ccwp_cast_prod_format_dates(
+                                                    $production['post_meta']['_ccwp_production_date_start'],
+                                                    $production['post_meta']['_ccwp_production_date_end']
+                                                );
                                             ?>
                                             <div class="cast-prod-show">
-                                                <?php if (has_post_thumbnail($production['ID'])) : ?>
+                                                <?php if (has_post_thumbnail($production['ID'])): ?>
                                                     <div class="cast-prod-show-poster">
                                                         <a href="<?php the_permalink($production['ID']); ?>">
                                                             <?php echo get_the_post_thumbnail($production['ID'], 'full'); ?>
@@ -171,7 +172,7 @@ get_header( 'single' );
                                                     </div>
                                                     
                                                     <div class="cast-prod-dates">
-                                                        <p><?php echo $cast_prod_dates; ?></p>
+                                                        <p><?php echo $castcrew_prod_dates; ?></p>
                                                     </div>
                                                 </div>
                                             </div>

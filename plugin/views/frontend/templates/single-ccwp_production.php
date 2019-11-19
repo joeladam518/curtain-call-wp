@@ -17,17 +17,6 @@ function  strip_shortcode_gallery( $content ) {
     return $content;
 }
 
-function calculate_temporal_state($start_date, $end_date) {
-    $today = Carbon::now();
-    if ($today > $end_date) {
-        return 'past';
-    } else if ($today < $start_date) {
-        return 'future';
-    } else {
-        return 'current';
-    }
-}
-
 get_header( 'single' );
 ?>
 
@@ -37,17 +26,14 @@ get_header( 'single' );
         // You can dynamically add classes to the article by adding to this array...
         $post_classes = [];
         
+        global $wpdb;
+        
         /** @var Production $production */
         $production = Production::make(get_post());
         $production_name = isset($production->name) ? $production->name : get_the_title();
-        
-        // Production show dates
-        $show_start_date = new Carbon($production->date_start);
-        $show_end_date = new Carbon($production->date_end);
-        $show_temporal_state = calculate_temporal_state($show_start_date, $show_end_date);
     
         // Production $ticket link
-        if (isset($production->ticket_url) && $show_temporal_state !== 'past') {
+        if (isset($production->ticket_url) && $production->getChronologicalState() !== 'past') {
             $ticket_link = $production->ticket_url;
         } else {
             // TODO: 2019-11-15: change this to an option setting
@@ -168,7 +154,7 @@ get_header( 'single' );
                                                         </div>
                                                         
                                                         <div class="prod-cc-role">
-                                                            <p><?php echo $cast_member['ccwp_role']; ?></p>
+                                                            <p><?php echo $cast_member['ccwp_join_role']; ?></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -201,7 +187,7 @@ get_header( 'single' );
                                                         </div>
                                                         
                                                         <div class="prod-cc-role">
-                                                            <p><?php echo $crew_member['ccwp_role']; ?></p>
+                                                            <p><?php echo $crew_member['ccwp_join_role']; ?></p>
                                                         </div>
                                                     </div>
                                                 </div>

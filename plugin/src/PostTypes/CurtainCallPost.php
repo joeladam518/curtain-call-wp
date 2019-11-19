@@ -52,9 +52,9 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
     
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
-    const JOIN_TABLE_NAME = 'ccwp_castandcrew_production';
     
     protected static $join_table_name;
+    protected static $join_table_alias = 'ccwp_join';
     
     /**
      * CurtainCallPost constructor.
@@ -100,10 +100,18 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
     {
         if (empty(static::$join_table_name)) {
             global $wpdb;
-            static::$join_table_name = $wpdb->prefix . static::JOIN_TABLE_NAME;
+            static::$join_table_name = $wpdb->prefix . 'ccwp_castandcrew_production';
         }
         
         return static::$join_table_name;
+    }
+    
+    /**
+     * @return string
+     */
+    public static function getJoinTableAlias(): string
+    {
+        return static::$join_table_alias;
     }
     
     /**

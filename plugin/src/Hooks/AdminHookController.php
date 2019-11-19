@@ -181,12 +181,12 @@ class AdminHookController extends CurtainCallHookController
         // Sort them into cast then crew members
         if (!empty($production_cast_and_crew_members) && is_array($production_cast_and_crew_members)) {
             $cast_members = array_filter($production_cast_and_crew_members, function ($castcrew_member) {
-                return ($castcrew_member['ccwp_type'] == 'cast');
+                return ($castcrew_member['ccwp_join_type'] == 'cast');
             });
             $cast_members = array_values($cast_members);
             
             $crew_members = array_filter($production_cast_and_crew_members, function ($castcrew_member) {
-                return ($castcrew_member['ccwp_type'] == 'crew');
+                return ($castcrew_member['ccwp_join_type'] == 'crew');
             });
             $crew_members = array_values($crew_members);
         }

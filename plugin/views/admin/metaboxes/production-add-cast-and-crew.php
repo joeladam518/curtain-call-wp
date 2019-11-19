@@ -3,7 +3,7 @@
  * @var string $wp_nonce
  * @var WP_Post $post
  * @var array $metabox
- * @var array $all_cast_and_crew_members
+ * @var array $all_cast_crew_names
  * @var array $cast_members
  * @var array $crew_members
  */
@@ -16,8 +16,8 @@ echo $wp_nonce;
         <label for="ccwp-production-cast-select">Add Cast: </label>
         <select id="ccwp-production-cast-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Cast</option>
-            <?php foreach ($all_cast_and_crew_members as $castcrew_member): ?>
-            <option value="<?php echo $castcrew_member['ID']; ?>"><?php echo $castcrew_member['post_title']; ?></option>
+            <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name): ?>
+            <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -59,7 +59,7 @@ echo $wp_nonce;
                             id="ccwp-production-cast-role-<?php echo $cast_member['ID']; ?>"
                             name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][role]"
                             placeholder="role"
-                            value="<?php echo $cast_member['ccwp_role']; ?>"
+                            value="<?php echo $cast_member['ccwp_join_role']; ?>"
                         >
                     </div>
                     <div class="ccwp-col billing-col">
@@ -68,7 +68,7 @@ echo $wp_nonce;
                             id="ccwp-production-cast-custom-order-<?php $cast_member['ID']; ?>"
                             name="ccwp_add_cast_to_production[<?php echo $cast_member['ID']; ?>][custom_order]"
                             placeholder="custom order"
-                            value="<?php echo $cast_member['ccwp_custom_order']; ?>"
+                            value="<?php echo $cast_member['ccwp_join_custom_order']; ?>"
                         >
                     </div>
                     <div class="ccwp-col action-col">
@@ -90,8 +90,8 @@ echo $wp_nonce;
         <label for="ccwp-production-crew-select">Add Crew: </label>
         <select id="ccwp-production-crew-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Crew</option>
-            <?php foreach ($all_cast_and_crew_members as $castcrew_member): ?>
-            <option value="<?php echo $castcrew_member['ID']; ?>"><?php echo $castcrew_member['post_title']; ?></option>
+            <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name): ?>
+            <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -134,7 +134,7 @@ echo $wp_nonce;
                             id="ccwp-production-crew-role-<?php echo $crew_member['ID']; ?>"
                             name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][role]"
                             placeholder="role"
-                            value="<?php echo $crew_member['ccwp_role']; ?>"
+                            value="<?php echo $crew_member['ccwp_join_role']; ?>"
                         >
                     </div>
                     <div class="ccwp-col billing-col">
@@ -143,7 +143,7 @@ echo $wp_nonce;
                             id="ccwp-production-crew-custom-order-<?php echo $crew_member['ID']; ?>"
                             name="ccwp_add_crew_to_production[<?php echo $crew_member['ID']; ?>][custom_order]"
                             placeholder="custom order"
-                            value="<?php echo $crew_member['ccwp_custom_order']; ?>"
+                            value="<?php echo $crew_member['ccwp_join_custom_order']; ?>"
                         >
                     </div>
                     <div class="ccwp-col action-col">

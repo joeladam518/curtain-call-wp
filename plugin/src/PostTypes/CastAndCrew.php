@@ -82,4 +82,18 @@ class CastAndCrew extends CurtainCallPost
             ],
         ];
     }
+    
+    
+    public static function rolesByProductionId(array $productions): array
+    {
+        $roles_by_id = [];
+        foreach ($productions as $p) {
+            if (!isset($roles_by_id[$p['ID']])) {
+                $roles_by_id[$p['ID']] = [];
+            }
+            $roles_by_id[$p['ID']][] = $p['ccwp_join_role'];
+        }
+        
+        return $roles_by_id;
+    }
 }

@@ -2,167 +2,109 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
-use CurtainCallWP\PostTypes\Production;
+use CurtainCallWP\Helpers\QueryHelper;
 
 trait HasCastAndCrew
 {
-    public function getCurrentCastCrewIds(string $type = 'both')
+    public function getCastCrewIds(string $type = 'both')
     {
         global $wpdb;
         
         $query = "
             SELECT
-                ccwp_join.production_id,
-                ccwp_join.cast_and_crew_id,
-                ccwp_join.type,
-                ccwp_join.role,
-                ccwp_join.custom_order
-            FROM
-                ". $wpdb->posts ." AS production_posts
-            LEFT JOIN
-                ". static::getJoinTableName() ." AS ccwp_join
-            ON
-                production_posts.ID = ccwp_join.production_id
-            LEFT JOIN
-                ". $wpdb->posts ." AS castcrew_posts
-            ON
-                castcrew_posts.ID = ccwp_join.cast_and_crew_id
-            WHERE
-                ccwp_join.production_id = ". $this->ID ."
+                `ccwp_join`.`production_id`,
+                `ccwp_join`.`cast_and_crew_id`,
+                `ccwp_join`.`type`,
+                `ccwp_join`.`role`,
+                `ccwp_join`.`custom_order`
+            FROM `". $wpdb->posts ."` AS `production_posts`
+            INNER JOIN `". static::getJoinTableName() ."` AS `ccwp_join` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
+            WHERE `production_posts`.`ID` = %d
         ";
         
-        switch ($type) {
-            case 'cast':
-                $query .= "
-                AND
-                    ccwp_join.type = 'cast'
-                ";
-                break;
-            case 'crew':
-                $query .= "
-                AND
-                    ccwp_join.type = 'crew'
-                ";
-                break;
-            case 'both':
-            default:
-                $query .= "
-                AND
-                    ( ccwp_join.type = 'cast' OR ccwp_join.type = 'crew' )
-                ";
-                break;
-        }
+        $query .= QueryHelper::whereCCWPJoinType($type, 'AND');
+        
+        $sql = $wpdb->prepare($query, $this->ID);
+        $castcrew = $wpdb->get_results($sql, ARRAY_A);
     
-        $current_castcrew = $wpdb->get_results($query, ARRAY_A);
-    
-        $current_castcrew_ids = [];
-        if (!empty($current_castcrew)) {
-            $current_castcrew_ids = array_values(array_map(function($castcrew_member) {
+        $castcrew_ids = [];
+        if (!empty($castcrew)) {
+            $castcrew_ids = array_values(array_map(function($castcrew_member) {
                 return $castcrew_member['cast_and_crew_id'];
-            }, $current_castcrew));
+            }, $castcrew));
         }
         
-        return $current_castcrew_ids;
+        return $castcrew_ids;
     }
     
-    public function getSelectBoxCastCrew()
+    public function getCastCrewNames()
     {
         global $wpdb;
         
         $query = "
             SELECT
-                castcrew_posts.ID,
-                castcrew_posts.post_title,
-                castcrew_posts.post_name,
-                castcrew_posts.post_type,
-                castcrew_posts.post_status
-            FROM
-                ". $wpdb->posts ." AS castcrew_posts
-            WHERE
-                castcrew_posts.post_type = 'ccwp_cast_and_crew'
-            AND
-                castcrew_posts.post_status = 'publish'
-            ORDER BY
-                castcrew_posts.post_title ASC
+                `castcrew_posts`.`ID`,
+                `castcrew_posts`.`post_title`,
+                `castcrew_posts`.`post_type`,
+                `castcrew_posts`.`post_status`
+            FROM `". $wpdb->posts ."` AS `castcrew_posts`
+            WHERE `castcrew_posts`.`post_type` = %s
+            AND `castcrew_posts`.`post_status` = %s
+            ORDER BY `castcrew_posts`.`post_title`
         ";
         
-        return $wpdb->get_results($query, ARRAY_A);
+        $sql = $wpdb->prepare($query, 'ccwp_cast_and_crew', 'publish');
+        $castcrew = $wpdb->get_results($sql, ARRAY_A);
+        
+        if (count($castcrew) > 0) {
+            $castcrew = array_column($castcrew, 'post_title', 'ID');
+        }
+        
+        return $castcrew;
     }
     
     public function getCastAndCrew(string $type = 'both', $include_post_meta = true): array
     {
         global $wpdb;
         
-        $cast_and_crew = null;
-        
         $query = "
             SELECT
-                castcrew_posts.*,
-                ccwp_join.production_id AS ccwp_production_post_id,
-                ccwp_join.cast_and_crew_id AS ccwp_castcrew_post_id,
-                ccwp_join.type AS ccwp_type,
-                ccwp_join.role AS ccwp_role,
-                ccwp_join.custom_order AS ccwp_custom_order
-            FROM
-                ". $wpdb->posts ." AS production_posts
-            LEFT JOIN
-                ". static::getJoinTableName() ." AS ccwp_join
-            ON
-                production_posts.ID = ccwp_join.production_id
-            LEFT JOIN
-                ". $wpdb->posts ." AS castcrew_posts
-            ON
-                castcrew_posts.ID = ccwp_join.cast_and_crew_id
+                `castcrew_posts`.*,
+                `ccwp_join`.`production_id` AS `ccwp_join_production_id`,
+                `ccwp_join`.`cast_and_crew_id` AS `ccwp_join_castcrew_id`,
+                `ccwp_join`.`type` AS `ccwp_join_type`,
+                `ccwp_join`.`role` AS `ccwp_join_role`,
+                `ccwp_join`.`custom_order` AS `ccwp_join_custom_order`
+            FROM `". $wpdb->posts ."` AS `production_posts`
+            INNER JOIN `". static::getJoinTableName() ."` AS `ccwp_join` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
+            WHERE `production_posts`.`ID` = %d
         ";
         
-        switch ($type) {
-            case 'cast':
-                $query .= "
-                WHERE
-                    ccwp_join.type = 'cast'
-                ";
-                break;
-            case 'crew':
-                $query .= "
-                WHERE
-                    ccwp_join.type = 'crew'
-                ";
-                break;
-            case 'both':
-            default:
-                $query .= "
-                WHERE
-                    ( ccwp_join.type = 'cast' OR ccwp_join.type = 'crew' )
-                ";
-                break;
-        }
-        
-        $query .= "
-        AND
-            production_posts.ID = ". $this->ID  ."
-        ORDER BY
-            ccwp_join.custom_order DESC, castcrew_posts.post_title ASC
-        ";
+        $query .= QueryHelper::whereCCWPJoinType($type, 'AND');
+        $query .= "            ";
+        $query .= "ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC";
     
-        $cast_and_crew = $wpdb->get_results($query, ARRAY_A);
+        $sql = $wpdb->prepare($query, $this->ID);
+        $castcrew = $wpdb->get_results($sql, ARRAY_A);
     
-        if ($include_post_meta && count($cast_and_crew) > 0) {
-            foreach ($cast_and_crew as &$castcrew) {
-                $castcrew_post_meta = get_post_meta($castcrew['ccwp_castcrew_post_id']);
-                $castcrew['post_meta'] = [];
-                foreach ($castcrew_post_meta as $key2 => $the_post_meta){
-                    $castcrew['post_meta'][$key2] = $the_post_meta[0];
-                }
+        if ($include_post_meta && count($castcrew) > 0) {
+            foreach ($castcrew as &$castcrew_member) {
+                $post_meta = get_post_meta($castcrew_member['ccwp_join_castcrew_id']);
+                $castcrew_member['post_meta'] = array_map(function($meta) {
+                    return $meta[0] ?? null;
+                }, $post_meta);
             }
         }
     
-        return $cast_and_crew;
+        return $castcrew;
     }
     
     public function saveCastAndCrew(string $type, array $castcrew_to_upsert = []): void
     {
         // Get the currently saved cast/crew ids
-        $current_castcrew_ids = $this->getCurrentCastCrewIds($type);
+        $current_castcrew_ids = $this->getCastCrewIds($type);
         
         // Get the ids of the cast/crew to be upserted
         $new_castcrew_ids = [];

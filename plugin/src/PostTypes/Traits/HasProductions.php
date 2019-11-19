@@ -10,35 +10,30 @@ trait HasProductions
     {
         global $wpdb;
         
-        $productions = null;
-        
         $query = "
             SELECT
-                production_posts.*,
-                ccwp_join.production_id AS ccwp_production_post_id,
-                ccwp_join.cast_and_crew_id AS ccwp_castcrew_post_id,
-                ccwp_join.type AS ccwp_type,
-                ccwp_join.role AS ccwp_role,
-                ccwp_join.custom_order AS ccwp_custom_order
-            FROM " . $wpdb->posts . " AS castcrew_posts
-            INNER JOIN " . static::getJoinTableName() . " AS ccwp_join
-            ON castcrew_posts.ID = ccwp_join.cast_and_crew_id
-            INNER JOIN " . $wpdb->posts . " AS production_posts
-            ON production_posts.ID = ccwp_join.production_id
-            WHERE (ccwp_join.type = 'cast' OR ccwp_join.type = 'crew')
-            AND castcrew_posts.ID = " . $this->ID . "
+                `production_posts`.*,
+                `ccwp_join`.`production_id` AS `ccwp_join_production_id`,
+                `ccwp_join`.`cast_and_crew_id` AS `ccwp_join_castcrew_id`,
+                `ccwp_join`.`type` AS `ccwp_join_type`,
+                `ccwp_join`.`role` AS `ccwp_join_role`,
+                `ccwp_join`.`custom_order` AS `ccwp_join_custom_order`
+            FROM `". $wpdb->posts ."` AS `castcrew_posts`
+            INNER JOIN `". static::getJoinTableName() ."` AS `ccwp_join` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
+            INNER JOIN `". $wpdb->posts ."` AS `production_posts` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            WHERE `castcrew_posts`.`ID` = %d
             ORDER BY production_posts.post_title
         ";
-        
-        $productions = $wpdb->get_results($query, ARRAY_A);
+    
+        $sql = $wpdb->prepare($query, $this->ID);
+        $productions = $wpdb->get_results($sql, ARRAY_A);
         
         if ($include_post_meta && count($productions) > 0) {
-            foreach ($productions as $key1 => &$production) {
-                $production_post_meta = get_post_meta($production['ccwp_production_post_id']);
-                $production['post_meta'] = [];
-                foreach ($production_post_meta as $key2 => $the_post_meta){
-                    $production['post_meta'][$key2] = $the_post_meta[0];
-                }
+            foreach ($productions as &$production) {
+                $post_meta = get_post_meta($production['ccwp_join_production_id']);
+                $production['post_meta'] = array_map(function($meta) {
+                    return $meta[0] ?? null;
+                }, $post_meta);
             }
             
             usort($productions , function($a, $b) {
