@@ -2,6 +2,8 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
+use CurtainCallWP\PostTypes\Interfaces\Arrayable;
+
 trait HasAttributes
 {
     /**
@@ -20,11 +22,11 @@ trait HasAttributes
     
     /**
      * @param string $key
-     * @return mixed
+     * @return mixed|null
      */
     protected function getAttribute(string $key)
     {
-        return $this->attributes[$key];
+        return $this->attributes[$key] ?? null;
     }
     
     /**
@@ -37,5 +39,19 @@ trait HasAttributes
         $this->attributes[$key] = $value;
         
         return $this;
+    }
+    
+    protected function attributesToArray(): array
+    {
+        $attributes = [];
+        foreach ($this->attributes as $key => $value) {
+            if ($value instanceof Arrayable) {
+                $attributes[$key] = $value->toArray();
+            } else {
+                $attributes[$key] = $value;
+            }
+        }
+        
+        return $attributes;
     }
 }

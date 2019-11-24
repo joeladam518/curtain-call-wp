@@ -2,10 +2,9 @@
 
 namespace CurtainCallWP\PostTypes;
 
-use ArrayAccess;
 use CurtainCallWP\Exceptions\UndefinedPropertyException;
 use CurtainCallWP\Exceptions\UnsettableException;
-use \WP_Post;
+use WP_Post;
 use CurtainCallWP\PostTypes\Traits\HasWordPressPost;
 use CurtainCallWP\PostTypes\Traits\HasMeta;
 use CurtainCallWP\PostTypes\Traits\HasAttributes;
@@ -43,8 +42,9 @@ use Throwable;
  * @property-read string $page_template
  * @property-read string $post_category
  * @property-read string $tags_input
+ * @property-read CurtainCallPostJoin $ccwp_join
  */
-abstract class CurtainCallPost implements ArrayAccess, Arrayable
+abstract class CurtainCallPost implements Arrayable
 {
     use HasWordPressPost;
     use HasMeta;
@@ -54,7 +54,7 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
     const META_PREFIX = '_ccwp_';
     
     protected static $join_table_name;
-    protected static $join_table_alias = 'ccwp_join';
+    protected static $join_table_name_with_alias;
     
     /**
      * CurtainCallPost constructor.
@@ -98,20 +98,33 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
      */
     public static function getJoinTableName(): string
     {
+        global $wpdb;
+        
         if (empty(static::$join_table_name)) {
-            global $wpdb;
-            static::$join_table_name = $wpdb->prefix . 'ccwp_castandcrew_production';
+            static::$join_table_name = $wpdb->prefix . CurtainCallPostJoin::TABLE_NAME;
         }
         
         return static::$join_table_name;
     }
     
-    /**
-     * @return string
-     */
-    public static function getJoinTableAlias(): string
+    public static function getJoinTableNameWithAlias(): string
     {
-        return static::$join_table_alias;
+        if (empty(static::$join_table_name_with_alias)) {
+            static::$join_table_name_with_alias  = '`' . static::getJoinTableName() . '`';
+            static::$join_table_name_with_alias .= ' AS `' . CurtainCallPostJoin::TABLE_ALIAS . '`';
+        }
+        
+        return static::$join_table_name_with_alias;
+    }
+    
+    /**
+     * @param CurtainCallPostJoin $curtain_call_post_join
+     * @return static
+     */
+    public function setCurtainCallPostJoin(CurtainCallPostJoin $curtain_call_post_join): self
+    {
+        $this->setAttribute('ccwp_join', $curtain_call_post_join);
+        return $this;
     }
     
     /**
@@ -170,7 +183,7 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
         }
         
         if ($this->isMetaAttribute($key)) {
-            return isset($this->meta[$key]);
+            return isset($this->meta[$this->getMetaKey($key)]);
         }
 
         return isset($this->attributes[$key]);
@@ -182,47 +195,10 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
     public function __unset($key)
     {
         if ($this->isMetaAttribute($key)) {
-            unset($this->meta[$key]);
+            unset($this->meta[$this->getMetaKey($key)]);
         }
         
         unset($this->attributes[$key]);
-    }
-    
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->$offset);
-    }
-    
-    /**
-     * @param mixed $offset
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return $this->$offset;
-    }
-    
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->$offset = $value;
-    }
-    
-    /**
-     * @param mixed $offset
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->$offset);
     }
     
     /**
@@ -231,7 +207,7 @@ abstract class CurtainCallPost implements ArrayAccess, Arrayable
     public function toArray(): array
     {
         $data = isset($this->wp_post) ? $this->wp_post->to_array() : [];
-        $data['attributes'] = $this->attributes;
+        $data['attributes'] = $this->attributesToArray();
         $data['meta'] = $this->meta;
         
         return $data;

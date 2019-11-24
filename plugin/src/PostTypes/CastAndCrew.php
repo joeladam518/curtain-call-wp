@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
+use Carbon\CarbonImmutable AS Carbon;
 use CurtainCallWP\PostTypes\Traits\HasProductions;
 
 /**
@@ -83,17 +84,57 @@ class CastAndCrew extends CurtainCallPost
         ];
     }
     
-    
+    /**
+     * @param array $productions
+     * @return array
+     */
     public static function rolesByProductionId(array $productions): array
     {
         $roles_by_id = [];
-        foreach ($productions as $p) {
-            if (!isset($roles_by_id[$p['ID']])) {
-                $roles_by_id[$p['ID']] = [];
+        /** @var Production $production */
+        foreach ($productions as $production) {
+            if (!isset($roles_by_id[$production->ID])) {
+                $roles_by_id[$production->ID] = [];
             }
-            $roles_by_id[$p['ID']][] = $p['ccwp_join_role'];
+            $roles_by_id[$production->ID][] = $production->ccwp_join->role;
         }
         
         return $roles_by_id;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        if (isset($this->name_last)) {
+            return "{$this->name_first} {$this->name_last}";
+        }
+        
+        return $this->name_first;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getBirthPlace(): string
+    {
+        $birthplace = '';
+        if (isset($this->birthday)) {
+            $birthplace .= 'Born on ' . Carbon::parse($this->birthday)->toFormattedDateString();
+            if (isset($this->hometown)) {
+                $birthplace .= ' in ' . $this->hometown;
+            }
+            $birthplace .= '.';
+        } else if (isset($this->hometown)) {
+            $birthplace .= 'Born in ' . $this->hometown . '.';
+        }
+        
+        return $birthplace;
+    }
+    
+    public function hasSocialMedia(): bool
+    {
+        return isset($this->facebook_link) || isset($this->instagram_link) || isset($this->twitter_link);
     }
 }

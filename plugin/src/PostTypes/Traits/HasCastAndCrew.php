@@ -2,10 +2,17 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
+use CurtainCallWP\Helpers\CurtainCallHelper;
 use CurtainCallWP\Helpers\QueryHelper;
+use CurtainCallWP\PostTypes\CastAndCrew;
+use Throwable;
 
 trait HasCastAndCrew
 {
+    /**
+     * @param string $type
+     * @return array
+     */
     public function getCastCrewIds(string $type = 'both')
     {
         global $wpdb;
@@ -14,11 +21,9 @@ trait HasCastAndCrew
             SELECT
                 `ccwp_join`.`production_id`,
                 `ccwp_join`.`cast_and_crew_id`,
-                `ccwp_join`.`type`,
-                `ccwp_join`.`role`,
-                `ccwp_join`.`custom_order`
+                `ccwp_join`.`type`
             FROM `". $wpdb->posts ."` AS `production_posts`
-            INNER JOIN `". static::getJoinTableName() ."` AS `ccwp_join` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            INNER JOIN ". static::getJoinTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
             INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
             WHERE `production_posts`.`ID` = %d
         ";
@@ -38,7 +43,10 @@ trait HasCastAndCrew
         return $castcrew_ids;
     }
     
-    public function getCastCrewNames()
+    /**
+     * @return array
+     */
+    public function getCastCrewNames(): array
     {
         global $wpdb;
         
@@ -55,52 +63,51 @@ trait HasCastAndCrew
         ";
         
         $sql = $wpdb->prepare($query, 'ccwp_cast_and_crew', 'publish');
-        $castcrew = $wpdb->get_results($sql, ARRAY_A);
+        $castcrew_names = $wpdb->get_results($sql, ARRAY_A);
         
-        if (count($castcrew) > 0) {
-            $castcrew = array_column($castcrew, 'post_title', 'ID');
+        if (count($castcrew_names) > 0) {
+            $castcrew_names = array_column($castcrew_names, 'post_title', 'ID');
         }
         
-        return $castcrew;
+        return $castcrew_names;
     }
     
-    public function getCastAndCrew(string $type = 'both', $include_post_meta = true): array
+    /**
+     * @param string $type
+     * @return array
+     * @throws Throwable
+     */
+    public function getCastAndCrew(string $type = 'both'): array
     {
         global $wpdb;
         
+        $whereJoinTypeClause = QueryHelper::whereCCWPJoinType($type, 'AND');
+        
         $query = "
-            SELECT
-                `castcrew_posts`.*,
-                `ccwp_join`.`production_id` AS `ccwp_join_production_id`,
-                `ccwp_join`.`cast_and_crew_id` AS `ccwp_join_castcrew_id`,
-                `ccwp_join`.`type` AS `ccwp_join_type`,
-                `ccwp_join`.`role` AS `ccwp_join_role`,
-                `ccwp_join`.`custom_order` AS `ccwp_join_custom_order`
+            SELECT ". QueryHelper::selectCastAndCrew() ."
             FROM `". $wpdb->posts ."` AS `production_posts`
-            INNER JOIN `". static::getJoinTableName() ."` AS `ccwp_join` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            INNER JOIN ". static::getJoinTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
             INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
             WHERE `production_posts`.`ID` = %d
+            ". $whereJoinTypeClause ."
+            ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC
         ";
-        
-        $query .= QueryHelper::whereCCWPJoinType($type, 'AND');
-        $query .= "            ";
-        $query .= "ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC";
     
         $sql = $wpdb->prepare($query, $this->ID);
         $castcrew = $wpdb->get_results($sql, ARRAY_A);
     
-        if ($include_post_meta && count($castcrew) > 0) {
-            foreach ($castcrew as &$castcrew_member) {
-                $post_meta = get_post_meta($castcrew_member['ccwp_join_castcrew_id']);
-                $castcrew_member['post_meta'] = array_map(function($meta) {
-                    return $meta[0] ?? null;
-                }, $post_meta);
-            }
+        if (count($castcrew) > 0) {
+            /** @var array|CastAndCrew[] $castcrew */
+            $castcrew = CurtainCallHelper::convertToCurtainCallPosts($castcrew);
         }
     
         return $castcrew;
     }
     
+    /**
+     * @param string $type
+     * @param array  $castcrew_to_upsert
+     */
     public function saveCastAndCrew(string $type, array $castcrew_to_upsert = []): void
     {
         // Get the currently saved cast/crew ids
@@ -154,7 +161,14 @@ trait HasCastAndCrew
         }
     }
     
-    protected function insertCastCrew(int $castcrew_id, string $type, ?string $role = null, ?int $custom_order = null)
+    /**
+     * @param int         $castcrew_id
+     * @param string      $type
+     * @param string|null $role
+     * @param int|null    $custom_order
+     * @return void
+     */
+    protected function insertCastCrew(int $castcrew_id, string $type, ?string $role = null, ?int $custom_order = null): void
     {
         global $wpdb;
         
@@ -177,7 +191,14 @@ trait HasCastAndCrew
         $wpdb->flush();
     }
     
-    protected function updateCastCrew(int $castcrew_id, string $type, ?string $role = null, ?int $custom_order = null)
+    /**
+     * @param int         $castcrew_id
+     * @param string      $type
+     * @param string|null $role
+     * @param int|null    $custom_order
+     * @return void
+     */
+    protected function updateCastCrew(int $castcrew_id, string $type, ?string $role = null, ?int $custom_order = null): void
     {
         global $wpdb;
         
@@ -201,11 +222,15 @@ trait HasCastAndCrew
             '%s',
         ]);
     
-    
         $wpdb->flush();
     }
     
-    protected function deleteCastCrew(int $castcrew_id, string $type)
+    /**
+     * @param int    $castcrew_id
+     * @param string $type
+     * @return void
+     */
+    protected function deleteCastCrew(int $castcrew_id, string $type): void
     {
         global $wpdb;
         
