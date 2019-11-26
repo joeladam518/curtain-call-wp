@@ -23,15 +23,13 @@ get_header( 'single' );
             $ticket_link = 'https://www.rutheckerdhall.com/events';
         }
         
+        // Production photo gallery
         $post_gallery = get_post_gallery();
-        if (empty($post_gallery)) {
-            $post_gallery = false;
-        }
     ?>
 
     <?php if (get_post_status($production->getPost()) == 'publish'): ?>
         <main id="main" class="ccwp-main">
-            <div id="content" class="ccwp-post-container">
+            <div id="content" class="ccwp-main-content-container">
                 <div class="ccwp-post-breadcrumbs">
                     <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                     <a href="/productions">Productions</a>&nbsp;&nbsp;/&nbsp;
@@ -39,9 +37,9 @@ get_header( 'single' );
                 </div>
                 
                 <article id="post-<?php the_ID(); ?>" <?php post_class($post_classes); ?>>
-                    <section class="ccwp-section">
+                    <section class="ccwp-section ccwp-production-info-section">
                         <!-- info about the production -->
-                        <div class="ccwp-production-details-container">
+                        <div class="ccwp-container">
                             <div class="ccwp-row">
                                 <?php if (has_post_thumbnail()) : ?>
                                     <div class="ccwp-production-poster">
@@ -52,11 +50,11 @@ get_header( 'single' );
                                 <div class="show-info">
                                     <h1 class="ccwp-post-header"><?php echo $production_name; ?></h1>
                                     
-                                    <div class="show-dates-container">
+                                    <div class="ccwp-show-dates-container">
                                         <?php if ($production->getChronologicalState() == 'current'): ?>
                                             <span class="now-showing-label">Now Showing</span>
                                         <?php endif; ?>
-                                        <span class="production-dates">
+                                        <span class="show-dates">
                                             <?php echo $production->getFormattedShowDates(); ?>
                                         </span>
                                         <?php if ($production->getChronologicalState() != 'past'): ?>
@@ -91,12 +89,9 @@ get_header( 'single' );
                         </div>
                         
                         <!-- Production images -->
-                        <?php if ($post_gallery): ?>
-                            <div class="ccwp-post-gallery-container ccwp-production-images">
-                                <h2>Gallery</h2>
-                                <div class="post-gallery">
-                                    <?php echo $post_gallery; ?>
-                                </div>
+                        <?php if (empty($post_gallery)): ?>
+                            <div class="ccwp-post-photo-gallery ccwp-production-photo-gallery">
+                                <?php echo $post_gallery; ?>
                             </div>
                         <?php endif; ?>
                     </section>
@@ -110,9 +105,9 @@ get_header( 'single' );
                     
                     <!-- the production's cast and crew -->
                     <?php if (!empty($production_castcrew['cast']) || !empty($production_castcrew['crew'])): ?>
-                        <section class="ccwp-directory production-talent-directory">
+                        <section class="ccwp-directory ccwp-production-castcrew-listing">
                             <?php foreach ($production_castcrew as $pcc_type => $pcc_array): ?>
-                                <div class="ccwp-section production-<?php echo $pcc_type; ?>-section">
+                                <div class="ccwp-container production-<?php echo $pcc_type; ?>-list">
                                     <h2><?php echo ucfirst($pcc_type); ?></h2>
                                     
                                     <div class="ccwp-section-content">
