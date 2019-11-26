@@ -138,8 +138,8 @@ class CurtainCall
     {
         $plugin_frontend = new FrontendHookController();
         
-        $this->loader->add_filter('single_template', $plugin_frontend, 'loadSingleTemplates');
-        $this->loader->add_filter('archive_template', $plugin_frontend, 'loadArchiveTemplates');
+        $this->loader->add_filter('single_template', $plugin_frontend, 'loadSingleTemplates', 10, 3);
+        $this->loader->add_filter('archive_template', $plugin_frontend, 'loadArchiveTemplates', 10, 3);
         
         $this->loader->add_action('wp_enqueue_scripts', $plugin_frontend, 'enqueueStyles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_frontend, 'enqueueScripts');

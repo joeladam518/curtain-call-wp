@@ -3,6 +3,7 @@
 namespace CurtainCallWP\Hooks;
 
 use CurtainCallWP\CurtainCallView;
+use WP_Post;
 
 /**
  * Class FrontendController
@@ -27,7 +28,8 @@ class FrontendHookController extends CurtainCallHookController
     public function enqueueStyles()
     {
         $frontend_css_url = $this->assets_url . 'curtain-call-wp-frontend.css';
-        wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $this->plugin_version, 'all');
+        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
+        wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $version, 'all');
     }
     
     /**
@@ -36,7 +38,8 @@ class FrontendHookController extends CurtainCallHookController
     public function enqueueScripts()
     {
         $frontend_js_url = $this->assets_url . 'curtain-call-wp-frontend.js';
-        wp_enqueue_script($this->plugin_name, $frontend_js_url, array('jquery'), $this->plugin_version, false);
+        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
+        wp_enqueue_script($this->plugin_name, $frontend_js_url, array('jquery'), $version, false);
     }
     
     /**
