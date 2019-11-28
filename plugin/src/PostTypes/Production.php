@@ -139,22 +139,32 @@ class Production extends CurtainCallPost
      */
     public function getFormattedShowDates(): string
     {
+        $chrono_state = $this->getChronologicalState();
         $start_date = new Carbon($this->date_start);
         $end_date = new Carbon($this->date_end);
+        $now = Carbon::now();
         
         $start_date_format = 'F jS';
         $end_date_format   = '';
-    
-        // Don't show start date year if both dates are in the same year
-        if ($start_date->format('Y') != $end_date->format('Y')) {
-            $start_date_format .= ', Y';
-        }
         
+        if ($chrono_state == 'past' || $start_date->format('Y') != $now->format('Y')) {
+            // Don't show start date year if both dates are in the same year
+            if ($start_date->format('Y') != $end_date->format('Y')) {
+                $start_date_format .= ', Y';
+            }
+        }
+
         // Don't show end date month if both dates are in the same month
         if ($start_date->format('F') != $end_date->format('F')) {
             $end_date_format .= 'F ';
         }
-        $end_date_format .= 'jS, Y';
+        
+        $end_date_format .= 'jS';
+        
+        // End date only gets a year if it's in the past or doesn't match the current year
+        if ($chrono_state == 'past' || $end_date->format('Y') != $now->format('Y')) {
+            $end_date_format .= ', Y';
+        }
     
         $formatted_dates = $start_date->format($start_date_format);
         $formatted_end_date = $end_date->format($end_date_format);
