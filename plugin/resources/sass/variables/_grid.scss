@@ -1,0 +1,19 @@
+/* Breakpoints min */
+$br-xs-min: 528px;
+$br-sm-min: 761px; // 769px
+$br-md-min: 1024px;
+$br-lg-min: 1216px;
+$br-xl-min: 1408px;
+
+/* Breakpoints max */
+$br-ss-max: $br-xs-min - 1; // ss = super small
+$br-xs-max: $br-sm-min - 1;
+$br-sm-max: $br-md-min - 1;
+$br-md-max: $br-lg-min - 1;
+$br-lg-max: $br-xl-min - 1;
+
+/* Fly Zones */
+$basezone: 0;
+$flyzone-1: 500;
+$flyzone-2: 1000;
+$flyzone-3: 1500;

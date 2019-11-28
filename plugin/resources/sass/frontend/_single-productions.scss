@@ -1,0 +1,110 @@
+/* CCWP Single production page */
+
+.single-ccwp_production {
+    .ccwp-post-breadcrumbs {
+        margin-bottom: 20px;
+        a {
+            color: $text;
+            text-decoration: none;
+            &:hover {
+                color: $red;
+            }
+        }
+    }
+
+    article {
+        .ccwp-production-info-section {
+            margin-bottom: 30px;
+        }
+
+        .ccwp-production-poster {
+            width: auto;
+            min-width: 200px;
+            max-width: 500px;
+            margin-right: 0;
+            margin-bottom: 15px;
+            @media screen and (min-width: $br-sm-min){
+                margin-right: 20px;
+            }
+        }
+
+        .show-info {
+            color: $black;
+
+            .ccwp-show-dates-container {
+                display: flex;
+                flex-flow: row wrap;
+                align-items: center;
+                color: $black;
+                .now-showing-label {
+                    margin-right: 7px;
+                }
+                .show-dates {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    margin-right: 7px;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+
+        .show-summary {
+            max-width: 800px;
+        }
+
+        .ccwp-production-castcrew-listing {
+            padding: 30px 0;
+            border-top: 1px solid rgba($black,.1);
+        }
+
+        .production-cast-list,
+        .production-crew-list {
+            margin-bottom: 20px;
+
+            h2 {
+                margin-bottom: 20px;
+            }
+
+            .ccwp-container {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: flex-start;
+            }
+
+            .production-castcrew-wrapper {
+                display: flex;
+                flex-flow: row nowrap;
+                flex-basis: 100%;
+                margin-bottom: 20px;
+                @media screen and (min-width: $br-sm-min) {
+                    flex-basis: 50%;
+                }
+            }
+
+            .castcrew-headshot {
+                flex-basis: 150px;
+                flex-shrink: 0;
+                margin-right: 15px;
+            }
+
+            .castcrew-details {
+                flex-grow: 1;
+                .castcrew-name {
+                    margin-bottom: 7px;
+                    a {
+                        font-size: 1.5rem;
+                        text-decoration: none;
+                        color: $black;
+                        &:hover {
+                            color: red;
+                        }
+                    }
+                }
+
+                .castcrew-role {
+                    font-size: 1.25rem;
+                }
+            }
+        }
+    }
+}

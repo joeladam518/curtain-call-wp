@@ -1,12 +1,24 @@
+.ccwp-section {
+    width: auto;
+}
+
+.ccwp-container {
+    width: 100%;
+    flex-grow: 1;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .ccwp-row {
     display: flex;
     flex-flow: row wrap;
+    width: auto;
     margin-bottom: 15px;
+}
 
-    .ccwp-col {
-        display: flex;
-        flex-flow: column nowrap;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+.ccwp-col {
+    display: flex;
+    flex-flow: column nowrap;
+    padding-left: 15px;
+    padding-right: 15px;
 }

@@ -1,0 +1,62 @@
+@import "../variables/colors";
+@import "../variables/grid";
+
+body.single-ccwp_cast_and_crew,
+body.post-type-archive-ccwp_cast_and_crew,
+body.single-ccwp_production,
+body.post-type-archive-ccwp_production {
+    * {
+        box-sizing: border-box;
+    }
+
+    h1,h2,h3,h4,h5,h6 {
+        &:before {
+            content:none;
+        }
+        &:after {
+            content: none;
+        }
+    }
+
+    .ccwp-page-header {
+        margin-bottom: 20px;
+    }
+
+    .ccwp-main {
+        padding: 0;
+        margin: 0;
+        .ccwp-main-content-container {
+            width: auto;
+            max-width: 1300px;
+            padding-top: 20px;
+            padding-right: 20px;
+            padding-left: 20px;
+            margin: 0 auto;
+
+            @media screen and (min-width: $br-sm-min){
+                padding-right: 30px;
+                padding-left: 30px;
+            }
+            @media screen and (min-width: $br-md-min){
+                padding-right: 50px;
+                padding-left: 50px;
+            }
+        }
+    }
+
+    .ccwp-btn {
+        display: block;
+        flex-basis: 120px;
+        width: 120px;
+        text-align: center;
+        text-decoration: none;
+        background-color: $red;
+        border-radius: 3px;
+        padding: 5px 0;
+        color: $white;
+    }
+
+    .ccwp-post-content {
+
+    }
+}

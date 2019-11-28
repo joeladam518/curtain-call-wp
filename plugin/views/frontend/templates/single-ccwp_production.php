@@ -36,7 +36,7 @@ get_header( 'single' );
                     <span><?php echo $production_name; ?></span>
                 </div>
                 
-                <article id="post-<?php the_ID(); ?>" <?php post_class($post_classes); ?>>
+                <article id="post-<?php echo $production->ID; ?>" <?php post_class($post_classes); ?>>
                     <section class="ccwp-section ccwp-production-info-section">
                         <!-- info about the production -->
                         <div class="ccwp-container">
@@ -48,7 +48,7 @@ get_header( 'single' );
                                 <?php endif; ?>
                                 
                                 <div class="show-info">
-                                    <h1 class="ccwp-post-header"><?php echo $production_name; ?></h1>
+                                    <h1 class="ccwp-page-header"><?php echo $production_name; ?></h1>
                                     
                                     <div class="ccwp-show-dates-container">
                                         <?php if ($production->getChronologicalState() == 'current'): ?>
@@ -89,7 +89,7 @@ get_header( 'single' );
                         </div>
                         
                         <!-- Production images -->
-                        <?php if (empty($post_gallery)): ?>
+                        <?php if (!empty($post_gallery)): ?>
                             <div class="ccwp-post-photo-gallery ccwp-production-photo-gallery">
                                 <?php echo $post_gallery; ?>
                             </div>
@@ -105,31 +105,31 @@ get_header( 'single' );
                     
                     <!-- the production's cast and crew -->
                     <?php if (!empty($production_castcrew['cast']) || !empty($production_castcrew['crew'])): ?>
-                        <section class="ccwp-directory ccwp-production-castcrew-listing">
+                        <section class="ccwp-section ccwp-production-castcrew-listing">
                             <?php foreach ($production_castcrew as $pcc_type => $pcc_array): ?>
-                                <div class="ccwp-container production-<?php echo $pcc_type; ?>-list">
+                                <div class="ccwp-directory-listing production-<?php echo $pcc_type; ?>-list">
                                     <h2><?php echo ucfirst($pcc_type); ?></h2>
                                     
-                                    <div class="ccwp-section-content">
+                                    <div class="ccwp-container">
                                         <?php /** @var CastAndCrew $castcrew_member */ ?>
                                         <?php foreach ($pcc_array as $castcrew_member): ?>
-                                            <div class="ccwp-row production-talent-row">
+                                            <div class="production-castcrew-wrapper">
                                                 <?php if (has_post_thumbnail($castcrew_member->ID)): ?>
-                                                    <div class="talent-headshot">
+                                                    <div class="castcrew-headshot">
                                                         <a href="<?php the_permalink($castcrew_member->ID); ?>">
                                                             <?php echo get_the_post_thumbnail($castcrew_member->ID, 'thumbnail'); ?>
                                                         </a>
                                                     </div>
                                                 <?php endif; ?>
         
-                                                <div class="talent-details">
-                                                    <div class="talent-name">
+                                                <div class="castcrew-details">
+                                                    <div class="castcrew-name">
                                                         <a href="<?php the_permalink($castcrew_member->ID); ?>">
                                                             <?php echo $castcrew_member->getFullName(); ?>
                                                         </a>
                                                     </div>
             
-                                                    <div class="talent-role">
+                                                    <div class="castcrew-role">
                                                         <p><?php echo $castcrew_member->ccwp_join->role; ?></p>
                                                     </div>
                                                 </div>
