@@ -24,7 +24,7 @@ echo $wp_nonce;
 
 <div class="ccwp-form-group">
     <label for="ccwp_name_last"><strong>Last Name*</strong></label>
-    <input type="name_last" id="ccwp_name_last" name="ccwp_name_last" value="<?php echo $name_last; ?>">
+    <input type="text" id="ccwp_name_last" name="ccwp_name_last" value="<?php echo $name_last; ?>">
 </div>
 <div class="ccwp-form-help-text">
     <p>*Required. These fields are used to auto-generate the post title with the cast or crew member's full
@@ -33,7 +33,7 @@ echo $wp_nonce;
 
 <div class="ccwp-form-group">
     <label for="ccwp_self_title"><strong>Title*</strong></label>
-    <input type="self_title" id="ccwp_self_title" name="ccwp_self_title" value="<?php echo $self_title ?>">
+    <input type="text" id="ccwp_self_title" name="ccwp_self_title" value="<?php echo $self_title ?>">
 </div>
 <div class="ccwp-form-help-text">
     <p>*Required. If the cast or crew member has many roles across different productions, try to use the one

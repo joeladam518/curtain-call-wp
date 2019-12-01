@@ -14,8 +14,8 @@ get_header( 'single' );
     ?>
 
     <?php if (get_post_status($castcrew->getPost()) == 'publish'): ?>
-        <main id="main" class="ccwp-main-content-area">
-            <div id="content" class="ccwp-post-container">
+        <main id="main" class="ccwp-main">
+            <div id="content" class="ccwp-main-content-container">
                 <div class="ccwp-post-breadcrumbs">
                     <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                     <a href="/cast-and-crew">Cast &amp; Crew</a>&nbsp;&nbsp;/&nbsp;
@@ -23,42 +23,42 @@ get_header( 'single' );
                 </div>
                 
                 <article id="post-<?php echo $castcrew->ID; ?>" <?php post_class($post_classes); ?>>
-                    <div class="ccwp-post-details-container">
+                    <section class="ccwp-section castcrew-profile-section">
                         <?php if (has_post_thumbnail()) : ?>
-                            <div class="talent-profile-image">
+                            <div class="castcrew-headshot">
                                 <?php the_post_thumbnail('full'); ?>
                             </div>
                         <?php endif; ?>
                         
-                        <div class="talent-profile-details">
+                        <div class="castcrew-profile">
                             <h1><?php echo $full_name; ?></h1>
                             
                             <?php if (isset($castcrew->self_title)): ?>
-                                <p class="talent-title"><?php echo $castcrew->self_title; ?></p>
+                                <h3 class="castcrew-title"><?php echo $castcrew->self_title; ?></h3>
                             <?php endif; ?>
                             
                             <?php if ($birthplace != ''): ?>
-                                <p class="talent-birthplace"><?php echo $birthplace; ?></p>
+                                <p class="castcrew-birthplace"><?php echo $birthplace; ?></p>
                             <?php endif; ?>
                             
                             <?php if (isset($castcrew->fun_fact)) : ?>
-                                <p class="talent-fun-fact"><?php echo $castcrew->fun_fact; ?></p>
+                                <p class="castcrew-fun-fact"><?php echo $castcrew->fun_fact; ?></p>
                             <?php endif; ?>
                             
-                            <div class="talent-bio">
+                            <div class="castcrew-bio">
                                 <?php if (!empty($castcrew->post_content)) : ?>
                                     <?php the_content(); ?>
                                 <?php endif; ?>
                             </div>
                             
                             <?php if (isset($castcrew->website_link) || $castcrew->hasSocialMedia()): ?>
-                                <h4 class="connect-with-talent-title">
+                                <h4 class="connect-with-castcrew">
                                     Connect with <?php echo $castcrew->name_first; ?>!
                                 </h4>
                             <?php endif; ?>
                             
                             <?php if (isset($castcrew->website_link)) :?>
-                                <div class="talent-website-link">
+                                <div class="castcrew-website">
                                     <a href="http://<?php echo $castcrew->website_link; ?>">
                                         <?php echo $castcrew->website_link; ?>
                                     </a>
@@ -66,7 +66,7 @@ get_header( 'single' );
                             <?php endif; ?>
                             
                             <?php if ($castcrew->hasSocialMedia()): ?>
-                                <div class="talent-social">
+                                <div class="castcrew-social">
                                     <?php if (isset($castcrew->facebook_link)): ?>
                                         <a href="http://<?php echo $castcrew->facebook_link; ?>">
                                             <i class="fab fa-facebook-f"></i>
@@ -87,7 +87,7 @@ get_header( 'single' );
                                 </div>
                             <?php endif; ?>
                         </div>
-                    </div>
+                    </section>
                     
                     <?php
                         $productions_shown = [];
@@ -96,48 +96,48 @@ get_header( 'single' );
                     ?>
                     
                     <?php if (!empty($productions)): ?>
-                        <div class="ccwp-detail-page-cross-db-directory cast-prod-directory">
-                            <h2>Productions</h2>
-                            
-                            <section class="cast-productions-section">
-                                <div class="cast-prod-flex-container">
+                        <section class="ccwp-section ccwp-directory-section">
+                            <div class="ccwp-directory-list castcrew-production-list">
+                                <h2>Productions</h2>
+    
+                                <div class="ccwp-container">
                                     <?php foreach($productions as $production): ?>
                                         <?php if (in_array($production->ID, $productions_shown)) continue; ?>
-                                        
-                                        <div class="cast-prod-show">
+            
+                                        <div class="castcrew-production-wrapper">
                                             <?php if (has_post_thumbnail($production->ID)): ?>
-                                                <div class="cast-prod-show-poster">
+                                                <div class="production-poster">
                                                     <a href="<?php the_permalink($production->ID); ?>">
                                                         <?php echo get_the_post_thumbnail($production->ID, 'full'); ?>
                                                     </a>
                                                 </div>
                                             <?php endif; ?>
-                                            
-                                            <div class="cast-prod-show-info">
-                                                <div class="cast-prod-show-title">
+                
+                                            <div class="production-details">
+                                                <div class="production-name">
                                                     <a href="<?php the_permalink($production->ID); ?>">
                                                         <?php echo $production->name; ?>
                                                     </a>
                                                 </div>
-                                                
-                                                <div class="cast-prod-role">
+                    
+                                                <div class="castcrew-role">
                                                     <p><?php echo implode(', ', $roles_by_pid[$production->ID]); ?></p>
                                                 </div>
-                                                
-                                                <div class="cast-prod-dates">
+                    
+                                                <div class="production-dates">
                                                     <p><?php echo $production->getFormattedShowDates(); ?></p>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+            
                                         <?php $productions_shown[] = $production->ID; ?>
                                     <?php endforeach; ?>
                                 </div>
-                            </section>
-                        </div>
+                            </div>
+                        </section>
                     <?php endif; // productions array not empty ?>
                 </article>
-            </>
+            </div>
         </main>
     <?php endif; // content is visible ?>
 <?php endwhile; endif; // end of the loop & end of have_posts() ?>

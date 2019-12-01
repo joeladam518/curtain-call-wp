@@ -33,9 +33,20 @@ body.post-type-archive-ccwp_production {
             padding-left: 20px;
             margin: 0 auto;
 
+            .ccwp-post-breadcrumbs {
+                margin-bottom: 20px;
+                a {
+                    color: $text;
+                    text-decoration: none;
+                    &:hover {
+                        color: $red;
+                    }
+                }
+            }
+
             @media screen and (min-width: $br-sm-min){
-                padding-right: 30px;
-                padding-left: 30px;
+                padding-right: 35px;
+                padding-left: 35px;
             }
             @media screen and (min-width: $br-md-min){
                 padding-right: 50px;

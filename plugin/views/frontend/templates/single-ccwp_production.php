@@ -50,7 +50,7 @@ get_header( 'single' );
                                 <div class="show-info">
                                     <h1 class="ccwp-page-header"><?php echo $production_name; ?></h1>
                                     
-                                    <div class="ccwp-show-dates-container">
+                                    <div class="show-dates-container">
                                         <?php if ($production->getChronologicalState() == 'current'): ?>
                                             <span class="now-showing-label">Now Showing</span>
                                         <?php endif; ?>
@@ -63,11 +63,11 @@ get_header( 'single' );
                                     </div>
         
                                     <?php if (isset($production->show_times)): ?>
-                                        <div class="show-times"><?php echo $production->show_times; ?></div>
+                                        <p class="show-times"><?php echo $production->show_times; ?></p>
                                     <?php endif; ?>
         
                                     <?php if (isset($production->venue)): ?>
-                                        <div class="show-venue"><?php echo $production->venue; ?></div>
+                                        <p class="show-venue"><?php echo $production->venue; ?></p>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -105,9 +105,9 @@ get_header( 'single' );
                     
                     <!-- the production's cast and crew -->
                     <?php if (!empty($production_castcrew['cast']) || !empty($production_castcrew['crew'])): ?>
-                        <section class="ccwp-section ccwp-production-castcrew-listing">
+                        <section class="ccwp-section ccwp-directory-section">
                             <?php foreach ($production_castcrew as $pcc_type => $pcc_array): ?>
-                                <div class="ccwp-directory-listing production-<?php echo $pcc_type; ?>-list">
+                                <div class="ccwp-directory-list production-<?php echo $pcc_type; ?>-list">
                                     <h2><?php echo ucfirst($pcc_type); ?></h2>
                                     
                                     <div class="ccwp-container">
