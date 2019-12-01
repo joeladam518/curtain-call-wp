@@ -42,5 +42,8 @@ mix.sass('resources/sass/admin/plugin.scss', 'admin/curtain-call-wp-admin.css');
 **/
 mix.js('resources/js/frontend/plugin.js', 'frontend/curtain-call-wp-frontend.js');
 mix.sass('resources/sass/frontend/plugin.scss', 'frontend/curtain-call-wp-frontend.css');
+mix.sass('resources/sass/fontawesome/fontawesome.scss', 'frontend/fontawesomefree.css');
+
+mix.copy('node_modules/@fortawesome/fontawesome-free/webfonts/', 'assets/fonts/fontawesome/');
 
 mix.setPublicPath('assets');

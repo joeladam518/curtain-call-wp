@@ -28,8 +28,10 @@ class FrontendHookController extends CurtainCallHookController
     public function enqueueStyles()
     {
         $frontend_css_url = $this->assets_url . 'curtain-call-wp-frontend.css';
+        $fontawesome = $this->assets_url . 'fontawesomefree.css';
         $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
         wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $version, 'all');
+        wp_enqueue_style('fontawesomefree', $fontawesome, array(), $version, 'all');
     }
     
     /**
