@@ -2,7 +2,8 @@
 
 namespace CurtainCallWP\Helpers;
 
-use CurtainCallWP\PostTypes\CurtainCallPostJoin;
+use CurtainCallWP\PostTypes\CurtainCallJoin;
+use WP_Query;
 
 class QueryHelper
 {
@@ -59,11 +60,11 @@ class QueryHelper
      */
     protected static function selectJoinFields(): array
     {
-        $join_alias = CurtainCallPostJoin::TABLE_ALIAS;
-        $prefix = CurtainCallPostJoin::ATTRIBUTE_PREFIX;
+        $join_alias = CurtainCallJoin::TABLE_ALIAS;
+        $prefix = CurtainCallJoin::ATTRIBUTE_PREFIX;
         
         $query_array = [];
-        foreach (CurtainCallPostJoin::getJoinFields() as $field) {
+        foreach (CurtainCallJoin::getJoinFields() as $field) {
             $query_array[] = "`{$join_alias}`.`{$field}` AS `{$prefix}{$field}`";
         }
     
@@ -81,14 +82,14 @@ class QueryHelper
         
         switch($type) {
             case 'cast':
-                $query .= $clause . " `". CurtainCallPostJoin::TABLE_ALIAS ."`.`type` = 'cast'";
+                $query .= $clause . " `" . CurtainCallJoin::TABLE_ALIAS . "`.`type` = 'cast'";
                 break;
             case 'crew':
-                $query .= $clause . " `". CurtainCallPostJoin::TABLE_ALIAS ."`.`type` = 'crew'";
+                $query .= $clause . " `" . CurtainCallJoin::TABLE_ALIAS . "`.`type` = 'crew'";
                 break;
             case 'both':
             default:
-                $query .= $clause . " (`". CurtainCallPostJoin::TABLE_ALIAS ."`.`type` = 'cast' OR `". CurtainCallPostJoin::TABLE_ALIAS ."`.`type` = 'crew')";
+                $query .= $clause . " (`" . CurtainCallJoin::TABLE_ALIAS . "`.`type` = 'cast' OR `" . CurtainCallJoin::TABLE_ALIAS . "`.`type` = 'crew')";
                 break;
         };
         

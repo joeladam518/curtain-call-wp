@@ -2,7 +2,7 @@
 
 namespace CurtainCallWP\Helpers;
 
-use CurtainCallWP\PostTypes\CurtainCallPostJoin;
+use CurtainCallWP\PostTypes\CurtainCallJoin;
 use WP_Post;
 use CurtainCallWP\PostTypes\CurtainCallPost;
 use CurtainCallWP\PostTypes\Production;
@@ -61,7 +61,7 @@ class CurtainCallHelper
 
             // Add to posts array
             if ($ccwp_post !== null) {
-                $ccwp_post->setCurtainCallPostJoin(new CurtainCallPostJoin($ccwp_join_data));
+                $ccwp_post->setCurtainCallPostJoin(new CurtainCallJoin($ccwp_join_data));
                 $posts[] = $ccwp_post;
             }
         }

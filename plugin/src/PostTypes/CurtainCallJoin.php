@@ -6,7 +6,7 @@ use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 use CurtainCallWP\PostTypes\Traits\HasAttributes;
 
 /**
- * Class CurtainCallPostJoin
+ * Class CurtainCallJoin
  * @package CurtainCallWP\PostTypes
  * @property int $production_id
  * @property int $cast_and_crew_id
@@ -14,7 +14,7 @@ use CurtainCallWP\PostTypes\Traits\HasAttributes;
  * @property string $role
  * @property int custom_order
  */
-class CurtainCallPostJoin implements Arrayable
+class CurtainCallJoin implements Arrayable
 {
     use HasAttributes;
     
