@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
+use Carbon\CarbonImmutable as Carbon;
 use CurtainCallWP\Exceptions\UndefinedPropertyException;
 use CurtainCallWP\Exceptions\UnsettableException;
 use WP_Post;
@@ -29,20 +30,20 @@ use Throwable;
  * @property-read string $to_ping
  * @property-read string $pinged
  * @property-read string $post_modified
- * @property-read string $post_modified_gmt
- * @property-read string $post_content_filtered
- * @property-read int $post_parent
- * @property-read string $guid
- * @property-read int $menu_order
- * @property-read string $post_type
- * @property-read string $post_mime_type
- * @property-read string $comment_count
- * @property-read string $filter
- * @property-read string $ancestors
- * @property-read string $page_template
- * @property-read string $post_category
- * @property-read string $tags_input
- * @property-read CurtainCallPostJoin $ccwp_join
+ * @property-read string       $post_modified_gmt
+ * @property-read string        $post_content_filtered
+ * @property-read int             $post_parent
+ * @property-read string          $guid
+ * @property-read int             $menu_order
+ * @property-read string          $post_type
+ * @property-read string          $post_mime_type
+ * @property-read string          $comment_count
+ * @property-read string          $filter
+ * @property-read string          $ancestors
+ * @property-read string          $page_template
+ * @property-read string          $post_category
+ * @property-read string          $tags_input
+ * @property-read CurtainCallJoin $ccwp_join
  */
 abstract class CurtainCallPost implements Arrayable
 {
@@ -53,8 +54,25 @@ abstract class CurtainCallPost implements Arrayable
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
     
+    /**
+     * The join table name
+     * TODO: 2019-12-01: move this to the CurtainCallPostJoin model
+     * @var string
+     */
     protected static $join_table_name;
+    
+    /**
+     * The join table name with alias
+     * TODO: 2019-12-01: move this to the CurtainCallPostJoin model
+     * @var string
+     */
     protected static $join_table_name_with_alias;
+    
+    /**
+     * The cached current date string
+     * @var string
+     */
+    protected static $todays_date;
     
     /**
      * CurtainCallPost constructor.
@@ -94,6 +112,19 @@ abstract class CurtainCallPost implements Arrayable
     }
     
     /**
+     * Get the current date string and cache it for the entire request
+     * @return string
+     */
+    protected static function getTodaysDate(): string
+    {
+        if (empty(static::$todays_date)) {
+            static::$todays_date = Carbon::now()->toDateString();
+        }
+        
+        return static::$todays_date;
+    }
+    
+    /**
      * @return string
      */
     public static function getJoinTableName(): string
@@ -101,27 +132,30 @@ abstract class CurtainCallPost implements Arrayable
         global $wpdb;
         
         if (empty(static::$join_table_name)) {
-            static::$join_table_name = $wpdb->prefix . CurtainCallPostJoin::TABLE_NAME;
+            static::$join_table_name = $wpdb->prefix . CurtainCallJoin::TABLE_NAME;
         }
         
         return static::$join_table_name;
     }
     
+    /**
+     * @return string
+     */
     public static function getJoinTableNameWithAlias(): string
     {
         if (empty(static::$join_table_name_with_alias)) {
             static::$join_table_name_with_alias  = '`' . static::getJoinTableName() . '`';
-            static::$join_table_name_with_alias .= ' AS `' . CurtainCallPostJoin::TABLE_ALIAS . '`';
+            static::$join_table_name_with_alias .= ' AS `' . CurtainCallJoin::TABLE_ALIAS . '`';
         }
         
         return static::$join_table_name_with_alias;
     }
     
     /**
-     * @param CurtainCallPostJoin $curtain_call_post_join
+     * @param CurtainCallJoin $curtain_call_post_join
      * @return static
      */
-    public function setCurtainCallPostJoin(CurtainCallPostJoin $curtain_call_post_join): self
+    public function setCurtainCallPostJoin(CurtainCallJoin $curtain_call_post_join): self
     {
         $this->setAttribute('ccwp_join', $curtain_call_post_join);
         return $this;

@@ -113,7 +113,7 @@ get_header( 'single' );
                                     <div class="ccwp-container">
                                         <?php /** @var CastAndCrew $castcrew_member */ ?>
                                         <?php foreach ($pcc_array as $castcrew_member): ?>
-                                            <div class="production-castcrew-wrapper">
+                                            <div class="castcrew-wrapper">
                                                 <?php if (has_post_thumbnail($castcrew_member->ID)): ?>
                                                     <div class="castcrew-headshot">
                                                         <a href="<?php the_permalink($castcrew_member->ID); ?>">

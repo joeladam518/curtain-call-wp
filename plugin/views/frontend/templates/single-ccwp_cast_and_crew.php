@@ -104,7 +104,7 @@ get_header( 'single' );
                                     <?php foreach($productions as $production): ?>
                                         <?php if (in_array($production->ID, $productions_shown)) continue; ?>
             
-                                        <div class="castcrew-production-wrapper">
+                                        <div class="production-wrapper">
                                             <?php if (has_post_thumbnail($production->ID)): ?>
                                                 <div class="production-poster">
                                                     <a href="<?php the_permalink($production->ID); ?>">

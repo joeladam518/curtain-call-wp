@@ -1,110 +1,81 @@
 <?php if (!defined('ABSPATH')) die;
 
-$args = [
-    'post_type' => [
-        'ccwp_cast_and_crew', 
-        'post',
-    ],
-    'post_status' => 'publish',
-    'meta_key' => '_ccwp_cast_crew_name_last',
-    'orderby' => 'meta_value',
-    'order'   => 'ASC',
-    'nopaging' => true,
-];
+use CurtainCallWP\Helpers\CurtainCallHelper;
+use CurtainCallWP\PostTypes\CastAndCrew;
 
-$result = new WP_Query($args);
+/** @var WP_Query $result */
+$result = CastAndCrew::getPosts();
 
-$full_alphabet = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-$cast_alpha_indexes = array();
-$current_cast_alpha_index = null;
-$prev_cast_alpha_index = null;
+$alphabet = CurtainCallHelper::getAlphabet();
+$alpha_indexes = CastAndCrew::getAlphaIndexes($result);
 
-if ($result->have_posts()) {
-    while ($result->have_posts()) {
-        $result->the_post();
-        $cast_crew_name_first = getCustomField('_ccwp_cast_crew_name_first');
-        $cast_crew_name_last = getCustomField('_ccwp_cast_crew_name_last');
-        $cast_crew_self_title = getCustomField('_ccwp_cast_crew_self_title');
-        if (!empty($cast_crew_name_first) && !empty($cast_crew_name_last) && !empty($cast_crew_self_title)) {
-            $cast_alpha_indexes[] = strtoupper(substr($cast_crew_name_last, 0, 1));
-        }
-    }
-}
+$current_alpha_index = null;
+$previous_alpha_index = null;
 
+get_header();
 ?>
 
-<?php get_header(); ?>
-
-<div id="content" class="content talent-content-container" role="main">	
-
+<div id="content" class="ccwp-cast-and-crew-page" role="main">
+    <h1>Cast and Crew</h1>
+    
     <?php if (!$result->have_posts()) : ?>
-        <h2>Sorry!</h2>
-        <p>There are currently no cast or crew members in our directory. Please check back soon!</p>
+        <p>Sorry! There are currently no cast or crew members in our directory. Please check back soon!</p>
     <?php else: ?>
+        <div class="ccwp-alphabet-navigation">
+            <?php foreach ($alphabet as $letter): ?>
+                <?php if (in_array($letter, $alpha_indexes)): ?>
+                    <a href="#<?php echo $letter; ?>"><?php echo $letter; ?></a>
+                <?php else: ?>
+                    <span><?php echo $letter; ?></span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
     
-    <h1>Cast and Crew</h1>  
-    
-    <div class="talent-alpha-index-menu">
-        <?php foreach($full_alphabet as $letter) : ?>
-            <?php if(in_array($letter, $cast_alpha_indexes)) : ?>
-                <a href="#<?php echo $letter ?>"><?php echo $letter ?></a>
-            <?php else: ?>
-                <span><?php echo $letter ?></span>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
-    
-    <div class="talent-directory-container">
-        
-        <?php while ($result->have_posts()) : $result->the_post(); ?>
-    
-            <?php  
-                //$current_post = get_post();
-                //$current_post_custom_fields = get_post_meta($current_post->ID);
-                $cast_crew_name_first = getCustomField('_ccwp_cast_crew_name_first');
-                $cast_crew_name_last = getCustomField('_ccwp_cast_crew_name_last');
-                $cast_crew_self_title = getCustomField('_ccwp_cast_crew_self_title');
+        <div class="ccwp-container">
+        <?php while ($result->have_posts()): $result->the_post(); ?>
+            <?php
+                /** @var WP_Post $current_post */
+                $current_post = get_post();
+                /** @var CastAndCrew $castcrew */
+                $castcrew = CastAndCrew::make($current_post);
+                $castcrew_permalink = get_post_permalink($castcrew->getPost());
             ?>
+
+            <?php if ($castcrew->post_status == 'publish' && isset($castcrew->name_last)): ?>
+                <?php $current_alpha_index = strtoupper(substr($castcrew->name_last, 0, 1)); ?>
             
-            <?php if (get_post_status() == 'publish' && !empty($cast_crew_name_first) && !empty($cast_crew_name_last) && !empty($cast_crew_self_title)): ?>
-            
-                <?php $current_cast_alpha_index = strtoupper(substr($cast_crew_name_last, 0, 1)); ?>
-            
-                <?php if ($current_cast_alpha_index != $prev_cast_alpha_index) : ?>
-                    </div>
-                    <h3 class="talent-alpha-index-header" id="<?php echo $current_cast_alpha_index; ?>">
-                        <?php echo $current_cast_alpha_index; ?>
-                    </h3>
-                    <div class="talent-directory-row">
+                <?php if ($current_alpha_index != $previous_alpha_index): ?>
+                    <?php if ($previous_alpha_index !== null): ?>
+                        </div>
+                    <?php endif; ?>
+                    <h3 class="ccwp-alphabet-header" id="<?php echo $current_alpha_index; ?>"><?php echo $current_alpha_index; ?></h3>
+                    <div class="ccwp-row">
                 <?php endif; ?>
                     
-                    <div class="talent-directory-member">
-                        <?php if (has_post_thumbnail()) : ?>
-                            <div class="talent-profile-image">
-                                <a href="<?php echo get_post_permalink(); ?>">
-                                    <?php the_post_thumbnail('thumbnail'); ?>
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <div class="talent-profile-details">
-                            <h3 class="talent-name">
-                                <a href="<?php echo get_post_permalink(); ?>">
-                                    <?php echo $cast_crew_name_first . ' ' . $cast_crew_name_last; ?>
-                                </a>
-                            </h3>
-                            <h5 class="talent-role"><?php echo $cast_crew_self_title; ?></h5>
+                <div class="castcrew-wrapper">
+                    <?php if (has_post_thumbnail($castcrew->getPost())): ?>
+                        <div class="castcrew-headshot">
+                            <a href="<?php echo $castcrew_permalink; ?>">
+                                <?php echo get_the_post_thumbnail($castcrew->getPost(), 'thumbnail'); ?>
+                            </a>
                         </div>
+                    <?php endif; ?>
+                    
+                    <div class="castcrew-details">
+                        <h3 class="castcrew-name">
+                            <a href="<?php echo $castcrew_permalink; ?>">
+                                <?php echo $castcrew->getFullName(); ?>
+                            </a>
+                        </h3>
+                        <h5 class="castcrew-self-title"><?php echo $castcrew->self_title; ?></h5>
                     </div>
-                
-                <?php $prev_cast_alpha_index = $current_cast_alpha_index; ?>
-            
+                </div>
+
+                <?php $previous_alpha_index = $current_alpha_index; ?>
             <?php endif; // content is visible ?>
-
         <?php endwhile; // while loop ?>
-
-    </div>
-
-<?php endif; // if / else is there content?? ?>
+        </div>
+    <?php endif; // if / else is there content?? ?>
+</div>
 
 <?php get_footer(); ?>

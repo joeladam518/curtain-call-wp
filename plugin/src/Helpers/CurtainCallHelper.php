@@ -12,15 +12,12 @@ use Throwable;
 class CurtainCallHelper
 {
     /**
-     * @var array
+     * @return array
      */
-    protected static $join_keys = [
-        'ccwp_join_production_id',
-        'ccwp_join_castcrew_id',
-        'ccwp_join_type',
-        'ccwp_join_role',
-        'ccwp_join_custom_order',
-    ];
+    public static function getAlphabet(): array
+    {
+        return ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+    }
     
     /**
      * @param array $data
@@ -30,12 +27,14 @@ class CurtainCallHelper
     public static function convertToCurtainCallPosts(array $data): array
     {
         $posts = [];
+        $join_fields = CurtainCallJoin::getJoinFields(true);
+        
         foreach ($data as $post_data) {
             $wp_post_data = [];
             $ccwp_join_data = [];
             // Separate CCWP Join data from WP_Post data
             foreach ($post_data as $key => $value) {
-                if (in_array($key, static::$join_keys)) {
+                if (in_array($key, $join_fields)) {
                     $ccwp_join_data[$key] = $value;
                 } else {
                     $wp_post_data[$key] = $value;

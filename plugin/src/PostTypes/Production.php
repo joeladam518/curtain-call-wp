@@ -2,8 +2,9 @@
 
 namespace CurtainCallWP\PostTypes;
 
-use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
 use Carbon\CarbonImmutable as Carbon;
+use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
+use CurtainCallWP\PostTypes\Traits\QueriesWordPressForProductions;
 use Throwable;
 
 /**
@@ -21,6 +22,7 @@ use Throwable;
 class Production extends CurtainCallPost
 {
     use HasCastAndCrew;
+    use QueriesWordPressForProductions;
     
     const POST_TYPE = 'ccwp_production';
     const META_PREFIX = '_ccwp_production_';
@@ -175,5 +177,19 @@ class Production extends CurtainCallPost
         }
         
         return $formatted_dates;
+    }
+    
+    public function getTicketUrl(): string
+    {
+        if ($this->getChronologicalState() == 'past') {
+            return '';
+        }
+        
+        if (isset($this->ticket_url)) {
+            return $this->ticket_url;
+        }
+        
+        // TODO: 2019-12-1: change ticket link to a plugin option
+        return 'https://www.rutheckerdhall.com/events';
     }
 }

@@ -209,7 +209,7 @@ if (!function_exists('ccwp_display_productions_of_type')) {
 <?php get_header(); ?>
 
 <!-- Content -->
-<div id="content" class="content productions-content-container" role="main">
+<div id="content" class="ccwp-productions" role="main">
     
     <?php echo '<h1 class="ccwp-archive-title">Productions</h1>'; ?>
     <?php //the_archive_title('<h1 class="ccwp-archive-title">', '</h1>'); ?>

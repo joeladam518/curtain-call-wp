@@ -4,6 +4,8 @@ namespace CurtainCallWP\PostTypes;
 
 use Carbon\CarbonImmutable AS Carbon;
 use CurtainCallWP\PostTypes\Traits\HasProductions;
+use CurtainCallWP\PostTypes\Traits\QueriesWordPressForCastAndCrew;
+use WP_Query;
 
 /**
  * Class CastAndCrew
@@ -22,6 +24,7 @@ use CurtainCallWP\PostTypes\Traits\HasProductions;
 class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
+    use QueriesWordPressForCastAndCrew;
     
     const POST_TYPE = 'ccwp_cast_and_crew';
     const META_PREFIX = '_ccwp_cast_crew_';
@@ -84,6 +87,27 @@ class CastAndCrew extends CurtainCallPost
         ];
     }
     
+    public static function getAlphaIndexes(WP_Query $query): array
+    {
+        $alpha_indexes = [];
+        
+        if (!$query->have_posts()) {
+            return $alpha_indexes;
+        }
+    
+        while ($query->have_posts()) {
+            $query->the_post();
+            $name_last = getCustomField('_ccwp_cast_crew_name_last');
+            if (!empty($name_last)) {
+                $alpha_indexes[] = strtoupper(substr($name_last, 0, 1));
+            }
+        }
+        
+        wp_reset_postdata();
+        
+        return array_unique($alpha_indexes);
+    }
+    
     /**
      * @param array $productions
      * @return array
@@ -137,4 +161,6 @@ class CastAndCrew extends CurtainCallPost
     {
         return isset($this->facebook_link) || isset($this->instagram_link) || isset($this->twitter_link);
     }
+    
+
 }
