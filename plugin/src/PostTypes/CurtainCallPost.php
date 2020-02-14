@@ -15,7 +15,7 @@ use Throwable;
 /**
  * Class CurtainCallPost
  * @package CurtainCallWP\PostTypes
- * @property-read int $ID
+ * @property-read int    $ID
  * @property-read string $post_author
  * @property-read string $post_date
  * @property-read string $post_date_gmt
@@ -30,19 +30,19 @@ use Throwable;
  * @property-read string $to_ping
  * @property-read string $pinged
  * @property-read string $post_modified
- * @property-read string       $post_modified_gmt
- * @property-read string        $post_content_filtered
- * @property-read int             $post_parent
- * @property-read string          $guid
- * @property-read int             $menu_order
- * @property-read string          $post_type
- * @property-read string          $post_mime_type
- * @property-read string          $comment_count
- * @property-read string          $filter
- * @property-read string          $ancestors
- * @property-read string          $page_template
- * @property-read string          $post_category
- * @property-read string          $tags_input
+ * @property-read string $post_modified_gmt
+ * @property-read string $post_content_filtered
+ * @property-read int    $post_parent
+ * @property-read string $guid
+ * @property-read int    $menu_order
+ * @property-read string $post_type
+ * @property-read string $post_mime_type
+ * @property-read string $comment_count
+ * @property-read string $filter
+ * @property-read string $ancestors
+ * @property-read string $page_template
+ * @property-read string $post_category
+ * @property-read string $tags_input
  * @property-read CurtainCallJoin $ccwp_join
  */
 abstract class CurtainCallPost implements Arrayable
