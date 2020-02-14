@@ -19,13 +19,13 @@ class Activator implements LifeCycleHook
         
         $charset_collate = $wpdb->get_charset_collate();
         
-        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
             production_id BIGINT UNSIGNED NOT NULL,
             cast_and_crew_id BIGINT UNSIGNED NOT NULL,
             type VARCHAR(191) DEFAULT 'cast' NULL,
             role VARCHAR(191) DEFAULT NULL NULL,
             custom_order SMALLINT UNSIGNED DEFAULT NULL NULL
-        ) $charset_collate;";
+        ) {$charset_collate};";
         
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);

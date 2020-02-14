@@ -17,7 +17,7 @@ class Uninstaller implements LifeCycleHook
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'ccwp_castandcrew_production';
-        $sql = "DROP TABLE IF EXISTS $table_name";
+        $sql = "DROP TABLE IF EXISTS {$table_name}";
         $wpdb->query($sql);
     }
     
