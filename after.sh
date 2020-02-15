@@ -14,7 +14,7 @@ cd "${wp_dir}" && wp config create --dbname=homestead --dbuser=homestead --dbpas
 
 # Write debug constants into the wp-config.php file
 if ! grep -q "WP_DEBUG" "${wp_dir}/wp-config.php"; then
-cd "${wp_dir}" && sed -i "/^\$table_prefix/ r /dev/stdin" ${wp_dir}/wp-config.php <<EOL
+cd "${wp_dir}" && sed -i "/^\$table_prefix/ r /dev/stdin" "${wp_dir}/wp-config.php" <<EOL
 
 // Set WordPress into debug mode
 define('WP_DEBUG', true);
@@ -27,7 +27,7 @@ EOL
 fi
 
 # Link the plugin to the wordpress site
-cd "${wp_plugin_dir}" && ln -sf ${repo_plugin_dir} CurtainCallWP
+cd "${wp_plugin_dir}" && ln -sf "${repo_plugin_dir}" CurtainCallWP
 
-# return HOME
-cd "${HOME}"
+# return to the repo directory
+cd "${repo_dir}"
