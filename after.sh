@@ -17,11 +17,11 @@ if ! grep -q "WP_DEBUG" "${wp_dir}/wp-config.php"; then
 cd "${wp_dir}" && sed -i "/^\$table_prefix/ r /dev/stdin" ${wp_dir}/wp-config.php <<EOL
 
 // Set WordPress into debug mode
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
-define( 'WP_DEBUG_DISPLAY', true );
-define( 'SCRIPT_DEBUG', false );
-define( 'SAVEQUERIES', false );
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
+define('WP_DEBUG_DISPLAY', true);
+define('SCRIPT_DEBUG', false);
+define('SAVEQUERIES', false);
 define('FS_METHOD','direct');
 EOL
 fi
