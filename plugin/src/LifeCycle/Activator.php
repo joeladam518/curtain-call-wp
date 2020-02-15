@@ -2,12 +2,14 @@
 
 namespace CurtainCallWP\LifeCycle;
 
+use CurtainCallWP\CurtainCall;
+
 class Activator implements LifeCycleHook
 {
     public static function run(): void
     {
         self::createPluginTables();
-        add_option('ccwp_db_version', CCWP_PLUGIN_VERSION);
+        add_option('ccwp_db_version', CurtainCall::PLUGIN_VERSION);
         flush_rewrite_rules(false);
     }
     

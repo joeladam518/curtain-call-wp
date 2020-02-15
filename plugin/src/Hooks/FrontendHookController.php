@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\Hooks;
 
+use CurtainCallWP\CurtainCall;
 use CurtainCallWP\CurtainCallView;
 use WP_Post;
 
@@ -9,39 +10,45 @@ use WP_Post;
  * Class FrontendController
  * @package CurtainCallWP\Controllers
  */
-class FrontendHookController extends CurtainCallHookController
+class FrontendHookController
 {
+    /** @var string  */
+    protected $assets_url;
+    
+    /** @var string  */
+    protected $assets_path;
+    
     /**
-     *  Initialize the class and set its properties.
+     * FrontendHookController constructor.
      */
     public function __construct()
     {
-        parent::__construct();
-    
         $this->assets_url = ccwpAssetsUrl() . 'frontend/';
         $this->assets_path = ccwpAssetsPath() . 'frontend/';
     }
     
     /**
      * Register the stylesheets for the public-facing side of the site.
+     * @return void
      */
     public function enqueueStyles()
     {
         $frontend_css_url = $this->assets_url . 'curtain-call-wp-frontend.css';
         $fontawesome = $this->assets_url . 'fontawesomefree.css';
-        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
-        wp_enqueue_style($this->plugin_name, $frontend_css_url, array(), $version, 'all');
+        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
+        wp_enqueue_style(CurtainCall::PLUGIN_NAME, $frontend_css_url, array(), $version, 'all');
         wp_enqueue_style('fontawesomefree', $fontawesome, array(), $version, 'all');
     }
     
     /**
      * Register the JavaScript for the public-facing side of the site.
-    **/
+     * @return void
+     */
     public function enqueueScripts()
     {
         $frontend_js_url = $this->assets_url . 'curtain-call-wp-frontend.js';
-        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
-        wp_enqueue_script($this->plugin_name, $frontend_js_url, array('jquery'), $version, false);
+        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
+        wp_enqueue_script(CurtainCall::PLUGIN_NAME, $frontend_js_url, array('jquery'), $version, false);
     }
     
     /**

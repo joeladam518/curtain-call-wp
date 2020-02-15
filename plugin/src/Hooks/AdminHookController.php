@@ -2,6 +2,7 @@
 
 namespace CurtainCallWP\Hooks;
 
+use CurtainCallWP\CurtainCall;
 use CurtainCallWP\PostTypes\CastAndCrew;
 use CurtainCallWP\PostTypes\Production;
 use Carbon\CarbonImmutable as Carbon;
@@ -10,15 +11,19 @@ use Carbon\CarbonImmutable as Carbon;
  * Class AdminController
  * @package CurtainCallWP\Controllers
  */
-class AdminHookController extends CurtainCallHookController
+class AdminHookController
 {
+    /** @var string  */
+    protected $assets_url;
+    
+    /** @var string  */
+    protected $assets_path;
+    
     /**
-     *  Initialize the class and set its properties.
+     * AdminHookController constructor.
      */
     public function __construct()
     {
-        parent::__construct();
-        
         $this->assets_url = ccwpAssetsUrl() . 'admin/';
         $this->assets_path = ccwpAssetsPath() . 'admin/';
     }
@@ -28,9 +33,9 @@ class AdminHookController extends CurtainCallHookController
      */
     public function enqueueStyles()
     {
-        $handle = $this->plugin_name . '_admin';
+        $handle = CurtainCall::PLUGIN_NAME . '_admin';
         $admin_css_url = $this->assets_url . 'curtain-call-wp-admin.css';
-        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
+        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
         wp_enqueue_style($handle, $admin_css_url, array(), $version, 'all');
     }
     
@@ -40,9 +45,9 @@ class AdminHookController extends CurtainCallHookController
      */
     public function enqueueScripts($hook)
     {
-        $handle = $this->plugin_name . '_admin';
+        $handle = CurtainCall::PLUGIN_NAME . '_admin';
         $admin_js_url = $this->assets_url . 'curtain-call-wp-admin.js';
-        $version = (CCWP_DEBUG) ? rand() : $this->plugin_version;
+        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
         wp_enqueue_script($handle, $admin_js_url, array('jquery'), $version, true);
     }
     
@@ -116,32 +121,6 @@ class AdminHookController extends CurtainCallHookController
     //  Production Functions
     //  ----------------------------------------------------------------------------------------------------------------
     
-    /**
-     *  Register the production custom post type.
-     */
-    public function createProductionPostType()
-    {
-        $args = Production::getConfig();
-        register_post_type('ccwp_production', $args);
-        add_rewrite_rule('productions/?$', 'index.php?post_type=ccwp_production', 'top');
-        add_rewrite_rule('productions/page/([0-9]{1,})/?$', 'index.php?post_type=ccwp_production&paged=$matches[1]', 'top');
-        add_rewrite_rule('productions/([^/]+)/?$', 'index.php?ccwp_production=$matches[1]', 'top');
-        flush_rewrite_rules();
-    }
-    
-    /**
-     *  Create the production custom post type taxonomies.
-     */
-    public function createProductionSeasonsTaxonomy()
-    {
-        $args = Production::getSeasonsTaxonomyConfig();
-        register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
-        flush_rewrite_rules();
-    }
-    
-    /**
-     *  Creation of all custom fields for the production custom post type
-     */
     public function addProductionPostMetaBoxes()
     {
         add_meta_box(
@@ -204,9 +183,13 @@ class AdminHookController extends CurtainCallHookController
     public function renderProductionDetailsMetaBox($post, $metabox)
     {
         $date_start = get_post_meta($post->ID, '_ccwp_production_date_start', true);
-        $date_start = Carbon::parse($date_start)->format('m/d/Y');
+        $date_start = $date_start
+            ? Carbon::parse($date_start)->format('m/d/Y')
+            : '';
         $date_end = get_post_meta($post->ID, '_ccwp_production_date_end', true);
-        $date_end = Carbon::parse($date_end)->format('m/d/Y');
+        $date_end = $date_end
+            ? Carbon::parse($date_end)->format('m/d/Y')
+            : '';
 
         ccwpView('admin/metaboxes/production-details.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
@@ -327,23 +310,6 @@ class AdminHookController extends CurtainCallHookController
     //  Cast And Crew Functions
     //----------------------------------------------------------------------------------------------------------------
     
-    /**
-     *  Register the cast/crew custom post type.
-     *
-     * @since    0.0.1
-     **/
-    public function createCastAndCrewPostType()
-    {
-        $args = CastAndCrew::getConfig();
-        register_post_type('ccwp_cast_and_crew', $args);
-        flush_rewrite_rules();
-    }
-    
-    /**
-     *  Creation of all custom fields for the production custom post type
-     *
-     *  since 0.0.1
-    **/
     public function addCastAndCrewPostMetaBoxes()
     {
         add_meta_box(
@@ -360,10 +326,12 @@ class AdminHookController extends CurtainCallHookController
     public function ccwp_cast_and_crew_details_box_html($post, $metabox)
     {
         wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce');
-        $cast_crew_birthday       = get_post_meta($post->ID, '_ccwp_cast_crew_birthday',true);
-        $cast_crew_birthday       = !empty($cast_crew_birthday)
-                                    ? Carbon::parse($cast_crew_birthday)->format('m/d/Y')
-                                    : '';
+        
+        $castcrew_birthday = get_post_meta($post->ID, '_ccwp_cast_crew_birthday',true);
+        $castcrew_birthday = !empty($castcrew_birthday)
+            ? Carbon::parse($castcrew_birthday)->format('m/d/Y')
+            : '';
+        
         ccwpView('admin/metaboxes/castcrew-details.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
             'post' => $post,
@@ -371,7 +339,7 @@ class AdminHookController extends CurtainCallHookController
             'name_first' => get_post_meta($post->ID, '_ccwp_cast_crew_name_first', true),
             'name_last'  => get_post_meta($post->ID, '_ccwp_cast_crew_name_last', true),
             'self_title' => get_post_meta($post->ID, '_ccwp_cast_crew_self_title', true),
-            'birthday'   => $cast_crew_birthday,
+            'birthday'   => $castcrew_birthday,
             'hometown'   => get_post_meta($post->ID, '_ccwp_cast_crew_hometown', true),
             'website_link' => get_post_meta($post->ID, '_ccwp_cast_crew_website_link', true),
             'facebook_link' => get_post_meta($post->ID, '_ccwp_cast_crew_facebook_link', true),

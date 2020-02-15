@@ -4,6 +4,7 @@ namespace CurtainCallWP;
 
 use CurtainCallWP\Hooks\AdminHookController;
 use CurtainCallWP\Hooks\FrontendHookController;
+use CurtainCallWP\Hooks\GlobalHookController;
 use CurtainCallWP\LifeCycle\Activator;
 use CurtainCallWP\LifeCycle\Deactivator;
 use CurtainCallWP\LifeCycle\Uninstaller;
@@ -14,6 +15,9 @@ use CurtainCallWP\LifeCycle\Uninstaller;
  */
 class CurtainCall
 {
+    const PLUGIN_NAME = 'CurtainCallWP';
+    const PLUGIN_VERSION = '0.1.0';
+    
     /**
      * The loader that's responsible for maintaining and registering all
      * hooks that power the plugin.
@@ -21,20 +25,6 @@ class CurtainCall
      * @var CurtainCallLoader
      */
     protected $loader;
-    
-    /**
-     * The unique identifier of this plugin.
-     *
-     * @var string
-     */
-    protected $plugin_name;
-    
-    /**
-     * The current version of the plugin.
-     *
-     * @var string
-     */
-    protected $plugin_version;
     
     /**
      * Define the core functionality of the plugin.
@@ -46,19 +36,18 @@ class CurtainCall
      * Include the following files that make up the plugin:
      *
      * CurtainCallLoader - Orchestrates the hooks of the plugin.
-     * CurtainCall_i18n  - Defines internationalization functionality.
-     * CurtainCallAdmin  - Defines all hooks for the admin area.
-     * CurtainCallPublic - Defines all hooks for the public side of the site.
+     *
+     * GlobalHookController   - Define the hooks that happen for both Admin and Frontend
+     * AdminHookController    - Defines all hooks for the admin area.
+     * FrontendHookController - Defines all hooks for the public side of the site.
      *
      * @return void
      */
     public function __construct()
     {
-        $this->plugin_name    = CCWP_PLUGIN_NAME;
-        $this->plugin_version = CCWP_PLUGIN_VERSION;
-        
         $this->initPluginLoader();
         $this->initPluginLocale();
+        $this->defineGlobalHooks();
         $this->defineAdminHooks();
         $this->defineFrontendHooks();
     }
@@ -99,7 +88,19 @@ class CurtainCall
      */
     protected function initPluginLocale()
     {
-        load_plugin_textdomain(CCWP_PLUGIN_NAME, false, plugin_dir_path(__FILE__) . 'languages/');
+        load_plugin_textdomain(static::PLUGIN_NAME, false, plugin_dir_path(__FILE__) . 'languages/');
+    }
+    
+    /**
+     * Register all hook related to bother the admin and frontend functionality
+     */
+    protected function defineGlobalHooks()
+    {
+        $controller = new GlobalHookController();
+        
+        $this->loader->add_action('init', $controller, 'createProductionPostType', 10, 0);
+        $this->loader->add_action('init', $controller, 'createProductionSeasonsTaxonomy', 10, 0);
+        $this->loader->add_action('init', $controller, 'createCastAndCrewPostType', 10, 0);
     }
     
     /**
@@ -108,26 +109,23 @@ class CurtainCall
      */
     protected function defineAdminHooks()
     {
-        $plugin_admin = new AdminHookController();
+        $controller = new AdminHookController();
         
         // All Actions and Filters on the Production custom post type
-        $this->loader->add_action('init', $plugin_admin, 'createProductionPostType', 10, 0);
-        $this->loader->add_action('init', $plugin_admin, 'createProductionSeasonsTaxonomy', 10, 0);
-        $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addProductionPostMetaBoxes', 10, 0);
-        $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostDetails', 10, 2);
-        $this->loader->add_action('save_post_ccwp_production', $plugin_admin, 'saveProductionPostCastAndCrew', 10, 2);
+        $this->loader->add_action('add_meta_boxes', $controller, 'addProductionPostMetaBoxes', 10, 0);
+        $this->loader->add_action('save_post_ccwp_production', $controller, 'saveProductionPostDetails', 10, 2);
+        $this->loader->add_action('save_post_ccwp_production', $controller, 'saveProductionPostCastAndCrew', 10, 2);
 
         // All Actions and Filters on the Cast and Crew custom post type
-        $this->loader->add_action('init', $plugin_admin, 'createCastAndCrewPostType', 10, 0);
-        $this->loader->add_action('add_meta_boxes', $plugin_admin, 'addCastAndCrewPostMetaBoxes', 10, 0);
-        $this->loader->add_action('save_post_ccwp_cast_and_crew', $plugin_admin, 'saveCastAndCrewPostDetails', 10, 2);
+        $this->loader->add_action('add_meta_boxes', $controller, 'addCastAndCrewPostMetaBoxes', 10, 0);
+        $this->loader->add_action('save_post_ccwp_cast_and_crew', $controller, 'saveCastAndCrewPostDetails', 10, 2);
         
         // All Actions and Filters that concern both post types
-        $this->loader->add_filter('wp_insert_post_data', $plugin_admin, 'setPostTitleOnPostSave', 10, 2);
+        $this->loader->add_filter('wp_insert_post_data', $controller, 'setPostTitleOnPostSave', 10, 2);
         
         // Scripts and style to be loaded for the admin area in the WordPress backend
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueueStyles');
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueueScripts');
+        $this->loader->add_action('admin_enqueue_scripts', $controller, 'enqueueStyles');
+        $this->loader->add_action('admin_enqueue_scripts', $controller, 'enqueueScripts');
     }
     
     /**
@@ -136,12 +134,12 @@ class CurtainCall
      */
     protected function defineFrontendHooks()
     {
-        $plugin_frontend = new FrontendHookController();
+        $controller = new FrontendHookController();
         
-        $this->loader->add_filter('single_template', $plugin_frontend, 'loadSingleTemplates', 10, 3);
-        $this->loader->add_filter('archive_template', $plugin_frontend, 'loadArchiveTemplates', 10, 3);
+        $this->loader->add_filter('single_template', $controller, 'loadSingleTemplates', 10, 3);
+        $this->loader->add_filter('archive_template', $controller, 'loadArchiveTemplates', 10, 3);
         
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_frontend, 'enqueueStyles');
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_frontend, 'enqueueScripts');
+        $this->loader->add_action('wp_enqueue_scripts', $controller, 'enqueueStyles');
+        $this->loader->add_action('wp_enqueue_scripts', $controller, 'enqueueScripts');
     }
 }
