@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
 use CurtainCallWP\PostTypes\Production;
 use Carbon\CarbonImmutable as Carbon;
