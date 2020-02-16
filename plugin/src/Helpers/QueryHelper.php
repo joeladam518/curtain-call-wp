@@ -3,7 +3,6 @@
 namespace CurtainCallWP\Helpers;
 
 use CurtainCallWP\PostTypes\CurtainCallJoin;
-use WP_Query;
 
 class QueryHelper
 {
