@@ -12,7 +12,7 @@ use CurtainCallWP\PostTypes\Production;
 class GlobalHookController
 {
     /**
-     *  Register the production custom post type.
+     * Register the production custom post type.
      * @return void
      */
     public function createProductionPostType()
@@ -26,7 +26,7 @@ class GlobalHookController
     }
     
     /**
-     *  Create the production custom post type taxonomies.
+     * Create the production custom post type taxonomies.
      * @return void
      */
     public function createProductionSeasonsTaxonomy()
@@ -37,7 +37,7 @@ class GlobalHookController
     }
     
     /**
-     *  Register the cast/crew custom post type.
+     * Register the cast/crew custom post type.
      * @return void
      */
     public function createCastAndCrewPostType()
