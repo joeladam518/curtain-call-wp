@@ -3,7 +3,7 @@
 namespace CurtainCallWP;
 
 use CurtainCallWP\Hooks\AdminHookController;
-use CurtainCallWP\Hooks\FrontendHookController;
+use CurtainCallWP\Hooks\FrontendHooks;
 use CurtainCallWP\Hooks\CurtainCallHooks;
 use CurtainCallWP\LifeCycle\Activator;
 use CurtainCallWP\LifeCycle\Deactivator;
@@ -134,7 +134,7 @@ class CurtainCall
      */
     protected function defineFrontendHooks()
     {
-        $controller = new FrontendHookController();
+        $controller = new FrontendHooks();
         
         $this->loader->add_filter('single_template', $controller, 'loadSingleTemplates', 10, 3);
         $this->loader->add_filter('archive_template', $controller, 'loadArchiveTemplates', 10, 3);

@@ -10,7 +10,7 @@ use WP_Post;
  * Class FrontendController
  * @package CurtainCallWP\Controllers
  */
-class FrontendHookController
+class FrontendHooks
 {
     /** @var string  */
     protected $assets_url;
