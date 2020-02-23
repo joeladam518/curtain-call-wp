@@ -9,7 +9,7 @@ use CurtainCallWP\PostTypes\Production;
  * Class CurtainCallController
  * @package CurtainCallWP\Controllers
  */
-class GlobalHookController
+class CurtainCallHooks
 {
     /**
      * Register the production custom post type.

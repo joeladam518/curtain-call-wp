@@ -4,7 +4,7 @@ namespace CurtainCallWP;
 
 use CurtainCallWP\Hooks\AdminHookController;
 use CurtainCallWP\Hooks\FrontendHookController;
-use CurtainCallWP\Hooks\GlobalHookController;
+use CurtainCallWP\Hooks\CurtainCallHooks;
 use CurtainCallWP\LifeCycle\Activator;
 use CurtainCallWP\LifeCycle\Deactivator;
 use CurtainCallWP\LifeCycle\Uninstaller;
@@ -96,7 +96,7 @@ class CurtainCall
      */
     protected function defineGlobalHooks()
     {
-        $controller = new GlobalHookController();
+        $controller = new CurtainCallHooks();
         
         $this->loader->add_action('init', $controller, 'createProductionPostType', 10, 0);
         $this->loader->add_action('init', $controller, 'createProductionSeasonsTaxonomy', 10, 0);
