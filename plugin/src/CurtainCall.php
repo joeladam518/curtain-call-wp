@@ -2,7 +2,7 @@
 
 namespace CurtainCallWP;
 
-use CurtainCallWP\Hooks\AdminHookController;
+use CurtainCallWP\Hooks\AdminHooks;
 use CurtainCallWP\Hooks\FrontendHooks;
 use CurtainCallWP\Hooks\CurtainCallHooks;
 use CurtainCallWP\LifeCycle\Activator;
@@ -109,7 +109,7 @@ class CurtainCall
      */
     protected function defineAdminHooks()
     {
-        $controller = new AdminHookController();
+        $controller = new AdminHooks();
         
         // All Actions and Filters on the Production custom post type
         $this->loader->add_action('add_meta_boxes', $controller, 'addProductionPostMetaBoxes', 10, 0);

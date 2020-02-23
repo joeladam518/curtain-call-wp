@@ -11,7 +11,7 @@ use Carbon\CarbonImmutable as Carbon;
  * Class AdminController
  * @package CurtainCallWP\Controllers
  */
-class AdminHookController
+class AdminHooks
 {
     /** @var string  */
     protected $assets_url;
