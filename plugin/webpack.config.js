@@ -8,8 +8,8 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.json'],
         alias: {
-            '@': path.resolve(__dirname, 'resources/js'),
-            '>': path.resolve(__dirname, 'resources/sass'),
+            '@js': path.resolve(__dirname, 'resources/js'),
+            '@sass': path.resolve(__dirname, 'resources/sass'),
         },
     },
 };
