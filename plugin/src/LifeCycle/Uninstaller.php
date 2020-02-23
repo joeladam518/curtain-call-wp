@@ -6,9 +6,9 @@ class Uninstaller implements LifeCycleHook
 {
     public static function run(): void
     {
-        self::deletePluginTables();
-        self::deletePluginPosts();
-        self::deletePluginPostMeta();
+        static::deletePluginTables();
+        static::deletePluginPosts();
+        static::deletePluginPostMeta();
         delete_option('ccwp_db_version');
         flush_rewrite_rules( false );
     }
@@ -16,8 +16,8 @@ class Uninstaller implements LifeCycleHook
     protected static function deletePluginTables(): void
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'ccwp_castandcrew_production';
-        $sql = "DROP TABLE IF EXISTS {$table_name}";
+        $table_name = "{$wpdb->prefix}ccwp_castandcrew_production";
+        $sql = "DROP TABLE IF EXISTS {$table_name};";
         $wpdb->query($sql);
     }
     
@@ -26,7 +26,7 @@ class Uninstaller implements LifeCycleHook
         global $wpdb;
         
         $sql = "
-            DELETE FROM ". $wpdb->posts ."
+            DELETE FROM {$wpdb->posts}
             WHERE `post_type` = 'ccwp_cast_and_crew'
             OR `post_type` = 'ccwp_production'
         ";
@@ -39,7 +39,7 @@ class Uninstaller implements LifeCycleHook
         global $wpdb;
         
         $sql = "
-            DELETE FROM ". $wpdb->postmeta ."
+            DELETE FROM {$wpdb->postmeta}
             WHERE `meta_key` = '_ccwp_cast_crew_name_first'
             OR `meta_key` = '_ccwp_cast_crew_name_last'
             OR `meta_key` = '_ccwp_cast_crew_self_title'
