@@ -1,49 +1,45 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
-
-use CurtainCallWP\PostTypes\Production;
-use Carbon\CarbonImmutable as Carbon;
-
 /**
  * Expected global variables for this partial
- * @var Production $production
+ * @var \CurtainCallWP\PostTypes\Production $production
  * @var string     $chronological_state
 **/
 
-// computed for this partial
+// Computed for this partial
 $production_permalink = get_post_permalink($production->ID);
 $production_thumbnail_html = get_the_post_thumbnail($production->getPost(), 'full');
 $production_excerpt = get_the_excerpt($production->getPost());
 $ticket_url = $production->getTicketUrl();
 ?>
 
-<div class="productions-directory-show-container">
-    <?php if (has_post_thumbnail()): ?>
-        <div class="show-poster">';
+<div class="productions-directory-row">
+    <div class="production-poster">
+        <?php if (has_post_thumbnail()): ?>
             <a href="<?php echo $production_permalink; ?>">
                 <?php echo $production_thumbnail_html; ?>
             </a>
-        </div>
-    <?php endif; ?>
+        <?php endif; ?>
+    </div>
         
-    <div class="show-content-container">
-        <div class="show-title-container">
-            <h3 class="show-title">
+    <div class="production-details">
+        <div class="production-name-container">
+            <h3 class="production-name">
                 <a href="<?php echo $production_permalink; ?>">
                     <?php echo $production->name; ?>
                 </a>
             </h3>
             <?php if (!empty($ticket_url)): ?>
-                <a href="<?php echo $ticket_url; ?>" class="show-tickets" target="_blank">Get Tickets</a>
+                <a href="<?php echo $ticket_url; ?>" class="production-tickets" target="_blank">Get Tickets</a>
             <?php endif; ?>
         </div>
         
-        <div class="show-info-container">';
+        <div class="ccwp-container">
             <?php if ($chronological_state == 'current'): ?>
                 <div>
                     <span class="now-showing">Now Showing</span>
             <?php endif; ?>
                 
-            <span class="show-dates"><?php echo $production->getFormattedShowDates(); ?></span>
+            <span class="production-dates"><?php echo $production->getFormattedShowDates(); ?></span>
     
             <?php if ($chronological_state == 'current'): ?>
                 </div>
@@ -51,11 +47,11 @@ $ticket_url = $production->getTicketUrl();
             <?php endif; ?>
                 
             <?php if (isset($production->show_times)): ?>
-                <span class="show-times"><?php echo $production->show_times; ?></span>
+                <span class="production-times"><?php echo $production->show_times; ?></span>
             <?php endif; ?>
             
             <?php if (isset($production->venue)): ?>
-                <span class="show-venue"><?php echo $production->venue; ?></span>
+                <span class="production-venue"><?php echo $production->venue; ?></span>
             <?php endif; ?>
     
             <?php if ($chronological_state == 'current'): ?>
@@ -64,7 +60,7 @@ $ticket_url = $production->getTicketUrl();
         </div>
         
         <?php if (!empty($production_excerpt)): ?>
-            <div class="show-summary"><?php echo $production_excerpt; ?></div>
+            <div class="production-excerpt"><?php echo $production_excerpt; ?></div>
         <?php endif;?>
     </div>
 </div>
