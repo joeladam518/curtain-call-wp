@@ -10,13 +10,15 @@
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       curtain-call-wp
  * Domain Path:       /languages
- **/
+**/
 
 if (!defined('ABSPATH')) {
     die;
 }
 
 // Plugin constants
+define('CCWP_PLUGIN_NAME', 'CurtainCallWP');
+define('CCWP_PLUGIN_VERSION', '0.1.0');
 define('CCWP_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('CCWP_TEXT_DOMAIN', 'curtain-call-wp');
 define('CCWP_DEBUG', true);

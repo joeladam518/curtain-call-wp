@@ -15,8 +15,8 @@ use CurtainCallWP\LifeCycle\Uninstaller;
  */
 class CurtainCall
 {
-    const PLUGIN_NAME = 'CurtainCallWP';
-    const PLUGIN_VERSION = '0.1.0';
+    const PLUGIN_NAME = CCWP_PLUGIN_NAME;
+    const PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
     
     /**
      * The loader that's responsible for maintaining and registering all
