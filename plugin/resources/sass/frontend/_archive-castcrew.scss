@@ -1,69 +1,74 @@
 /* Cast and Crew */
+@import "~@sass/variables/all";
 
 .post-type-archive-ccwp_cast_and_crew {
     .ccwp-cast-and-crew-page {
         padding-top: 20px;
+    }
 
-        .ccwp-alphabet-navigation {
-            margin-bottom: 30px;
-            font-size: 17px;
-            a, span {
-                padding: 0 5px;
-            }
-            a {
-                color: $black;
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    .ccwp-alphabet-navigation {
+        margin-bottom: 30px;
+        font-size: 17px;
+        a, span {
+            padding: 0 5px;
+        }
+        a {
+            color: $black;
+            text-decoration: none;
+            &:hover {
+                color: $red;
                 text-decoration: none;
-                &:hover {
-                    color: $red;
-                    text-decoration: none;
-                }
-            }
-            span {
-                color: rgba(0,0,0,.3);
             }
         }
-        .ccwp-alphabet-header {
-            font-size: 1.5rem;
-            line-height: calc(1.5rem + 10px);
-            padding-left: 20px;
-            margin-bottom: 20px;
+        span {
+            color: rgba(0,0,0,.3);
         }
-        .ccwp-row {
-            flex-flow: row wrap;
-            margin-bottom: 0;
-        }
-        .castcrew-wrapper {
-            display: flex;
-            flex-flow: column nowrap;
-            align-items: center;
-            flex-basis: 250px;
-            flex-shrink: 0;
-            margin-right: 40px;
-            margin-bottom: 40px;
-        }
-        .castcrew-headshot {
-            text-align: center;
-        }
-        .castcrew-details {
-            text-align: center;
-        }
-        .castcrew-name {
-            font-size: 1.5rem;
-            line-height: calc(1.5rem + 10px);
-            margin: 0;
-            a {
+    }
+    .ccwp-alphabet-header {
+        font-size: 1.5rem;
+        line-height: calc(1.5rem + 10px);
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+    .ccwp-row {
+        flex-flow: row wrap;
+        margin-bottom: 0;
+    }
+    .castcrew-wrapper {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        flex-basis: 250px;
+        flex-shrink: 0;
+        margin-right: 40px;
+        margin-bottom: 40px;
+    }
+    .castcrew-headshot {
+        text-align: center;
+    }
+    .castcrew-details {
+        text-align: center;
+    }
+    .castcrew-name {
+        font-size: 1.5rem;
+        line-height: calc(1.5rem + 10px);
+        margin: 0;
+        a {
+            text-decoration: none;
+            &:hover {
+                color: $red;
                 text-decoration: none;
-                &:hover {
-                    color: $red;
-                    text-decoration: none;
-                }
             }
         }
-        .castcrew-self-title {
-            font-size: 1rem;
-            line-height: calc(1rem + 10px);
-            color: rgba(0,0,0,.5);
-            margin-bottom: 10px;
-        }
+    }
+    .castcrew-self-title {
+        font-size: 1rem;
+        line-height: calc(1rem + 10px);
+        color: rgba(0,0,0,.5);
+        margin-bottom: 10px;
     }
 }
