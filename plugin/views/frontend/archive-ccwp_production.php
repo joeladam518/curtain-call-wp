@@ -2,7 +2,6 @@
 
 use CurtainCallWP\PostTypes\Production;
 
-$view_partial_path = 'frontend/partials/archive-production-section.php';
 get_header();
 ?>
 
@@ -24,6 +23,8 @@ get_header();
     
         <div class="ccwp-container">
             <?php
+                $view_partial_path = 'frontend/partials/archive-production-section.php';
+                
                 ccwpView($view_partial_path, [
                     'wp_query' => Production::getCurrentPosts(),
                     'chronological_state' => 'current',

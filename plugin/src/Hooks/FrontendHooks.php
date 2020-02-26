@@ -78,11 +78,11 @@ class FrontendHooks
         global $post;
         
         if ($post->post_type === 'ccwp_production' && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath('frontend/') . '/templates/single-ccwp_production.php';
+            return CurtainCallView::dirPath('frontend/') . 'single-ccwp_production.php';
         }
         
         if ($post->post_type === 'ccwp_cast_and_crew' && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath('frontend') . '/templates/single-ccwp_cast_and_crew.php';
+            return CurtainCallView::dirPath('frontend/') . 'single-ccwp_cast_and_crew.php';
         }
         
         return $template;
@@ -97,11 +97,11 @@ class FrontendHooks
     public function loadArchiveTemplates($template, $type, $templates)
     {
         if (is_post_type_archive('ccwp_production') && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath('frontend/') . 'templates/archive-ccwp_production.php';
+            return CurtainCallView::dirPath('frontend/') . 'archive-ccwp_production.php';
         }
         
         if (is_post_type_archive('ccwp_cast_and_crew') && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath('frontend/') . 'templates/archive-ccwp_cast_and_crew.php';
+            return CurtainCallView::dirPath('frontend/') . 'archive-ccwp_cast_and_crew.php';
         }
         
         return $template;
