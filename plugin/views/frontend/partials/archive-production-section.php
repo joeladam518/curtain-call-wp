@@ -25,7 +25,6 @@ $wp_query->rewind_posts();
             
             while ($wp_query->have_posts()) {
                 $wp_query->the_post();
-                $production = Production::make(get_post());
                 ccwpView('frontend/partials/archive-production-row.php', [
                     'production' => Production::make(get_post()),
                     'chronological_state' => $chronological_state,
