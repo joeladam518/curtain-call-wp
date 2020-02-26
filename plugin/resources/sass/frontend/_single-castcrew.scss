@@ -27,7 +27,6 @@
 
         .castcrew-profile {
             .castcrew-title {
-                font-size: 1.5rem;
                 color: $black;
             }
             .castcrew-birthplace {
@@ -91,26 +90,28 @@
             }
 
             .production-poster {
-                flex-basis: 395px;
+                flex-basis: 400px;
                 flex-shrink: 0;
-                margin-right: 15px;
+                margin-right: 30px;
                 text-align: left;
                 @media screen and (min-width: $br-sm-min) {
                     text-align: center;
                 }
 
                 img {
-                    max-height: 200px;
+                    height: auto;
+                    max-height: 250px;
                     width: auto;
+                    max-width: 100%;
                 }
             }
 
             .production-details {
                 flex-grow: 1;
                 .production-name {
-                    margin-bottom: 7px;
+                    margin-bottom: 5px;
                     a {
-                        font-size: 1.5rem;
+                        font-size: 1.6rem;
                         text-decoration: none;
                         color: $black;
                         &:hover {
@@ -119,10 +120,10 @@
                     }
                 }
                 .castcrew-role {
-                    font-size: 1.25rem;
+                    font-size: 1.4rem;
                 }
                 .production-dates {
-                    font-size: 1.15rem;
+                    font-size: 1.2rem;
                 }
             }
         }

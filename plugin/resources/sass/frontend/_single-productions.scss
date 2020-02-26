@@ -27,6 +27,7 @@
 
         .show-info {
             color: $black;
+            margin-bottom: 20px;
             .show-dates-container {
                 display: flex;
                 flex-flow: row wrap;
@@ -86,15 +87,15 @@
             .castcrew-headshot {
                 flex-basis: 150px;
                 flex-shrink: 0;
-                margin-right: 15px;
+                margin-right: 20px;
             }
 
             .castcrew-details {
                 flex-grow: 1;
                 .castcrew-name {
-                    margin-bottom: 7px;
+                    margin-bottom: 5px;
                     a {
-                        font-size: 1.5rem;
+                        font-size: 1.6rem;
                         text-decoration: none;
                         color: $black;
                         &:hover {
@@ -104,7 +105,7 @@
                 }
 
                 .castcrew-role {
-                    font-size: 1.25rem;
+                    font-size: 1.4rem;
                 }
             }
         }
