@@ -1,6 +1,8 @@
 /.vagrant
 /vendor
 /node_modules
+/CurtainCallWP
+/curtaincallwp.zip
 
 # Numerous always-ignore extensions
 *.diff
