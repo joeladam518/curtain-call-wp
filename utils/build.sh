@@ -2,7 +2,7 @@
 
 # Variables
 CWD=$(pwd);
-plugin_dir_name="plugin"
+plugin_dir_name="src"
 zip_dir_name="CurtainCallWP"
 
 # Determine plugin dir path
