@@ -16,10 +16,10 @@
     },
     "autoload": {
         "psr-4": {
-            "CurtainCallWP\\": [ "src/" ]
+            "CurtainCallWP\\": [ "plugin/" ]
         },
         "files": [
-          "src/functions.php"
+          "plugin/functions.php"
         ]
     }
 }

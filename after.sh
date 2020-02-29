@@ -2,7 +2,7 @@
 
 # Variables
 repo_dir="${HOME}/CurtainCallWP"
-repo_plugin_dir="${repo_dir}/plugin"
+repo_plugin_dir="${repo_dir}/src"
 wp_dir="${repo_dir}/public"
 wp_plugin_dir="${wp_dir}/wp-content/plugins"
 

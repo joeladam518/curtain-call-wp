@@ -44,8 +44,6 @@ if [ "$zip_dir" != "${repo_dir}/${zip_dir_name}" ];then
     exit 1
 fi
 
-exit
-
 # build for production
 cd "$plugin_dir" && npm run production
 cd "$plugin_dir" && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --no-suggest --optimize-autoloader
