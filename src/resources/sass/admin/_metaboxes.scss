@@ -11,7 +11,7 @@
         margin-bottom: 10px;
 
         label {
-            padding-right: 20px;
+            padding-right: 15px;
             text-align: right;
         }
 
@@ -35,6 +35,10 @@
             flex-basis: 200px;
         }
     }
+
+    .ccwp-form-group + .ccwp-form-help-text {
+        margin-left: 220px;
+    }
 }
 
 #ccwp_cast_and_cast_details {
@@ -42,5 +46,9 @@
         label {
             flex-basis: 100px;
         }
+    }
+
+    .ccwp-form-group + .ccwp-form-help-text {
+        margin-left: 120px;
     }
 }
