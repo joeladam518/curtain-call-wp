@@ -13,7 +13,7 @@ keys:
 
 folders:
     -
-        map: ~/repos/CurtainCallWP
+        map: /home/jhaker/repos/CurtainCallWP
         to: /home/vagrant/CurtainCallWP
 
 sites:
