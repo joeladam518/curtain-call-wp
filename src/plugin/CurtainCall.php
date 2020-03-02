@@ -101,6 +101,7 @@ class CurtainCall
         $this->loader->add_action('init', $controller, 'createProductionPostType');
         $this->loader->add_action('init', $controller, 'createCastAndCrewPostType');
         $this->loader->add_action('init', $controller, 'createProductionSeasonsTaxonomy');
+        //$this->loader->add_filter('rewrite_rules_array', $controller, 'filterRewriteRulesArray', 1);
     }
     
     /**

@@ -40,5 +40,16 @@ class CurtainCallHooks
         register_taxonomy('ccwp_production_seasons', array('ccwp_production'), Production::getSeasonsTaxonomyConfig());
         flush_rewrite_rules();
     }
+    
+    /**
+     * View rewrite rules (for debugging)
+     * @param array $rules
+     * @return array
+     */
+    public function filterRewriteRulesArray($rules)
+    {
+        //pr($rules,1);
+        return $rules;
+    }
 }
 
