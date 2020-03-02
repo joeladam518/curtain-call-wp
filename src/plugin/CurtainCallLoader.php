@@ -46,7 +46,7 @@ class CurtainCallLoader
      * @param int    $accepted_args Optional. The number of arguments that should be passed to the $callback.
      * @return void
      */
-    public function add_action($tag, $component, $callback, $priority = 10, $accepted_args = 1)
+    public function add_action($tag, $component, $callback, $accepted_args = 1, $priority = 10)
     {
         $this->actions[] = [
             'tag'           => $tag,
@@ -67,7 +67,7 @@ class CurtainCallLoader
      * @param int    $accepted_args Optional. The number of arguments that should be passed to the $callback.
      * @return void
      */
-    public function add_filter($tag, $component, $callback, $priority = 10, $accepted_args = 1)
+    public function add_filter($tag, $component, $callback, $accepted_args = 1, $priority = 10)
     {
         $this->filters[] = [
             'tag'           => $tag,
