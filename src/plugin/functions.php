@@ -1,10 +1,6 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
 use CurtainCallWP\CurtainCallView;
-
-if (!defined('ABSPATH')) {
-    die;
-}
 
 if (!function_exists('getCustomField')) {
     /**
