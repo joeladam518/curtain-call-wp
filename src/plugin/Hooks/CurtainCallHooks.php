@@ -17,11 +17,7 @@ class CurtainCallHooks
      */
     public function createProductionPostType()
     {
-        $args = Production::getConfig();
-        register_post_type('ccwp_production', $args);
-        add_rewrite_rule('productions/?$', 'index.php?post_type=ccwp_production', 'top');
-        add_rewrite_rule('productions/page/([0-9]{1,})/?$', 'index.php?post_type=ccwp_production&paged=$matches[1]', 'top');
-        add_rewrite_rule('productions/([^/]+)/?$', 'index.php?ccwp_production=$matches[1]', 'top');
+        register_post_type('ccwp_production', Production::getConfig());
         flush_rewrite_rules();
     }
     
@@ -31,11 +27,7 @@ class CurtainCallHooks
      */
     public function createCastAndCrewPostType()
     {
-        $args = CastAndCrew::getConfig();
-        register_post_type('ccwp_cast_and_crew', $args);
-        add_rewrite_rule('cast-and-crew/?$', 'index.php?post_type=ccwp_cast_and_crew', 'top');
-        add_rewrite_rule('cast-and-crew/page/([0-9]{1,})/?$', 'index.php?post_type=ccwp_cast_and_crew&paged=$matches[1]', 'top');
-        add_rewrite_rule('cast-and-crew/([^/]+)/?$', 'index.php?ccwp_cast_and_crew=$matches[1]', 'top');
+        register_post_type('ccwp_cast_and_crew', CastAndCrew::getConfig());
         flush_rewrite_rules();
     }
     
@@ -45,8 +37,7 @@ class CurtainCallHooks
      */
     public function createProductionSeasonsTaxonomy()
     {
-        $args = Production::getSeasonsTaxonomyConfig();
-        register_taxonomy('ccwp_production_seasons', array('ccwp_production'), $args);
+        register_taxonomy('ccwp_production_seasons', array('ccwp_production'), Production::getSeasonsTaxonomyConfig());
         flush_rewrite_rules();
     }
 }
