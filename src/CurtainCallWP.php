@@ -36,5 +36,9 @@ require_once dirname(__FILE__) . '/vendor/autoload.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
 **/
-$ccwp_plugin = new \CurtainCallWP\CurtainCall();
-$ccwp_plugin->run();
+function ccwp_run_plugin()
+{
+    $ccwp_plugin = new \CurtainCallWP\CurtainCall();
+    $ccwp_plugin->run();
+}
+ccwp_run_plugin();
