@@ -1,0 +1,136 @@
+/* Cast & Crew Production Directory */
+@import "~@sass/variables/all";
+
+.single-ccwp_cast_and_crew  {
+    article {
+        .castcrew-profile-section {
+            display: flex;
+            flex-flow: column nowrap;
+            margin-bottom: 40px;
+            @media screen and (min-width: $br-sm-min) {
+                flex-flow: row nowrap;
+            }
+        }
+
+        .castcrew-headshot {
+            flex-basis: 250px;
+            flex-shrink: 0;
+            margin-right: 40px;
+            img {
+                max-height: 250px;
+                width: auto;
+                @media screen and (min-width: $br-sm-min) {
+                    max-height: 400px;
+                }
+            }
+        }
+
+        .castcrew-profile {
+            .castcrew-title {
+                color: $black;
+            }
+            .castcrew-birthplace {
+                color: $black;
+                font-size: 1.1rem;
+            }
+            //.castcrew-bio {}
+            .connect-with-castcrew {
+                font-size: 20px;
+                margin: 20px 0 15px;
+            }
+            .castcrew-website {
+                margin: -10px 0 0;
+                font-size: 1.1rem;
+                a {
+                    text-decoration: none;
+                    &:hover {
+                        text-decoration: none;
+                        color: $yellow;
+                    }
+                }
+            }
+            .castcrew-social {
+                margin-top: 10px;
+                a {
+                    text-decoration: none;
+                    margin-right: 10px;
+                    &:hover {
+                        color: $yellow;
+                        text-decoration: none;
+                    }
+
+                    i {
+                        font-size: 1.4rem;
+                    }
+                }
+            }
+        }
+
+        .ccwp-directory-section {
+            padding: 30px 0;
+            border-top: 1px solid rgba($black,.1);
+        }
+
+        .castcrew-production-list {
+            margin-bottom: 20px;
+
+            h2 {
+                margin-bottom: 20px;
+            }
+
+            .ccwp-container {
+                display: flex;
+                flex-flow: column nowrap;
+            }
+
+            .production-wrapper {
+                display: flex;
+                flex-flow: row wrap;
+                margin-bottom: 20px;
+            }
+
+            .production-poster {
+                flex-basis: 100%;
+                flex-shrink: 0;
+                margin-right: 0;
+                text-align: left;
+                @media screen and (min-width: $br-sm-min) {
+                    flex-basis: 325px;
+                    margin-right: 25px;
+                    text-align: center;
+                }
+                @media screen and (min-width: $br-md-min) {
+                    flex-basis: 400px;
+                }
+
+                img {
+                    height: auto;
+                    max-height: 250px;
+                    width: auto;
+                    max-width: 100%;
+                }
+            }
+
+            .production-details {
+                flex-grow: 1;
+                .production-name {
+                    margin-bottom: 5px;
+                    a {
+                        font-size: 1.6rem;
+                        text-decoration: none;
+                        color: $black;
+                        &:hover {
+                            color: $red;
+                        }
+                    }
+                }
+                .castcrew-role {
+                    font-size: 1.4rem;
+                }
+                .production-dates {
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+}

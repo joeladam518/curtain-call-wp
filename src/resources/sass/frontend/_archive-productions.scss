@@ -1,0 +1,125 @@
+/* Productions Directory */
+@import '~@sass/variables/all';
+
+.post-type-archive-ccwp_production {
+    .ccwp-productions-page {
+        padding-top: 20px;
+        > .ccwp-container {
+            > .ccwp-section {
+                margin-bottom: 90px;
+            }
+        }
+    }
+
+    h1 {
+        margin-bottom: 20px;
+    }
+
+    .productions-directory-row {
+        display: flex;
+        flex-flow: column nowrap;
+        margin-bottom: 45px;
+        @media (min-width: $br-sm-min) {
+            flex-flow: row wrap;
+        }
+    }
+
+    .production-poster {
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 100%;
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 15px;
+
+        img {
+            width: auto;
+            height: auto;
+            max-height: 250px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: $br-sm-min) {
+            flex-basis: 50%;
+            padding-right: 50px;
+            margin-bottom: 0;
+        }
+    }
+
+    .production-details {
+        flex-basis: 50%;
+        flex-grow: 1;
+        flex-shrink: 0;
+
+        .now-showing {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .production-name-container {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .production-name {
+            margin-right: 30px;
+            margin-bottom: 0;
+        }
+        .production-tickets {
+            display: block;
+            flex-basis: 120px;
+            width: 120px;
+            text-align: center;
+            text-decoration: none;
+            background-color: $red;
+            border-radius: 3px;
+            padding: 5px 0;
+            color: $white;
+        }
+        .production-dates {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: $black;
+        }
+        .production-times {
+            display: block;
+            color: $black;
+        }
+        .production-venue {
+            color: $black;
+        }
+    }
+
+    .current-productions-section {
+        .production-poster {
+            flex-basis: 100%;
+            img {
+                max-height: 250px;
+            }
+        }
+    }
+
+    .ccwp-future-productions-section {
+        > h2 {
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba($black,.1);
+            color: $black;
+            text-align: left;
+        }
+    }
+
+    .ccwp-past-productions-section {
+        > h2 {
+            padding: 20px 0;
+            margin-bottom: 50px;
+            color: $white;
+            background-color: rgba(132,132,132,.6);
+            text-align: center;
+            @media screen and (max-width: 778px) {
+                margin: 0 -20px 20px;
+            }
+        }
+    }
+}
