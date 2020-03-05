@@ -90,12 +90,17 @@
             }
 
             .production-poster {
-                flex-basis: 400px;
+                flex-basis: 100%;
                 flex-shrink: 0;
-                margin-right: 30px;
+                margin-right: 0;
                 text-align: left;
                 @media screen and (min-width: $br-sm-min) {
+                    flex-basis: 325px;
+                    margin-right: 25px;
                     text-align: center;
+                }
+                @media screen and (min-width: $br-md-min) {
+                    flex-basis: 400px;
                 }
 
                 img {
