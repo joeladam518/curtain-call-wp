@@ -1,5 +1,5 @@
 /* Productions Directory */
-@import "~@sass/variables/all";
+@import '~@sass/variables/all';
 
 .post-type-archive-ccwp_production {
     .ccwp-productions-page {
@@ -17,22 +17,32 @@
 
     .productions-directory-row {
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: column nowrap;
         margin-bottom: 45px;
+        @media (min-width: $br-sm-min) {
+            flex-flow: row wrap;
+        }
     }
 
     .production-poster {
         flex-grow: 1;
         flex-shrink: 0;
-        flex-basis: 50%;
+        flex-basis: 100%;
         text-align: center;
-        padding-right: 50px;
+        padding-right: 0;
+        margin-bottom: 15px;
 
         img {
             width: auto;
             height: auto;
             max-height: 250px;
             margin: 0 auto;
+        }
+
+        @media (min-width: $br-sm-min) {
+            flex-basis: 50%;
+            padding-right: 50px;
+            margin-bottom: 0;
         }
     }
 
