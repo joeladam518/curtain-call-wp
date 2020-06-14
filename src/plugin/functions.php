@@ -19,6 +19,10 @@ if (!function_exists('getCustomField')) {
 }
 
 if (!function_exists('ccwpStripHttp')) {
+    /**
+     * @param string $str
+     * @return string|string[]|null
+     */
     function ccwpStripHttp(string $str)
     {
         return preg_replace('#^https?://#', '', $str);
@@ -26,6 +30,10 @@ if (!function_exists('ccwpStripHttp')) {
 }
 
 if (!function_exists('ccwpStripShortCodeGallery')) {
+    /**
+     * @param string $content
+     * @return string|string[]
+     */
     function  ccwpStripShortCodeGallery($content) {
         preg_match_all('/'. get_shortcode_regex() .'/s', $content, $matches, PREG_SET_ORDER);
         if (!empty($matches)) {
@@ -62,7 +70,9 @@ if (!function_exists('ccwpAssetsUrl')) {
      */
     function ccwpAssetsUrl(): string
     {
-        return ccwpPluginUrl('assets/');
+        return trailingslashit(
+            ccwpPluginUrl('assets')
+        );
     }
 }
 
@@ -73,7 +83,9 @@ if (!function_exists('ccwpAssetsPath')) {
      */
     function ccwpAssetsPath(): string
     {
-        return ccwpPluginPath('assets/');
+        return trailingslashit(
+            ccwpPluginPath('assets')
+        );
     }
 }
 
@@ -86,12 +98,8 @@ if (!function_exists('ccwpPluginUrl')) {
     function ccwpPluginUrl(string $path = ''): string
     {
         $url_path = plugin_dir_url(dirname(__FILE__));
-        
-        if ($path !== '') {
-            $url_path = $url_path . $path;
-        }
-        
-        return $url_path;
+
+        return trim("{$url_path}{$path}");
     }
 }
 
@@ -105,11 +113,7 @@ if (!function_exists('ccwpPluginPath')) {
     {
         $dir_path = plugin_dir_path(dirname(__FILE__));
         
-        if ($path !== '') {
-            $dir_path = $dir_path . $path;
-        }
-        
-        return $dir_path;
+        return trim("{$dir_path}{$path}");
     }
 }
 
@@ -122,7 +126,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * @param bool $return
          * @return string
          */
-        function fnln($return = true): string
+        function fnln(bool $return = false): string
         {
             $backtrace = debug_backtrace()[0];
             $out = basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
@@ -134,7 +138,6 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
             echo $out;
         }
     }
-    
     
     if (!function_exists("pr")) {
         /**
@@ -156,7 +159,6 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
             if ($exit) { exit; }
         }
     }
-    
     
     if (!function_exists("dmp")) {
         /**
