@@ -2,4 +2,7 @@
 
 namespace CurtainCallWP\Exceptions;
 
-class PostNotFoundException extends \Exception {}
+final class PostNotFoundException extends \Exception
+{
+    //
+}
