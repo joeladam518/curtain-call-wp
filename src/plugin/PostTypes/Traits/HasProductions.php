@@ -2,7 +2,6 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
-use Carbon\CarbonImmutable as Carbon;
 use CurtainCallWP\Helpers\CurtainCallHelper;
 use CurtainCallWP\Helpers\QueryHelper;
 use CurtainCallWP\PostTypes\Production;
@@ -47,15 +46,27 @@ trait HasProductions
                 } else if ($b_has_start_date && !$a_has_start_date) {
                     return 1;
                 } else {
-                    $a_start_date = Carbon::parse($production_a->date_start)->endOfDay();
-                    $b_start_date = Carbon::parse($production_b->date_start)->endOfDay();
+                    $a_start_date = CurtainCallHelper::toCarbon($production_a->date_start);
+                    $a_start_date = $a_start_date ? $a_start_date->endOfDay() : null;
+                    $b_start_date = CurtainCallHelper::toCarbon($production_b->date_start);
+                    $b_start_date = $b_start_date ? $b_start_date->endOfDay() : null;
                     
-                    if ($a_start_date->lt($b_start_date)) {
-                        return 1;
-                    } else if ($a_start_date->gt($b_start_date)) {
-                        return -1;
+                    if (isset($a_start_date) && isset($b_start_date)) {
+                        if ($a_start_date->lt($b_start_date)) {
+                            return 1;
+                        } else if ($a_start_date->gt($b_start_date)) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
                     } else {
-                        return 0;
+                        if ($a_start_date === null && $b_start_date !== null) {
+                            return -1;
+                        } else if ($a_start_date !== null && $b_start_date === null) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
                 }
             });

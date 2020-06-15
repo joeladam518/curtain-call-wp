@@ -3,6 +3,7 @@
 namespace CurtainCallWP\PostTypes;
 
 use Carbon\CarbonImmutable as Carbon;
+use CurtainCallWP\Helpers\CurtainCallHelper;
 use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
 use CurtainCallWP\PostTypes\Traits\QueriesWordPressForProductions;
 use Throwable;
@@ -121,8 +122,8 @@ class Production extends CurtainCallPost
         }
         
         $now = Carbon::now();
-        $start_date = Carbon::parse($this->date_start);
-        $end_date = Carbon::parse($this->date_end);
+        $start_date = CurtainCallHelper::toCarbon($this->date_start);
+        $end_date = CurtainCallHelper::toCarbon($this->date_end);
         
         if ($now->gt($end_date)) {
             $this->chronological_state = 'past';
@@ -142,8 +143,8 @@ class Production extends CurtainCallPost
     public function getFormattedShowDates(): string
     {
         $chrono_state = $this->getChronologicalState();
-        $start_date = new Carbon($this->date_start);
-        $end_date = new Carbon($this->date_end);
+        $start_date = CurtainCallHelper::toCarbon($this->date_start);
+        $end_date = CurtainCallHelper::toCarbon($this->date_end);
         $now = Carbon::now();
         
         $start_date_format = 'F jS';

@@ -32,7 +32,7 @@ trait HasAttributes
     /**
      * @param string $key
      * @param mixed  $value
-     * @return $this
+     * @return static
      */
     protected function setAttribute(string $key, $value): self
     {
@@ -41,6 +41,9 @@ trait HasAttributes
         return $this;
     }
     
+    /**
+     * @return array
+     */
     protected function attributesToArray(): array
     {
         $attributes = [];

@@ -2,7 +2,6 @@
 
 namespace CurtainCallWP\PostTypes\Traits;
 
-use Carbon\CarbonImmutable as Carbon;
 use WP_Query;
 
 trait QueriesWordPressForProductions
