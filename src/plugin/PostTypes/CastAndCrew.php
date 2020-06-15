@@ -2,7 +2,7 @@
 
 namespace CurtainCallWP\PostTypes;
 
-use Carbon\CarbonImmutable AS Carbon;
+use CurtainCallWP\Helpers\CurtainCallHelper;
 use CurtainCallWP\PostTypes\Traits\HasProductions;
 use CurtainCallWP\PostTypes\Traits\QueriesWordPressForCastAndCrew;
 use WP_Query;
@@ -29,9 +29,7 @@ class CastAndCrew extends CurtainCallPost
     const POST_TYPE = 'ccwp_cast_and_crew';
     const META_PREFIX = '_ccwp_cast_crew_';
     
-    /**
-     * @var array
-     */
+    /** @var array|string[] */
     protected $ccwp_meta_keys = [
         'name_first',
         'name_last',
@@ -87,6 +85,10 @@ class CastAndCrew extends CurtainCallPost
         ];
     }
     
+    /**
+     * @param WP_Query $query
+     * @return array
+     */
     public static function getAlphaIndexes(WP_Query $query): array
     {
         $alpha_indexes = [];
@@ -145,7 +147,9 @@ class CastAndCrew extends CurtainCallPost
     {
         $birthplace = '';
         if (isset($this->birthday)) {
-            $birthplace .= 'Born on ' . Carbon::parse($this->birthday)->toFormattedDateString();
+            $birthday = CurtainCallHelper::toCarbon($this->birthday);
+            $birthday = $birthday ? $birthday->toDateTimeString() : '';
+            $birthplace .= "Born on {$birthday}";
             if (isset($this->hometown)) {
                 $birthplace .= ' in ' . $this->hometown;
             }
@@ -157,10 +161,11 @@ class CastAndCrew extends CurtainCallPost
         return $birthplace;
     }
     
+    /**
+     * @return bool
+     */
     public function hasSocialMedia(): bool
     {
         return isset($this->facebook_link) || isset($this->instagram_link) || isset($this->twitter_link);
     }
-    
-
 }

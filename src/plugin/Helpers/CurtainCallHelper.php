@@ -2,6 +2,8 @@
 
 namespace CurtainCallWP\Helpers;
 
+use Carbon\CarbonImmutable as Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use CurtainCallWP\PostTypes\CurtainCallJoin;
 use WP_Post;
 use CurtainCallWP\PostTypes\CurtainCallPost;
@@ -66,5 +68,37 @@ class CurtainCallHelper
         }
 
         return $posts;
+    }
+    
+    /**
+     * @param string|null $date_string
+     * @return Carbon|null
+     */
+    public static function toCarbon(?string $date_string): ?Carbon
+    {
+        if (empty($date_string)) {
+            return null;
+        }
+    
+        try {
+            $carbon_date = Carbon::parse($date_string);
+        } catch (InvalidFormatException $e) {
+            return null;
+        }
+        
+        return $carbon_date;
+    }
+    
+    /**
+     * @param string|null $from
+     * @param string      $to
+     * @param null        $default
+     * @return string|null
+     */
+    public static function convertDate(?string $from, string $to = 'Y-m-d', $default = null): ?string
+    {
+        $date = static::toCarbon($from);
+        
+        return $date ? $date->format($to) : $default;
     }
 }

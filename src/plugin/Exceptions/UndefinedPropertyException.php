@@ -2,4 +2,7 @@
 
 namespace CurtainCallWP\Exceptions;
 
-class UndefinedPropertyException extends \Exception {}
+final class UndefinedPropertyException extends \Exception
+{
+    //
+}

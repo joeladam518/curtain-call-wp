@@ -2,4 +2,7 @@
 
 namespace CurtainCallWP\Exceptions;
 
-class UnsettableException extends \Exception {}
+final class UnsettableException extends \Exception
+{
+    //
+}

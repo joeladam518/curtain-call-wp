@@ -51,6 +51,10 @@ cd "$plugin_dir" && composer install --no-ansi --no-dev --no-interaction --no-pl
 # copy the plugin to the directory to be zipped
 rsync -arh --delete-delay "$plugin_dir/" "$zip_dir"
 
+# Copy the license and readme to the zip dir
+cp "${repo_dir}/LICENSE" "${zip_dir}/LICENSE"
+cp "${repo_dir}/README.md" "${zip_dir}/README.md"
+
 # set the file and directory permissions
 find "$zip_dir" -type d -exec chmod 755 {} \;
 find "$zip_dir" -type f -exec chmod 644 {} \;

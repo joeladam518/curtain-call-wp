@@ -35,17 +35,29 @@ class CurtainCallJoin implements Arrayable
         $this->load($data);
     }
     
+    /**
+     * @param string $key
+     * @return string
+     */
     public static function stripJoinPrefix($key): string
     {
         return preg_replace('~^'. static::ATTRIBUTE_PREFIX .'~', '', $key);
     }
     
+    /**
+     * @param string $key
+     * @return bool
+     */
     public static function isJoinField($key): bool
     {
         $join_field = static::stripJoinPrefix($key);
         return in_array($join_field, static::$fields);
     }
     
+    /**
+     * @param bool $with_prefix
+     * @return array|string[]
+     */
     public static function getJoinFields($with_prefix = false): array
     {
         if (!$with_prefix) {
@@ -60,6 +72,9 @@ class CurtainCallJoin implements Arrayable
         return $join_fields;
     }
     
+    /**
+     * @param array $data
+     */
     public function load(array $data)
     {
         foreach ($data as $key => $value) {
@@ -70,26 +85,45 @@ class CurtainCallJoin implements Arrayable
         }
     }
     
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
     public function __get($key)
     {
         return $this->getAttribute($key);
     }
     
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
     public function __set($key, $value)
     {
         $this->setAttribute($key, $value);
     }
     
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function __isset($key)
     {
         return isset($this->attributes[$key]);
     }
     
+    /**
+     * @param $key
+     * @return void
+     */
     public function __unset($key)
     {
         unset($this->attributes[$key]);
     }
     
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->attributes;
