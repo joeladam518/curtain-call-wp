@@ -158,6 +158,7 @@ abstract class CurtainCallPost implements Arrayable
     public function setCurtainCallPostJoin(CurtainCallJoin $curtain_call_post_join): self
     {
         $this->setAttribute('ccwp_join', $curtain_call_post_join);
+
         return $this;
     }
     
@@ -232,9 +233,9 @@ abstract class CurtainCallPost implements Arrayable
     {
         if ($this->isMetaAttribute($key)) {
             unset($this->meta[$this->getMetaKey($key)]);
+        } else {
+            unset($this->attributes[$key]);
         }
-        
-        unset($this->attributes[$key]);
     }
     
     /**
