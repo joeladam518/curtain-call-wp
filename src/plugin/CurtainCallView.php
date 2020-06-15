@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace CurtainCallWP;
 
-use const DIRECTORY_SEPARATOR;
 use CurtainCallWP\Exceptions\ViewDataNotValidException;
 use CurtainCallWP\Exceptions\ViewNotFoundException;
 use Throwable;
