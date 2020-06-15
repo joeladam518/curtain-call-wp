@@ -93,6 +93,7 @@ class CurtainCall
     
     /**
      * Register all hook related to bother the admin and frontend functionality
+     * @return void
      */
     protected function defineGlobalHooks()
     {

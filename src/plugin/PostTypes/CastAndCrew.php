@@ -87,6 +87,10 @@ class CastAndCrew extends CurtainCallPost
         ];
     }
     
+    /**
+     * @param WP_Query $query
+     * @return array
+     */
     public static function getAlphaIndexes(WP_Query $query): array
     {
         $alpha_indexes = [];
@@ -157,6 +161,9 @@ class CastAndCrew extends CurtainCallPost
         return $birthplace;
     }
     
+    /**
+     * @return bool
+     */
     public function hasSocialMedia(): bool
     {
         return isset($this->facebook_link) || isset($this->instagram_link) || isset($this->twitter_link);

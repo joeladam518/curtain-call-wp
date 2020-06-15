@@ -1,6 +1,12 @@
 import $ from 'jquery';
 
-function generateFormGroupHtml({production_id, castcrew_id, type = '', name = ''}) {
+/**
+ * @param {string|number} production_id
+ * @param {string|number} castcrew_id
+ * @param {string} type
+ * @param {string} name
+ * @returns {string}
+ */
     castcrew_id = parseInt(castcrew_id, 10);
     production_id = parseInt(production_id, 10);
     let passed_validation = true;
@@ -43,11 +49,17 @@ function generateFormGroupHtml({production_id, castcrew_id, type = '', name = ''
     ].join('\n');
 }
 
+/**
+ * @returns {void}
+ */
 export function removeProductionCastCrew() {
     const target_div  = $(this).data('target');
     $('#' + target_div).remove();
 }
 
+/**
+ * @returns {void}
+ */
 export function addProductionCast() {
     const production_id = $('#post_ID').val();
     const castcrew_id = $('#ccwp-production-cast-select').val();
@@ -67,6 +79,9 @@ export function addProductionCast() {
         .on('click', removeProductionCastCrew);
 }
 
+/**
+ * @returns {void}
+ */
 export function addProductionCrew() {
     const production_id = $('#post_ID').val();
     const castcrew_id = $('#ccwp-production-crew-select').val();

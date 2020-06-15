@@ -30,6 +30,7 @@ class AdminHooks
     
     /**
      * Register the stylesheets for the admin area.
+     * @return void
      */
     public function enqueueStyles()
     {
@@ -41,7 +42,7 @@ class AdminHooks
     
     /**
      * Register the JavaScript for the admin area.
-     * @param $hook
+     * @return void
      */
     public function enqueueScripts($hook)
     {
@@ -55,6 +56,11 @@ class AdminHooks
     //  Global Functions
     //  ----------------------------------------------------------------------------------------------------------------
     
+    /**
+     * @param array $data
+     * @param array $postarr
+     * @return array
+     */
     public function setPostTitleOnPostSave(array $data, array $postarr)
     {
         // if this is not a save from the edit post page dont do anything
@@ -121,6 +127,9 @@ class AdminHooks
     //  Production Functions
     //  ----------------------------------------------------------------------------------------------------------------
     
+    /**
+     * @return void
+     */
     public function addProductionPostMetaBoxes()
     {
         add_meta_box(
@@ -144,6 +153,12 @@ class AdminHooks
         );
     }
     
+    /**
+     * @param $post
+     * @param $metabox
+     * @return void
+     * @throws Throwable
+     */
     public function renderAddCastAndCrewMetaBox($post, $metabox)
     {
         /** @var Production $production */
@@ -180,6 +195,12 @@ class AdminHooks
         ])->render();
     }
     
+    /**
+     * @param WP_Post $post
+     * @param $metabox
+     * @return void
+     * @throws Throwable
+     */
     public function renderProductionDetailsMetaBox($post, $metabox)
     {
         $date_start = get_post_meta($post->ID, '_ccwp_production_date_start', true);
@@ -205,6 +226,11 @@ class AdminHooks
         ])->render();
     }
     
+    /**
+     * @param int $post_id
+     * @return void
+     * @throws Throwable
+     */
     public function saveProductionPostCastAndCrew($post_id)
     {
         # Verify meta box nonce
@@ -234,6 +260,10 @@ class AdminHooks
         $production->saveCastAndCrew('crew', $production_crew);
     }
     
+    /**
+     * @param int $post_id
+     * @return void
+     */
     public function saveProductionPostDetails($post_id)
     {
         # Verify meta box nonce
@@ -310,6 +340,9 @@ class AdminHooks
     //  Cast And Crew Functions
     //----------------------------------------------------------------------------------------------------------------
     
+    /**
+     * @return void
+     */
     public function addCastAndCrewPostMetaBoxes()
     {
         add_meta_box(
@@ -323,6 +356,12 @@ class AdminHooks
         );
     }
     
+    /**
+     * @param WP_Post $post
+     * @param $metabox
+     * @return void
+     * @throws Throwable
+     */
     public function ccwp_cast_and_crew_details_box_html($post, $metabox)
     {
         wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce');

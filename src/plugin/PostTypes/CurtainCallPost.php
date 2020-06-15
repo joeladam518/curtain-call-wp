@@ -102,7 +102,7 @@ abstract class CurtainCallPost implements Arrayable
     }
     
     /**
-     * @param WP_Post|null $post
+     * @param WP_Post $post
      * @return CurtainCallPost
      * @throws Throwable
      */
@@ -163,7 +163,7 @@ abstract class CurtainCallPost implements Arrayable
     
     /**
      * @param  string $key
-     * @return mixed
+     * @return mixed|null
      * @throws UndefinedPropertyException
      */
     public function __get($key)
@@ -186,6 +186,7 @@ abstract class CurtainCallPost implements Arrayable
     /**
      * @param string $key
      * @param mixed  $value
+     * @return void
      * @throws UnsettableException;
      */
     public function __set($key, $value)
@@ -207,7 +208,7 @@ abstract class CurtainCallPost implements Arrayable
     }
     
     /**
-     * @param $key
+     * @param string $key
      * @return bool
      */
     public function __isset($key)
@@ -224,7 +225,8 @@ abstract class CurtainCallPost implements Arrayable
     }
     
     /**
-     * @param $key
+     * @param string $key
+     * @return void
      */
     public function __unset($key)
     {
