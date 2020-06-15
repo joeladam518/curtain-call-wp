@@ -7,6 +7,7 @@ import $ from 'jquery';
  * @param {string} name
  * @returns {string}
  */
+export function generateFormGroupHtml({production_id, castcrew_id, type = '', name = ''}) {
     castcrew_id = parseInt(castcrew_id, 10);
     production_id = parseInt(production_id, 10);
     let passed_validation = true;
@@ -100,5 +101,3 @@ export function addProductionCrew() {
         .off('click')
         .on('click', removeProductionCastCrew);
 }
-
-
