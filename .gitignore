@@ -1,16 +1,19 @@
 .vagrant
-/vendor/
-/node_modules/
+.idea/
+.phpintel/
 
-# keep public folder but nothing in it
-/public/*
-!/public/.gitkeep
+vendor/
+node_modules/
 
-# folders used in git creation
+# folders used in build
 /CurtainCallWP
 /curtaincallwp.zip
 
-# Wordpress files (irrelevant)
+# public folder (Where Wordpress is)
+/public/*
+!/public/.gitkeep
+
+# Wordpress files
 wp-config.php
 wp-content/advanced-cache.php
 wp-content/backup-db/
@@ -22,30 +25,37 @@ wp-content/uploads/
 wp-content/wp-cache-config.php
 wp-content/plugins/hello.php
 
-# Numerous always-ignore extensions
-*.diff
-*.err
+# npm
+npm-debug.log
+.npmrc
+yarn-error.log
+
+# Mappings
+*.js.map
+*.css.map
+
+# Buid ignores
+mix-manifest.json
+
+# Text editor/ide folders
+.phpintel
+.vscode
+.idea
+*.swp
 *.orig
+*.diff
+*.vi
+*.idea
+
+# Numerous always-ignore extensions
+*.err
 *.log
 *.rej
 *.swo
-*.swp
-*.vi
-*~
 *.sass-cache
 
-# OS or Editor folders
-sftp-config.json
+# OS ignores
 .DS_Store
-Thumbs.db
-.cache
-.project
-.settings
-.tmproj
-*.esproj
-nbproject
-*.sublime-project
-*.sublime-workspace
-.phpintel/
-.phpintel/*
-.idea/
+.AppleDouble
+.LSOverride
+__MACOSX
