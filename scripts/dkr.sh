@@ -1,32 +1,20 @@
 #!/usr/bin/env bash
 
+#
+# Inspired by laravel sails script
+# https://github.com/laravel/sail
+#
+
 set -Eeo pipefail
 
 # Setup
-SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
-REPO_DIR="$(dirname "$SCRIPTS_DIR")"
-PLUGIN_DIR="${REPO_DIR}/src"
-
-if ! [ -x "$(command -v docker-compose)" ]; then
-    shopt -s expand_aliases
-    alias docker-compose='docker compose'
-fi
-
-UNAMEOUT="$(uname -s)"
-
 WHITE='\033[1;37m'
 NC='\033[0m'
 
-# Verify operating system is supported...
-case "${UNAMEOUT}" in
-    Linux*)  MACHINE=linux;;
-    Darwin*) MACHINE=mac;;
-    *)       MACHINE="UNKNOWN"
-esac
-
-if [ "$MACHINE" == "UNKNOWN" ]; then
-    echo "Unsupported operating system [$(uname -s)]. Laravel Sail supports macOS, Linux, and Windows (WSL2)." >&2
-    exit 1
+# fix docker compose if needed
+if ! [ -x "$(command -v docker-compose)" ]; then
+    shopt -s expand_aliases
+    alias docker-compose='docker compose'
 fi
 
 # Source the ".env" file
@@ -101,19 +89,6 @@ if [ $# -gt 0 ]; then
 
     # Initiate a Bash shell within the application container...
     elif [ "$1" == "shell" ] || [ "$1" == "bash" ]; then
-        shift 1
-
-        if [ "$EXEC" == "yes" ]; then
-            docker-compose exec \
-                -u wpuser \
-                "$APP_SERVICE" \
-                bash "$@"
-        else
-            container_is_not_running
-        fi
-
-    # Initiate a root user Bash shell within the application container...
-    elif [ "$1" == "root-shell" ] ; then
         shift 1
 
         if [ "$EXEC" == "yes" ]; then
