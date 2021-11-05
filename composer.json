@@ -1,29 +1,42 @@
 {
     "name": "joeladam518/curtain-call-wp",
     "description": "CMS for theatres looking to create productions, cast, and crew custom posts.",
-    "keywords": ["WordPress", "theatre", "theater", "productions", "plays", "cast", "crew"],
-    "license": "MIT",
     "type": "project",
-    "prefer-stable": true,
+    "license": "MIT",
+    "keywords": [
+        "WordPress",
+        "theatre",
+        "theater",
+        "productions",
+        "plays",
+        "cast",
+        "crew"
+    ],
     "require": {
-        "php": "^7.1",
-        "nesbot/carbon": "^2.25.2"
+        "php": "^7.4|^8.0",
+        "nesbot/carbon": "^2.54.0"
     },
     "require-dev": {
-        "laravel/homestead": "^10.3"
+        "johnpbloch/wordpress": "*"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "vendor-dir": "src"
+        "vendor-dir": "src/vendor/"
+    },
+    "extra": {
+        "wordpress-install-dir": "public/"
     },
     "autoload": {
         "psr-4": {
-            "CurtainCallWP\\": [ "plugin/" ]
+            "CurtainCallWP\\": [ "src/plugin/" ]
         },
         "files": [
-            "plugin/functions.php"
+            "src/functions.php"
         ]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {}
 }

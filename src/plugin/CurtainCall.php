@@ -17,7 +17,7 @@ class CurtainCall
 {
     const PLUGIN_NAME = CCWP_PLUGIN_NAME;
     const PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
-    
+
     /**
      * The loader that's responsible for maintaining and registering all
      * hooks that power the plugin.
@@ -25,7 +25,7 @@ class CurtainCall
      * @var CurtainCallLoader
      */
     protected $loader;
-    
+
     /**
      * Define the core functionality of the plugin.
      *
@@ -51,7 +51,7 @@ class CurtainCall
         $this->defineAdminHooks();
         $this->defineFrontendHooks();
     }
-    
+
     /**
      * Register the plugin's life cycle hooks
      * @param string $file
@@ -63,7 +63,7 @@ class CurtainCall
         register_deactivation_hook($file, array(Deactivator::class, 'run'));
         register_uninstall_hook($file, array(Uninstaller::class, 'run'));
     }
-    
+
     /**
      * Run the loader to execute all of the hooks with WordPress.
      * @return void
@@ -72,7 +72,7 @@ class CurtainCall
     {
         $this->loader->run();
     }
-    
+
     /**
      * Set the loader that manager the hooks
      * @return void
@@ -81,7 +81,7 @@ class CurtainCall
     {
         $this->loader = new CurtainCallLoader();
     }
-    
+
     /**
      * Define the locale for this plugin for internationalization.
      * @return void
@@ -90,7 +90,7 @@ class CurtainCall
     {
         load_plugin_textdomain(static::PLUGIN_NAME, false, plugin_dir_path(__FILE__) . 'languages/');
     }
-    
+
     /**
      * Register all hook related to bother the admin and frontend functionality
      * @return void
@@ -98,13 +98,13 @@ class CurtainCall
     protected function defineGlobalHooks()
     {
         $controller = new CurtainCallHooks();
-        
+
         $this->loader->add_action('init', $controller, 'createProductionPostType');
         $this->loader->add_action('init', $controller, 'createCastAndCrewPostType');
         $this->loader->add_action('init', $controller, 'createProductionSeasonsTaxonomy');
         //$this->loader->add_filter('rewrite_rules_array', $controller, 'filterRewriteRulesArray', 1);
     }
-    
+
     /**
      * Register all of the hooks related to the admin area functionality of the plugin.
      * @return void
@@ -112,7 +112,7 @@ class CurtainCall
     protected function defineAdminHooks()
     {
         $controller = new AdminHooks();
-    
+
         // All Actions and Filters on the Production custom post type
         $this->loader->add_action('add_meta_boxes', $controller, 'addProductionPostMetaBoxes');
         $this->loader->add_action('save_post_ccwp_production', $controller, 'saveProductionPostDetails', 2);
@@ -121,15 +121,15 @@ class CurtainCall
         // All Actions and Filters on the Cast and Crew custom post type
         $this->loader->add_action('add_meta_boxes', $controller, 'addCastAndCrewPostMetaBoxes', 0);
         $this->loader->add_action('save_post_ccwp_cast_and_crew', $controller, 'saveCastAndCrewPostDetails', 2);
-        
+
         // All Actions and Filters that concern both post types
         $this->loader->add_filter('wp_insert_post_data', $controller, 'setPostTitleOnPostSave', 2);
-        
+
         // Scripts and style to be loaded for the admin area in the WordPress backend
         $this->loader->add_action('admin_enqueue_scripts', $controller, 'enqueueStyles');
         $this->loader->add_action('admin_enqueue_scripts', $controller, 'enqueueScripts');
     }
-    
+
     /**
      * Register all of the hooks related to the public-facing functionality of the plugin.
      * @return void
@@ -137,10 +137,10 @@ class CurtainCall
     protected function defineFrontendHooks()
     {
         $controller = new FrontendHooks();
-        
+
         $this->loader->add_filter('single_template', $controller, 'loadSingleTemplates', 3);
         $this->loader->add_filter('archive_template', $controller, 'loadArchiveTemplates', 3);
-        
+
         $this->loader->add_action('wp_enqueue_scripts', $controller, 'enqueueStyles');
         $this->loader->add_action('wp_enqueue_scripts', $controller, 'enqueueScripts');
     }
