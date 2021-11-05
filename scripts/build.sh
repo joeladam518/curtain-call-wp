@@ -40,6 +40,10 @@ cp "${REPO_DIR}/README.md" "${ZIP_DIR}/README.md"
 find "$ZIP_DIR" -type d -exec chmod 755 {} \;
 find "$ZIP_DIR" -type f -exec chmod 644 {} \;
 
+if [ -f "./$ZIP_DIR_NAME" ]; then
+    rm "./$ZIP_DIR_NAME"
+fi
+
 # Zip up the Directory
 cd "$REPO_DIR" || exit 1
 zip -r "./${ZIP_FILE_NAME}" "./$ZIP_DIR_NAME"
