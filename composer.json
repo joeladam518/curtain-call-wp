@@ -14,8 +14,7 @@
     ],
     "require": {},
     "require-dev": {
-        "johnpbloch/wordpress": "*",
-        "laravel/homestead": "^12.7"
+        "johnpbloch/wordpress": "*"
     },
     "config": {
         "optimize-autoloader": true,
