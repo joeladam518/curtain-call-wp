@@ -1,5 +1,37 @@
 {
+    "name": "joeladam518/curtain-call-wp",
+    "description": "CMS for theatres looking to create productions, cast, and crew custom posts.",
+    "type": "project",
+    "license": "MIT",
+    "keywords": [
+        "WordPress",
+        "theatre",
+        "theater",
+        "productions",
+        "plays",
+        "cast",
+        "crew"
+    ],
+    "require": {},
     "require-dev": {
-        "laravel/homestead": "^10.3"
+        "johnpbloch/wordpress": "*",
+        "laravel/homestead": "^12.7"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "wordpress-install-dir": "public/"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "src-install": "cd src && composer install",
+        "src-update": "cd src && composer update",
+        "post-install-cmd": "composer run src-install",
+        "post-update-cmd": "composer run src-update",
+        "build": "composer run src-install -- --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader"
     }
 }

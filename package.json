@@ -1,0 +1,32 @@
+{
+    "name": "curtaincallwp",
+    "description": "Custom Post types for productions, casts and crews",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "dev": "mix -- --progress",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "mix --production"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.0",
+        "laravel-mix": "^6.0.0",
+        "moment": "^2.29.0",
+        "pikaday": "^1.8.0",
+        "sass": "^1.43.0",
+        "sass-loader": "^12.3.0",
+        "select2": "^4.0.13"
+    },
+    "author": "Joel Haker",
+    "homepage": "https://github.com/joeladam518/CurtainCallWP#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/joeladam518/CurtainCallWP.git"
+    },
+    "bugs": {
+        "url": "https://github.com/joeladam518/CurtainCallWP/issues"
+    }
+}

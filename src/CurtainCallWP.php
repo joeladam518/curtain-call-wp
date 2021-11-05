@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('ABSPATH')) die;
 /**
  * Plugin Name:     CurtainCallWP
  * Plugin URI:      http://joelhaker.com/curtain-call-wp/
@@ -12,9 +12,7 @@
  * Domain Path:     /languages
 **/
 
-if (!defined('ABSPATH')) {
-    die;
-}
+use CurtainCallWP\CurtainCall;
 
 // Plugin constants
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');
@@ -23,11 +21,11 @@ define('CCWP_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('CCWP_TEXT_DOMAIN', 'curtain-call-wp');
 define('CCWP_DEBUG', false);
 
-// Load composer dependencies
+// Load dependencies
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 // Register Plugin Life Cycle Hooks
-\CurtainCallWP\CurtainCall::registerLifeCycleHooks(__FILE__);
+CurtainCall::registerLifeCycleHooks(__FILE__);
 
 /**
  * Begins execution of the plugin.
@@ -38,7 +36,7 @@ require_once dirname(__FILE__) . '/vendor/autoload.php';
 **/
 function ccwp_run_plugin()
 {
-    $ccwp_plugin = new \CurtainCallWP\CurtainCall();
+    $ccwp_plugin = new CurtainCall();
     $ccwp_plugin->run();
 }
 ccwp_run_plugin();
