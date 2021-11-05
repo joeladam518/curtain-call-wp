@@ -10,13 +10,13 @@ ZIP_DIR_NAME="CurtainCallWP"
 ZIP_DIR="${REPO_DIR}/${ZIP_DIR_NAME}"
 ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]').zip"
 
-echo "     REPO_DIR: ${REPO_DIR}"
-echo "  SCRIPTS_DIR: ${SCRIPTS_DIR}"
-echo "   PLUGIN_DIR: ${PLUGIN_DIR}"
-echo "      ZIP_DIR: ${ZIP_DIR}"
-echo " ZIP_DIR_NAME: ${ZIP_DIR_NAME}"
-echo "ZIP_FILE_NAME: ${ZIP_FILE_NAME}"
-echo ""
+#echo "     REPO_DIR: ${REPO_DIR}"
+#echo "  SCRIPTS_DIR: ${SCRIPTS_DIR}"
+#echo "   PLUGIN_DIR: ${PLUGIN_DIR}"
+#echo "      ZIP_DIR: ${ZIP_DIR}"
+#echo " ZIP_DIR_NAME: ${ZIP_DIR_NAME}"
+#echo "ZIP_FILE_NAME: ${ZIP_FILE_NAME}"
+#echo ""
 
 # Start Logic
 cd "$REPO_DIR" || exit 1
@@ -26,7 +26,7 @@ fi
 
 # Build for production
 npm run prod
-composer install --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+composer run build
 
 # Copy the plugin to the directory to be zipped
 cd "$REPO_DIR" || exit 1
@@ -47,4 +47,4 @@ rm -rf "$ZIP_DIR"
 
 # Reset back to dev
 npm run dev
-composer install
+composer run src-install

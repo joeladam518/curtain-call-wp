@@ -12,31 +12,26 @@
         "cast",
         "crew"
     ],
-    "require": {
-        "php": "^7.4|^8.0",
-        "nesbot/carbon": "^2.54.0"
-    },
+    "require": {},
     "require-dev": {
-        "johnpbloch/wordpress": "*"
+        "johnpbloch/wordpress": "*",
+        "laravel/homestead": "^12.7"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true,
-        "vendor-dir": "src/vendor/"
+        "sort-packages": true
     },
     "extra": {
         "wordpress-install-dir": "public/"
     },
-    "autoload": {
-        "psr-4": {
-            "CurtainCallWP\\": [ "src/plugin/" ]
-        },
-        "files": [
-            "src/functions.php"
-        ]
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "scripts": {}
+    "scripts": {
+        "src-install": "cd src && composer install",
+        "src-update": "cd src && composer update",
+        "post-install-cmd": "composer run src-install",
+        "post-update-cmd": "composer run src-update",
+        "build": "composer run src-install -- --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader"
+    }
 }

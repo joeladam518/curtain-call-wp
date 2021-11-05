@@ -1,0 +1,21 @@
+{
+    "require": {
+        "php": "^7.4|^8.0",
+        "nesbot/carbon": "^2.54.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "CurtainCallWP\\": ["plugin/"]
+        },
+        "files": [
+            "functions.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

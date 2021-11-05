@@ -21,7 +21,7 @@ define('CCWP_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('CCWP_TEXT_DOMAIN', 'curtain-call-wp');
 define('CCWP_DEBUG', false);
 
-// Load composer dependencies
+// Load dependencies
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 // Register Plugin Life Cycle Hooks
