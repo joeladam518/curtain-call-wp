@@ -3,7 +3,7 @@
  * Plugin Name:     CurtainCallWP
  * Plugin URI:      http://joelhaker.com/curtain-call-wp/
  * Description:     CMS for theatres looking to display their productions, casts, and crews
- * Version:         0.2.0
+ * Version:         0.3.0
  * Author:          Joel Haker, Gregg Hilferding, David Sams
  * Author URI:      http://joelhaker.com/
  * License:         BSD 3-Clause "New" or "Revised" License
