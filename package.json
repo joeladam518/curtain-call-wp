@@ -1,37 +1,32 @@
 {
-  "name": "curtaincallwp",
-  "version": "1.0.0",
-  "description": "Custom Post types for productions, casts and crews",
-  "scripts": {
-    "dev": "npm run development",
-    "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "npm run development -- --watch",
-    "watch-poll": "npm run watch -- --watch-poll=1000",
-    "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "prod": "npm run production",
-    "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/joeladam518/CurtainCallWP.git"
-  },
-  "author": "Joel Haker",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/joeladam518/CurtainCallWP/issues"
-  },
-  "homepage": "https://github.com/joeladam518/CurtainCallWP#readme",
-  "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.13.0",
-    "cross-env": "^6.0.3",
-    "laravel-mix": "^5.0.4",
-    "lodash": "^4.17.21",
-    "moment": "^2.26.0",
-    "pikaday": "^1.8.0",
-    "sass": "^1.26.8",
-    "sass-loader": "^8.0.2",
-    "select2": "^4.0.13",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "dependencies": {}
+    "name": "curtaincallwp",
+    "description": "Custom Post types for productions, casts and crews",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "dev": "mix -- --progress",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "mix --production"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.0",
+        "laravel-mix": "^6.0.0",
+        "moment": "^2.29.0",
+        "pikaday": "^1.8.0",
+        "sass": "^1.43.0",
+        "sass-loader": "^12.3.0",
+        "select2": "^4.0.13"
+    },
+    "author": "Joel Haker",
+    "homepage": "https://github.com/joeladam518/CurtainCallWP#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/joeladam518/CurtainCallWP.git"
+    },
+    "bugs": {
+        "url": "https://github.com/joeladam518/CurtainCallWP/issues"
+    }
 }
