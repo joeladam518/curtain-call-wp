@@ -1,0 +1,65 @@
+version: '3.1'
+
+services:
+  mariadb:
+    image: 'mariadb:latest'
+    restart: always
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - './data/mariadb:/var/lib/mysql'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+    networks:
+      - wpdev
+
+  myadmin:
+    image: 'phpmyadmin:latest'
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      PMA_HOSTS: mariadb
+      PMA_USER: '${DB_USERNAME}'
+      PMA_PASSWORD: '${DB_PASSWORD}'
+    depends_on:
+      - mariadb
+    networks:
+      - wpdev
+
+  wpsite.test:
+    container_name: wpsite_code
+    image: 'wordpress:latest'
+    ports:
+      - '${APP_PORT:-80}:80'
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: '${DB_HOST}'
+      WORDPRESS_DB_USER: '${DB_USERNAME}'
+      WORDPRESS_DB_PASSWORD: '${DB_PASSWORD}'
+      WORDPRESS_DB_NAME: '${DB_DATABASE}'
+      WORDPRESS_DEBUG: 'true'
+    volumes:
+      - './public:/var/www/html'
+      - './src:/var/www/html/wp-content/plugins/CurtainCallWP'
+      - './docker/xdebug.ini:/etc/php/7.4/cli/conf.d/99-xdebug.ini'
+    depends_on:
+      - mariadb
+      - myadmin
+    networks:
+      - wpdev
+
+networks:
+  wpdev:
+    driver: bridge
+
+volumes:
+  mariadb:
+    driver: local

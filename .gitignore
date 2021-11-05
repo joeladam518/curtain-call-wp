@@ -9,9 +9,13 @@ node_modules/
 /CurtainCallWP
 /curtaincallwp.zip
 
-# public folder (Where Wordpress is)
+# Dev data excludes
 /public/*
 !/public/.gitkeep
+/data/
+
+# environment
+.env*
 
 # Wordpress files
 wp-config.php

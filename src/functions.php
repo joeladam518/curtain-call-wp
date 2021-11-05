@@ -13,7 +13,7 @@ if (!function_exists('getCustomField')) {
         if (!empty($post_id)) {
             return get_post_meta($post_id, $field_name, true);
         }
-        
+
         return get_post_meta(get_the_ID(), $field_name, true);
     }
 }
@@ -97,7 +97,7 @@ if (!function_exists('ccwpPluginUrl')) {
      */
     function ccwpPluginUrl(string $path = ''): string
     {
-        $url_path = plugin_dir_url(dirname(__FILE__));
+        $url_path = plugin_dir_url(__FILE__);
 
         return trim("{$url_path}{$path}");
     }
@@ -111,8 +111,8 @@ if (!function_exists('ccwpPluginPath')) {
      */
     function ccwpPluginPath(string $path = ''): string
     {
-        $dir_path = plugin_dir_path(dirname(__FILE__));
-        
+        $dir_path = plugin_dir_path(__FILE__);
+
         return trim("{$dir_path}{$path}");
     }
 }
@@ -130,15 +130,15 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
         {
             $backtrace = debug_backtrace()[0];
             $out = basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
-            
+
             if ($return) {
                 return $out;
             }
-            
+
             echo $out;
         }
     }
-    
+
     if (!function_exists("pr")) {
         /**
          * Debug print:
@@ -159,7 +159,7 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
             if ($exit) { exit; }
         }
     }
-    
+
     if (!function_exists("dmp")) {
         /**
          * Debug dump:

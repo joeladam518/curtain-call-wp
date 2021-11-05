@@ -2,11 +2,10 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
-@import "../variables/all";
-@import "../global/all";
+@import '../shared/all';
 
-@import "./archive-productions";
-@import "./archive-castcrew";
+@import 'archive-productions';
+@import 'archive-castcrew';
 
-@import "./single-productions";
-@import "./single-castcrew";
+@import 'single-productions';
+@import 'single-castcrew';

@@ -3,7 +3,7 @@
 set -Eeo pipefail
 
 # Setup
-SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd -P)"
+SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
 PLUGIN_DIR="${REPO_DIR}/src"
 ZIP_DIR_NAME="CurtainCallWP"
