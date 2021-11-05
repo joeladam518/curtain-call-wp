@@ -1,81 +1,50 @@
 #!/usr/bin/env bash
 
-# Variables
-CWD=$(pwd);
-plugin_dir_name="src"
-zip_dir_name="CurtainCallWP"
+set -Eeo pipefail
 
-# Determine plugin dir path
-if [ -d "./${plugin_dir_name}" ]; then
-    plugin_dir=$(cd "${CWD}/./${plugin_dir_name}"; pwd)
-elif [ -d "../${plugin_dir_name}" ]; then
-    plugin_dir=$(cd "${CWD}/../${plugin_dir_name}"; pwd)
-else
-    echo "Can't find the plugin directory..."
-    echo "Have you tried running this script from the CurtainCallWP directory?";
-    exit 1
+# Setup
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd -P)"
+REPO_DIR="$(dirname "$SCRIPTS_DIR")"
+PLUGIN_DIR="${REPO_DIR}/src"
+ZIP_DIR_NAME="CurtainCallWP"
+ZIP_DIR="${REPO_DIR}/${ZIP_DIR_NAME}"
+ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]').zip"
+
+echo "     REPO_DIR: ${REPO_DIR}"
+echo "  SCRIPTS_DIR: ${SCRIPTS_DIR}"
+echo "   PLUGIN_DIR: ${PLUGIN_DIR}"
+echo "      ZIP_DIR: ${ZIP_DIR}"
+echo " ZIP_DIR_NAME: ${ZIP_DIR_NAME}"
+echo "ZIP_FILE_NAME: ${ZIP_FILE_NAME}"
+echo ""
+
+# Start Logic
+cd "$REPO_DIR" || exit 1
+if [ ! -f "$ZIP_DIR" ]; then
+    mkdir -p "$ZIP_DIR"
 fi
 
-echo "Plugin Directory path: ${plugin_dir}"
+# Build for production
+npm run prod
+composer install --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
 
-# Determine the repos dir path
-repo_dir=$(dirname -- "$plugin_dir")
-
-if [ "$repo_dir" != "${HOME}/repos/CurtainCallWP" ]; then
-    echo "Can't build. We're in the wrong directory..."
-    exit 1
-fi
-
-echo "Repo Directory path: ${repo_dir}"
-
-# Determine the path to the folder that will be zipped
-cd "$repo_dir"
-if [ ! -d "./$zip_dir_name" ]; then
-    # make the directory to be zipped
-    cd "$repo_dir" && mkdir "./$zip_dir_name"
-fi
-
-zip_dir="${repo_dir}/${zip_dir_name}"
-
-echo "Zip Directory path: $zip_dir"
-
-if [ "$zip_dir" != "${repo_dir}/${zip_dir_name}" ];then
-    echo "Can't build. Didn't create the correct zip directory..."
-    exit 1
-fi
-
-# build for production
-cd "$plugin_dir" && npm run production
-cd "$plugin_dir" && composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --no-suggest --optimize-autoloader
-
-# copy the plugin to the directory to be zipped
-rsync -arh --delete-delay "$plugin_dir/" "$zip_dir"
+# Copy the plugin to the directory to be zipped
+cd "$REPO_DIR" || exit 1
+rsync -arh --delete-delay --exclude-from "${SCRIPTS_DIR}/exclude-from.txt" "${PLUGIN_DIR}/" "${ZIP_DIR}"
 
 # Copy the license and readme to the zip dir
-cp "${repo_dir}/LICENSE" "${zip_dir}/LICENSE"
-cp "${repo_dir}/README.md" "${zip_dir}/README.md"
+cp "${REPO_DIR}/LICENSE" "${ZIP_DIR}/LICENSE"
+cp "${REPO_DIR}/README.md" "${ZIP_DIR}/README.md"
 
-# set the file and directory permissions
-find "$zip_dir" -type d -exec chmod 755 {} \;
-find "$zip_dir" -type f -exec chmod 644 {} \;
+# Set the file and directory permissions
+find "$ZIP_DIR" -type d -exec chmod 755 {} \;
+find "$ZIP_DIR" -type f -exec chmod 644 {} \;
 
-# remove unneded files
-cd "$zip_dir" && rm -rf "./node_modules"
-cd "$zip_dir" && rm -rf "./resources"
-cd "$zip_dir" && rm -f "./.gitignore"
-cd "$zip_dir" && rm -f "./composer.json"
-cd "$zip_dir" && rm -f "./composer.lock"
-cd "$zip_dir" && rm -f "./package.json"
-cd "$zip_dir" && rm -f "./package-lock.json"
-cd "$zip_dir" && rm -f "./webpack.config.js"
-cd "$zip_dir" && rm -f "./webpack.mix.js"
+# Zip up the Directory
+cd "$REPO_DIR" || exit 1
+zip -r "./${ZIP_FILE_NAME}" "./$ZIP_DIR_NAME"
+rm -rf "$ZIP_DIR"
 
-# set the owner
-chown -R root:root "$zip_dir"
-
-cd "$repo_dir" && zip -r "curtaincallwp.zip" "./$zip_dir_name"
-rm -rf "$zip_dir"
-
-# reset back to dev
-cd "$plugin_dir" && npm run dev
-cd "$plugin_dir" && composer install
+# Reset back to dev
+npm run dev
+composer install
