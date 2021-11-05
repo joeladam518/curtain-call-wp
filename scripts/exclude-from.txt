@@ -8,6 +8,9 @@
 - .DS_Store
 - .LSOverride
 - __MACOSX
+- .env*
+- dkr.sh
+- docker-compose.yml
 - after.sh
 - aliases
 - curtaincallwp.zip
@@ -23,6 +26,7 @@
 - yarn-error.log
 - Vagrantfile
 - xdebug.ini
+- docker/
 - /CurtainCallWP/
 - /node_modules/
 - /resources/
