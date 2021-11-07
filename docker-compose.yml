@@ -48,7 +48,7 @@ services:
       WORDPRESS_DEBUG: 'true'
     volumes:
       - './public:/var/www/html'
-      - './src:/var/www/html/wp-content/plugins/CurtainCallWP'
+      - './plugin:/var/www/html/wp-content/plugins/CurtainCallWP'
     depends_on:
       - mariadb
       - myadmin

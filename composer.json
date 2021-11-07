@@ -27,8 +27,8 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "src-install": "cd src && composer install",
-        "src-update": "cd src && composer update",
+        "src-install": "cd plugin && composer install",
+        "src-update": "cd plugin && composer update",
         "post-install-cmd": "composer run src-install",
         "post-update-cmd": "composer run src-update",
         "build": "composer run src-install -- --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader"

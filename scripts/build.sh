@@ -5,7 +5,7 @@ set -Eeo pipefail
 # Setup
 SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
-PLUGIN_DIR="${REPO_DIR}/src"
+PLUGIN_DIR="${REPO_DIR}/plugin"
 ZIP_DIR_NAME="CurtainCallWP"
 ZIP_DIR="${REPO_DIR}/${ZIP_DIR_NAME}"
 ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]').zip"
