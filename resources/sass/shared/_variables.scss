@@ -1,5 +1,4 @@
 /* Sizing */
-$size-0:  0;
 $size-A:  .125rem; // 2px
 $size-1:  .25rem;  // 4px
 $size-1A: .375rem; // 6px
@@ -7,46 +6,38 @@ $size-2:  .5rem;   // 8px
 $size-2A: .625rem; // 10px
 $size-3:  .75rem;  // 12px
 $size-3A: .875rem; // 14px
-$size-4:  1rem;
-$size-5:  1.25rem;
-$size-6:  1.5rem;
-$size-7:  1.75rem;
-$size-8:  2rem;
-$size-9:  2.25rem;
-$size-10: 2.5rem;
-$size-11: 2.75rem;
-$size-12: 3rem;
-$size-13: 3.25rem;
-$size-14: 3.5rem;
-$size-15: 3.75rem;
-$size-16: 4rem;
-$size-17: 4.25rem;
-$size-18: 4.5rem;
-$size-19: 4.75rem;
-$size-20: 5rem;
-$size-21: 5.25rem;
-$size-22: 5.5rem;
-$size-23: 5.75rem;
-$size-24: 6rem;
-$size-28: 7rem;
-$size-29: 7.25rem;
-$size-32: 8rem;
-$size-36: 9rem;
-$size-40: 10rem;
-$size-44: 11rem;
-$size-48: 12rem;
-$size-56: 14rem;
-$size-60: 15rem;
-$size-64: 16rem;
-$size-auto: auto;
-
-$sizes: (
-    "0": $size-0, "1": $size-1, "2": $size-2, "3": $size-3, "4": $size-4, "5": $size-5, "6":  $size-6, "7": $size-7,
-    "8": $size-8, "9": $size-9, "10": $size-10, "11": $size-11, "12": $size-12, "13": $size-13, "14": $size-14,
-    "15": $size-15, "16": $size-16, "17": $size-17,"18": $size-18, "19": $size-19, "20": $size-20, "24": $size-24,
-    "28": $size-28, "29": $size-29, "32": $size-32, "36": $size-36, "40": $size-40, "44": $size-44, "48": $size-48,
-    "56": $size-56, "60": $size-60, "64": $size-64
-);
+$size-4:  1rem;    // 16px
+$size-5:  1.25rem; // 20px
+$size-6:  1.5rem;  // 24px
+$size-7:  1.75rem; // 28px
+$size-8:  2rem;    // 32px
+$size-9:  2.25rem; // 36px
+$size-10: 2.5rem;  // 40px
+$size-11: 2.75rem; // 44px
+$size-12: 3rem;    // 48px
+$size-13: 3.25rem; // 52px
+$size-14: 3.5rem;  // 56px
+$size-15: 3.75rem; // 60px
+$size-16: 4rem;    // 64px
+$size-17: 4.25rem; // 68px
+$size-18: 4.5rem;  // 72px
+$size-19: 4.75rem; // 76px
+$size-20: 5rem;    // 80px
+$size-21: 5.25rem; // 84px
+$size-22: 5.5rem;  // 88px
+$size-23: 5.75rem; // 92px
+$size-24: 6rem;    // 96px
+$size-28: 7rem;    // 112px
+$size-29: 7.25rem; // 116px
+$size-32: 8rem;    // 128px
+$size-36: 9rem;    // 144px
+$size-40: 10rem;   // 160px
+$size-44: 11rem;   // 176px
+$size-48: 12rem;   // 192px
+$size-52: 13rem;   // 208px
+$size-56: 14rem;   // 224px
+$size-60: 15rem;   // 240px
+$size-64: 16rem;   // 256px
 
 /* Breakpoints min */
 $br-xs-min: 528px;
@@ -68,7 +59,7 @@ $flyzone-1: 500;
 $flyzone-2: 1000;
 $flyzone-3: 1500;
 
-// Colors for the Curtain Call WP Plugin
+/* Colors */
 $white: rgb(255,255,255);
 $black: rgb(0,0,0);
 
@@ -80,3 +71,6 @@ $red: rgb(231,76,60);
 $yellow: rgb(241,196,15);
 
 $text: rgb(17,17,17);
+
+/* Borders */
+$border-normal: 1px solid rgba($black, .1);

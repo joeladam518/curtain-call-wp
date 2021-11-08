@@ -7,6 +7,7 @@ mix
     .options({
         processCssUrls: false
     })
+    .sourceMaps(false, 'inline-cheap-module-source-map')
     /**
      * Admin Assets
      */
