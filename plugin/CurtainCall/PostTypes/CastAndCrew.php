@@ -25,10 +25,10 @@ class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
     use QueriesWordPressForCastAndCrew;
-    
+
     const POST_TYPE = 'ccwp_cast_and_crew';
     const META_PREFIX = '_ccwp_cast_crew_';
-    
+
     /** @var array|string[] */
     protected $ccwp_meta_keys = [
         'name_first',
@@ -42,7 +42,7 @@ class CastAndCrew extends CurtainCallPost
         'instagram_link',
         'fun_fact',
     ];
-    
+
     /**
      * @return array
      */
@@ -84,7 +84,7 @@ class CastAndCrew extends CurtainCallPost
             ],
         ];
     }
-    
+
     /**
      * @param WP_Query $query
      * @return array
@@ -92,11 +92,11 @@ class CastAndCrew extends CurtainCallPost
     public static function getAlphaIndexes(WP_Query $query): array
     {
         $alpha_indexes = [];
-        
+
         if (!$query->have_posts()) {
             return $alpha_indexes;
         }
-    
+
         while ($query->have_posts()) {
             $query->the_post();
             $name_last = getCustomField('_ccwp_cast_crew_name_last');
@@ -104,12 +104,12 @@ class CastAndCrew extends CurtainCallPost
                 $alpha_indexes[] = strtoupper(substr($name_last, 0, 1));
             }
         }
-        
+
         wp_reset_postdata();
-        
+
         return array_unique($alpha_indexes);
     }
-    
+
     /**
      * @param array $productions
      * @return array
@@ -124,10 +124,10 @@ class CastAndCrew extends CurtainCallPost
             }
             $roles_by_id[$production->ID][] = $production->ccwp_join->role;
         }
-        
+
         return $roles_by_id;
     }
-    
+
     /**
      * @return string
      */
@@ -136,10 +136,10 @@ class CastAndCrew extends CurtainCallPost
         if (isset($this->name_last)) {
             return "{$this->name_first} {$this->name_last}";
         }
-        
+
         return $this->name_first;
     }
-    
+
     /**
      * @return string
      */
@@ -148,7 +148,7 @@ class CastAndCrew extends CurtainCallPost
         $birthplace = '';
         if (isset($this->birthday)) {
             $birthday = CurtainCallHelper::toCarbon($this->birthday);
-            $birthday = $birthday ? $birthday->toDateTimeString() : '';
+            $birthday = $birthday ? $birthday->toFormattedDateString() : '';
             $birthplace .= "Born on {$birthday}";
             if (isset($this->hometown)) {
                 $birthplace .= ' in ' . $this->hometown;
@@ -157,10 +157,10 @@ class CastAndCrew extends CurtainCallPost
         } else if (isset($this->hometown)) {
             $birthplace .= 'Born in ' . $this->hometown . '.';
         }
-        
+
         return $birthplace;
     }
-    
+
     /**
      * @return bool
      */
