@@ -1,9 +1,7 @@
 .vagrant
-.idea/
-.phpintel/
-
-vendor/
+.mariadb/
 node_modules/
+vendor/
 
 # folders used in build
 /CurtainCallWP
@@ -30,8 +28,8 @@ wp-content/wp-cache-config.php
 wp-content/plugins/hello.php
 
 # npm
-npm-debug.log
 .npmrc
+npm-debug.log
 yarn-error.log
 
 # Mappings

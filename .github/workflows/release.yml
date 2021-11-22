@@ -1,0 +1,61 @@
+name: 'curtaincallwp-release'
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  release:
+    name: Releases
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Set output variables'
+        id: vars
+        shell: bash
+        # tag == with v
+        # version == without v
+        run: |
+          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+          echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Composer
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: bcmath, curl, dom, gd, json, libxml, mbstring, mysql, pcntl, pdo_mysql, zip
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Build
+        shell: bash
+        env:
+          TAG: ${{ steps.vars.outputs.version }}
+          VERSION: ${{ steps.vars.outputs.version }}
+        run: ./scripts/build.sh
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          prerelease: true
+          name: ${{ steps.vars.outputs.tag }}
+          tag_name: ${{ steps.vars.outputs.tag }}
+          files: curtaincallwp-${{ steps.vars.outputs.version }}.zip
+          generate_release_notes: true
