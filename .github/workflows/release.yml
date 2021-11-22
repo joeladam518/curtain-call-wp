@@ -50,14 +50,11 @@ jobs:
           VERSION: ${{ steps.vars.outputs.version }}
         run: ./scripts/build.sh
 
-      - name: Check current directory
-        run: ls -laph --group-directories-first
-
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          draft: false
-          prerelease: false
+          draft: true
+          prerelease: true
           name: ${{ steps.vars.outputs.tag }}
           tag_name: ${{ steps.vars.outputs.tag }}
           files: curtaincallwp-${{ steps.vars.outputs.version }}.zip
