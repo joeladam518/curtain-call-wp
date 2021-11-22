@@ -32,9 +32,12 @@ if [ ! -f "$ZIP_DIR" ]; then
     mkdir -p "$ZIP_DIR"
 fi
 
-# Build for production
-npm run prod
+# Install dependencies
 composer run build
+npm install
+
+# Build assets for production
+npm run prod
 
 # Copy the plugin to the directory to be zipped
 cd "$REPO_DIR" || exit 1
