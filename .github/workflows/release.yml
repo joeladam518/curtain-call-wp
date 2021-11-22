@@ -17,12 +17,9 @@ jobs:
         run: |
           echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
           echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
-          echo ::set-output name=branch::master
 
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: ${{ steps.vars.outputs.branch }}
 
       - name: Cache Composer
         id: composer-cache
@@ -41,6 +38,9 @@ jobs:
           extensions: bcmath, curl, dom, gd, json, libxml, mbstring, mysql, pcntl, pdo_mysql, zip
           coverage: none
 
+      - name: Install dependencies (PHP)
+        run: composer install
+
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -52,6 +52,9 @@ jobs:
           TAG: ${{ steps.vars.outputs.version }}
           VERSION: ${{ steps.vars.outputs.version }}
         run: ./scripts/build.sh
+
+      - name: Install dependencies (JavaScript)
+        run: npm install
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
