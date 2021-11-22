@@ -27,10 +27,10 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "src-install": "cd plugin && composer install",
-        "src-update": "cd plugin && composer update",
-        "post-install-cmd": "composer run src-install",
-        "post-update-cmd": "composer run src-update",
-        "build": "composer run src-install -- --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader"
+        "plugin-install": "cd plugin && composer install",
+        "plugin-update": "cd plugin && composer update",
+        "post-install-cmd": "composer run plugin-install",
+        "post-update-cmd": "composer run plugin-update",
+        "build": "composer run plugin-install -- --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader"
     }
 }

@@ -2,15 +2,21 @@
 
 set -Eeo pipefail
 
-# Environment File Hello
-
-# Setup
+# Variables
 SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
 PLUGIN_DIR="${REPO_DIR}/plugin"
+VERSION="${VERSION:-"$1"}"
+TAG="${TAG:-"v${VERSION}"}"
+
+if [ -z "$VERSION" ]; then
+    echo "No version provided. Can't continue." 1>&2
+    exit 1
+fi
+
 ZIP_DIR_NAME="CurtainCallWP"
 ZIP_DIR="${REPO_DIR}/${ZIP_DIR_NAME}"
-ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]').zip"
+ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]')-${VERSION}.zip"
 
 #echo "     REPO_DIR: ${REPO_DIR}"
 #echo "  SCRIPTS_DIR: ${SCRIPTS_DIR}"
@@ -50,7 +56,3 @@ fi
 cd "$REPO_DIR" || exit 1
 zip -r "./${ZIP_FILE_NAME}" "./$ZIP_DIR_NAME"
 rm -rf "$ZIP_DIR"
-
-# Reset back to dev
-npm run dev
-composer run src-install
