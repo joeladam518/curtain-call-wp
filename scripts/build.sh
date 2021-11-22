@@ -2,6 +2,8 @@
 
 set -Eeo pipefail
 
+# Environment
+
 # Setup
 SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
