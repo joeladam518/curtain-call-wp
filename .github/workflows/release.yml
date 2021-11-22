@@ -38,9 +38,6 @@ jobs:
           extensions: bcmath, curl, dom, gd, json, libxml, mbstring, mysql, pcntl, pdo_mysql, zip
           coverage: none
 
-      - name: Install dependencies (PHP)
-        run: composer install
-
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -53,8 +50,8 @@ jobs:
           VERSION: ${{ steps.vars.outputs.version }}
         run: ./scripts/build.sh
 
-      - name: Install dependencies (JavaScript)
-        run: npm install
+      - name: Check current directory
+        run: ls -laph --group-directories-first
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -63,5 +60,5 @@ jobs:
           prerelease: false
           name: ${{ steps.vars.outputs.tag }}
           tag_name: ${{ steps.vars.outputs.tag }}
-          files: ./curtiancallwp-${{ steps.vars.outputs.version }}.zip
+          files: curtaincallwp-${{ steps.vars.outputs.version }}.zip
           generate_release_notes: true

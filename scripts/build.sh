@@ -32,14 +32,18 @@ if [ ! -f "$ZIP_DIR" ]; then
     mkdir -p "$ZIP_DIR"
 fi
 
-# Install dependencies
+echo ""
+echo "# Install dependencies"
 composer run build
 npm install
 
-# Build assets for production
+echo ""
+echo "# Build production assets"
 npm run prod
 
 # Copy the plugin to the directory to be zipped
+echo ""
+echo "# Create Plugin zip file"
 cd "$REPO_DIR" || exit 1
 rsync -arh --delete-delay --exclude-from "${SCRIPTS_DIR}/exclude-from.txt" "${PLUGIN_DIR}/" "${ZIP_DIR}"
 
@@ -59,3 +63,7 @@ fi
 cd "$REPO_DIR" || exit 1
 zip -r "./${ZIP_FILE_NAME}" "./$ZIP_DIR_NAME"
 rm -rf "$ZIP_DIR"
+
+echo ""
+echo "# Done!"
+echo ""
