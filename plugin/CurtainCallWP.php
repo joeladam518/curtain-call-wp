@@ -1,22 +1,22 @@
 <?php if (!defined('ABSPATH')) die;
 /**
- * Plugin Name:     CurtainCallWP
- * Plugin URI:      http://joelhaker.com/curtain-call-wp/
- * Description:     CMS for theatres looking to display their productions, casts, and crews
- * Version:         0.3.0
- * Author:          Joel Haker, Gregg Hilferding, David Sams
- * Author URI:      http://joelhaker.com/
- * License:         BSD 3-Clause "New" or "Revised" License
- * License URI:     https://github.com/joeladam518/CurtainCallWP/blob/master/LICENSE
- * Text Domain:     curtain-call-wp
- * Domain Path:     /languages
+ * Plugin Name:  CurtainCallWP
+ * Plugin URI:   https://github.com/joeladam518/CurtainCallWP
+ * Description:  CMS for theatres looking to display their productions, casts, and crews
+ * Version:      0.4.1
+ * Author:       Joel Haker, Gregg Hilferding, David Sams
+ * Author URI:   https://joelhaker.com/
+ * License:      MIT
+ * License URI:  https://github.com/joeladam518/CurtainCallWP/blob/master/LICENSE
+ * Text Domain:  curtain-call-wp
+ * Domain Path:  CurtainCall/languages
 **/
 
 use CurtainCallWP\CurtainCall;
 
 // Plugin constants
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');
-define('CCWP_PLUGIN_VERSION', '0.4.0');
+define('CCWP_PLUGIN_VERSION', '0.4.1');
 define('CCWP_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('CCWP_TEXT_DOMAIN', 'curtain-call-wp');
 define('CCWP_DEBUG', false);
