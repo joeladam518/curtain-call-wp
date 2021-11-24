@@ -6,11 +6,9 @@ use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 
 trait HasAttributes
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $attributes = [];
-    
+
     /**
      * @param string $key
      * @return bool
@@ -19,31 +17,28 @@ trait HasAttributes
     {
         return array_key_exists($key, $this->attributes);
     }
-    
+
     /**
      * @param string $key
-     * @return mixed|null
+     * @return mixed
      */
     protected function getAttribute(string $key)
     {
         return $this->attributes[$key] ?? null;
     }
-    
+
     /**
      * @param string $key
      * @param mixed  $value
-     * @return static
+     * @return $this
      */
-    protected function setAttribute(string $key, $value): self
+    protected function setAttribute(string $key, $value)
     {
         $this->attributes[$key] = $value;
-        
+
         return $this;
     }
-    
-    /**
-     * @return array
-     */
+
     protected function attributesToArray(): array
     {
         $attributes = [];
@@ -54,7 +49,7 @@ trait HasAttributes
                 $attributes[$key] = $value;
             }
         }
-        
+
         return $attributes;
     }
 }

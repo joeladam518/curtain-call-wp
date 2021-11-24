@@ -8,8 +8,6 @@ use CurtainCallWP\PostTypes\Traits\QueriesWordPressForCastAndCrew;
 use WP_Query;
 
 /**
- * Class CastAndCrew
- * @package CurtainCallWP\PostTypes
  * @property string $name_first'
  * @property string $name_last'
  * @property string $self_title'

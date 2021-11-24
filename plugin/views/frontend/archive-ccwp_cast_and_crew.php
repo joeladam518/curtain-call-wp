@@ -3,7 +3,6 @@
 use CurtainCallWP\Helpers\CurtainCallHelper;
 use CurtainCallWP\PostTypes\CastAndCrew;
 
-/** @var WP_Query $result */
 $result = CastAndCrew::getPosts();
 
 $alphabet = CurtainCallHelper::getAlphabet();
@@ -17,7 +16,7 @@ get_header();
 
 <div id="content" class="ccwp-cast-and-crew-page" role="main">
     <h1>Cast and Crew</h1>
-    
+
     <?php if (!$result->have_posts()) : ?>
         <p>Sorry! There are currently no cast or crew members in our directory. Please check back soon!</p>
     <?php else: ?>
@@ -30,20 +29,19 @@ get_header();
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
-    
+
         <div class="ccwp-container">
         <?php while ($result->have_posts()): $result->the_post(); ?>
             <?php
                 /** @var WP_Post $current_post */
                 $current_post = get_post();
-                /** @var CastAndCrew $castcrew */
                 $castcrew = CastAndCrew::make($current_post);
                 $castcrew_permalink = get_post_permalink($castcrew->getPost());
             ?>
 
             <?php if ($castcrew->post_status == 'publish' && isset($castcrew->name_last)): ?>
                 <?php $current_alpha_index = strtoupper(substr($castcrew->name_last, 0, 1)); ?>
-            
+
                 <?php if ($current_alpha_index != $previous_alpha_index): ?>
                     <?php if ($previous_alpha_index !== null): ?>
                         </div>
@@ -51,7 +49,7 @@ get_header();
                     <h3 class="ccwp-alphabet-header" id="<?php echo $current_alpha_index; ?>"><?php echo $current_alpha_index; ?></h3>
                     <div class="ccwp-row">
                 <?php endif; ?>
-                    
+
                 <div class="castcrew-wrapper">
                     <?php if (has_post_thumbnail($castcrew->getPost())): ?>
                         <div class="castcrew-headshot">
@@ -60,7 +58,7 @@ get_header();
                             </a>
                         </div>
                     <?php endif; ?>
-                    
+
                     <div class="castcrew-details">
                         <h3 class="castcrew-name">
                             <a href="<?php echo $castcrew_permalink; ?>">

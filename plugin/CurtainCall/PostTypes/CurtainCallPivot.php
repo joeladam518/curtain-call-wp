@@ -6,13 +6,11 @@ use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 use CurtainCallWP\PostTypes\Traits\HasAttributes;
 
 /**
- * Class CurtainCallJoin
- * @package CurtainCallWP\PostTypes
- * @property int $production_id
- * @property int $cast_and_crew_id
+ * @property int    $production_id
+ * @property int    $cast_and_crew_id
  * @property string $type
  * @property string $role
- * @property int custom_order
+ * @property int    $custom_order
  */
 class CurtainCallPivot implements Arrayable
 {

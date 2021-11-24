@@ -11,10 +11,9 @@ use CurtainCallWP\PostTypes\Traits\HasMeta;
 use CurtainCallWP\PostTypes\Traits\HasAttributes;
 use CurtainCallWP\PostTypes\Interfaces\Arrayable;
 use Throwable;
+use wpdb;
 
 /**
- * Class CurtainCallPost
- * @package CurtainCallWP\PostTypes
  * @property-read int    $ID
  * @property-read string $post_author
  * @property-read string $post_date
@@ -43,39 +42,38 @@ use Throwable;
  * @property-read string $page_template
  * @property-read string $post_category
  * @property-read string $tags_input
- * @property-read CurtainCallJoin $ccwp_join
+ * @property-read CurtainCallPivot $ccwp_join
  */
 abstract class CurtainCallPost implements Arrayable
 {
     use HasWordPressPost;
     use HasMeta;
     use HasAttributes;
-    
+
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
-    
+
     /**
      * The join table name
      * TODO: 2019-12-01: move this to the CurtainCallPostJoin model
-     * @var string
+     * @var string|null
      */
-    protected static $join_table_name;
-    
+    protected static ?string $join_table_name;
+
     /**
      * The join table name with alias
      * TODO: 2019-12-01: move this to the CurtainCallPostJoin model
-     * @var string
+     * @var string|null
      */
-    protected static $join_table_name_with_alias;
-    
+    protected static ?string $join_table_name_with_alias;
+
     /**
      * The cached current date string
-     * @var string
+     * @var string|null
      */
-    protected static $todays_date;
-    
+    protected static ?string $todays_date;
+
     /**
-     * CurtainCallPost constructor.
      * @param int|WP_Post $post
      * @throws Throwable
      */
@@ -84,33 +82,27 @@ abstract class CurtainCallPost implements Arrayable
         $this->loadPost($post);
         $this->loadMeta();
     }
-    
-    /**
-     * Get the config array used when creating a WP custom post type
-     * @return array
-     */
-    abstract public static function getConfig(): array;
-    
+
     /**
      * @param int $id
-     * @return CurtainCallPost
+     * @return $this
      * @throws Throwable
      */
-    public static function find(int $id): self
+    public static function find(int $id)
     {
         return new static($id);
     }
-    
+
     /**
      * @param WP_Post $post
-     * @return CurtainCallPost
+     * @return $this
      * @throws Throwable
      */
-    public static function make(WP_Post $post): self
+    public static function make(WP_Post $post)
     {
         return new static($post);
     }
-    
+
     /**
      * Get the current date string and cache it for the entire request
      * @return string
@@ -120,48 +112,55 @@ abstract class CurtainCallPost implements Arrayable
         if (empty(static::$todays_date)) {
             static::$todays_date = Carbon::now()->toDateString();
         }
-        
+
         return static::$todays_date;
     }
-    
+
     /**
+     * @global wpdb $wpbd
      * @return string
      */
     public static function getJoinTableName(): string
     {
         global $wpdb;
-        
+
         if (empty(static::$join_table_name)) {
-            static::$join_table_name = $wpdb->prefix . CurtainCallJoin::TABLE_NAME;
+            static::$join_table_name = $wpdb->prefix . CurtainCallPivot::TABLE_NAME;
         }
-        
+
         return static::$join_table_name;
     }
-    
-    /**
-     * @return string
-     */
+
     public static function getJoinTableNameWithAlias(): string
     {
         if (empty(static::$join_table_name_with_alias)) {
             static::$join_table_name_with_alias  = '`' . static::getJoinTableName() . '`';
-            static::$join_table_name_with_alias .= ' AS `' . CurtainCallJoin::TABLE_ALIAS . '`';
+            static::$join_table_name_with_alias .= ' AS `' . CurtainCallPivot::TABLE_ALIAS . '`';
         }
-        
+
         return static::$join_table_name_with_alias;
     }
-    
+
     /**
-     * @param CurtainCallJoin $curtain_call_post_join
-     * @return static
+     * @param CurtainCallPivot $curtainCallPivot
+     * @return $this
      */
-    public function setCurtainCallPostJoin(CurtainCallJoin $curtain_call_post_join): self
+    public function setCurtainCallPostJoin(CurtainCallPivot $curtainCallPivot)
     {
-        $this->setAttribute('ccwp_join', $curtain_call_post_join);
+        $this->setAttribute('ccwp_join', $curtainCallPivot);
 
         return $this;
     }
-    
+
+    public function toArray(): array
+    {
+        $data = isset($this->wp_post) ? $this->wp_post->to_array() : [];
+        $data['attributes'] = $this->attributesToArray();
+        $data['meta'] = $this->meta;
+
+        return $data;
+    }
+
     /**
      * @param  string $key
      * @return mixed|null
@@ -169,21 +168,21 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __get($key)
     {
-        if ($this->isWordPressPostAttribute($key)){
+        if ($this->isWordPressPostAttribute($key)) {
             return $this->wp_post->$key;
         }
-    
+
         if ($this->isMetaAttribute($key)) {
             return $this->getMeta($key);
         }
-    
+
         if ($this->isAttribute($key)) {
             return $this->getAttribute($key);
         }
-        
+
         throw new UndefinedPropertyException('Undefined property: '. static::class .'::$'. $key);
     }
-    
+
     /**
      * @param string $key
      * @param mixed  $value
@@ -195,19 +194,19 @@ abstract class CurtainCallPost implements Arrayable
         if ($key === 'meta') {
             throw new UnsettableException('You can not set the meta property.');
         }
-        
+
         if ($this->isWordPressPostAttribute($key)) {
             throw new UnsettableException('You can not set "'. $key .'" it is a WordPress post attribute.');
         }
-        
+
         if ($this->isMetaAttribute($key)) {
             $this->setMeta($key, $value);
             return;
         }
-        
+
         $this->setAttribute($key, $value);
     }
-    
+
     /**
      * @param string $key
      * @return bool
@@ -217,14 +216,14 @@ abstract class CurtainCallPost implements Arrayable
         if ($this->isWordPressPostAttribute($key)) {
             return isset($this->wp_post->$key);
         }
-        
+
         if ($this->isMetaAttribute($key)) {
             return isset($this->meta[$this->getMetaKey($key)]);
         }
 
         return isset($this->attributes[$key]);
     }
-    
+
     /**
      * @param string $key
      * @return void
@@ -237,16 +236,10 @@ abstract class CurtainCallPost implements Arrayable
             unset($this->attributes[$key]);
         }
     }
-    
+
     /**
+     * Get the config array used when creating a WP custom post type
      * @return array
      */
-    public function toArray(): array
-    {
-        $data = isset($this->wp_post) ? $this->wp_post->to_array() : [];
-        $data['attributes'] = $this->attributesToArray();
-        $data['meta'] = $this->meta;
-        
-        return $data;
-    }
+    abstract public static function getConfig(): array;
 }
