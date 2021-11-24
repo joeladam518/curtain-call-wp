@@ -1,10 +1,10 @@
 <?php
 
-namespace CurtainCallWP\PostTypes;
+namespace CurtainCall\PostTypes;
 
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\Traits\HasProductions;
-use CurtainCallWP\PostTypes\Traits\QueriesWordPressForCastAndCrew;
+use CurtainCall\Helpers\CurtainCallHelper;
+use CurtainCall\PostTypes\Traits\HasProductions;
+use CurtainCall\PostTypes\Traits\QueriesWordPressForCastAndCrew;
 use WP_Query;
 
 /**

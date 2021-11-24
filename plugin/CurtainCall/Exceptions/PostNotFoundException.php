@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\Exceptions;
+namespace CurtainCall\Exceptions;
 
 final class PostNotFoundException extends \Exception
 {

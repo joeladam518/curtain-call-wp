@@ -1,10 +1,10 @@
 <?php
 
-namespace CurtainCallWP\PostTypes\Traits;
+namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\Helpers\QueryHelper;
-use CurtainCallWP\PostTypes\CastAndCrew;
+use CurtainCall\Helpers\CurtainCallHelper;
+use CurtainCall\Helpers\QueryHelper;
+use CurtainCall\PostTypes\CastAndCrew;
 use Throwable;
 use wpdb;
 

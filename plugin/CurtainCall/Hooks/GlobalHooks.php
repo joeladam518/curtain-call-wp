@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCallWP\Hooks;
+namespace CurtainCall\Hooks;
 
-use CurtainCallWP\PostTypes\CastAndCrew;
-use CurtainCallWP\PostTypes\Production;
+use CurtainCall\PostTypes\CastAndCrew;
+use CurtainCall\PostTypes\Production;
 
 class GlobalHooks
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace CurtainCallWP;
+namespace CurtainCall;
 
-use CurtainCallWP\Exceptions\ViewDataNotValidException;
-use CurtainCallWP\Exceptions\ViewNotFoundException;
-use CurtainCallWP\Support\Arr;
+use CurtainCall\Exceptions\ViewDataNotValidException;
+use CurtainCall\Exceptions\ViewNotFoundException;
+use CurtainCall\Support\Arr;
 use Throwable;
 
 class View

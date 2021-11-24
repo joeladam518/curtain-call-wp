@@ -1,12 +1,12 @@
 <?php
 
-namespace CurtainCallWP\Hooks;
+namespace CurtainCall\Hooks;
 
-use CurtainCallWP\CurtainCall;
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\Production;
-use CurtainCallWP\Support\Date;
-use CurtainCallWP\View;
+use CurtainCall\CurtainCall;
+use CurtainCall\Helpers\CurtainCallHelper;
+use CurtainCall\PostTypes\Production;
+use CurtainCall\Support\Date;
+use CurtainCall\View;
 use Throwable;
 use WP_Post;
 

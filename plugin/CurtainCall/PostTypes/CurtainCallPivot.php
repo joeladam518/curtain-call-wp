@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCallWP\PostTypes;
+namespace CurtainCall\PostTypes;
 
-use CurtainCallWP\PostTypes\Interfaces\Arrayable;
-use CurtainCallWP\PostTypes\Traits\HasAttributes;
+use CurtainCall\PostTypes\Interfaces\Arrayable;
+use CurtainCall\PostTypes\Traits\HasAttributes;
 
 /**
  * @property int    $production_id

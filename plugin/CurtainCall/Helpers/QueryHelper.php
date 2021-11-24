@@ -1,8 +1,8 @@
 <?php
 
-namespace CurtainCallWP\Helpers;
+namespace CurtainCall\Helpers;
 
-use CurtainCallWP\PostTypes\CurtainCallPivot;
+use CurtainCall\PostTypes\CurtainCallPivot;
 
 class QueryHelper
 {

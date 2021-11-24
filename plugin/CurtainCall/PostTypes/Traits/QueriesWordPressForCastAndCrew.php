@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\PostTypes\Traits;
+namespace CurtainCall\PostTypes\Traits;
 
 use WP_Query;
 
@@ -17,7 +17,7 @@ trait QueriesWordPressForCastAndCrew
         'order'   => 'ASC',
         'nopaging' => true,
     ];
-    
+
     public static function getPosts(): WP_Query
     {
         return new WP_Query(static::$wp_query_args);

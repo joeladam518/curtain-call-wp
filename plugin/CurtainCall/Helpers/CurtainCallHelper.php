@@ -1,14 +1,14 @@
 <?php
 
-namespace CurtainCallWP\Helpers;
+namespace CurtainCall\Helpers;
 
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use CurtainCallWP\PostTypes\CurtainCallPivot;
+use CurtainCall\PostTypes\CurtainCallPivot;
 use WP_Post;
-use CurtainCallWP\PostTypes\CurtainCallPost;
-use CurtainCallWP\PostTypes\Production;
-use CurtainCallWP\PostTypes\CastAndCrew;
+use CurtainCall\PostTypes\CurtainCallPost;
+use CurtainCall\PostTypes\Production;
+use CurtainCall\PostTypes\CastAndCrew;
 use Throwable;
 
 class CurtainCallHelper

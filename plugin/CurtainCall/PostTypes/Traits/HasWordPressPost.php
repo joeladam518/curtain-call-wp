@@ -1,10 +1,10 @@
 <?php
 
-namespace CurtainCallWP\PostTypes\Traits;
+namespace CurtainCall\PostTypes\Traits;
 
 use WP_Post;
-use CurtainCallWP\PostTypes\CurtainCallPost;
-use CurtainCallWP\Exceptions\PostNotFoundException;
+use CurtainCall\PostTypes\CurtainCallPost;
+use CurtainCall\Exceptions\PostNotFoundException;
 use InvalidArgumentException;
 use Throwable;
 
@@ -14,12 +14,12 @@ trait HasWordPressPost
      * @var WP_Post
      */
     protected $wp_post;
-    
+
     /**
      * @var array
      */
     protected $wp_post_attributes = [];
-    
+
     /**
      * @return WP_Post
      */
@@ -27,12 +27,12 @@ trait HasWordPressPost
     {
         return $this->wp_post;
     }
-    
+
     protected function isWordPressPostAttribute(string $key)
     {
         return in_array($key, $this->wp_post_attributes);
     }
-    
+
     /**
      * @param int|WP_Post $post
      * @return void
@@ -48,10 +48,10 @@ trait HasWordPressPost
         } else {
             throw new InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
         }
-    
+
         $this->setWordPressPostAttributes();
     }
-    
+
     /**
      * @param int $post_id
      * @return WP_Post
@@ -62,16 +62,16 @@ trait HasWordPressPost
         global $wpdb;
         $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE `ID` = %d AND `post_type` = %s LIMIT 1", $post_id, static::POST_TYPE);
         $post = $wpdb->get_row($sql);
-    
+
         if (!$post) {
             throw new PostNotFoundException("Failed to fetch post. id #{$post_id} post_type: ". static::POST_TYPE);
         }
-    
+
         $post = sanitize_post($post, 'raw');
-    
+
         return new WP_Post($post);
     }
-    
+
     /**
      * @param WP_Post $post
      * @return $this
@@ -83,10 +83,10 @@ trait HasWordPressPost
         }
 
         $this->wp_post = $post;
-        
+
         return $this;
     }
-    
+
     /**
      * @return CurtainCallPost
      */
@@ -94,7 +94,7 @@ trait HasWordPressPost
     {
         $object_vars = get_object_vars($this->wp_post);
         $this->wp_post_attributes = array_keys($object_vars);
-        
+
         return $this;
     }
 }

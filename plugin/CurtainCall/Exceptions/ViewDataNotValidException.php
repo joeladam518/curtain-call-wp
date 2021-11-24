@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\Exceptions;
+namespace CurtainCall\Exceptions;
 
 final class ViewDataNotValidException extends \RuntimeException
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\LifeCycle;
+namespace CurtainCall\LifeCycle;
 
 class Uninstaller implements LifeCycleHook
 {
@@ -12,7 +12,7 @@ class Uninstaller implements LifeCycleHook
         delete_option('ccwp_db_version');
         flush_rewrite_rules( false );
     }
-    
+
     protected static function deletePluginTables(): void
     {
         global $wpdb;
@@ -20,24 +20,24 @@ class Uninstaller implements LifeCycleHook
         $sql = "DROP TABLE IF EXISTS {$table_name};";
         $wpdb->query($sql);
     }
-    
+
     protected static function deletePluginPosts(): void
     {
         global $wpdb;
-        
+
         $sql = "
             DELETE FROM {$wpdb->posts}
             WHERE `post_type` = 'ccwp_cast_and_crew'
             OR `post_type` = 'ccwp_production'
         ";
-        
+
         $wpdb->query($sql);
     }
-    
+
     protected static function deletePluginPostMeta(): void
     {
         global $wpdb;
-        
+
         $sql = "
             DELETE FROM {$wpdb->postmeta}
             WHERE `meta_key` = '_ccwp_cast_crew_name_first'
@@ -58,7 +58,7 @@ class Uninstaller implements LifeCycleHook
             OR `meta_key` = '_ccwp_production_ticket_url'
             OR `meta_key` = '_ccwp_production_venue'
         ";
-        
+
         $wpdb->query($sql);
     }
 }

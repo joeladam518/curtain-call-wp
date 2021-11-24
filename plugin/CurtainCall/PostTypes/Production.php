@@ -1,16 +1,16 @@
 <?php
 
-namespace CurtainCallWP\PostTypes;
+namespace CurtainCall\PostTypes;
 
 use Carbon\CarbonImmutable as Carbon;
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\Traits\HasCastAndCrew;
-use CurtainCallWP\PostTypes\Traits\QueriesWordPressForProductions;
+use CurtainCall\Helpers\CurtainCallHelper;
+use CurtainCall\PostTypes\Traits\HasCastAndCrew;
+use CurtainCall\PostTypes\Traits\QueriesWordPressForProductions;
 use Throwable;
 
 /**
  * Class Production
- * @package CurtainCallWP\PostTypes
+ * @package CurtainCall\PostTypes
  * @property string $name
  * @property string $date_start
  * @property string $date_end
@@ -24,10 +24,10 @@ class Production extends CurtainCallPost
 {
     use HasCastAndCrew;
     use QueriesWordPressForProductions;
-    
+
     const POST_TYPE = 'ccwp_production';
     const META_PREFIX = '_ccwp_production_';
-    
+
     /**
      * @var array
      */
@@ -40,7 +40,7 @@ class Production extends CurtainCallPost
         'venue',
         'press',
     ];
-    
+
     public static function getConfig(): array
     {
         return [
@@ -79,7 +79,7 @@ class Production extends CurtainCallPost
             ],
         ];
     }
-    
+
     public static function getSeasonsTaxonomyConfig(): array
     {
         // Add new taxonomy, make it hierarchical (like categories)
@@ -107,11 +107,11 @@ class Production extends CurtainCallPost
             ],
         ];
     }
-    
+
     #
     # Functions
     #
-    
+
     /**
      * @return string
      */
@@ -120,11 +120,11 @@ class Production extends CurtainCallPost
         if (isset($this->chronological_state)) {
             return $this->chronological_state;
         }
-        
+
         $now = Carbon::now();
         $start_date = CurtainCallHelper::toCarbon($this->date_start);
         $end_date = CurtainCallHelper::toCarbon($this->date_end);
-        
+
         if ($now->gt($end_date)) {
             $this->chronological_state = 'past';
         } else if ($now->lt($start_date)) {
@@ -132,10 +132,10 @@ class Production extends CurtainCallPost
         } else {
             $this->chronological_state = 'current';
         }
-        
+
         return $this->chronological_state;
     }
-    
+
     /**
      * @return string
      * @throws Throwable
@@ -146,10 +146,10 @@ class Production extends CurtainCallPost
         $start_date = CurtainCallHelper::toCarbon($this->date_start);
         $end_date = CurtainCallHelper::toCarbon($this->date_end);
         $now = Carbon::now();
-        
+
         $start_date_format = 'F jS';
         $end_date_format   = '';
-        
+
         if ($chrono_state == 'past' || $start_date->format('Y') != $now->format('Y')) {
             // Don't show start date year if both dates are in the same year
             if ($start_date->format('Y') != $end_date->format('Y')) {
@@ -161,35 +161,35 @@ class Production extends CurtainCallPost
         if ($start_date->format('F') != $end_date->format('F')) {
             $end_date_format .= 'F ';
         }
-        
+
         $end_date_format .= 'jS';
-        
+
         // End date only gets a year if it's in the past or doesn't match the current year
         if ($chrono_state == 'past' || $end_date->format('Y') != $now->format('Y')) {
             $end_date_format .= ', Y';
         }
-    
+
         $formatted_dates = $start_date->format($start_date_format);
         $formatted_end_date = $end_date->format($end_date_format);
-        
+
         // Only show one date if the dates are identical
         if ($formatted_dates != $formatted_end_date) {
             $formatted_dates .= ' - ' . $formatted_end_date;
         }
-        
+
         return $formatted_dates;
     }
-    
+
     public function getTicketUrl(): string
     {
         if ($this->getChronologicalState() == 'past') {
             return '';
         }
-        
+
         if (isset($this->ticket_url)) {
             return $this->ticket_url;
         }
-        
+
         // TODO: 2019-12-1: change ticket link to a plugin option
         return 'https://www.rutheckerdhall.com/events';
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP;
+namespace CurtainCall;
 
 class Loader
 {

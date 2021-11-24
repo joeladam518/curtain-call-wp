@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\PostTypes\Traits;
+namespace CurtainCall\PostTypes\Traits;
 
 use WP_Query;
 
@@ -19,11 +19,11 @@ trait QueriesWordPressForProductions
         'orderby' => 'meta_value',
         'nopaging' => true,
     ];
-    
+
     protected static function getPastQueryArgs(): array
     {
         $today = static::getTodaysDate();
-        
+
         return array_merge(static::$wp_query_args, [
             'order' => 'DESC',
             'meta_query' => [
@@ -41,11 +41,11 @@ trait QueriesWordPressForProductions
             ]
         ]);
     }
-    
+
     protected static function getCurrentQueryArgs(): array
     {
         $today = static::getTodaysDate();
-        
+
         return array_merge(static::$wp_query_args, [
             'order' => 'ASC',
             'meta_query' => [
@@ -63,7 +63,7 @@ trait QueriesWordPressForProductions
             ]
         ]);
     }
-    
+
     protected static function getFutureQueryArgs(): array
     {
         $today = static::getTodaysDate();
@@ -85,17 +85,17 @@ trait QueriesWordPressForProductions
             ]
         ]);
     }
-    
+
     public static function getPastPosts(): WP_Query
     {
         return new WP_Query(static::getPastQueryArgs());
     }
-    
+
     public static function getCurrentPosts(): WP_Query
     {
         return new WP_Query(static::getCurrentQueryArgs());
     }
-    
+
     public static function getFuturePosts(): WP_Query
     {
         return new WP_Query(static::getFutureQueryArgs());

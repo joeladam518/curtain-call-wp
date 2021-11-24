@@ -1,8 +1,8 @@
 <?php
 
-namespace CurtainCallWP\PostTypes\Traits;
+namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCallWP\PostTypes\CurtainCallPostMeta;
+use CurtainCall\PostTypes\CurtainCallPostMeta;
 
 trait HasMeta
 {

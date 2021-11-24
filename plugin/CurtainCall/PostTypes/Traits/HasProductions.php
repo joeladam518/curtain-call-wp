@@ -1,17 +1,17 @@
 <?php
 
-namespace CurtainCallWP\PostTypes\Traits;
+namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\Helpers\QueryHelper;
-use CurtainCallWP\PostTypes\Production;
+use CurtainCall\Helpers\CurtainCallHelper;
+use CurtainCall\Helpers\QueryHelper;
+use CurtainCall\PostTypes\Production;
 
 trait HasProductions
 {
     public function getProductions($include_post_meta = true)
     {
         global $wpdb;
-        
+
         // SELECT
         // `production_posts`.*,
         // `ccwp_join`.`production_id` AS `ccwp_join_production_id`,
@@ -28,14 +28,14 @@ trait HasProductions
             WHERE `castcrew_posts`.`ID` = %d
             ORDER BY `production_posts`.`post_title`
         ";
-    
+
         $sql = $wpdb->prepare($query, $this->ID);
         $productions = $wpdb->get_results($sql, ARRAY_A);
-        
+
         if (count($productions) > 0) {
             /** @var array|Production[] $productions */
             $productions = CurtainCallHelper::convertToCurtainCallPosts($productions);
-    
+
             usort($productions , function($production_a, $production_b) {
                 /** @var Production $production_a */
                 $a_has_start_date = empty($production_a->date_start);
@@ -50,7 +50,7 @@ trait HasProductions
                     $a_start_date = $a_start_date ? $a_start_date->endOfDay() : null;
                     $b_start_date = CurtainCallHelper::toCarbon($production_b->date_start);
                     $b_start_date = $b_start_date ? $b_start_date->endOfDay() : null;
-                    
+
                     if (isset($a_start_date) && isset($b_start_date)) {
                         if ($a_start_date->lt($b_start_date)) {
                             return 1;

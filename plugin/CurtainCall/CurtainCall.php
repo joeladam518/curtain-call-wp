@@ -1,13 +1,13 @@
 <?php
 
-namespace CurtainCallWP;
+namespace CurtainCall;
 
-use CurtainCallWP\Hooks\AdminHooks;
-use CurtainCallWP\Hooks\FrontendHooks;
-use CurtainCallWP\Hooks\GlobalHooks;
-use CurtainCallWP\LifeCycle\Activator;
-use CurtainCallWP\LifeCycle\Deactivator;
-use CurtainCallWP\LifeCycle\Uninstaller;
+use CurtainCall\Hooks\AdminHooks;
+use CurtainCall\Hooks\FrontendHooks;
+use CurtainCall\Hooks\GlobalHooks;
+use CurtainCall\LifeCycle\Activator;
+use CurtainCall\LifeCycle\Deactivator;
+use CurtainCall\LifeCycle\Uninstaller;
 
 class CurtainCall
 {

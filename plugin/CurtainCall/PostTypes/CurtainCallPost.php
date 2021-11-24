@@ -1,15 +1,15 @@
 <?php
 
-namespace CurtainCallWP\PostTypes;
+namespace CurtainCall\PostTypes;
 
 use Carbon\CarbonImmutable as Carbon;
-use CurtainCallWP\Exceptions\UndefinedPropertyException;
-use CurtainCallWP\Exceptions\UnsettableException;
+use CurtainCall\Exceptions\UndefinedPropertyException;
+use CurtainCall\Exceptions\UnsettableException;
 use WP_Post;
-use CurtainCallWP\PostTypes\Traits\HasWordPressPost;
-use CurtainCallWP\PostTypes\Traits\HasMeta;
-use CurtainCallWP\PostTypes\Traits\HasAttributes;
-use CurtainCallWP\PostTypes\Interfaces\Arrayable;
+use CurtainCall\PostTypes\Traits\HasWordPressPost;
+use CurtainCall\PostTypes\Traits\HasMeta;
+use CurtainCall\PostTypes\Traits\HasAttributes;
+use CurtainCall\PostTypes\Interfaces\Arrayable;
 use Throwable;
 use wpdb;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCallWP\Hooks;
+namespace CurtainCall\Hooks;
 
-use CurtainCallWP\CurtainCall;
-use CurtainCallWP\View;
+use CurtainCall\CurtainCall;
+use CurtainCall\View;
 use WP_Post;
 
 class FrontendHooks
