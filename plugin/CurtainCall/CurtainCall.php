@@ -4,27 +4,23 @@ namespace CurtainCallWP;
 
 use CurtainCallWP\Hooks\AdminHooks;
 use CurtainCallWP\Hooks\FrontendHooks;
-use CurtainCallWP\Hooks\CurtainCallHooks;
+use CurtainCallWP\Hooks\GlobalHooks;
 use CurtainCallWP\LifeCycle\Activator;
 use CurtainCallWP\LifeCycle\Deactivator;
 use CurtainCallWP\LifeCycle\Uninstaller;
 
-/**
- * Class CurtainCall
- * @package CurtainCallWP
- */
 class CurtainCall
 {
     const PLUGIN_NAME = CCWP_PLUGIN_NAME;
     const PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
 
     /**
-     * The loader that's responsible for maintaining and registering all
-     * hooks that power the plugin.
+     * The loader that's responsible for maintaining and
+     * registering all hooks that power the plugin.
      *
-     * @var CurtainCallLoader
+     * @var Loader
      */
-    protected $loader;
+    protected Loader $loader;
 
     /**
      * Define the core functionality of the plugin.
@@ -35,25 +31,24 @@ class CurtainCall
      *
      * Include the following files that make up the plugin:
      *
-     * CurtainCallLoader - Orchestrates the hooks of the plugin.
-     *
-     * GlobalHookController   - Define the hooks that happen for both Admin and Frontend
-     * AdminHookController    - Defines all hooks for the admin area.
-     * FrontendHookController - Defines all hooks for the public side of the site.
-     *
-     * @return void
+     * Loader         - Orchestrates the hooks of the plugin.
+     * GlobalHooks    - Defines the hooks that happen for both Admin and Frontend
+     * AdminHooks     - Defines the hooks for the admin area.
+     * FrontendHooks  - Defines the hooks for the public side of the site.
      */
     public function __construct()
     {
-        $this->initPluginLoader();
-        $this->initPluginLocale();
-        $this->defineGlobalHooks();
-        $this->defineAdminHooks();
-        $this->defineFrontendHooks();
+        $this->loader = new Loader();
+
+        $this->registerLocales();
+        $this->registerGlobalHooks();
+        $this->registerAdminHooks();
+        $this->registerFrontendHooks();
     }
 
     /**
      * Register the plugin's life cycle hooks
+     *
      * @param string $file
      * @return void
      */
@@ -65,83 +60,100 @@ class CurtainCall
     }
 
     /**
-     * Run the loader to execute all of the hooks with WordPress.
+     * Begins execution of the plugin.
+     *
+     * Since everything within the plugin is registered via hooks,
+     * then kicking off the plugin from this point in the file does
+     * not affect the page life cycle.
+     *
+     * @return self
+     */
+    public static function run(): self
+    {
+        $plugin = new static();
+        $plugin->boot();
+
+        return $plugin;
+    }
+
+    /**
+     * Boot the plugin
+     *
      * @return void
      */
-    public function run()
+    public function boot(): void
     {
         $this->loader->run();
     }
 
     /**
-     * Set the loader that manager the hooks
+     * Register all the hooks related to the admin area functionality of the plugin.
+     *
      * @return void
      */
-    protected function initPluginLoader()
-    {
-        $this->loader = new CurtainCallLoader();
-    }
-
-    /**
-     * Define the locale for this plugin for internationalization.
-     * @return void
-     */
-    protected function initPluginLocale()
-    {
-        load_plugin_textdomain(static::PLUGIN_NAME, false, plugin_dir_path(__FILE__) . 'languages/');
-    }
-
-    /**
-     * Register all hook related to bother the admin and frontend functionality
-     * @return void
-     */
-    protected function defineGlobalHooks()
-    {
-        $controller = new CurtainCallHooks();
-
-        $this->loader->add_action('init', $controller, 'createProductionPostType');
-        $this->loader->add_action('init', $controller, 'createCastAndCrewPostType');
-        $this->loader->add_action('init', $controller, 'createProductionSeasonsTaxonomy');
-        //$this->loader->add_filter('rewrite_rules_array', $controller, 'filterRewriteRulesArray', 1);
-    }
-
-    /**
-     * Register all of the hooks related to the admin area functionality of the plugin.
-     * @return void
-     */
-    protected function defineAdminHooks()
+    protected function registerAdminHooks(): void
     {
         $controller = new AdminHooks();
 
         // All Actions and Filters on the Production custom post type
-        $this->loader->add_action('add_meta_boxes', $controller, 'addProductionPostMetaBoxes');
-        $this->loader->add_action('save_post_ccwp_production', $controller, 'saveProductionPostDetails', 2);
-        $this->loader->add_action('save_post_ccwp_production', $controller, 'saveProductionPostCastAndCrew', 2);
+        $this->loader->addAction('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes']);
+        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 2);
+        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 2);
 
         // All Actions and Filters on the Cast and Crew custom post type
-        $this->loader->add_action('add_meta_boxes', $controller, 'addCastAndCrewPostMetaBoxes', 0);
-        $this->loader->add_action('save_post_ccwp_cast_and_crew', $controller, 'saveCastAndCrewPostDetails', 2);
+        $this->loader->addAction('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 0);
+        $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 2);
 
         // All Actions and Filters that concern both post types
-        $this->loader->add_filter('wp_insert_post_data', $controller, 'setPostTitleOnPostSave', 2);
+        $this->loader->addFilter('wp_insert_post_data', [$controller, 'setPostTitleOnPostSave'], 2);
 
         // Scripts and style to be loaded for the admin area in the WordPress backend
-        $this->loader->add_action('admin_enqueue_scripts', $controller, 'enqueueStyles');
-        $this->loader->add_action('admin_enqueue_scripts', $controller, 'enqueueScripts');
+        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles']);
+        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueScripts']);
     }
 
     /**
-     * Register all of the hooks related to the public-facing functionality of the plugin.
+     * Register all hook related to bother the admin and frontend functionality
+     *
      * @return void
      */
-    protected function defineFrontendHooks()
+    protected function registerGlobalHooks(): void
+    {
+        $controller = new GlobalHooks();
+
+        $this->loader->addAction('init', [$controller, 'createProductionPostType']);
+        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType']);
+        $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy']);
+        //$this->loader->addFilter('rewrite_rules_array', [$controller, 'filterRewriteRulesArray'], 1);
+    }
+
+    /**
+     * Register all the hooks related to the public-facing functionality of the plugin.
+     *
+     * @return void
+     */
+    protected function registerFrontendHooks(): void
     {
         $controller = new FrontendHooks();
 
-        $this->loader->add_filter('single_template', $controller, 'loadSingleTemplates', 3);
-        $this->loader->add_filter('archive_template', $controller, 'loadArchiveTemplates', 3);
+        $this->loader->addFilter('single_template', [$controller, 'loadSingleTemplates'], 3);
+        $this->loader->addFilter('archive_template', [$controller, 'loadArchiveTemplates'], 3);
 
-        $this->loader->add_action('wp_enqueue_scripts', $controller, 'enqueueStyles');
-        $this->loader->add_action('wp_enqueue_scripts', $controller, 'enqueueScripts');
+        $this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueStyles']);
+        //$this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueScripts']);
+    }
+
+    /**
+     * Define the locales for this plugin for internationalization.
+     *
+     * @return void
+     */
+    protected function registerLocales(): void
+    {
+        load_plugin_textdomain(
+            static::PLUGIN_NAME,
+            false,
+            plugin_dir_path(__FILE__) . 'languages/'
+        );
     }
 }
