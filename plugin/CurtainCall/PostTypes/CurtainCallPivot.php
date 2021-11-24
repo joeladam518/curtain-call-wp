@@ -14,14 +14,14 @@ use CurtainCallWP\PostTypes\Traits\HasAttributes;
  * @property string $role
  * @property int custom_order
  */
-class CurtainCallJoin implements Arrayable
+class CurtainCallPivot implements Arrayable
 {
     use HasAttributes;
-    
+
     const TABLE_NAME  = 'ccwp_castandcrew_production';
     const TABLE_ALIAS = 'ccwp_join';
     const ATTRIBUTE_PREFIX =  self::TABLE_ALIAS . '_';
-    
+
     protected static $fields = [
         'production_id',
         'cast_and_crew_id',
@@ -29,12 +29,12 @@ class CurtainCallJoin implements Arrayable
         'role',
         'custom_order',
     ];
-    
+
     public function __construct(array $data)
     {
         $this->load($data);
     }
-    
+
     /**
      * @param string $key
      * @return string
@@ -43,7 +43,7 @@ class CurtainCallJoin implements Arrayable
     {
         return preg_replace('~^'. static::ATTRIBUTE_PREFIX .'~', '', $key);
     }
-    
+
     /**
      * @param string $key
      * @return bool
@@ -53,7 +53,7 @@ class CurtainCallJoin implements Arrayable
         $join_field = static::stripJoinPrefix($key);
         return in_array($join_field, static::$fields);
     }
-    
+
     /**
      * @param bool $with_prefix
      * @return array|string[]
@@ -63,15 +63,15 @@ class CurtainCallJoin implements Arrayable
         if (!$with_prefix) {
             return static::$fields;
         }
-    
+
         $join_fields = [];
         foreach (static::$fields as $key) {
             $join_fields[] = static::ATTRIBUTE_PREFIX . $key;
         }
-        
+
         return $join_fields;
     }
-    
+
     /**
      * @param array $data
      */
@@ -84,7 +84,7 @@ class CurtainCallJoin implements Arrayable
             }
         }
     }
-    
+
     /**
      * @param string $key
      * @return mixed|null
@@ -93,7 +93,7 @@ class CurtainCallJoin implements Arrayable
     {
         return $this->getAttribute($key);
     }
-    
+
     /**
      * @param string $key
      * @param mixed $value
@@ -102,7 +102,7 @@ class CurtainCallJoin implements Arrayable
     {
         $this->setAttribute($key, $value);
     }
-    
+
     /**
      * @param string $key
      * @return bool
@@ -111,7 +111,7 @@ class CurtainCallJoin implements Arrayable
     {
         return isset($this->attributes[$key]);
     }
-    
+
     /**
      * @param $key
      * @return void
@@ -120,7 +120,7 @@ class CurtainCallJoin implements Arrayable
     {
         unset($this->attributes[$key]);
     }
-    
+
     /**
      * @return array
      */
