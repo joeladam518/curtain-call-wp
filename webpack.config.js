@@ -1,9 +1,8 @@
 const path = require('path');
-const webpack = require('webpack');
 
 module.exports = {
     externals: {
-        "jquery": "jQuery"
+        jquery: "jQuery"
     },
     resolve: {
         extensions: ['.js', '.json'],
