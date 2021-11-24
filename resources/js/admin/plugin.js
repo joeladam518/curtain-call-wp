@@ -1,29 +1,108 @@
 import $ from 'jquery';
-import { addProductionCast, addProductionCrew, removeProductionCastCrew } from './functions.js';
 import Pikaday from 'pikaday';
 import 'select2';
 
-$(function() {
-    const $castcrew_post_title_input = $('body.post-type-ccwp_cast_and_crew input[name="post_title"]');
-    const $production_post_title_input = $('body.post-type-ccwp_production input[name="post_title"]');
+/**
+ * @param {string} name
+ * @param {string} type
+ * @param {string|number} castcrewId
+ * @param {string|number} productionId
+ * @returns {string}
+ */
+function generateFormGroupHtml(type, castcrewId, productionId, name = '') {
+    castcrewId = parseInt(castcrewId, 10);
+    productionId = parseInt(productionId, 10);
 
-    // Disable post title input box for production posts
-    if ($production_post_title_input.length){
-        $production_post_title_input
-            .prop('disabled', true)
-            .after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Production details section.</p>');
+    if (!productionId || !castcrewId || (type !== 'cast' && type !== 'crew')) {
+        return '';
     }
-    // Disable post title input box for cast and crew posts
-    if ($castcrew_post_title_input.length){
-        $castcrew_post_title_input
+
+    const formGroupId = `ccwp-production-${type}-${castcrewId}`;
+    const inputName = `ccwp_add_${type}_to_production`;
+
+    return [
+        `<div class="form-group ccwp-production-castcrew-form-group" id="${formGroupId}">`,
+        `<input type="hidden" name="${inputName}[${castcrewId}][cast_and_crew_id]" value="${castcrewId}">`,
+        `<input type="hidden" name="${inputName}[${castcrewId}][production_id]" value="${productionId}">`,
+        `<input type="hidden" name="${inputName}[${castcrewId}][type]" value="cast">`,
+        '<div class="ccwp-row">',
+        '<div class="ccwp-col name-col">',
+        `<div class="ccwp-castcrew-name">${name || ''}</div>`,
+        '</div>',
+        '<div class="ccwp-col role-col">',
+        `<input type="text" name="${inputName}[${castcrewId}][role]" placeholder="role" value="">`,
+        '</div>',
+        '<div class="ccwp-col billing-col">',
+        `<input type="text" name="${inputName}[${castcrewId}][custom_order]" placeholder="custom order" value="">`,
+        '</div>',
+        '<div class="ccwp-col action-col">',
+        `<button type="button" class="button ccwp-production-castcrew-remove-btn" data-target="${formGroupId}">Delete</button>`,
+        '</div>',
+        '</div>',
+        '</div>',
+    ].join('\n');
+}
+
+/**
+ * @param {string} type
+ * @returns {void}
+ */
+function addProductionCastCrew(type) {
+    if (type !== 'cast' && type !== 'crew') {
+        throw new TypeError('Invalid value for type');
+    }
+
+    const productionId = $('#post_ID').val();
+    const castcrewId = $(`#ccwp-production-${type}-select`).val();
+    const name = $(`#ccwp-production-${type}-select option[value="${castcrewId}"]`).text();
+
+    $(`#ccwp-production-${type}-wrap`).append(generateFormGroupHtml(
+        type,
+        castcrewId,
+        productionId,
+        name
+    ));
+
+    $('.ccwp-production-castcrew-remove-btn')
+        .off('click')
+        .on('click', removeCastCrewFormGroup);
+}
+
+/**
+ * @returns {void}
+ */
+function disableThePostTitle() {
+    const $castcrewTitleInput = $('body.post-type-ccwp_cast_and_crew input[name="post_title"]');
+
+    if ($castcrewTitleInput.length){
+        $castcrewTitleInput
             .prop('disabled', true)
             .after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Cast and Crew details section.</p>');
     }
 
+    const $productionTitleInput = $('body.post-type-ccwp_production input[name="post_title"]');
+
+    if ($productionTitleInput.length){
+        $productionTitleInput
+            .prop('disabled', true)
+            .after('<p class="ccwp-help-text" style="margin-left:10px;">You can change the post title by editing the Production details section.</p>');
+    }
+}
+
+/**
+ * @returns {void}
+ */
+function removeCastCrewFormGroup() {
+    $('#' + $(this).data('target')).remove();
+}
+
+$(function () {
+    disableThePostTitle();
+
     // Inject datepicker into admin forms
-    const $datepicker_input = $('.ccwp_datepicker_input');
-    if ($datepicker_input.length) {
-        $datepicker_input.each(function(index, ele) {
+    const $datepickerInput = $('.ccwp_datepicker_input');
+    if ($datepickerInput.length) {
+        $datepickerInput.each(function(index, ele) {
             const picker = new Pikaday({
                 field: ele,
                 format: 'M/D/YYYY',
@@ -31,9 +110,9 @@ $(function() {
         });
     }
 
-    const $admin_select_box = $('.ccwp-admin-select-box');
-    if ($admin_select_box.length) {
-        $admin_select_box.each(function (index, ele) {
+    const $castCrewSelectBox = $('.ccwp-admin-select-box');
+    if ($castCrewSelectBox.length) {
+        $castCrewSelectBox.each(function (index, ele) {
             $(ele).select2({
                 width: 'resolve',
             });
@@ -41,11 +120,12 @@ $(function() {
     }
 
     if ($('#ccwp_add_cast_and_crew_to_production').length) {
-        $('#ccwp-production-cast-add-btn')
-            .on('click', addProductionCast);
-        $('#ccwp-production-crew-add-btn')
-            .on('click', addProductionCrew);
-        $('.ccwp-production-castcrew-remove-btn')
-            .on('click', removeProductionCastCrew);
+        $('#ccwp-production-cast-add-btn').on('click', () => {
+            addProductionCastCrew('cast');
+        });
+        $('#ccwp-production-crew-add-btn').on('click', () => {
+            addProductionCastCrew('crew');
+        });
+        $('.ccwp-production-castcrew-remove-btn').on('click', removeCastCrewFormGroup);
     }
 });
