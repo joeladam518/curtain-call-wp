@@ -4,7 +4,7 @@ namespace CurtainCallWP\Helpers;
 
 use Carbon\CarbonImmutable as Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use CurtainCallWP\PostTypes\CurtainCallJoin;
+use CurtainCallWP\PostTypes\CurtainCallPivot;
 use WP_Post;
 use CurtainCallWP\PostTypes\CurtainCallPost;
 use CurtainCallWP\PostTypes\Production;
@@ -20,7 +20,7 @@ class CurtainCallHelper
     {
         return ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
     }
-    
+
     /**
      * @param array $data
      * @return array|CurtainCallPost[]
@@ -29,8 +29,8 @@ class CurtainCallHelper
     public static function convertToCurtainCallPosts(array $data): array
     {
         $posts = [];
-        $join_fields = CurtainCallJoin::getJoinFields(true);
-        
+        $join_fields = CurtainCallPivot::getJoinFields(true);
+
         foreach ($data as $post_data) {
             $wp_post_data = [];
             $ccwp_join_data = [];
@@ -42,11 +42,11 @@ class CurtainCallHelper
                     $wp_post_data[$key] = $value;
                 }
             }
-            
+
             // Convert to WP_Post
             $wp_post_data = (object)$wp_post_data;
             $wp_post = new WP_Post($wp_post_data);
-            
+
             $ccwp_post = null;
             // Convert to CurtainCallPost
             switch ($wp_post->post_type) {
@@ -62,14 +62,14 @@ class CurtainCallHelper
 
             // Add to posts array
             if ($ccwp_post !== null) {
-                $ccwp_post->setCurtainCallPostJoin(new CurtainCallJoin($ccwp_join_data));
+                $ccwp_post->setCurtainCallPostJoin(new CurtainCallPivot($ccwp_join_data));
                 $posts[] = $ccwp_post;
             }
         }
 
         return $posts;
     }
-    
+
     /**
      * @param string|null $date_string
      * @return Carbon|null
@@ -79,16 +79,16 @@ class CurtainCallHelper
         if (empty($date_string)) {
             return null;
         }
-    
+
         try {
             $carbon_date = Carbon::parse($date_string);
         } catch (InvalidFormatException $e) {
             return null;
         }
-        
+
         return $carbon_date;
     }
-    
+
     /**
      * @param string|null $from
      * @param string      $to
@@ -98,7 +98,7 @@ class CurtainCallHelper
     public static function convertDate(?string $from, string $to = 'Y-m-d', $default = null): ?string
     {
         $date = static::toCarbon($from);
-        
+
         return $date ? $date->format($to) : $default;
     }
 }
