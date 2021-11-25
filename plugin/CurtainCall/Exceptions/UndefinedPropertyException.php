@@ -2,7 +2,6 @@
 
 namespace CurtainCall\Exceptions;
 
-final class UndefinedPropertyException extends \Exception
-{
-    //
-}
+use Exception;
+
+final class UndefinedPropertyException extends Exception {}

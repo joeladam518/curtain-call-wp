@@ -2,7 +2,6 @@
 
 namespace CurtainCall\Exceptions;
 
-final class PostNotFoundException extends \Exception
-{
-    //
-}
+use Exception;
+
+final class PostNotFoundException extends Exception {}
