@@ -11,9 +11,6 @@ class FrontendHooks
     protected string $assetsUrl;
     protected string $assetsPath;
 
-    /**
-     * FrontendHookController constructor.
-     */
     public function __construct()
     {
         $this->assetsUrl = ccwpPluginUrl('assets/frontend/');
@@ -53,6 +50,7 @@ class FrontendHooks
      *
      * @param string $type
      * @param array  $templates
+     *
      * @return bool
      */
     private function themeHasTemplate(string $type, array $templates): bool
@@ -65,11 +63,14 @@ class FrontendHooks
     }
 
     /**
-     * @global WP_Post $post
-     * @param  string  $template
-     * @param  string  $type
-     * @param  array   $templates
+     * Override the theme's single template with CurtainCall's custom template
+     *
+     * @param string $template
+     * @param string $type
+     * @param array $templates
+     *
      * @return string
+     * @global WP_Post $post
      */
     public function loadSingleTemplates($template, $type, $templates): string
     {
@@ -87,9 +88,12 @@ class FrontendHooks
     }
 
     /**
-     * @param  string  $template
-     * @param  string  $type
-     * @param  array   $templates
+     * Override the theme's archive template with CurtainCall's custom template
+     *
+     * @param string $template
+     * @param string $type
+     * @param array $templates
+     *
      * @return string
      */
     public function loadArchiveTemplates($template, $type, $templates): string

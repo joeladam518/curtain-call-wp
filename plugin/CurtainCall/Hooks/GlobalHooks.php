@@ -12,7 +12,7 @@ class GlobalHooks
      *
      * @return void
      */
-    public function createCastAndCrewPostType()
+    public function createCastAndCrewPostType(): void
     {
         register_post_type('ccwp_cast_and_crew', CastAndCrew::getConfig());
         flush_rewrite_rules();
@@ -23,7 +23,7 @@ class GlobalHooks
      *
      * @return void
      */
-    public function createProductionPostType()
+    public function createProductionPostType(): void
     {
         register_post_type('ccwp_production', Production::getConfig());
         flush_rewrite_rules();
@@ -34,7 +34,7 @@ class GlobalHooks
      *
      * @return void
      */
-    public function createProductionSeasonsTaxonomy()
+    public function createProductionSeasonsTaxonomy(): void
     {
         register_taxonomy('ccwp_production_seasons', array('ccwp_production'), Production::getSeasonsTaxonomyConfig());
         flush_rewrite_rules();
