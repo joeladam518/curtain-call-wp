@@ -1,6 +1,6 @@
 <?php if ( !defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\PostTypes\Production;
+use CurtainCall\PostTypes\Production;
 
 /**
  * Expected global variables for this partial

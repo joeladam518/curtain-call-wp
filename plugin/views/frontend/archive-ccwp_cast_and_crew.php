@@ -1,11 +1,11 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\CastAndCrew;
+use CurtainCall\PostTypes\CastAndCrew;
+use CurtainCall\Support\Str;
 
 $result = CastAndCrew::getPosts();
 
-$alphabet = CurtainCallHelper::getAlphabet();
+$alphabet = Str::alphabet();
 $alpha_indexes = CastAndCrew::getAlphaIndexes($result);
 
 $current_alpha_index = null;

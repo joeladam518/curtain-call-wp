@@ -1,7 +1,7 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\PostTypes\Production;
-use CurtainCallWP\View;
+use CurtainCall\PostTypes\Production;
+use CurtainCall\View;
 
 /**
  * @var string $chronological_state

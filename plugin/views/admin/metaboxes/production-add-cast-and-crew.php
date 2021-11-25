@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\PostTypes\CastAndCrew;
+use CurtainCall\PostTypes\CastAndCrew;
 
 /**
  * @var string $wp_nonce
@@ -109,7 +109,7 @@ echo $wp_nonce;
             <div class="ccwp-col billing-col">Billing</div>
             <div class="ccwp-col action-col">&nbsp;</div>
         </div>
-        
+
         <?php foreach($crew_members as $crew_member): ?>
             <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-crew-<?php echo $crew_member->ID; ?>">
                 <input
