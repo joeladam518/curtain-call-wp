@@ -2,14 +2,12 @@
 
 namespace CurtainCall\PostTypes\Traits;
 
+use Carbon\CarbonImmutable;
 use WP_Query;
 
 trait QueriesWordPressForProductions
 {
-    /**
-     * @var array
-     */
-    protected static $wp_query_args = [
+    protected static array $wp_query_args = [
         'post_type' => [
             'ccwp_production',
             'post',
@@ -20,10 +18,24 @@ trait QueriesWordPressForProductions
         'nopaging' => true,
     ];
 
+    public static function getPastPosts(): WP_Query
+    {
+        return new WP_Query(static::getPastQueryArgs());
+    }
+
+    public static function getCurrentPosts(): WP_Query
+    {
+        return new WP_Query(static::getCurrentQueryArgs());
+    }
+
+    public static function getFuturePosts(): WP_Query
+    {
+        return new WP_Query(static::getFutureQueryArgs());
+    }
+
     protected static function getPastQueryArgs(): array
     {
-        $today = static::getTodaysDate();
-
+        $today = CarbonImmutable::now()->toDateString();
         return array_merge(static::$wp_query_args, [
             'order' => 'DESC',
             'meta_query' => [
@@ -44,8 +56,7 @@ trait QueriesWordPressForProductions
 
     protected static function getCurrentQueryArgs(): array
     {
-        $today = static::getTodaysDate();
-
+        $today = CarbonImmutable::now()->toDateString();
         return array_merge(static::$wp_query_args, [
             'order' => 'ASC',
             'meta_query' => [
@@ -66,8 +77,7 @@ trait QueriesWordPressForProductions
 
     protected static function getFutureQueryArgs(): array
     {
-        $today = static::getTodaysDate();
-
+        $today = CarbonImmutable::now()->toDateString();
         return array_merge(static::$wp_query_args, [
             'order' => 'ASC',
             'meta_query' => [
@@ -84,20 +94,5 @@ trait QueriesWordPressForProductions
                 ]
             ]
         ]);
-    }
-
-    public static function getPastPosts(): WP_Query
-    {
-        return new WP_Query(static::getPastQueryArgs());
-    }
-
-    public static function getCurrentPosts(): WP_Query
-    {
-        return new WP_Query(static::getCurrentQueryArgs());
-    }
-
-    public static function getFuturePosts(): WP_Query
-    {
-        return new WP_Query(static::getFutureQueryArgs());
     }
 }

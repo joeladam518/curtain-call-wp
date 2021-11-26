@@ -39,6 +39,9 @@ trait HasAttributes
         return $this;
     }
 
+    /**
+     * @return array
+     */
     protected function attributesToArray(): array
     {
         $attributes = [];

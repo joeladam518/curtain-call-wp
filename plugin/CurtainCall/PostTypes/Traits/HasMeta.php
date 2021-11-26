@@ -2,8 +2,6 @@
 
 namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCall\PostTypes\CurtainCallPostMeta;
-
 trait HasMeta
 {
     /** @var array */

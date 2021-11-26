@@ -46,32 +46,14 @@ use wpdb;
  */
 abstract class CurtainCallPost implements Arrayable
 {
-    use HasWordPressPost;
-    use HasMeta;
     use HasAttributes;
+    use HasMeta;
+    use HasWordPressPost;
 
     const POST_TYPE = 'ccwp_post';
     const META_PREFIX = '_ccwp_';
 
-    /**
-     * The join table name
-     * TODO: 2019-12-01: move this to the CurtainCallPostJoin model
-     * @var string|null
-     */
-    protected static ?string $join_table_name;
-
-    /**
-     * The join table name with alias
-     * TODO: 2019-12-01: move this to the CurtainCallPostJoin model
-     * @var string|null
-     */
-    protected static ?string $join_table_name_with_alias;
-
-    /**
-     * The cached current date string
-     * @var string|null
-     */
-    protected static ?string $todays_date;
+    protected array $featuredImageCache;
 
     /**
      * @param int|WP_Post $post
@@ -79,6 +61,7 @@ abstract class CurtainCallPost implements Arrayable
      */
     private function __construct($post)
     {
+        $this->featuredImageCache = [];
         $this->loadPost($post);
         $this->loadMeta();
     }
@@ -104,41 +87,77 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
-     * Get the current date string and cache it for the entire request
-     * @return string
+     * @param array $data
+     * @return array|CurtainCallPost[]
+     * @throws Throwable
      */
-    protected static function getTodaysDate(): string
+    public static function toCurtainCallPosts(array $data): array
     {
-        if (empty(static::$todays_date)) {
-            static::$todays_date = Carbon::now()->toDateString();
+        $posts = [];
+        $pivotFields = CurtainCallPivot::getFields(true);
+
+        foreach ($data as $datum) {
+            // Separate CurtainCallPivot data from WP_Post data
+            $postData = [];
+            $pivotData = [];
+            foreach ($datum as $key => $value) {
+                if (in_array($key, $pivotFields)) {
+                    $pivotData[$key] = $value;
+                } else {
+                    $postData[$key] = $value;
+                }
+            }
+
+            // Convert $postData to WP_Post
+            $post = new WP_Post((object)$postData);
+
+            // Convert $post to CurtainCallPost and add it to the array
+            switch ($post->post_type) {
+                case Production::POST_TYPE:
+                    $posts[] = Production::make($post)->setCurtainCallPostJoin(
+                        new CurtainCallPivot($pivotData)
+                    );
+                    break;
+                case CastAndCrew::POST_TYPE:
+                    $posts[] = CastAndCrew::make($post)->setCurtainCallPostJoin(
+                        new CurtainCallPivot($pivotData)
+                    );
+                    break;
+            }
         }
 
-        return static::$todays_date;
+        return $posts;
     }
 
     /**
-     * @global wpdb $wpbd
-     * @return string
+     * Retrieves an image data to for the attachment.
+     *
+     * @param string $size
+     * @param bool $icon
+     *
+     * @return array|null
      */
-    public static function getJoinTableName(): string
+    public function getFeaturedImage(string $size = 'thumbnail', bool $icon = false): ?array
     {
-        global $wpdb;
+        if (empty($this->featuredImageCache[$size])) {
+            $imageSrc = wp_get_attachment_image_src(
+                get_post_thumbnail_id($this->ID),
+                $size,
+                $icon
+            );
 
-        if (empty(static::$join_table_name)) {
-            static::$join_table_name = $wpdb->prefix . CurtainCallPivot::TABLE_NAME;
+            if ($imageSrc && isset($imageSrc[0])) {
+                $this->featuredImageCache[$size] = [
+                    'url'    => $imageSrc[0],
+                    'width'  => $imageSrc[1] ?? null,
+                    'height' => $imageSrc[2] ?? null,
+                ];
+            } else {
+                $this->featuredImageCache[$size] = null;
+            }
         }
 
-        return static::$join_table_name;
-    }
-
-    public static function getJoinTableNameWithAlias(): string
-    {
-        if (empty(static::$join_table_name_with_alias)) {
-            static::$join_table_name_with_alias  = '`' . static::getJoinTableName() . '`';
-            static::$join_table_name_with_alias .= ' AS `' . CurtainCallPivot::TABLE_ALIAS . '`';
-        }
-
-        return static::$join_table_name_with_alias;
+        return $this->featuredImageCache[$size];
     }
 
     /**
@@ -152,6 +171,9 @@ abstract class CurtainCallPost implements Arrayable
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         $data = isset($this->wp_post) ? $this->wp_post->to_array() : [];

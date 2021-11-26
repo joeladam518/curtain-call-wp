@@ -2,18 +2,19 @@
 
 namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCall\Helpers\CurtainCallHelper;
-use CurtainCall\Helpers\QueryHelper;
 use CurtainCall\PostTypes\CastAndCrew;
+use CurtainCall\PostTypes\CurtainCallPivot;
+use CurtainCall\Support\Arr;
+use CurtainCall\Support\Query;
 use Throwable;
 use wpdb;
 
 trait HasCastAndCrew
 {
     /**
-     * @global wpdb $wpdb
      * @param string $type
      * @return array
+     * @global wpdb $wpdb
      */
     public function getCastCrewIds(string $type = 'both'): array
     {
@@ -25,29 +26,28 @@ trait HasCastAndCrew
                 `ccwp_join`.`cast_and_crew_id`,
                 `ccwp_join`.`type`
             FROM `". $wpdb->posts ."` AS `production_posts`
-            INNER JOIN ". static::getJoinTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
             INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
             WHERE `production_posts`.`ID` = %d
         ";
 
-        $query .= QueryHelper::whereCCWPJoinType($type, 'AND');
+        $query .= Query::wherePivotType($type, 'AND');
 
         $sql = $wpdb->prepare($query, $this->ID);
         $castcrew = $wpdb->get_results($sql, ARRAY_A);
 
-        $castcrew_ids = [];
-        if (!empty($castcrew)) {
-            $castcrew_ids = array_values(array_map(function($castcrew_member) {
-                return $castcrew_member['cast_and_crew_id'];
-            }, $castcrew));
+        if (count($castcrew) === 0) {
+            return [];
         }
 
-        return $castcrew_ids;
+        $ids = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
+
+        return array_filter($ids);
     }
 
     /**
-     * @global wpdb $wpdb
      * @return array
+     * @global wpdb $wpdb
      */
     public function getCastCrewNames(): array
     {
@@ -66,30 +66,31 @@ trait HasCastAndCrew
         ";
 
         $sql = $wpdb->prepare($query, 'ccwp_cast_and_crew', 'publish');
-        $castcrew_names = $wpdb->get_results($sql, ARRAY_A);
+        $names = $wpdb->get_results($sql, ARRAY_A);
 
-        if (count($castcrew_names) > 0) {
-            $castcrew_names = array_column($castcrew_names, 'post_title', 'ID');
+        if (count($names) === 0) {
+            return [];
         }
 
-        return $castcrew_names;
+        return array_column($names, 'post_title', 'ID');
     }
 
     /**
      * @param string $type
-     * @return array
+     * @return array|CastAndCrew[]
+     * @global wpdb $wpdb
      * @throws Throwable
      */
     public function getCastAndCrew(string $type = 'both'): array
     {
         global $wpdb;
 
-        $whereJoinTypeClause = QueryHelper::whereCCWPJoinType($type, 'AND');
+        $whereJoinTypeClause = Query::wherePivotType($type, 'AND');
 
         $query = "
-            SELECT ". QueryHelper::selectCastAndCrew() ."
+            SELECT ". Query::selectCastAndCrew() ."
             FROM `". $wpdb->posts ."` AS `production_posts`
-            INNER JOIN ". static::getJoinTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
+            INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
             INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
             WHERE `production_posts`.`ID` = %d
             ". $whereJoinTypeClause ."
@@ -99,91 +100,94 @@ trait HasCastAndCrew
         $sql = $wpdb->prepare($query, $this->ID);
         $castcrew = $wpdb->get_results($sql, ARRAY_A);
 
-        if (count($castcrew) > 0) {
-            /** @var array|CastAndCrew[] $castcrew */
-            $castcrew = CurtainCallHelper::convertToCurtainCallPosts($castcrew);
+        if (count($castcrew) === 0) {
+            return [];
         }
 
-        return $castcrew;
+        return static::toCurtainCallPosts($castcrew);
     }
 
     /**
      * @param string $type
-     * @param array $castcrew_to_upsert
+     * @param array $castcrew
+     *
      * @return void
      */
-    public function saveCastAndCrew(string $type, array $castcrew_to_upsert = []): void
+    public function saveCastAndCrew(string $type, array $castcrew = []): void
     {
-        // Get the currently saved cast/crew ids
-        $current_castcrew_ids = $this->getCastCrewIds($type);
+        $currentIds = $this->getCastCrewIds($type);
 
-        // Get the ids of the cast/crew to be upserted
-        $new_castcrew_ids = [];
-        if (!empty($castcrew_to_upsert)) {
-            $new_castcrew_ids = array_values(array_map(function($castcrew_member) {
-                return $castcrew_member['cast_and_crew_id'];
-            }, $castcrew_to_upsert));
+        $newIds = [];
+        if (!empty($castcrew)) {
+            $newIds = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
+            $newIds = array_filter($newIds);
         }
 
-        if (!empty($new_castcrew_ids)) {
-            foreach ($castcrew_to_upsert as $castcrew_member) {
-                $castcrew_id  = is_numeric($castcrew_member['cast_and_crew_id'])
-                    ? (int)$castcrew_member['cast_and_crew_id']
+        // insert / update the production's castcrew
+        if (count($newIds) > 0) {
+            foreach ($castcrew as $member) {
+                $castcrewId = is_numeric($member['cast_and_crew_id'])
+                    ? (int) $member['cast_and_crew_id']
                     : null;
-                $role = !empty($castcrew_member['role'])
-                    ? sanitize_text_field($castcrew_member['role'])
+                $role = !empty($member['role'])
+                    ? sanitize_text_field($member['role'])
                     : null;
-                $custom_order = is_numeric($castcrew_member['custom_order'])
-                    ? (int)$castcrew_member['custom_order']
+                $order = is_numeric($member['custom_order'])
+                    ? (int) $member['custom_order']
                     : null;
 
-                if (in_array($castcrew_member['cast_and_crew_id'], $current_castcrew_ids)) {
-                    # if in both the new c/c array and the current c/c array update
-                    $this->updateCastCrew($castcrew_id, $type, $role, $custom_order);
+                if (!$castcrewId) {
+                    continue;
+                }
+
+                if (in_array($member['cast_and_crew_id'], $currentIds)) {
+                    # if in both $newIds and $currentIds, update
+                    $this->updateCastCrew($castcrewId, $type, $role, $order);
                 } else {
-                    # if in the new c/c array but not in the current c/c array insert
-                    $this->insertCastCrew($castcrew_id, $type, $role, $custom_order);
+                    # if in $newIds but not in $currentIds, insert
+                    $this->insertCastCrew($castcrewId, $type, $role, $order);
                 }
             }
         }
 
-        # array_diff() the current c/c array with new c/c array. this gives us the cast crew to be deleted
-        if (!empty($current_castcrew_ids) && !empty($new_castcrew_ids)) {
-            $castcrew_to_delete_ids = array_values(array_diff($current_castcrew_ids, $new_castcrew_ids));
-        } else if (!empty($current_castcrew_ids) && empty($new_castcrew_ids)) {
-            $castcrew_to_delete_ids = $current_castcrew_ids;
+        // Determine the production's castcrew to be deleted
+        if (!empty($currentIds) && !empty($newIds)) {
+            $toDeleteIds = array_values(array_diff($currentIds, $newIds));
+        } else if (!empty($currentIds) && empty($newIds)) {
+            $toDeleteIds = $currentIds;
         } else {
-            $castcrew_to_delete_ids = [];
+            $toDeleteIds = [];
         }
 
-        # delete the to be deleted
-        if (is_array($castcrew_to_delete_ids) && count($castcrew_to_delete_ids) > 0) {
+        // Delete the to be deleted
+        if (is_array($toDeleteIds) && count($toDeleteIds) > 0) {
             # if in the current c/c array but not in the to be saved array delete
-            foreach ($castcrew_to_delete_ids as $castcrew_id) {
-                $this->deleteCastCrew($castcrew_id, $type);
+            foreach ($toDeleteIds as $castcrewId) {
+                $this->deleteCastCrew($castcrewId, $type);
             }
         }
     }
 
     /**
-     * @global wpdb $wpdb
-     * @param int $castcrew_id
+     * @param int $id
      * @param string $type
      * @param string|null $role
-     * @param int|null $custom_order
+     * @param int|null $customOrder
+     *
      * @return void
+     * @global wpdb $wpdb
      */
-    protected function insertCastCrew(int $castcrew_id, string $type, ?string $role = null, ?int $custom_order = null): void
+    protected function insertCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
         global $wpdb;
 
-        $wpdb->insert(static::getJoinTableName(), [
+        $wpdb->insert(CurtainCallPivot::getTableName(), [
             // Data to be inserted
             'production_id'    => $this->ID,
-            'cast_and_crew_id' => $castcrew_id,
+            'cast_and_crew_id' => $id,
             'type'             => $type,
             'role'             => $role,
-            'custom_order'     => $custom_order,
+            'custom_order'     => $customOrder,
         ], [
             // Format of data to be inserted
             '%d',
@@ -197,25 +201,26 @@ trait HasCastAndCrew
     }
 
     /**
-     * @global wpdb $wpdb
-     * @param int $castcrew_id
+     * @param int $id
      * @param string $type
      * @param string|null $role
-     * @param int|null $custom_order
+     * @param int|null $customOrder
+     *
      * @return void
+     * @global wpdb $wpdb
      */
-    protected function updateCastCrew(int $castcrew_id, string $type, ?string $role = null, ?int $custom_order = null): void
+    protected function updateCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
         global $wpdb;
 
-        $wpdb->update(static::getJoinTableName(), [
+        $wpdb->update(CurtainCallPivot::getTableName(), [
             // Data to be updated
             'role'         => $role,
-            'custom_order' => $custom_order,
+            'custom_order' => $customOrder,
         ], [
             // Where Clauses
             'production_id'    => $this->ID,
-            'cast_and_crew_id' => $castcrew_id,
+            'cast_and_crew_id' => $id,
             'type'             => $type,
         ], [
             // Format of the data to be inserted
@@ -232,20 +237,21 @@ trait HasCastAndCrew
     }
 
     /**
-     * @global wpdb $wpdb
-     * @param int $castcrew_id
+     * @param int $id
      * @param string $type
+     *
      * @return void
+     * @global wpdb $wpdb
      */
-    protected function deleteCastCrew(int $castcrew_id, string $type): void
+    protected function deleteCastCrew(int $id, string $type): void
     {
         global $wpdb;
 
-        $wpdb->delete(static::getJoinTableName(), [
+        $wpdb->delete(CurtainCallPivot::getTableName(), [
             // Where Clauses
-            'production_id' => $this->ID,
-            'cast_and_crew_id' => $castcrew_id,
-            'type' => $type,
+            'production_id'    => $this->ID,
+            'cast_and_crew_id' => $id,
+            'type'             => $type,
         ], [
             // Format of where clauses data
             '%d',

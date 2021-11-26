@@ -2,22 +2,16 @@
 
 namespace CurtainCall\PostTypes\Traits;
 
-use WP_Post;
 use CurtainCall\PostTypes\CurtainCallPost;
+use WP_Post;
 use CurtainCall\Exceptions\PostNotFoundException;
 use InvalidArgumentException;
-use Throwable;
 
 trait HasWordPressPost
 {
-    /**
-     * @var WP_Post
-     */
+    /** @var WP_Post */
     protected $wp_post;
-
-    /**
-     * @var array
-     */
+    /** @var array  */
     protected $wp_post_attributes = [];
 
     /**
@@ -28,7 +22,12 @@ trait HasWordPressPost
         return $this->wp_post;
     }
 
-    protected function isWordPressPostAttribute(string $key)
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    protected function isWordPressPostAttribute(string $key): bool
     {
         return in_array($key, $this->wp_post_attributes);
     }
@@ -42,29 +41,32 @@ trait HasWordPressPost
     {
         if ($post instanceof WP_Post) {
             $this->setPost($post);
-        } else if (intval($post) > 0) {
-            $post = $this->fetchPost(intval($post));
+        } else if (is_numeric($post)) {
+            $post = $this->fetchPost((int) $post);
             $this->setPost($post);
         } else {
             throw new InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
         }
 
-        $this->setWordPressPostAttributes();
+        $this->wp_post_attributes = array_keys(get_object_vars($this->wp_post));
     }
 
     /**
-     * @param int $post_id
+     * @param int $postId
+     *
      * @return WP_Post
      * @throws PostNotFoundException
      */
-    protected function fetchPost(int $post_id): WP_Post
+    protected function fetchPost(int $postId): WP_Post
     {
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE `ID` = %d AND `post_type` = %s LIMIT 1", $post_id, static::POST_TYPE);
+
+        $query = "SELECT * FROM {$wpdb->posts} WHERE `ID` = %d AND `post_type` = %s LIMIT 1";
+        $sql = $wpdb->prepare($query, $postId, static::POST_TYPE);
         $post = $wpdb->get_row($sql);
 
         if (!$post) {
-            throw new PostNotFoundException("Failed to fetch post. id #{$post_id} post_type: ". static::POST_TYPE);
+            throw new PostNotFoundException( "Failed to fetch post. id #{$postId} post_type: " . static::POST_TYPE);
         }
 
         $post = sanitize_post($post, 'raw');
@@ -73,27 +75,25 @@ trait HasWordPressPost
     }
 
     /**
+     * Set the WordPress post on the CurtainCallPost
+     *
      * @param WP_Post $post
+     *
      * @return $this
      */
-    protected function setPost(WP_Post $post): self
+    protected function setPost(WP_Post $post)
     {
-        if ($post->post_type !== static::POST_TYPE) {
-            throw new InvalidArgumentException('Can\'t set wp_post.  post_type: "'. $post->post_type .'" is incompatible with '. static::class);
+        if ($post->post_type === static::POST_TYPE) {
+            $this->wp_post = $post;
+        } else {
+            throw new InvalidArgumentException(
+                sprintf(
+                    "Can't set wp_post. \"%s\" is the wrong post type for %s.",
+                    $post->post_type,
+                    static::class
+                )
+            );
         }
-
-        $this->wp_post = $post;
-
-        return $this;
-    }
-
-    /**
-     * @return CurtainCallPost
-     */
-    protected function setWordPressPostAttributes(): self
-    {
-        $object_vars = get_object_vars($this->wp_post);
-        $this->wp_post_attributes = array_keys($object_vars);
 
         return $this;
     }

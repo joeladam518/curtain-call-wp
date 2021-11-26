@@ -2,28 +2,26 @@
 
 namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCall\Helpers\CurtainCallHelper;
-use CurtainCall\Helpers\QueryHelper;
+use CurtainCall\PostTypes\CurtainCallPivot;
 use CurtainCall\PostTypes\Production;
+use CurtainCall\Support\Date;
+use CurtainCall\Support\Query;
+use wpdb;
 
 trait HasProductions
 {
-    public function getProductions($include_post_meta = true)
+    /**
+     * @return array|Production[]
+     * @global wpdb $wpdb
+     */
+    public function getProductions(): array
     {
         global $wpdb;
 
-        // SELECT
-        // `production_posts`.*,
-        // `ccwp_join`.`production_id` AS `ccwp_join_production_id`,
-        // `ccwp_join`.`cast_and_crew_id` AS `ccwp_join_castcrew_id`,
-        // `ccwp_join`.`type` AS `ccwp_join_type`,
-        // `ccwp_join`.`role` AS `ccwp_join_role`,
-        // `ccwp_join`.`custom_order` AS `ccwp_join_custom_order`
-
         $query = "
-            SELECT ". QueryHelper::selectProductions() ."
+            SELECT ". Query::selectProductions() ."
             FROM `". $wpdb->posts ."` AS `castcrew_posts`
-            INNER JOIN ". static::getJoinTableNameWithAlias() ." ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
+            INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
             INNER JOIN `". $wpdb->posts ."` AS `production_posts` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
             WHERE `castcrew_posts`.`ID` = %d
             ORDER BY `production_posts`.`post_title`
@@ -32,45 +30,43 @@ trait HasProductions
         $sql = $wpdb->prepare($query, $this->ID);
         $productions = $wpdb->get_results($sql, ARRAY_A);
 
-        if (count($productions) > 0) {
-            /** @var array|Production[] $productions */
-            $productions = CurtainCallHelper::convertToCurtainCallPosts($productions);
+        if (count($productions) === 0) {
+            return [];
+        }
 
-            usort($productions , function($production_a, $production_b) {
-                /** @var Production $production_a */
-                $a_has_start_date = empty($production_a->date_start);
-                /** @var Production $production_b */
-                $b_has_start_date = empty($production_b->date_start);
-                if ($a_has_start_date && !$b_has_start_date) {
-                    return -1;
-                } else if ($b_has_start_date && !$a_has_start_date) {
-                    return 1;
-                } else {
-                    $a_start_date = CurtainCallHelper::toCarbon($production_a->date_start);
-                    $a_start_date = $a_start_date ? $a_start_date->endOfDay() : null;
-                    $b_start_date = CurtainCallHelper::toCarbon($production_b->date_start);
-                    $b_start_date = $b_start_date ? $b_start_date->endOfDay() : null;
+        /** @var Production[] $productions */
+        $productions = static::toCurtainCallPosts($productions);
 
-                    if (isset($a_start_date) && isset($b_start_date)) {
-                        if ($a_start_date->lt($b_start_date)) {
-                            return 1;
-                        } else if ($a_start_date->gt($b_start_date)) {
-                            return -1;
-                        } else {
-                            return 0;
-                        }
+        usort($productions , function(Production $productionA, Production $productionB) {
+            if ($productionA->hasStartDate() && !$productionB->hasStartDate()) {
+                return -1;
+            } else if ($productionB->hasStartDate() && !$productionA->hasStartDate()) {
+                return 1;
+            } else {
+                $startDateA = Date::toCarbon($productionA->date_start);
+                $startDateA = $startDateA ? $startDateA->endOfDay() : null;
+                $startDateB = Date::toCarbon($productionB->date_start);
+                $startDateB = $startDateB ? $startDateB->endOfDay() : null;
+
+                if (isset($startDateA) && isset($startDateB)) {
+                    if ($startDateA->lt($startDateB)) {
+                        return 1;
+                    } else if ($startDateA->gt($startDateB)) {
+                        return -1;
                     } else {
-                        if ($a_start_date === null && $b_start_date !== null) {
-                            return -1;
-                        } else if ($a_start_date !== null && $b_start_date === null) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
+                        return 0;
+                    }
+                } else {
+                    if ($startDateA === null && $startDateB !== null) {
+                        return -1;
+                    } else if ($startDateA !== null && $startDateB === null) {
+                        return 1;
+                    } else {
+                        return 0;
                     }
                 }
-            });
-        }
+            }
+        });
 
         return $productions;
     }

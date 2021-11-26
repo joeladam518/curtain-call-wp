@@ -6,9 +6,9 @@ use CurtainCall\PostTypes\CurtainCallPivot;
 
 class Query
 {
-    protected static $selectProductionCache;
-    protected static $selectCastAndCrewCache;
-    protected static $joinFieldCache;
+    protected static ?string $selectProductionCache = null;
+    protected static ?string $selectCastAndCrewCache = null;
+    protected static ?array $selectPivotCache = null;
 
     /**
      * @return string
@@ -16,17 +16,13 @@ class Query
     public static function selectProductions(): string
     {
         if (empty(static::$selectProductionCache)) {
-            $query_array = [
+            $select = [
                 '`production_posts`.*'
             ];
 
-            if (empty(static::$joinFieldCache)) {
-                static::$joinFieldCache = static::selectJoinFields();
-            }
+            $select = array_merge($select, static::selectPivotFields());
 
-            $query_array = array_merge($query_array, static::$joinFieldCache);
-
-            static::$selectProductionCache  = implode(', ', $query_array);
+            static::$selectProductionCache  = implode(', ', $select);
         }
 
         return static::$selectProductionCache;
@@ -38,17 +34,13 @@ class Query
     public static function selectCastAndCrew(): string
     {
         if (empty(static::$selectCastAndCrewCache)) {
-            $query_array = [
+            $select = [
                 '`castcrew_posts`.*'
             ];
 
-            if (empty(static::$joinFieldCache)) {
-                static::$joinFieldCache = static::selectJoinFields();
-            }
+            $select = array_merge($select, static::selectPivotFields());
 
-            $query_array = array_merge($query_array, static::$joinFieldCache);
-
-            static::$selectCastAndCrewCache  = implode(', ', $query_array);
+            static::$selectCastAndCrewCache = implode(', ', $select);
         }
 
         return static::$selectCastAndCrewCache;
@@ -57,17 +49,21 @@ class Query
     /**
      * @return array
      */
-    protected static function selectJoinFields(): array
+    protected static function selectPivotFields(): array
     {
-        $join_alias = CurtainCallPivot::TABLE_ALIAS;
-        $prefix = CurtainCallPivot::ATTRIBUTE_PREFIX;
+        if (empty(static::$selectPivotCache)) {
+            $pivotAlias = CurtainCallPivot::TABLE_ALIAS;
+            $prefix = CurtainCallPivot::ATTRIBUTE_PREFIX;
 
-        $query_array = [];
-        foreach (CurtainCallPivot::getFields() as $field) {
-            $query_array[] = "`{$join_alias}`.`{$field}` AS `{$prefix}{$field}`";
+            $select = [];
+            foreach (CurtainCallPivot::getFields() as $field) {
+                $select[] = "`{$pivotAlias}`.`{$field}` AS `{$prefix}{$field}`";
+            }
+
+            static::$selectPivotCache = $select;
         }
 
-        return $query_array;
+        return static::$selectPivotCache;
     }
 
     /**
@@ -75,7 +71,7 @@ class Query
      * @param string $clause
      * @return string
      */
-    public static function whereCCWPJoinType(string $type = 'both', string $clause = 'WHERE'): string
+    public static function wherePivotType(string $type = 'both', string $clause = 'WHERE'): string
     {
         $query = "    ";
 

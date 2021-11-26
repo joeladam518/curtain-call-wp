@@ -3,9 +3,9 @@
 namespace CurtainCall\PostTypes;
 
 use Carbon\CarbonImmutable as Carbon;
-use CurtainCall\Helpers\CurtainCallHelper;
 use CurtainCall\PostTypes\Traits\HasCastAndCrew;
 use CurtainCall\PostTypes\Traits\QueriesWordPressForProductions;
+use CurtainCall\Support\Date;
 use Throwable;
 
 /**
@@ -122,8 +122,8 @@ class Production extends CurtainCallPost
         }
 
         $now = Carbon::now();
-        $start_date = CurtainCallHelper::toCarbon($this->date_start);
-        $end_date = CurtainCallHelper::toCarbon($this->date_end);
+        $start_date = Date::toCarbon($this->date_start);
+        $end_date = Date::toCarbon($this->date_end);
 
         if ($now->gt($end_date)) {
             $this->chronological_state = 'past';
@@ -143,8 +143,8 @@ class Production extends CurtainCallPost
     public function getFormattedShowDates(): string
     {
         $chrono_state = $this->getChronologicalState();
-        $start_date = CurtainCallHelper::toCarbon($this->date_start);
-        $end_date = CurtainCallHelper::toCarbon($this->date_end);
+        $start_date = Date::toCarbon($this->date_start);
+        $end_date = Date::toCarbon($this->date_end);
         $now = Carbon::now();
 
         $start_date_format = 'F jS';
@@ -192,5 +192,10 @@ class Production extends CurtainCallPost
 
         // TODO: 2019-12-1: change ticket link to a plugin option
         return 'https://www.rutheckerdhall.com/events';
+    }
+
+    public function hasStartDate(): bool
+    {
+        return !empty($this->date_start);
     }
 }
