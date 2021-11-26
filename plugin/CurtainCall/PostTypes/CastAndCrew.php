@@ -3,7 +3,6 @@
 namespace CurtainCall\PostTypes;
 
 use CurtainCall\PostTypes\Traits\HasProductions;
-use CurtainCall\PostTypes\Traits\QueriesWordPressForCastAndCrew;
 use CurtainCall\Support\Date;
 use WP_Query;
 
@@ -22,7 +21,6 @@ use WP_Query;
 class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
-    use QueriesWordPressForCastAndCrew;
 
     const POST_TYPE = 'ccwp_cast_and_crew';
     const META_PREFIX = '_ccwp_cast_crew_';
@@ -40,6 +38,31 @@ class CastAndCrew extends CurtainCallPost
         'instagram_link',
         'fun_fact',
     ];
+
+    /**
+     * @param WP_Query $query
+     * @return array
+     */
+    public static function getAlphaIndexes(WP_Query $query): array
+    {
+        $alpha_indexes = [];
+
+        if (!$query->have_posts()) {
+            return $alpha_indexes;
+        }
+
+        while ($query->have_posts()) {
+            $query->the_post();
+            $name_last = getCustomField('_ccwp_cast_crew_name_last');
+            if (!empty($name_last)) {
+                $alpha_indexes[] = strtoupper(substr($name_last, 0, 1));
+            }
+        }
+
+        wp_reset_postdata();
+
+        return array_unique($alpha_indexes);
+    }
 
     /**
      * @return array
@@ -84,28 +107,21 @@ class CastAndCrew extends CurtainCallPost
     }
 
     /**
-     * @param WP_Query $query
-     * @return array
+     * @return WP_Query
      */
-    public static function getAlphaIndexes(WP_Query $query): array
+    public static function getPosts(): WP_Query
     {
-        $alpha_indexes = [];
-
-        if (!$query->have_posts()) {
-            return $alpha_indexes;
-        }
-
-        while ($query->have_posts()) {
-            $query->the_post();
-            $name_last = getCustomField('_ccwp_cast_crew_name_last');
-            if (!empty($name_last)) {
-                $alpha_indexes[] = strtoupper(substr($name_last, 0, 1));
-            }
-        }
-
-        wp_reset_postdata();
-
-        return array_unique($alpha_indexes);
+        return new WP_Query([
+            'post_type' => [
+                'ccwp_cast_and_crew',
+                'post',
+            ],
+            'post_status' => 'publish',
+            'meta_key' => '_ccwp_cast_crew_name_last',
+            'orderby' => 'meta_value',
+            'order'   => 'ASC',
+            'nopaging' => true,
+        ]);
     }
 
     /**

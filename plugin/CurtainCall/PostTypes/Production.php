@@ -23,7 +23,6 @@ use Throwable;
 class Production extends CurtainCallPost
 {
     use HasCastAndCrew;
-    use QueriesWordPressForProductions;
 
     const POST_TYPE = 'ccwp_production';
     const META_PREFIX = '_ccwp_production_';
@@ -41,6 +40,17 @@ class Production extends CurtainCallPost
         'press',
     ];
 
+    /** @var array */
+    protected static array $wp_query_args = [
+        'post_type' => [
+            'ccwp_production',
+            'post',
+        ],
+        'post_status' => 'publish',
+        'meta_key' => '_ccwp_production_date_start',
+        'orderby' => 'meta_value',
+        'nopaging' => true,
+    ];
     public static function getConfig(): array
     {
         return [
@@ -108,9 +118,74 @@ class Production extends CurtainCallPost
         ];
     }
 
-    #
-    # Functions
-    #
+    /**
+     * @return WP_Query
+     */
+    public static function getPastPosts(): WP_Query
+    {
+        return new WP_Query(array_merge(static::$wp_query_args, [
+            'order' => 'DESC',
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key' => '_ccwp_production_date_start',
+                    'value' => Date::today(),
+                    'compare' => '<',
+                ],
+                [
+                    'key' => '_ccwp_production_date_end',
+                    'value' => Date::today(),
+                    'compare' => '<',
+                ]
+            ]
+        ]));
+    }
+
+    /**
+     * @return WP_Query
+     */
+    public static function getCurrentPosts(): WP_Query
+    {
+        return new WP_Query(array_merge(static::$wp_query_args, [
+            'order' => 'ASC',
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key' => '_ccwp_production_date_start',
+                    'value' => Date::today(),
+                    'compare' => '<=',
+                ],
+                [
+                    'key' => '_ccwp_production_date_end',
+                    'value' => Date::today(),
+                    'compare' => '>=',
+                ]
+            ]
+        ]));
+    }
+
+    /**
+     * @return WP_Query
+     */
+    public static function getFuturePosts(): WP_Query
+    {
+        return new WP_Query(array_merge(static::$wp_query_args, [
+            'order' => 'ASC',
+            'meta_query' => [
+                'relation' => 'AND',
+                [
+                    'key' => '_ccwp_production_date_start',
+                    'value' => Date::today(),
+                    'compare' => '>',
+                ],
+                [
+                    'key' => '_ccwp_production_date_end',
+                    'value' => Date::today(),
+                    'compare' => '>',
+                ]
+            ]
+        ]));
+    }
 
     /**
      * @return string
