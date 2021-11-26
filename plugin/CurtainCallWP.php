@@ -1,15 +1,17 @@
 <?php if (!defined('ABSPATH')) die;
 /**
- * Plugin Name:  CurtainCallWP
- * Plugin URI:   https://github.com/joeladam518/CurtainCallWP
- * Description:  CMS for theatres looking to display their productions, casts, and crews
- * Version:      0.4.1
- * Author:       Joel Haker, Gregg Hilferding, David Sams
- * Author URI:   https://joelhaker.com/
- * License:      MIT
- * License URI:  https://github.com/joeladam518/CurtainCallWP/blob/master/LICENSE
- * Text Domain:  curtain-call-wp
- * Domain Path:  CurtainCall/languages
+ * Plugin Name:       CurtainCallWP
+ * Plugin URI:        https://github.com/joeladam518/CurtainCallWP
+ * Description:       CMS for theatres looking to display their productions, casts, and crews
+ * Version:           0.4.1
+ * Requires at least: 5.8
+ * Requires PHP:      7.4
+ * Author:            Joel Haker, Gregg Hilferding, David Sams
+ * Author URI:        https://joelhaker.com/
+ * License:           MIT
+ * License URI:       https://github.com/joeladam518/CurtainCallWP/blob/master/LICENSE
+ * Text Domain:       curtain-call-wp
+ * Domain Path:       CurtainCall/languages
 **/
 
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');
@@ -20,5 +22,5 @@ define('CCWP_DEBUG', false);
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
-\CurtainCallWP\CurtainCall::registerLifeCycleHooks(__FILE__);
-\CurtainCallWP\CurtainCall::run();
+\CurtainCall\CurtainCall::registerLifeCycleHooks(__FILE__);
+\CurtainCall\CurtainCall::run();
