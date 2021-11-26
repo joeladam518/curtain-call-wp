@@ -57,7 +57,7 @@ abstract class CurtainCallPost implements Arrayable
      * @param int|WP_Post $post
      * @throws Throwable
      */
-    private function __construct($post)
+    protected function __construct($post)
     {
         $this->featuredImageCache = [];
         $this->loadPost($post);
