@@ -1,10 +1,10 @@
 <?php
 
-namespace CurtainCall\Helpers;
+namespace CurtainCall\Support;
 
 use CurtainCall\PostTypes\CurtainCallPivot;
 
-class QueryHelper
+class Query
 {
     protected static $selectProductionCache;
     protected static $selectCastAndCrewCache;
@@ -63,7 +63,7 @@ class QueryHelper
         $prefix = CurtainCallPivot::ATTRIBUTE_PREFIX;
 
         $query_array = [];
-        foreach (CurtainCallPivot::getJoinFields() as $field) {
+        foreach (CurtainCallPivot::getFields() as $field) {
             $query_array[] = "`{$join_alias}`.`{$field}` AS `{$prefix}{$field}`";
         }
 
