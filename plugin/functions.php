@@ -30,19 +30,6 @@ if (!function_exists('ccwpPluginUrl')) {
     }
 }
 
-if (!function_exists('ccwpStripHttp')) {
-    /**
-     * Strip the protocol from the url
-     *
-     * @param string $url
-     * @return string|null
-     */
-    function ccwpStripHttp(string $url): string
-    {
-        return preg_replace('#^https?://#', '', $url);
-    }
-}
-
 if (!function_exists('ccwpStripShortCodeGallery')) {
     /**
      * @param string $content
