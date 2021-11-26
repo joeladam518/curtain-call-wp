@@ -105,7 +105,7 @@ class CurtainCall
         $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 2);
 
         // All Actions and Filters that concern both post types
-        $this->loader->addFilter('wp_insert_post_data', [$controller, 'setPostTitleOnPostSave'], 2);
+        $this->loader->addFilter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 2);
 
         // Scripts and style to be loaded for the admin area in the WordPress backend
         $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles']);

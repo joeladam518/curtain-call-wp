@@ -2,9 +2,9 @@
 
 namespace CurtainCall\PostTypes;
 
-use CurtainCall\Helpers\CurtainCallHelper;
 use CurtainCall\PostTypes\Traits\HasProductions;
 use CurtainCall\PostTypes\Traits\QueriesWordPressForCastAndCrew;
+use CurtainCall\Support\Date;
 use WP_Query;
 
 /**
@@ -145,7 +145,7 @@ class CastAndCrew extends CurtainCallPost
     {
         $birthplace = '';
         if (isset($this->birthday)) {
-            $birthday = CurtainCallHelper::toCarbon($this->birthday);
+            $birthday = Date::toCarbon($this->birthday);
             $birthday = $birthday ? $birthday->toFormattedDateString() : '';
             $birthplace .= "Born on {$birthday}";
             if (isset($this->hometown)) {

@@ -3,9 +3,9 @@
 namespace CurtainCall\Hooks;
 
 use CurtainCall\CurtainCall;
-use CurtainCall\Helpers\CurtainCallHelper;
 use CurtainCall\PostTypes\Production;
 use CurtainCall\Support\Date;
+use CurtainCall\Support\Str;
 use CurtainCall\View;
 use Throwable;
 use WP_Post;
@@ -55,9 +55,11 @@ class AdminHooks
      * Set the post title based on the information provided in the metaboxes
      *
      * @param array $data
+     * @param array $postarr
+     *
      * @return array
      */
-    public function setPostTitleOnPostSave(array $data, array $postarr): array
+    public function setTitleOnPostSave(array $data, array $postarr): array
     {
         // if this is not a save from the edit post page don't do anything
         if (!isset($postarr['action'])
@@ -84,7 +86,7 @@ class AdminHooks
                     $title_arr[] = '-';
                 }
 
-                $date_start = CurtainCallHelper::toCarbon(
+                $date_start = Date::toCarbon(
                     sanitize_text_field($_POST['ccwp_date_start'])
                 );
 
@@ -264,7 +266,7 @@ class AdminHooks
      */
     public function saveProductionPostDetails(int $postId, WP_Post $post): void
     {
-        if (# Verify meta box nonce
+        if ( # Verify meta box nonce
             !isset($_POST['ccwp_production_details_box_nonce'])
         ||  !wp_verify_nonce($_POST['ccwp_production_details_box_nonce'], basename(__FILE__))
         ) {
@@ -291,7 +293,7 @@ class AdminHooks
 
         if (!empty($_REQUEST['ccwp_date_start'])) {
             $ccwp_date_start = sanitize_text_field($_POST['ccwp_date_start']);
-            $ccwp_date_start = CurtainCallHelper::convertDate($ccwp_date_start, 'Y-m-d');
+            $ccwp_date_start = Date::reformat($ccwp_date_start, 'Y-m-d');
             update_post_meta($postId, '_ccwp_production_date_start', $ccwp_date_start);
         } else {
             delete_post_meta($postId, '_ccwp_production_date_start');
@@ -299,7 +301,7 @@ class AdminHooks
 
         if (!empty($_REQUEST['ccwp_date_end'])) {
             $ccwp_date_end = sanitize_text_field($_POST['ccwp_date_end']);
-            $ccwp_date_end = CurtainCallHelper::convertDate($ccwp_date_end, 'Y-m-d');
+            $ccwp_date_end = Date::reformat($ccwp_date_end, 'Y-m-d');
             update_post_meta($postId, '_ccwp_production_date_end', $ccwp_date_end);
         } else {
             delete_post_meta($postId, '_ccwp_production_date_end');
@@ -422,7 +424,7 @@ class AdminHooks
 
         if (!empty($_REQUEST['ccwp_birthday'])) {
             $ccwp_birthday = sanitize_text_field($_POST['ccwp_birthday']);
-            $ccwp_birthday = CurtainCallHelper::convertDate($ccwp_birthday, 'Y-m-d');
+            $ccwp_birthday = Date::reformat($ccwp_birthday, 'Y-m-d');
             update_post_meta($postId, '_ccwp_cast_crew_birthday', $ccwp_birthday);
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_birthday');
@@ -435,7 +437,7 @@ class AdminHooks
         }
 
         if (!empty($_REQUEST['ccwp_website_link'])) {
-            $link = ccwpStripHttp($_POST['ccwp_website_link']);
+            $link = Str::stripHttp($_POST['ccwp_website_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_website_link', $link);
         } else {
@@ -443,7 +445,7 @@ class AdminHooks
         }
 
         if (!empty($_REQUEST['ccwp_facebook_link'])) {
-            $link = ccwpStripHttp($_POST['ccwp_facebook_link']);
+            $link = Str::stripHttp($_POST['ccwp_facebook_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_facebook_link', $link);
         } else {
@@ -451,7 +453,7 @@ class AdminHooks
         }
 
         if (!empty($_REQUEST['ccwp_twitter_link'])) {
-            $link = ccwpStripHttp($_POST['ccwp_twitter_link']);
+            $link = Str::stripHttp($_POST['ccwp_twitter_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_twitter_link', $link);
         } else {

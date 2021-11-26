@@ -20,6 +20,9 @@ class CurtainCallPivot implements Arrayable
     const TABLE_ALIAS = 'ccwp_join';
     const ATTRIBUTE_PREFIX =  self::TABLE_ALIAS . '_';
 
+    protected static ?string $table;
+    protected static ?string $tableWithAlias;
+
     protected static $fields = [
         'production_id',
         'cast_and_crew_id',
@@ -28,46 +31,72 @@ class CurtainCallPivot implements Arrayable
         'custom_order',
     ];
 
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
         $this->load($data);
     }
 
     /**
      * @param string $key
-     * @return string
-     */
-    public static function stripJoinPrefix($key): string
-    {
-        return preg_replace('~^'. static::ATTRIBUTE_PREFIX .'~', '', $key);
-    }
-
-    /**
-     * @param string $key
      * @return bool
      */
-    public static function isJoinField($key): bool
+    public static function isField(string $key): bool
     {
-        $join_field = static::stripJoinPrefix($key);
+        $join_field = static::stripPrefix($key);
         return in_array($join_field, static::$fields);
     }
 
     /**
-     * @param bool $with_prefix
+     * @param bool $withPrefix
      * @return array|string[]
      */
-    public static function getJoinFields($with_prefix = false): array
+    public static function getFields(bool $withPrefix = false): array
     {
-        if (!$with_prefix) {
+        if (!$withPrefix) {
             return static::$fields;
         }
 
         $join_fields = [];
         foreach (static::$fields as $key) {
-            $join_fields[] = static::ATTRIBUTE_PREFIX . $key;
+            $join_fields[] = static::ATTRIBUTE_PREFIX.$key;
         }
 
         return $join_fields;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTableName(): string
+    {
+        global $wpdb;
+
+        return static::$table ??= $wpdb->prefix.static::TABLE_NAME;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getTableNameWithAlias(): string
+    {
+        return static::$tableWithAlias ??= static::getTableName().' AS `'.static::TABLE_ALIAS.'`';
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public static function stripPrefix(string $key): string
+    {
+        return preg_replace('~^'.static::ATTRIBUTE_PREFIX.'~', '', $key);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return static::getTableName();
     }
 
     /**
@@ -76,8 +105,8 @@ class CurtainCallPivot implements Arrayable
     public function load(array $data)
     {
         foreach ($data as $key => $value) {
-            if (static::isJoinField($key)) {
-                $key = static::stripJoinPrefix($key);
+            if (static::isField($key)) {
+                $key = static::stripPrefix($key);
                 $this->setAttribute($key, $value);
             }
         }
@@ -95,6 +124,7 @@ class CurtainCallPivot implements Arrayable
     /**
      * @param string $key
      * @param mixed $value
+     * @return void
      */
     public function __set($key, $value)
     {
@@ -111,7 +141,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return void
      */
     public function __unset($key)
