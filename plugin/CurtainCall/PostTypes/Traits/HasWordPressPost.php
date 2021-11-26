@@ -2,7 +2,6 @@
 
 namespace CurtainCall\PostTypes\Traits;
 
-use CurtainCall\PostTypes\CurtainCallPost;
 use WP_Post;
 use CurtainCall\Exceptions\PostNotFoundException;
 use InvalidArgumentException;
@@ -11,7 +10,7 @@ trait HasWordPressPost
 {
     /** @var WP_Post */
     protected $wp_post;
-    /** @var array  */
+    /** @var array|string[] */
     protected $wp_post_attributes = [];
 
     /**
@@ -24,7 +23,6 @@ trait HasWordPressPost
 
     /**
      * @param string $key
-     *
      * @return bool
      */
     protected function isWordPressPostAttribute(string $key): bool
@@ -78,7 +76,6 @@ trait HasWordPressPost
      * Set the WordPress post on the CurtainCallPost
      *
      * @param WP_Post $post
-     *
      * @return $this
      */
     protected function setPost(WP_Post $post)

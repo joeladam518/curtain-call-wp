@@ -110,7 +110,6 @@ trait HasCastAndCrew
     /**
      * @param string $type
      * @param array $castcrew
-     *
      * @return void
      */
     public function saveCastAndCrew(string $type, array $castcrew = []): void
@@ -173,7 +172,6 @@ trait HasCastAndCrew
      * @param string $type
      * @param string|null $role
      * @param int|null $customOrder
-     *
      * @return void
      * @global wpdb $wpdb
      */
@@ -205,7 +203,6 @@ trait HasCastAndCrew
      * @param string $type
      * @param string|null $role
      * @param int|null $customOrder
-     *
      * @return void
      * @global wpdb $wpdb
      */
@@ -239,7 +236,6 @@ trait HasCastAndCrew
     /**
      * @param int $id
      * @param string $type
-     *
      * @return void
      * @global wpdb $wpdb
      */

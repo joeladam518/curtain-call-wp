@@ -6,7 +6,7 @@ trait HasMeta
 {
     /** @var array */
     protected $meta = [];
-    /** @var array */
+    /** @var array|string[] */
     protected $ccwp_meta_keys = [];
 
     /**

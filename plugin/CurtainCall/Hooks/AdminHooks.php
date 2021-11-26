@@ -3,6 +3,7 @@
 namespace CurtainCall\Hooks;
 
 use CurtainCall\CurtainCall;
+use CurtainCall\PostTypes\CastAndCrew;
 use CurtainCall\PostTypes\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
@@ -69,11 +70,11 @@ class AdminHooks
             return $data;
         }
 
-        $title_arr = [];
-        if ($data['post_type'] === 'ccwp_production') {
+        $titleParts = [];
+        if ($data['post_type'] === Production::POST_TYPE) {
 
             if (isset($postarr['ccwp_production_name'])) {
-                $title_arr[] = sanitize_text_field($_POST['ccwp_production_name']);
+                $titleParts[] = sanitize_text_field($_POST['ccwp_production_name']);
             }
 
             /**
@@ -82,8 +83,8 @@ class AdminHooks
             **/
 
             if (isset($postarr['ccwp_date_start'])) {
-                if ( ! empty($title_arr)) {
-                    $title_arr[] = '-';
+                if (!empty($titleParts)) {
+                    $titleParts[] = '-';
                 }
 
                 $date_start = Date::toCarbon(
@@ -91,29 +92,29 @@ class AdminHooks
                 );
 
                 if ($date_start) {
-                    $title_arr[] = $date_start->format('Y');
+                    $titleParts[] = $date_start->format('Y');
                 }
             }
 
-            if (empty($title_arr)) {
-                $title_arr[] = 'Untitled Curtain Call Production';
+            if (empty($titleParts)) {
+                $titleParts[] = 'Untitled Curtain Call Production';
             }
-        } else if ($data['post_type'] === 'ccwp_cast_and_crew') {
+        } else if ($data['post_type'] === CastAndCrew::POST_TYPE) {
             if (isset($_POST['ccwp_name_first'])) {
-                $title_arr[] = sanitize_text_field($_POST['ccwp_name_first']);
+                $titleParts[] = sanitize_text_field($_POST['ccwp_name_first']);
             }
 
             if (isset($_POST['ccwp_name_last'])) {
-                $title_arr[] = sanitize_text_field($_POST['ccwp_name_last']);
+                $titleParts[] = sanitize_text_field($_POST['ccwp_name_last']);
             }
 
-            if (empty($title_arr)) {
-                $title_arr[] = 'Untitled Curtain Call Cast/Crew';
+            if (empty($titleParts)) {
+                $titleParts[] = 'Untitled Curtain Call Cast/Crew';
             }
         }
 
-        if ( ! empty($title_arr)) {
-            $title = implode(' ', $title_arr);
+        if (!empty($titleParts)) {
+            $title = implode(' ', $titleParts);
             $title = preg_replace('~\s\s+~', ' ', $title);
 
             $data['post_name']  = sanitize_title($title);

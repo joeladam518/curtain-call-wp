@@ -145,18 +145,6 @@ class CastAndCrew extends CurtainCallPost
     /**
      * @return string
      */
-    public function getFullName(): string
-    {
-        if (isset($this->name_last)) {
-            return "{$this->name_first} {$this->name_last}";
-        }
-
-        return $this->name_first;
-    }
-
-    /**
-     * @return string
-     */
     public function getBirthPlace(): string
     {
         $birthplace = '';
@@ -173,6 +161,18 @@ class CastAndCrew extends CurtainCallPost
         }
 
         return $birthplace;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        if (isset($this->name_last)) {
+            return "{$this->name_first} {$this->name_last}";
+        }
+
+        return $this->name_first;
     }
 
     /**

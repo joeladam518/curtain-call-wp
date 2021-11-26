@@ -4,6 +4,7 @@ namespace CurtainCall\PostTypes;
 
 use CurtainCall\PostTypes\Interfaces\Arrayable;
 use CurtainCall\PostTypes\Traits\HasAttributes;
+use wpdb;
 
 /**
  * @property int    $production_id
@@ -23,6 +24,7 @@ class CurtainCallPivot implements Arrayable
     protected static ?string $table;
     protected static ?string $tableWithAlias;
 
+    /** @var array|string[] */
     protected static $fields = [
         'production_id',
         'cast_and_crew_id',
@@ -34,16 +36,6 @@ class CurtainCallPivot implements Arrayable
     public function __construct(array $data = [])
     {
         $this->load($data);
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public static function isField(string $key): bool
-    {
-        $join_field = static::stripPrefix($key);
-        return in_array($join_field, static::$fields);
     }
 
     /**
@@ -65,6 +57,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
+     * @global wpdb $wpdb
      * @return string
      */
     public static function getTableName(): string
@@ -80,6 +73,16 @@ class CurtainCallPivot implements Arrayable
     public static function getTableNameWithAlias(): string
     {
         return static::$tableWithAlias ??= static::getTableName().' AS `'.static::TABLE_ALIAS.'`';
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public static function isField(string $key): bool
+    {
+        $join_field = static::stripPrefix($key);
+        return in_array($join_field, static::$fields);
     }
 
     /**

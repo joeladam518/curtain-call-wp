@@ -33,7 +33,6 @@ class Arr
      *
      * @param array $array
      * @param callable $callback
-     *
      * @return array
      */
     public static function map(array $array, callable $callback): array

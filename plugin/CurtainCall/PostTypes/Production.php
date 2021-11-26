@@ -4,13 +4,11 @@ namespace CurtainCall\PostTypes;
 
 use Carbon\CarbonImmutable as Carbon;
 use CurtainCall\PostTypes\Traits\HasCastAndCrew;
-use CurtainCall\PostTypes\Traits\QueriesWordPressForProductions;
 use CurtainCall\Support\Date;
 use Throwable;
+use WP_Query;
 
 /**
- * Class Production
- * @package CurtainCall\PostTypes
  * @property string $name
  * @property string $date_start
  * @property string $date_end
@@ -27,9 +25,7 @@ class Production extends CurtainCallPost
     const POST_TYPE = 'ccwp_production';
     const META_PREFIX = '_ccwp_production_';
 
-    /**
-     * @var array
-     */
+    /** @var array|string[] */
     protected $ccwp_meta_keys = [
         'name',
         'date_start',
@@ -51,6 +47,10 @@ class Production extends CurtainCallPost
         'orderby' => 'meta_value',
         'nopaging' => true,
     ];
+
+    /**
+     * @return array
+     */
     public static function getConfig(): array
     {
         return [
@@ -90,6 +90,9 @@ class Production extends CurtainCallPost
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function getSeasonsTaxonomyConfig(): array
     {
         // Add new taxonomy, make it hierarchical (like categories)
@@ -255,6 +258,9 @@ class Production extends CurtainCallPost
         return $formatted_dates;
     }
 
+    /**
+     * @return string
+     */
     public function getTicketUrl(): string
     {
         if ($this->getChronologicalState() == 'past') {
@@ -269,6 +275,9 @@ class Production extends CurtainCallPost
         return 'https://www.rutheckerdhall.com/events';
     }
 
+    /**
+     * @return bool
+     */
     public function hasStartDate(): bool
     {
         return !empty($this->date_start);

@@ -2,7 +2,6 @@
 
 namespace CurtainCall\PostTypes;
 
-use Carbon\CarbonImmutable as Carbon;
 use CurtainCall\Exceptions\UndefinedPropertyException;
 use CurtainCall\Exceptions\UnsettableException;
 use WP_Post;
@@ -11,7 +10,6 @@ use CurtainCall\PostTypes\Traits\HasMeta;
 use CurtainCall\PostTypes\Traits\HasAttributes;
 use CurtainCall\PostTypes\Interfaces\Arrayable;
 use Throwable;
-use wpdb;
 
 /**
  * @property-read int    $ID
@@ -134,7 +132,6 @@ abstract class CurtainCallPost implements Arrayable
      *
      * @param string $size
      * @param bool $icon
-     *
      * @return array|null
      */
     public function getFeaturedImage(string $size = 'thumbnail', bool $icon = false): ?array
@@ -261,6 +258,7 @@ abstract class CurtainCallPost implements Arrayable
 
     /**
      * Get the config array used when creating a WP custom post type
+     *
      * @return array
      */
     abstract public static function getConfig(): array;
