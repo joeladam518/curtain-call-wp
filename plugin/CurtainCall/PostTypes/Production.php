@@ -24,6 +24,7 @@ class Production extends CurtainCallPost
 
     const POST_TYPE = 'ccwp_production';
     const META_PREFIX = '_ccwp_production_';
+    const SEASONS_TAXONOMY = 'ccwp_production_seasons';
 
     /** @var array|string[] */
     protected $ccwp_meta_keys = [
