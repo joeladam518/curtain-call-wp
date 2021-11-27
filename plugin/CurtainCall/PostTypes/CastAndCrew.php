@@ -4,6 +4,7 @@ namespace CurtainCall\PostTypes;
 
 use CurtainCall\PostTypes\Traits\HasProductions;
 use CurtainCall\Support\Date;
+use CurtainCall\Support\Str;
 use WP_Query;
 
 /**
@@ -54,7 +55,7 @@ class CastAndCrew extends CurtainCallPost
         while ($query->have_posts()) {
             $query->the_post();
             if ($lastName = getCustomField('_ccwp_cast_crew_name_last')) {
-                $alphaIndexes[] = strtoupper(substr($lastName, 0, 1));
+                $alphaIndexes[] = Str::firstLetter($lastName, 'upper');
             }
         }
 

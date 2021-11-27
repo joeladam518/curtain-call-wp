@@ -33,14 +33,12 @@ get_header();
         <div class="ccwp-container">
         <?php while ($result->have_posts()): $result->the_post(); ?>
             <?php
-                /** @var WP_Post $current_post */
-                $current_post = get_post();
-                $castcrew = CastAndCrew::make($current_post);
+                $castcrew = CastAndCrew::make(get_post());
                 $castcrew_permalink = get_post_permalink($castcrew->getPost());
             ?>
 
             <?php if ($castcrew->post_status == 'publish' && isset($castcrew->name_last)): ?>
-                <?php $current_alpha_index = strtoupper(substr($castcrew->name_last, 0, 1)); ?>
+                <?php $current_alpha_index = Str::firstLetter($castcrew->name_last, 'upper') ?>
 
                 <?php if ($current_alpha_index != $previous_alpha_index): ?>
                     <?php if ($previous_alpha_index !== null): ?>
@@ -73,7 +71,7 @@ get_header();
             <?php endif; // content is visible ?>
         <?php endwhile; // while loop ?>
         </div>
-    <?php endif; // if / else is there content?? ?>
+    <?php endif; // have_posts ?>
 </div>
 
 <?php get_footer(); ?>
