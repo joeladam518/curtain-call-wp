@@ -20,18 +20,18 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $query = "
-            SELECT
-                `ccwp_join`.`production_id`,
-                `ccwp_join`.`cast_and_crew_id`,
-                `ccwp_join`.`type`
-            FROM `". $wpdb->posts ."` AS `production_posts`
-            INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
-            INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
-            WHERE `production_posts`.`ID` = %d
-        ";
-
-        $query .= Query::wherePivotType($type, 'AND');
+        $query = implode(' ', [
+            Query::select([
+                'ccwp_join.production_id',
+                'ccwp_join.cast_and_crew_id',
+                'ccwp_join.type',
+            ]),
+            "FROM `{$wpdb->posts}` AS `production_posts`",
+            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
+            "WHERE `production_posts`.`ID` = %d",
+            Query::wherePivotType($type, 'AND'),
+        ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
         $castcrew = $wpdb->get_results($sql, ARRAY_A);
@@ -42,7 +42,7 @@ trait HasCastAndCrew
 
         $ids = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
 
-        return array_filter($ids);
+        return array_unique(array_filter($ids));
     }
 
     /**
@@ -53,17 +53,18 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $query = "
-            SELECT
-                `castcrew_posts`.`ID`,
-                `castcrew_posts`.`post_title`,
-                `castcrew_posts`.`post_type`,
-                `castcrew_posts`.`post_status`
-            FROM `". $wpdb->posts ."` AS `castcrew_posts`
-            WHERE `castcrew_posts`.`post_type` = %s
-            AND `castcrew_posts`.`post_status` = %s
-            ORDER BY `castcrew_posts`.`post_title`
-        ";
+        $query = implode(' ', [
+            Query::select([
+                'castcrew_posts.ID',
+                'castcrew_posts.post_title',
+                'castcrew_posts.post_type',
+                'castcrew_posts.post_status',
+            ]),
+            "FROM `{$wpdb->posts}` AS `castcrew_posts`",
+            'WHERE `castcrew_posts`.`post_type` = %s',
+            'AND `castcrew_posts`.`post_status` = %s',
+            'ORDER BY `castcrew_posts`.`post_title`',
+        ]);
 
         $sql = $wpdb->prepare($query, 'ccwp_cast_and_crew', 'publish');
         $names = $wpdb->get_results($sql, ARRAY_A);
@@ -85,17 +86,15 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $whereJoinTypeClause = Query::wherePivotType($type, 'AND');
-
-        $query = "
-            SELECT ". Query::selectCastAndCrew() ."
-            FROM `". $wpdb->posts ."` AS `production_posts`
-            INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`
-            INNER JOIN `". $wpdb->posts ."` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
-            WHERE `production_posts`.`ID` = %d
-            ". $whereJoinTypeClause ."
-            ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC
-        ";
+        $query = implode(' ', [
+            "SELECT " . Query::selectCastAndCrew(),
+            "FROM `{$wpdb->posts}` AS `production_posts`",
+            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
+            "WHERE `production_posts`.`ID` = %d",
+            Query::wherePivotType($type, 'AND'),
+            "ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC;"
+        ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
         $castcrew = $wpdb->get_results($sql, ARRAY_A);

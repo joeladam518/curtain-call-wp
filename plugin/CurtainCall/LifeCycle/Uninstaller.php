@@ -2,6 +2,10 @@
 
 namespace CurtainCall\LifeCycle;
 
+use CurtainCall\PostTypes\CastAndCrew;
+use CurtainCall\PostTypes\CurtainCallPivot;
+use CurtainCall\PostTypes\Production;
+
 class Uninstaller implements LifeCycleHook
 {
     public static function run(): void
@@ -10,14 +14,14 @@ class Uninstaller implements LifeCycleHook
         static::deletePluginPosts();
         static::deletePluginPostMeta();
         delete_option('ccwp_db_version');
-        flush_rewrite_rules( false );
+        flush_rewrite_rules(false);
     }
 
     protected static function deletePluginTables(): void
     {
         global $wpdb;
-        $table_name = "{$wpdb->prefix}ccwp_castandcrew_production";
-        $sql = "DROP TABLE IF EXISTS {$table_name};";
+        $table = CurtainCallPivot::getTableName();
+        $sql = "DROP TABLE IF EXISTS {$table};";
         $wpdb->query($sql);
     }
 
@@ -25,11 +29,11 @@ class Uninstaller implements LifeCycleHook
     {
         global $wpdb;
 
-        $sql = "
-            DELETE FROM {$wpdb->posts}
-            WHERE `post_type` = 'ccwp_cast_and_crew'
-            OR `post_type` = 'ccwp_production'
-        ";
+        $sql = implode(' ', [
+            "DELETE FROM {$wpdb->posts}",
+            "WHERE `post_type` = '". CastAndCrew::POST_TYPE ."'",
+            "OR `post_type` = '". Production::POST_TYPE ."'",
+        ]);
 
         $wpdb->query($sql);
     }

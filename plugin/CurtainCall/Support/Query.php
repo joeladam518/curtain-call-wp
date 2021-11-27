@@ -10,19 +10,26 @@ class Query
     protected static ?string $selectCastAndCrewCache = null;
     protected static ?array $selectPivotCache = null;
 
+    public static function select(array $fields = [], bool $prependSelect = true): string
+    {
+        $fields = Arr::map($fields, function($field) {
+            $field = str_replace('`', '', $field);
+            return static::backtickField($field);
+        });
+
+        $query = implode(', ', $fields);
+
+        return $prependSelect ? "SELECT {$query}" : $query;
+    }
+
     /**
      * @return string
      */
     public static function selectProductions(): string
     {
         if (empty(static::$selectProductionCache)) {
-            $select = [
-                '`production_posts`.*'
-            ];
-
-            $select = array_merge($select, static::selectPivotFields());
-
-            static::$selectProductionCache  = implode(', ', $select);
+            $select = array_merge(['`production_posts`.*'], static::selectPivotFields());
+            static::$selectProductionCache = implode(', ', $select);
         }
 
         return static::$selectProductionCache;
@@ -34,12 +41,7 @@ class Query
     public static function selectCastAndCrew(): string
     {
         if (empty(static::$selectCastAndCrewCache)) {
-            $select = [
-                '`castcrew_posts`.*'
-            ];
-
-            $select = array_merge($select, static::selectPivotFields());
-
+            $select = array_merge(['`castcrew_posts`.*'], static::selectPivotFields());
             static::$selectCastAndCrewCache = implode(', ', $select);
         }
 
@@ -73,23 +75,39 @@ class Query
      */
     public static function wherePivotType(string $type = 'both', string $clause = 'WHERE'): string
     {
-        $query = "    ";
+        $alias = '`'.CurtainCallPivot::TABLE_ALIAS.'`';
 
         switch($type) {
             case 'cast':
-                $query .= $clause . " `" . CurtainCallPivot::TABLE_ALIAS . "`.`type` = 'cast'";
-                break;
+                return " {$clause} {$alias}.`type` = 'cast' ";
             case 'crew':
-                $query .= $clause . " `" . CurtainCallPivot::TABLE_ALIAS . "`.`type` = 'crew'";
-                break;
+                return " {$clause} {$alias}.`type` = 'crew' ";
             case 'both':
             default:
-                $query .= $clause . " (`" . CurtainCallPivot::TABLE_ALIAS . "`.`type` = 'cast' OR `" . CurtainCallPivot::TABLE_ALIAS . "`.`type` = 'crew')";
-                break;
-        };
+                return " {$clause} ({$alias}.`type` = 'cast' OR {$alias}.`type` = 'crew') ";
+        }
+    }
 
-        $query .= PHP_EOL;
+    /**
+     * @param string $value
+     * @return string
+     */
+    protected static function backtickField(string $value): string
+    {
+        $parts = preg_split('~\s+AS\s+~i', $value);
+        $field = trim($parts[0]);
+        $alias = trim($parts[1] ?? '');
 
-        return $query;
+        $fieldParts = Arr::map(explode('.', $field), function ($part) {
+            if ($part === '*') {
+                return $part;
+            }
+
+            return "`{$part}`";
+        });
+
+        $field = implode('.', $fieldParts);
+
+        return $alias ? "{$field} AS {$alias}" : $field;
     }
 }

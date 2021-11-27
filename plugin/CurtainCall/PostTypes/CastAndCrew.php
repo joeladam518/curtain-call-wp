@@ -45,23 +45,22 @@ class CastAndCrew extends CurtainCallPost
      */
     public static function getAlphaIndexes(WP_Query $query): array
     {
-        $alpha_indexes = [];
+        $alphaIndexes = [];
 
         if (!$query->have_posts()) {
-            return $alpha_indexes;
+            return $alphaIndexes;
         }
 
         while ($query->have_posts()) {
             $query->the_post();
-            $name_last = getCustomField('_ccwp_cast_crew_name_last');
-            if (!empty($name_last)) {
-                $alpha_indexes[] = strtoupper(substr($name_last, 0, 1));
+            if ($lastName = getCustomField('_ccwp_cast_crew_name_last')) {
+                $alphaIndexes[] = strtoupper(substr($lastName, 0, 1));
             }
         }
 
         wp_reset_postdata();
 
-        return array_unique($alpha_indexes);
+        return array_unique($alphaIndexes);
     }
 
     /**
@@ -70,8 +69,8 @@ class CastAndCrew extends CurtainCallPost
     public static function getConfig(): array
     {
         return [
-            'description'   => 'The Cast and Crew for you productions',
-            'labels'        => [
+            'description' => 'The Cast and Crew for you productions',
+            'labels' => [
                 'name'               => _x('Cast and Crew', 'post type general name'),
                 'singular_name'      => _x('Cast or Crew', 'post type singular name'),
                 'add_new'            => _x('Add New', 'Cast or Crew'),
@@ -86,60 +85,62 @@ class CastAndCrew extends CurtainCallPost
                 'parent_item_colon'  => '',
                 'menu_name'          => 'Cast and Crew',
             ],
-            'public'        => true,
-            'menu_position' => 6,
+            'public'            => true,
+            'menu_position'     => 6,
             'show_in_nav_menus' => true,
-            'supports'      => [
+            'has_archive'       => true,
+            'supports' => [
                 'title',
                 'editor',
                 'thumbnail',
             ],
-            'taxonomies'    => [
+            'taxonomies' => [
                 'ccwp_cast_crew_productions',
             ],
-            'has_archive'   => true,
-            'rewrite'       => [
-                'slug' => 'cast-and-crew',
+            'rewrite' => [
+                'slug'       => 'cast-and-crew',
                 'with_front' => true,
-                'feeds' => false,
+                'feeds'      => false,
             ],
         ];
     }
 
     /**
+     * Query for castcrew posts
+     *
+     * @param array $additionalArgs
      * @return WP_Query
      */
-    public static function getPosts(): WP_Query
+    public static function getPosts( array $additionalArgs = []): WP_Query
     {
-        return new WP_Query([
+        return new WP_Query(array_merge([
             'post_type' => [
                 'ccwp_cast_and_crew',
                 'post',
             ],
             'post_status' => 'publish',
-            'meta_key' => '_ccwp_cast_crew_name_last',
-            'orderby' => 'meta_value',
-            'order'   => 'ASC',
-            'nopaging' => true,
-        ]);
+            'meta_key'    => '_ccwp_cast_crew_name_last',
+            'orderby'     => 'meta_value',
+            'order'       => 'ASC',
+            'nopaging'    => true,
+        ], $additionalArgs));
     }
 
     /**
-     * @param array $productions
+     * @param array|Production[] $productions
      * @return array
      */
     public static function rolesByProductionId(array $productions): array
     {
-        $roles_by_id = [];
-        /** @var Production $production */
+        $rolesById = [];
         foreach ($productions as $production) {
-            if (!isset($roles_by_id[$production->ID])) {
-                $roles_by_id[$production->ID] = [];
+            if (!isset($rolesById[$production->ID])) {
+                $rolesById[$production->ID] = [];
             }
-            $roles_by_id[$production->ID][] = $production->ccwp_join->role;
+            $rolesById[$production->ID][] = $production->ccwp_join->role;
         }
 
-        return $roles_by_id;
+        return $rolesById;
     }
 
     /**

@@ -18,14 +18,14 @@ trait HasProductions
     {
         global $wpdb;
 
-        $query = "
-            SELECT ". Query::selectProductions() ."
-            FROM `". $wpdb->posts ."` AS `castcrew_posts`
-            INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`
-            INNER JOIN `". $wpdb->posts ."` AS `production_posts` ON `production_posts`.`ID` = `ccwp_join`.`production_id`
-            WHERE `castcrew_posts`.`ID` = %d
-            ORDER BY `production_posts`.`post_title`
-        ";
+        $query = implode(' ', [
+            "SELECT " . Query::selectProductions(),
+            "FROM `{$wpdb->posts}` AS `castcrew_posts`",
+            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
+            "INNER JOIN `{$wpdb->posts}` AS `production_posts` ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            "WHERE `castcrew_posts`.`ID` = %d",
+            "ORDER BY `production_posts`.`post_title`;",
+        ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
         $productions = $wpdb->get_results($sql, ARRAY_A);

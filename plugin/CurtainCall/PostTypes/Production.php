@@ -36,26 +36,14 @@ class Production extends CurtainCallPost
         'press',
     ];
 
-    /** @var array */
-    protected static array $wp_query_args = [
-        'post_type' => [
-            'ccwp_production',
-            'post',
-        ],
-        'post_status' => 'publish',
-        'meta_key' => '_ccwp_production_date_start',
-        'orderby' => 'meta_value',
-        'nopaging' => true,
-    ];
-
     /**
      * @return array
      */
     public static function getConfig(): array
     {
         return [
-            'description'   => 'Displays your theatre company\'s productions and their relevant data',
-            'labels'        => [
+            'description' => 'Displays your theatre company\'s productions and their relevant data',
+            'labels' => [
                 'name'               => __('Productions', CCWP_TEXT_DOMAIN),
                 'singular_name'      => __('Production', CCWP_TEXT_DOMAIN),
                 'add_new'            => __('Add New', CCWP_TEXT_DOMAIN),
@@ -70,18 +58,18 @@ class Production extends CurtainCallPost
                 'parent_item_colon'  => '',
                 'menu_name'          => 'Productions',
             ],
-            'public'        => true,
-            'menu_position' => 5,
+            'public'            => true,
+            'menu_position'     => 5,
             'show_in_nav_menus' => true,
-            'supports'      => [
+            'has_archive' => true,
+            'supports' => [
                 'title',
                 'editor',
                 'thumbnail',
             ],
-            'taxonomies'    => [
+            'taxonomies' => [
                 'ccwp_production_seasons'
             ],
-            'has_archive' => true,
             'rewrite' => [
                 'slug' => 'productions',
                 'with_front' => true,
@@ -97,8 +85,8 @@ class Production extends CurtainCallPost
     {
         // Add new taxonomy, make it hierarchical (like categories)
         return [
-            'hierarchical'      => true,
-            'labels'            => [
+            'hierarchical' => true,
+            'labels' => [
                 'name'              => __('Seasons', CCWP_TEXT_DOMAIN),
                 'singular_name'     => __('Season', CCWP_TEXT_DOMAIN),
                 'search_items'      => __('Search Seasons', CCWP_TEXT_DOMAIN),
@@ -114,80 +102,106 @@ class Production extends CurtainCallPost
             'show_ui'           => true,
             'show_admin_column' => true,
             'query_var'         => true,
-            'rewrite'           => [
-                'slug' => 'seasons',
+            'rewrite' => [
+                'slug'       => 'seasons',
                 'with_front' => true,
             ],
         ];
     }
 
     /**
+     * Query for Production Posts
+     *
+     * @param array $additionalArgs
+     * @return WP_Query
+     */
+    public static function getPosts(array $additionalArgs = []): WP_Query
+    {
+        return new WP_Query(array_merge([
+            'post_type' => [
+                'ccwp_production',
+                'post',
+            ],
+            'post_status' => 'publish',
+            'meta_key'    => '_ccwp_production_date_start',
+            'orderby'     => 'meta_value',
+            'nopaging'    => true,
+        ], $additionalArgs));
+    }
+
+    /**
+     * Query for Past Production Posts
+     *
      * @return WP_Query
      */
     public static function getPastPosts(): WP_Query
     {
-        return new WP_Query(array_merge(static::$wp_query_args, [
+        return static::getPosts([
             'order' => 'DESC',
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key' => '_ccwp_production_date_start',
-                    'value' => Date::today(),
+                    'key'     => '_ccwp_production_date_start',
+                    'value'   => Date::today(),
                     'compare' => '<',
                 ],
                 [
-                    'key' => '_ccwp_production_date_end',
-                    'value' => Date::today(),
+                    'key'     => '_ccwp_production_date_end',
+                    'value'   => Date::today(),
                     'compare' => '<',
-                ]
-            ]
-        ]));
+                ],
+            ],
+        ]);
     }
 
     /**
+     * Query for Present Production Posts
+     *
      * @return WP_Query
      */
     public static function getCurrentPosts(): WP_Query
     {
-        return new WP_Query(array_merge(static::$wp_query_args, [
+        return static::getPosts([
             'order' => 'ASC',
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key' => '_ccwp_production_date_start',
-                    'value' => Date::today(),
+                    'key'     => '_ccwp_production_date_start',
+                    'value'   => Date::today(),
                     'compare' => '<=',
                 ],
                 [
-                    'key' => '_ccwp_production_date_end',
-                    'value' => Date::today(),
+                    'key'     => '_ccwp_production_date_end',
+                    'value'   => Date::today(),
                     'compare' => '>=',
-                ]
-            ]
-        ]));
+                ],
+            ],
+        ]);
     }
 
     /**
+     * Query for Future Production Posts
+     *
      * @return WP_Query
      */
     public static function getFuturePosts(): WP_Query
     {
-        return new WP_Query(array_merge(static::$wp_query_args, [
+        return static::getPosts([
             'order' => 'ASC',
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key' => '_ccwp_production_date_start',
-                    'value' => Date::today(),
+                    'key'     => '_ccwp_production_date_start',
+                    'value'   => Date::today(),
                     'compare' => '>',
                 ],
                 [
-                    'key' => '_ccwp_production_date_end',
-                    'value' => Date::today(),
+                    'key'     => '_ccwp_production_date_end',
+                    'value'   => Date::today(),
                     'compare' => '>',
-                ]
-            ]
-        ]));
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -200,12 +214,12 @@ class Production extends CurtainCallPost
         }
 
         $now = Carbon::now();
-        $start_date = Date::toCarbon($this->date_start);
-        $end_date = Date::toCarbon($this->date_end);
+        $startDate = Date::toCarbon($this->date_start);
+        $endDate = Date::toCarbon($this->date_end);
 
-        if ($now->gt($end_date)) {
+        if ($now->gt($endDate)) {
             $this->chronological_state = 'past';
-        } else if ($now->lt($start_date)) {
+        } else if ($now->lt($startDate)) {
             $this->chronological_state = 'future';
         } else {
             $this->chronological_state = 'current';

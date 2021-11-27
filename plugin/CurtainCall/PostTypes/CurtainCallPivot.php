@@ -4,6 +4,7 @@ namespace CurtainCall\PostTypes;
 
 use CurtainCall\PostTypes\Interfaces\Arrayable;
 use CurtainCall\PostTypes\Traits\HasAttributes;
+use CurtainCall\Support\Arr;
 use wpdb;
 
 /**
@@ -48,12 +49,7 @@ class CurtainCallPivot implements Arrayable
             return static::$fields;
         }
 
-        $join_fields = [];
-        foreach (static::$fields as $key) {
-            $join_fields[] = static::ATTRIBUTE_PREFIX.$key;
-        }
-
-        return $join_fields;
+        return Arr::map(static::$fields, fn($field) => static::ATTRIBUTE_PREFIX . $field);
     }
 
     /**
@@ -72,34 +68,26 @@ class CurtainCallPivot implements Arrayable
      */
     public static function getTableNameWithAlias(): string
     {
-        return static::$tableWithAlias ??= static::getTableName().' AS `'.static::TABLE_ALIAS.'`';
+        return static::$tableWithAlias ??= '`'.static::getTableName().'` AS `'.static::TABLE_ALIAS.'`';
     }
 
     /**
-     * @param string $key
+     * @param string $value
      * @return bool
      */
-    public static function isField(string $key): bool
+    public static function isField(string $value): bool
     {
-        $join_field = static::stripPrefix($key);
-        return in_array($join_field, static::$fields);
+        $field = static::stripPrefix($value);
+        return in_array($field, static::$fields);
     }
 
     /**
-     * @param string $key
+     * @param string $field
      * @return string
      */
-    public static function stripPrefix(string $key): string
+    public static function stripPrefix(string $field): string
     {
-        return preg_replace('~^'.static::ATTRIBUTE_PREFIX.'~', '', $key);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTable(): string
-    {
-        return static::getTableName();
+        return preg_replace('~^'.static::ATTRIBUTE_PREFIX.'~', '', $field);
     }
 
     /**

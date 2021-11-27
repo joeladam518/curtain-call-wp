@@ -10,6 +10,7 @@ use CurtainCall\PostTypes\Traits\HasMeta;
 use CurtainCall\PostTypes\Traits\HasAttributes;
 use CurtainCall\PostTypes\Interfaces\Arrayable;
 use Throwable;
+use WP_Query;
 
 /**
  * @property-read int    $ID
@@ -262,4 +263,12 @@ abstract class CurtainCallPost implements Arrayable
      * @return array
      */
     abstract public static function getConfig(): array;
+
+    /**
+     * Query for Posts
+     *
+     * @param array $additionalArgs
+     * @return WP_Query
+     */
+    abstract public static function getPosts(array $additionalArgs = []): WP_Query;
 }
