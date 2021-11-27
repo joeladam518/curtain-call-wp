@@ -23,6 +23,11 @@ class Query
         return implode(' ', Arr::map($query, fn($part) => trim($part)));
     }
 
+    /**
+     * @param array $fields
+     * @param bool $prependSelect
+     * @return string
+     */
     public static function select(array $fields = [], bool $prependSelect = true): string
     {
         $fields = Arr::map($fields, function($field) {
