@@ -4,6 +4,9 @@ namespace CurtainCall\Support;
 
 class Str
 {
+    /**
+     * @return array|string[]
+     */
     public static function alphabet(): array
     {
         return [
@@ -15,11 +18,23 @@ class Str
 
     /**
      * @param string $value
+     * @param string $case
      * @return string
      */
-    public static function camel(string $value): string
+    public static function firstLetter(string $value, string $case = ''): string
     {
-        return lcfirst(static::studly($value));
+        $letter = static::substr($value, 0, 1);
+
+        switch (static::lower($case)) {
+            case 'upper':
+            case 'uppercase':
+                return static::upper($letter);
+            case 'lower':
+            case 'lowercase':
+                return static::lower($letter);
+            default:
+                return $letter;
+        }
     }
 
     /**
@@ -36,44 +51,36 @@ class Str
     }
 
     /**
-     * @param string $value
-     * @param string $delimiter
-     * @return string
-     */
-    public function snake(string $value, string $delimiter = '_'): string
-    {
-        $value = preg_replace('/\s+/u', '', ucwords($value));
-
-        return static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
-    }
-
-    /**
      * Strip the protocol from a url
      *
      * @param string $url
      * @return string
      */
-    public static function stripHttp(string $url): string
+    public static function stripHttp(string $url)
     {
         return preg_replace('#^https?://#', '', $url);
     }
 
     /**
-     * @param string $value
-     * @return string
+     * @param string $string
+     * @param int $start
+     * @param int|null $length
+     * @return false|string
      */
-    public static function studly(string $value): string
+    public static function substr(string $string, int $start, ?int $length = null)
     {
-        $value = ucwords(str_replace(['-', '_'], ' ', $value));
+        if (!function_exists('mb_substr')) {
+            return substr($string, $start, $length);
+        }
 
-        return str_replace(' ', '', $value);
+        return mb_substr($string, $start, $length, 'UTF-8');
     }
 
     /**
      * @param string $value
      * @return string
      */
-    public static function title(string $value): string
+    public static function title(string $value)
     {
         if (!function_exists('mb_convert_case')) {
             return ucwords(static::lower($value));
