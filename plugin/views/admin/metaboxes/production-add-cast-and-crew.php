@@ -68,7 +68,7 @@ echo $wp_nonce;
                     <div class="ccwp-col billing-col">
                         <input
                             type="text"
-                            id="ccwp-production-cast-custom-order-<?php $cast_member->ID; ?>"
+                            id="ccwp-production-cast-custom-order-<?php echo $cast_member->ID; ?>"
                             name="ccwp_add_cast_to_production[<?php echo $cast_member->ID; ?>][custom_order]"
                             placeholder="custom order"
                             value="<?php echo $cast_member->ccwp_join->custom_order; ?>"
