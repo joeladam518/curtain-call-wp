@@ -11,6 +11,8 @@ class Query
     protected static ?array $selectPivotCache = null;
 
     /**
+     * Stitch together a bunch of query parts
+     *
      * @param array|string[]|string|null $query
      * @return string
      */
