@@ -36,11 +36,11 @@ class View
     {
         $dirPath = trailingslashit(ccwpPluginPath('views'));
 
-        if ($path) {
-            return $dirPath . ltrim($path, '/');
+        if (!$path) {
+            return $dirPath;
         }
 
-        return $dirPath;
+        return $dirPath . ltrim($path, '/');
     }
 
     /**
@@ -104,7 +104,10 @@ class View
      */
     protected function includeTemplate(): void
     {
-        extract($this->data);
+        if (!empty($this->data)) {
+            extract($this->data);
+        }
+
         include $this->templatePath();
     }
 }
