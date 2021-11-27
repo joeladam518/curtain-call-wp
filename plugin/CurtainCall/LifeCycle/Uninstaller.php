@@ -5,63 +5,77 @@ namespace CurtainCall\LifeCycle;
 use CurtainCall\PostTypes\CastAndCrew;
 use CurtainCall\PostTypes\CurtainCallPivot;
 use CurtainCall\PostTypes\Production;
+use CurtainCall\Support\Query;
 
 class Uninstaller implements LifeCycleHook
 {
     public static function run(): void
     {
-        static::deletePluginTables();
-        static::deletePluginPosts();
-        static::deletePluginPostMeta();
+        global $wpdb;
+
+        static::deleteTable(CurtainCallPivot::getTableName());
+        static::deletePosts(CastAndCrew::POST_TYPE);
+        static::deletePosts(Production::POST_TYPE);
+        static::deletePostMeta();
+        static::deleteTaxonomy(Production::SEASONS_TAXONOMY);
+        $wpdb->flush();
+
         delete_option('ccwp_db_version');
         flush_rewrite_rules(false);
     }
 
-    protected static function deletePluginTables(): void
+    protected static function deletePosts(string $postType): void
     {
         global $wpdb;
-        $table = CurtainCallPivot::getTableName();
-        $sql = "DROP TABLE IF EXISTS {$table};";
+
+        $sql = "DELETE FROM `{$wpdb->posts}` WHERE `post_type` = '{$postType}';";
+
         $wpdb->query($sql);
     }
 
-    protected static function deletePluginPosts(): void
+    protected static function deletePostMeta(): void
     {
         global $wpdb;
 
-        $sql = implode(' ', [
-            "DELETE FROM {$wpdb->posts}",
-            "WHERE `post_type` = '". CastAndCrew::POST_TYPE ."'",
-            "OR `post_type` = '". Production::POST_TYPE ."'",
+        $sql = Query::raw([
+            "DELETE FROM `{$wpdb->postmeta}`",
+            "WHERE (`meta_key` LIKE '_ccwp_cast_crew_%' OR `meta_key` LIKE '_ccwp_production_%');",
         ]);
 
         $wpdb->query($sql);
     }
 
-    protected static function deletePluginPostMeta(): void
+    protected static function deleteTable(string $table): void
     {
         global $wpdb;
 
-        $sql = "
-            DELETE FROM {$wpdb->postmeta}
-            WHERE `meta_key` = '_ccwp_cast_crew_name_first'
-            OR `meta_key` = '_ccwp_cast_crew_name_last'
-            OR `meta_key` = '_ccwp_cast_crew_self_title'
-            OR `meta_key` = '_ccwp_cast_crew_birthday'
-            OR `meta_key` = '_ccwp_cast_crew_hometown'
-            OR `meta_key` = '_ccwp_cast_crew_website_link'
-            OR `meta_key` = '_ccwp_cast_crew_facebook_link'
-            OR `meta_key` = '_ccwp_cast_crew_twitter_link'
-            OR `meta_key` = '_ccwp_cast_crew_instagram_link'
-            OR `meta_key` = '_ccwp_cast_crew_fun_fact'
-            OR `meta_key` = '_ccwp_production_name'
-            OR `meta_key` = '_ccwp_production_date_start'
-            OR `meta_key` = '_ccwp_production_date_end'
-            OR `meta_key` = '_ccwp_production_press'
-            OR `meta_key` = '_ccwp_production_show_times'
-            OR `meta_key` = '_ccwp_production_ticket_url'
-            OR `meta_key` = '_ccwp_production_venue'
-        ";
+        $sql = "DROP TABLE IF EXISTS {$table};";
+
+        $wpdb->query($sql);
+    }
+
+    protected static function deleteTaxonomy(string $taxonomy): void
+    {
+        global $wpdb;
+
+        $sql = Query::raw("
+            DELETE FROM `{$wpdb->terms}`
+            WHERE `term_id` IN (
+                SELECT *
+                FROM (
+                    SELECT `{$wpdb->terms}`.`term_id`
+                    FROM `{$wpdb->terms}`
+                    JOIN `{$wpdb->term_taxonomy}` ON `{$wpdb->term_taxonomy}`.`term_id` = `{$wpdb->terms}`.`term_id`
+                    WHERE `{$wpdb->term_taxonomy}`.`taxonomy` = '{$taxonomy}'
+                ) as t
+            );
+        ");
+
+        $wpdb->query($sql);
+
+        $sql = Query::raw("
+            DELETE FROM `{$wpdb->term_taxonomy}` WHERE `{$wpdb->term_taxonomy}`.`taxonomy` = '{$taxonomy}';
+        ");
 
         $wpdb->query($sql);
     }

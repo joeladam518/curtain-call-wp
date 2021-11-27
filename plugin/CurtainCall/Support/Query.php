@@ -10,6 +10,17 @@ class Query
     protected static ?string $selectCastAndCrewCache = null;
     protected static ?array $selectPivotCache = null;
 
+    /**
+     * @param array|string[]|string|null $query
+     * @return string
+     */
+    public static function raw($query): string
+    {
+        $query = Arr::wrap($query);
+
+        return implode(' ', Arr::map($query, fn($part) => trim($part)));
+    }
+
     public static function select(array $fields = [], bool $prependSelect = true): string
     {
         $fields = Arr::map($fields, function($field) {
