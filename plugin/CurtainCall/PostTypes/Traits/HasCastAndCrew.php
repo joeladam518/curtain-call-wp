@@ -20,7 +20,7 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $query = implode(' ', [
+        $query = Query::raw([
             Query::select([
                 'ccwp_join.production_id',
                 'ccwp_join.cast_and_crew_id',
@@ -53,7 +53,7 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $query = implode(' ', [
+        $query = Query::raw([
             Query::select([
                 'castcrew_posts.ID',
                 'castcrew_posts.post_title',
@@ -86,7 +86,7 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $query = implode(' ', [
+        $query = Query::raw([
             "SELECT " . Query::selectCastAndCrew(),
             "FROM `{$wpdb->posts}` AS `production_posts`",
             "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",

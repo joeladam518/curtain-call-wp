@@ -18,7 +18,7 @@ trait HasProductions
     {
         global $wpdb;
 
-        $query = implode(' ', [
+        $query = Query::raw([
             "SELECT " . Query::selectProductions(),
             "FROM `{$wpdb->posts}` AS `castcrew_posts`",
             "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
