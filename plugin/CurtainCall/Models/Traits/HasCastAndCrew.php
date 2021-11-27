@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCall\PostTypes\Traits;
+namespace CurtainCall\Models\Traits;
 
-use CurtainCall\PostTypes\CastAndCrew;
-use CurtainCall\PostTypes\CurtainCallPivot;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Support\Arr;
 use CurtainCall\Support\Query;
 use Throwable;

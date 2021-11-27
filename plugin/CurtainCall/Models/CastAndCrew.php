@@ -1,8 +1,8 @@
 <?php
 
-namespace CurtainCall\PostTypes;
+namespace CurtainCall\Models;
 
-use CurtainCall\PostTypes\Traits\HasProductions;
+use CurtainCall\Models\Traits\HasProductions;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
 use WP_Query;

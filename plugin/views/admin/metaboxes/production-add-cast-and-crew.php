@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCall\PostTypes\CastAndCrew;
+use CurtainCall\Models\CastAndCrew;
 
 /**
  * @var string $wp_nonce

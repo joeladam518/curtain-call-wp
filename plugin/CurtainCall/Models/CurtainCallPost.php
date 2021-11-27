@@ -1,14 +1,14 @@
 <?php
 
-namespace CurtainCall\PostTypes;
+namespace CurtainCall\Models;
 
 use CurtainCall\Exceptions\UndefinedPropertyException;
 use CurtainCall\Exceptions\UnsettableException;
 use WP_Post;
-use CurtainCall\PostTypes\Traits\HasWordPressPost;
-use CurtainCall\PostTypes\Traits\HasMeta;
-use CurtainCall\PostTypes\Traits\HasAttributes;
-use CurtainCall\PostTypes\Interfaces\Arrayable;
+use CurtainCall\Models\Traits\HasWordPressPost;
+use CurtainCall\Models\Traits\HasMeta;
+use CurtainCall\Models\Traits\HasAttributes;
+use CurtainCall\Models\Interfaces\Arrayable;
 use Throwable;
 use WP_Query;
 

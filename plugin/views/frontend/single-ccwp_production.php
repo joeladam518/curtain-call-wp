@@ -1,7 +1,7 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCall\PostTypes\CastAndCrew;
-use CurtainCall\PostTypes\Production;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\Production;
 
 get_header( 'single' );
 ?>

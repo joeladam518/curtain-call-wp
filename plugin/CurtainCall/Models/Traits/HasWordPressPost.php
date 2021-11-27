@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCall\PostTypes\Traits;
+namespace CurtainCall\Models\Traits;
 
 use WP_Post;
 use CurtainCall\Exceptions\PostNotFoundException;

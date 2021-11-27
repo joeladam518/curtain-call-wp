@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCall\PostTypes\Traits;
+namespace CurtainCall\Models\Traits;
 
 trait HasMeta
 {

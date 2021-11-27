@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCall\PostTypes\Traits;
+namespace CurtainCall\Models\Traits;
 
-use CurtainCall\PostTypes\CurtainCallPivot;
-use CurtainCall\PostTypes\Production;
+use CurtainCall\Models\CurtainCallPivot;
+use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Query;
 use wpdb;

@@ -2,7 +2,7 @@
 
 namespace CurtainCall\Support;
 
-use CurtainCall\PostTypes\CurtainCallPivot;
+use CurtainCall\Models\CurtainCallPivot;
 
 class Query
 {

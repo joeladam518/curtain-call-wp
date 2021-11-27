@@ -2,8 +2,8 @@
 
 namespace CurtainCall\Hooks;
 
-use CurtainCall\PostTypes\CastAndCrew;
-use CurtainCall\PostTypes\Production;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\Production;
 
 class GlobalHooks
 {

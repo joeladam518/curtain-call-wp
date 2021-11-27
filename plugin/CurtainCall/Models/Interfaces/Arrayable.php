@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCall\PostTypes\Interfaces;
+namespace CurtainCall\Models\Interfaces;
 
 interface Arrayable
 {

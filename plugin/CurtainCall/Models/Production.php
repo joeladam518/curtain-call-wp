@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCall\PostTypes;
+namespace CurtainCall\Models;
 
 use Carbon\CarbonImmutable as Carbon;
-use CurtainCall\PostTypes\Traits\HasCastAndCrew;
+use CurtainCall\Models\Traits\HasCastAndCrew;
 use CurtainCall\Support\Date;
 use Throwable;
 use WP_Query;

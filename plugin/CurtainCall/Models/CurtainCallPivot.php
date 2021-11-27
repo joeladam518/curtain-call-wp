@@ -1,9 +1,9 @@
 <?php
 
-namespace CurtainCall\PostTypes;
+namespace CurtainCall\Models;
 
-use CurtainCall\PostTypes\Interfaces\Arrayable;
-use CurtainCall\PostTypes\Traits\HasAttributes;
+use CurtainCall\Models\Interfaces\Arrayable;
+use CurtainCall\Models\Traits\HasAttributes;
 use CurtainCall\Support\Arr;
 use wpdb;
 

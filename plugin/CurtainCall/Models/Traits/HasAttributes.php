@@ -1,8 +1,8 @@
 <?php
 
-namespace CurtainCall\PostTypes\Traits;
+namespace CurtainCall\Models\Traits;
 
-use CurtainCall\PostTypes\Interfaces\Arrayable;
+use CurtainCall\Models\Interfaces\Arrayable;
 
 trait HasAttributes
 {

@@ -3,8 +3,8 @@
 namespace CurtainCall\Hooks;
 
 use CurtainCall\CurtainCall;
-use CurtainCall\PostTypes\CastAndCrew;
-use CurtainCall\PostTypes\Production;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
 use CurtainCall\View;

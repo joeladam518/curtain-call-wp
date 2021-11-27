@@ -2,9 +2,9 @@
 
 namespace CurtainCall\LifeCycle;
 
-use CurtainCall\PostTypes\CastAndCrew;
-use CurtainCall\PostTypes\CurtainCallPivot;
-use CurtainCall\PostTypes\Production;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\CurtainCallPivot;
+use CurtainCall\Models\Production;
 use CurtainCall\Support\Query;
 
 class Uninstaller implements LifeCycleHook
