@@ -127,7 +127,7 @@ echo $wp_nonce;
                     name="ccwp_add_crew_to_production[<?php echo $crew_member->ID; ?>][type]"
                     value="crew"
                 >
-                <div class="ccwp-row">
+                <div class="ccwp-row mb-4">
                     <div class="ccwp-col name-col">
                         <div class="ccwp-castcrew-name"><?php echo $crew_member->post_title;  ?></div>
                     </div>

@@ -45,7 +45,7 @@ get_header();
                         </div>
                     <?php endif; ?>
                     <h3 class="ccwp-alphabet-header" id="<?php echo $current_alpha_index; ?>"><?php echo $current_alpha_index; ?></h3>
-                    <div class="ccwp-row">
+                    <div class="ccwp-row mb-4">
                 <?php endif; ?>
 
                 <div class="castcrew-wrapper">

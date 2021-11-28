@@ -40,7 +40,7 @@ get_header( 'single' );
                     <section class="ccwp-section ccwp-production-info-section">
                         <!-- info about the production -->
                         <div class="ccwp-container">
-                            <div class="ccwp-row">
+                            <div class="ccwp-row mb-4">
                                 <?php if (has_post_thumbnail()) : ?>
                                     <div class="ccwp-production-poster">
                                         <?php the_post_thumbnail('full'); ?>
@@ -72,7 +72,7 @@ get_header( 'single' );
                                 </div>
                             </div>
 
-                            <div class="ccwp-row">
+                            <div class="ccwp-row mb-4">
                                 <?php if (!empty($production->post_content)): ?>
                                     <div class="ccwp-post-content show-summary">
                                         <?php echo apply_filters('the_content', ccwpStripShortCodeGallery(get_the_content())); ?>
