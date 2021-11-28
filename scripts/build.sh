@@ -7,7 +7,6 @@ SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
 PLUGIN_DIR="${REPO_DIR}/plugin"
 VERSION="${VERSION:-"$1"}"
-TAG="${TAG:-"v${VERSION}"}"
 
 if [ -z "$VERSION" ]; then
     echo "No version provided. Can't continue." 1>&2
@@ -28,7 +27,7 @@ ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]')-${VERSION}
 
 # Start Logic
 cd "$REPO_DIR" || exit 1
-if [ ! -f "$ZIP_DIR" ]; then
+if [ ! -d "$ZIP_DIR" ]; then
     mkdir -p "$ZIP_DIR"
 fi
 
@@ -55,13 +54,9 @@ cp "${REPO_DIR}/README.md" "${ZIP_DIR}/README.md"
 find "$ZIP_DIR" -type d -exec chmod 755 {} \;
 find "$ZIP_DIR" -type f -exec chmod 644 {} \;
 
-if [ -f "./$ZIP_DIR_NAME" ]; then
-    rm "./$ZIP_DIR_NAME"
-fi
-
 # Zip up the Directory
 cd "$REPO_DIR" || exit 1
-zip -r "./${ZIP_FILE_NAME}" "./$ZIP_DIR_NAME"
+zip -r "./${ZIP_FILE_NAME}" "./${ZIP_DIR_NAME}"
 rm -rf "$ZIP_DIR"
 
 echo ""

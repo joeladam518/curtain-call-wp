@@ -6,6 +6,7 @@ vendor/
 # folders used in build
 /CurtainCallWP
 /curtaincallwp.zip
+/curtaincallwp*.zip
 
 # Dev data excludes
 /public/*
