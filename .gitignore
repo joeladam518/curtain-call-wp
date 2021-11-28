@@ -14,7 +14,7 @@ vendor/
 /data/
 
 # environment
-.env*
+.env
 
 # Wordpress files
 wp-config.php

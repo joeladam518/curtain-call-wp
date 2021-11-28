@@ -6,7 +6,7 @@ services:
     image: 'mariadb:latest'
     restart: always
     ports:
-      - '${FORWARD_DB_PORT:-3306}:3306'
+      - '${DB_PORT:-3306}:3306'
     environment:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
       MYSQL_DATABASE: '${DB_DATABASE}'
@@ -25,7 +25,7 @@ services:
     image: 'phpmyadmin:latest'
     restart: always
     ports:
-      - '8080:80'
+      - '${PHP_MYADMIN_PORT:-8080}:80'
     environment:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
       PMA_HOSTS: mariadb
