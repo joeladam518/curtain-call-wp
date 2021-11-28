@@ -15,9 +15,11 @@
             flex-basis: 250px;
             flex-shrink: 0;
             margin-right: 40px;
+
             img {
                 max-height: 250px;
                 width: auto;
+
                 @media screen and (min-width: $br-sm-min) {
                     max-height: 400px;
                 }
@@ -40,26 +42,30 @@
             .castcrew-website {
                 margin: -10px 0 0;
                 font-size: 1.1rem;
+
                 a {
                     text-decoration: none;
+
                     &:hover {
                         text-decoration: none;
                         color: $yellow;
                     }
                 }
             }
+
             .castcrew-social {
                 margin-top: 10px;
                 a {
                     text-decoration: none;
                     margin-right: 10px;
-                    &:hover {
-                        color: $yellow;
-                        text-decoration: none;
-                    }
 
                     i {
                         font-size: 1.4rem;
+                    }
+
+                    &:hover {
+                        color: $yellow;
+                        text-decoration: none;
                     }
                 }
             }
@@ -93,14 +99,6 @@
                 flex-shrink: 0;
                 margin-right: 0;
                 text-align: left;
-                @media screen and (min-width: $br-sm-min) {
-                    flex-basis: 325px;
-                    margin-right: 25px;
-                    text-align: center;
-                }
-                @media screen and (min-width: $br-md-min) {
-                    flex-basis: 400px;
-                }
 
                 img {
                     height: auto;
@@ -108,24 +106,39 @@
                     width: auto;
                     max-width: 100%;
                 }
+
+                @media screen and (min-width: $br-sm-min) {
+                    flex-basis: 325px;
+                    margin-right: 25px;
+                    text-align: center;
+                }
+
+                @media screen and (min-width: $br-md-min) {
+                    flex-basis: 400px;
+                }
             }
 
             .production-details {
                 flex-grow: 1;
+
                 .production-name {
                     margin-bottom: 5px;
+
                     a {
                         font-size: 1.6rem;
                         text-decoration: none;
                         color: $black;
+
                         &:hover {
                             color: $red;
                         }
                     }
                 }
+
                 .castcrew-role {
                     font-size: 1.4rem;
                 }
+
                 .production-dates {
                     font-size: 1.2rem;
                 }

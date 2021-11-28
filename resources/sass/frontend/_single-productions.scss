@@ -4,7 +4,9 @@
     article {
         .ccwp-production-info-section {
             margin-bottom: 30px;
+
             > .ccwp-container {
+
                 > .ccwp-row {
                     &:first-child {
                         margin-bottom: 0;
@@ -19,6 +21,7 @@
             max-width: 500px;
             margin-right: 0;
             margin-bottom: 15px;
+
             @media screen and (min-width: $br-sm-min){
                 margin-right: 30px;
             }
@@ -27,14 +30,17 @@
         .show-info {
             color: $black;
             margin-bottom: 20px;
+
             .show-dates-container {
                 display: flex;
                 flex-flow: row wrap;
                 align-items: center;
                 color: $black;
+
                 .now-showing-label {
                     margin-right: 7px;
                 }
+
                 .show-dates {
                     font-size: 1.2rem;
                     font-weight: bold;
@@ -42,9 +48,11 @@
                     margin-bottom: 10px;
                 }
             }
+
             .show-times {
                 margin-bottom: 0;
             }
+
             .show-venue {
                 margin-bottom: 0;
             }
@@ -78,6 +86,7 @@
                 flex-flow: row nowrap;
                 flex-basis: 100%;
                 margin-bottom: 20px;
+
                 @media screen and (min-width: $br-sm-min) {
                     flex-basis: 50%;
                 }
@@ -91,12 +100,15 @@
 
             .castcrew-details {
                 flex-grow: 1;
+
                 .castcrew-name {
                     margin-bottom: 5px;
+
                     a {
                         font-size: 1.6rem;
                         text-decoration: none;
                         color: $black;
+
                         &:hover {
                             color: $red;
                         }

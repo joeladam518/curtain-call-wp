@@ -1,3 +1,5 @@
+@use "sass:map";
+
 .ccwp-section {
     width: auto;
 }
@@ -13,7 +15,15 @@
     display: flex;
     flex-flow: row wrap;
     width: auto;
-    margin-bottom: 15px;
+
+    @for $i from 1 through 4 {
+        &.mt-#{$i} {
+            margin-top: map.get($sizes, $i);
+        }
+        &.mb-#{$i} {
+            margin-bottom: map.get($sizes, $i);
+        }
+    }
 }
 
 .ccwp-col {
