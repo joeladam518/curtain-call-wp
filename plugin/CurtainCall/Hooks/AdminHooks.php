@@ -219,7 +219,6 @@ class AdminHooks
             'show_times' => getCustomField('_ccwp_production_show_times', $post->ID),
             'ticket_url' => getCustomField('_ccwp_production_ticket_url', $post->ID),
             'venue'      => getCustomField('_ccwp_production_venue', $post->ID),
-            'press'      => getCustomField('_ccwp_production_press', $post->ID),
         ])->render();
     }
 
@@ -324,12 +323,6 @@ class AdminHooks
             update_post_meta($postId, '_ccwp_production_venue', sanitize_text_field($_POST['ccwp_venue']));
         } else {
             delete_post_meta($postId, '_ccwp_production_venue');
-        }
-
-        if (!empty($_REQUEST['ccwp_press'])) {
-            update_post_meta($postId, '_ccwp_production_press', sanitize_text_field($_POST['ccwp_press']));
-        } else {
-            delete_post_meta($postId, '_ccwp_production_press');
         }
     }
 

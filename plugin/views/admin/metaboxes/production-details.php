@@ -9,7 +9,7 @@
  * @var string $show_times
  * @var string $ticket_url
  * @var string $venue
- * @var string $press
+
 **/
 echo $wp_nonce;
 ?>
@@ -54,9 +54,4 @@ echo $wp_nonce;
 
 <div class="ccwp-form-help-text">
     <p>Where the show was performed.</p>
-</div>
-
-<div class="ccwp-form-group">
-    <label for="ccwp_press">Press Highlights</label>
-    <textarea id="ccwp_press" name="ccwp_press"><?php echo $press; ?></textarea>
 </div>

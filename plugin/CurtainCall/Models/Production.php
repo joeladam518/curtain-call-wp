@@ -15,7 +15,6 @@ use WP_Query;
  * @property string $show_times
  * @property string $ticket_url
  * @property string $venue
- * @property string $press
  * @property string $chronological_state
  */
 class Production extends CurtainCallPost

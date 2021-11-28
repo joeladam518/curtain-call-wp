@@ -80,13 +80,6 @@ get_header( 'single' );
                                         <?php echo apply_filters('the_content', ccwpStripShortCodeGallery(get_the_content())); ?>
                                     </div>
                                 <?php endif; ?>
-
-                                <?php if (!empty($production->press)): ?>
-                                    <div class="show-press-quotes">
-                                        <h4>Press Highlights</h4>
-                                        <p><?php echo $production->press; ?></p>
-                                    </div>
-                                <?php endif; ?>
                             </div>
                         </div>
 
