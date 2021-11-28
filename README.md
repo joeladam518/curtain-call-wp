@@ -23,14 +23,14 @@ Then you can install the generated zip file in seperate WordPress installation.
 ```shell
 $ bash scrtipts/build.sh
 
-# output: curtancallwp.zip
+# output: curtaincallwp.zip
 ```
 
 The script takes and optional version argument attach to the file name.
 ```shell
 $ bash scrtipts/build.sh 1.0.0
 
-# output: curtancallwp-1.0.0.zip
+# output: curtaincallwp-1.0.0.zip
 ```
 
 
