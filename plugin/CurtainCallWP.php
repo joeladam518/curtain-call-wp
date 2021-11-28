@@ -11,7 +11,7 @@
  * License:           MIT
  * License URI:       https://github.com/joeladam518/CurtainCallWP/blob/master/LICENSE
  * Text Domain:       curtain-call-wp
- * Domain Path:       CurtainCall/languages
+ * Domain Path:       /languages
 **/
 
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');
