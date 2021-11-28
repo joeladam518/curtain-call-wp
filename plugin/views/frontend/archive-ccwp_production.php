@@ -6,8 +6,8 @@ use CurtainCall\View;
 get_header();
 ?>
 
-<!-- Content -->
 <div id="content" class="ccwp-productions-page" role="main">
+    <h1 class="ccwp-page-header">Productions</h1>
 
     <?php echo '<h1 class="ccwp-archive-title">Productions</h1>'; ?>
     <?php //the_archive_title('<h1 class="ccwp-archive-title">', '</h1>'); ?>

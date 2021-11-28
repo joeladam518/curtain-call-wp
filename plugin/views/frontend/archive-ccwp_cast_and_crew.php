@@ -15,7 +15,7 @@ get_header();
 ?>
 
 <div id="content" class="ccwp-cast-and-crew-page" role="main">
-    <h1>Cast and Crew</h1>
+    <h1 class="ccwp-page-header">Cast and Crew</h1>
 
     <?php if (!$result->have_posts()) : ?>
         <p>Sorry! There are currently no cast or crew members in our directory. Please check back soon!</p>

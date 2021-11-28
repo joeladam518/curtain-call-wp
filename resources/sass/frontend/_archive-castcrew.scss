@@ -6,10 +6,6 @@
         padding-right: 8px;
     }
 
-    h1 {
-        margin-bottom: 10px;
-    }
-
     .ccwp-alphabet-navigation {
         margin-bottom: 30px;
         font-size: 17px;
@@ -29,7 +25,7 @@
         }
 
         span {
-            color: rgba(0,0,0,.3);
+            color: rgba($black,.3);
         }
     }
 

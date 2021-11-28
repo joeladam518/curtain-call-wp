@@ -16,12 +16,15 @@ body.post-type-archive-ccwp_production {
     }
 
     .ccwp-page-header {
-        margin-bottom: 20px;
+        margin-top: 0;
+        margin-block-start: 0;
+        margin-bottom: $size-5;
     }
 
     .ccwp-main {
         padding: 0;
         margin: 0;
+
         .ccwp-main-content-container {
             width: auto;
             max-width: 1300px;
@@ -62,9 +65,5 @@ body.post-type-archive-ccwp_production {
         border-radius: 3px;
         padding: 5px 0;
         color: $white;
-    }
-
-    .ccwp-post-content {
-
     }
 }

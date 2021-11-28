@@ -7,9 +7,8 @@ get_header( 'single' );
 
 <?php if (have_posts()): while (have_posts()): the_post(); ?>
     <?php
-        $post_classes = []; // You can dynamically add classes to the article by adding to this array...
-        $castcrew = CastAndCrew::make(get_post());
-        $full_name = $castcrew->getFullName();
+        $castcrew   = CastAndCrew::make(get_post());
+        $fullName   = $castcrew->getFullName();
         $birthplace = $castcrew->getBirthPlace();
     ?>
 
@@ -19,10 +18,10 @@ get_header( 'single' );
                 <div class="ccwp-post-breadcrumbs">
                     <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                     <a href="/cast-and-crew">Cast &amp; Crew</a>&nbsp;&nbsp;/&nbsp;
-                    <span><?php echo $full_name; ?></span>
+                    <span><?php echo $fullName; ?></span>
                 </div>
 
-                <article id="post-<?php echo $castcrew->ID; ?>" <?php post_class($post_classes); ?>>
+                <article id="post-<?php echo $castcrew->ID; ?>" <?php post_class(); ?>>
                     <section class="ccwp-section castcrew-profile-section">
                         <?php if (has_post_thumbnail()) : ?>
                             <div class="castcrew-headshot">
@@ -31,7 +30,7 @@ get_header( 'single' );
                         <?php endif; ?>
 
                         <div class="castcrew-profile">
-                            <h1><?php echo $full_name; ?></h1>
+                            <h1 class="ccwp-page-header"><?php echo $fullName; ?></h1>
 
                             <?php if (isset($castcrew->self_title)): ?>
                                 <h3 class="castcrew-title"><?php echo $castcrew->self_title; ?></h3>

@@ -8,12 +8,8 @@ get_header( 'single' );
 
 <?php if (have_posts()): while (have_posts()): the_post(); ?>
     <?php
-        // You can dynamically add classes to the article by adding to this array...
-        $post_classes = [];
-
-        /** @var Production $production */
-        $production = Production::make(get_post());
-        $production_name = isset($production->name) ? $production->name : get_the_title();
+        $production     = Production::make(get_post());
+        $productionName = $production->name ?? get_the_title();
 
         // Production $ticket link
         if (isset($production->ticket_url) && $production->getChronologicalState() !== 'past') {
@@ -33,10 +29,10 @@ get_header( 'single' );
                 <div class="ccwp-post-breadcrumbs">
                     <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                     <a href="/productions">Productions</a>&nbsp;&nbsp;/&nbsp;
-                    <span><?php echo $production_name; ?></span>
+                    <span><?php echo $productionName; ?></span>
                 </div>
 
-                <article id="post-<?php echo $production->ID; ?>" <?php post_class($post_classes); ?>>
+                <article id="post-<?php echo $production->ID; ?>" <?php post_class(); ?>>
                     <section class="ccwp-section ccwp-production-info-section">
                         <!-- info about the production -->
                         <div class="ccwp-container">
@@ -48,7 +44,7 @@ get_header( 'single' );
                                 <?php endif; ?>
 
                                 <div class="show-info">
-                                    <h1 class="ccwp-page-header"><?php echo $production_name; ?></h1>
+                                    <h1 class="ccwp-page-header"><?php echo $productionName; ?></h1>
 
                                     <div class="show-dates-container">
                                         <?php if ($production->getChronologicalState() == 'current'): ?>
