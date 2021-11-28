@@ -1,8 +1,7 @@
 <?php
 
-namespace CurtainCallWP\Exceptions;
+namespace CurtainCall\Exceptions;
 
-final class ViewNotFoundException extends \RuntimeException
-{
-    //
-}
+use RuntimeException;
+
+final class ViewNotFoundException extends RuntimeException {}

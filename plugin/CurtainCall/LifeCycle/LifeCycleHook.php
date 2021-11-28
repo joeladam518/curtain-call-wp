@@ -1,6 +1,6 @@
 <?php
 
-namespace CurtainCallWP\LifeCycle;
+namespace CurtainCall\LifeCycle;
 
 interface LifeCycleHook
 {

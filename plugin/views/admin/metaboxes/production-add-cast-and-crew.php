@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\PostTypes\CastAndCrew;
+use CurtainCall\Models\CastAndCrew;
 
 /**
  * @var string $wp_nonce
@@ -68,7 +68,7 @@ echo $wp_nonce;
                     <div class="ccwp-col billing-col">
                         <input
                             type="text"
-                            id="ccwp-production-cast-custom-order-<?php $cast_member->ID; ?>"
+                            id="ccwp-production-cast-custom-order-<?php echo $cast_member->ID; ?>"
                             name="ccwp_add_cast_to_production[<?php echo $cast_member->ID; ?>][custom_order]"
                             placeholder="custom order"
                             value="<?php echo $cast_member->ccwp_join->custom_order; ?>"
@@ -109,7 +109,7 @@ echo $wp_nonce;
             <div class="ccwp-col billing-col">Billing</div>
             <div class="ccwp-col action-col">&nbsp;</div>
         </div>
-        
+
         <?php foreach($crew_members as $crew_member): ?>
             <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-crew-<?php echo $crew_member->ID; ?>">
                 <input

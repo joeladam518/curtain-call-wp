@@ -1,8 +1,7 @@
 <?php
 
-namespace CurtainCallWP\Exceptions;
+namespace CurtainCall\Exceptions;
 
-final class UnsettableException extends \Exception
-{
-    //
-}
+use Exception;
+
+final class UnsettableException extends Exception {}

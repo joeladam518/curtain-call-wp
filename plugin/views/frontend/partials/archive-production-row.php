@@ -1,9 +1,12 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php if ( !defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+
+use CurtainCall\Models\Production;
+
 /**
  * Expected global variables for this partial
- * @var \CurtainCallWP\PostTypes\Production $production
+ * @var Production $production
  * @var string     $chronological_state
-**/
+ */
 
 // Computed for this partial
 $production_permalink = get_post_permalink($production->ID);
@@ -20,7 +23,7 @@ $ticket_url = $production->getTicketUrl();
             </a>
         <?php endif; ?>
     </div>
-        
+
     <div class="production-details">
         <div class="production-name-container">
             <h3 class="production-name">
@@ -29,36 +32,36 @@ $ticket_url = $production->getTicketUrl();
                 </a>
             </h3>
             <?php if (!empty($ticket_url)): ?>
-                <a href="<?php echo $ticket_url; ?>" class="production-tickets" target="_blank">Get Tickets</a>
+                <a href="<?php echo $ticket_url; ?>" class="ccwp-btn" target="_blank">Get Tickets</a>
             <?php endif; ?>
         </div>
-        
+
         <div class="ccwp-container">
             <?php if ($chronological_state == 'current'): ?>
                 <div>
                     <span class="now-showing">Now Showing</span>
             <?php endif; ?>
-                
+
             <span class="production-dates"><?php echo $production->getFormattedShowDates(); ?></span>
-    
+
             <?php if ($chronological_state == 'current'): ?>
                 </div>
                 <div>
             <?php endif; ?>
-                
+
             <?php if (isset($production->show_times)): ?>
                 <span class="production-times"><?php echo $production->show_times; ?></span>
             <?php endif; ?>
-            
+
             <?php if (isset($production->venue)): ?>
                 <span class="production-venue"><?php echo $production->venue; ?></span>
             <?php endif; ?>
-    
+
             <?php if ($chronological_state == 'current'): ?>
                 </div>
             <?php endif; ?>
         </div>
-        
+
         <?php if (!empty($production_excerpt)): ?>
             <div class="production-excerpt"><?php echo $production_excerpt; ?></div>
         <?php endif;?>

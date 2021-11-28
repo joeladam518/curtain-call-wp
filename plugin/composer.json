@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "CurtainCallWP\\": ["CurtainCall/"]
+            "CurtainCall\\": ["CurtainCall/"]
         },
         "files": [
             "functions.php"

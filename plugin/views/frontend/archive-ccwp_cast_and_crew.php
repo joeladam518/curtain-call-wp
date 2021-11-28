@@ -1,12 +1,11 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\CastAndCrew;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Support\Str;
 
-/** @var WP_Query $result */
 $result = CastAndCrew::getPosts();
 
-$alphabet = CurtainCallHelper::getAlphabet();
+$alphabet = Str::alphabet();
 $alpha_indexes = CastAndCrew::getAlphaIndexes($result);
 
 $current_alpha_index = null;
@@ -15,11 +14,13 @@ $previous_alpha_index = null;
 get_header();
 ?>
 
-<div id="content" class="ccwp-cast-and-crew-page" role="main">
-    <h1>Cast and Crew</h1>
-    
+<div class="ccwp-cast-and-crew-page">
+    <h1 class="ccwp-page-heading">Cast and Crew</h1>
     <?php if (!$result->have_posts()) : ?>
-        <p>Sorry! There are currently no cast or crew members in our directory. Please check back soon!</p>
+        <div class="ccwp-container">
+            <h2>Sorry!</h2>
+            <p>There are currently no cast or crew members in our directory. Please check back soon!</p>
+        </div>
     <?php else: ?>
         <div class="ccwp-alphabet-navigation">
             <?php foreach ($alphabet as $letter): ?>
@@ -30,28 +31,25 @@ get_header();
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
-    
+
         <div class="ccwp-container">
         <?php while ($result->have_posts()): $result->the_post(); ?>
             <?php
-                /** @var WP_Post $current_post */
-                $current_post = get_post();
-                /** @var CastAndCrew $castcrew */
-                $castcrew = CastAndCrew::make($current_post);
+                $castcrew = CastAndCrew::make(get_post());
                 $castcrew_permalink = get_post_permalink($castcrew->getPost());
             ?>
 
             <?php if ($castcrew->post_status == 'publish' && isset($castcrew->name_last)): ?>
-                <?php $current_alpha_index = strtoupper(substr($castcrew->name_last, 0, 1)); ?>
-            
+                <?php $current_alpha_index = Str::firstLetter($castcrew->name_last, 'upper') ?>
+
                 <?php if ($current_alpha_index != $previous_alpha_index): ?>
                     <?php if ($previous_alpha_index !== null): ?>
                         </div>
                     <?php endif; ?>
                     <h3 class="ccwp-alphabet-header" id="<?php echo $current_alpha_index; ?>"><?php echo $current_alpha_index; ?></h3>
-                    <div class="ccwp-row">
+                    <div class="ccwp-row mb-4">
                 <?php endif; ?>
-                    
+
                 <div class="castcrew-wrapper">
                     <?php if (has_post_thumbnail($castcrew->getPost())): ?>
                         <div class="castcrew-headshot">
@@ -60,7 +58,7 @@ get_header();
                             </a>
                         </div>
                     <?php endif; ?>
-                    
+
                     <div class="castcrew-details">
                         <h3 class="castcrew-name">
                             <a href="<?php echo $castcrew_permalink; ?>">
@@ -75,7 +73,7 @@ get_header();
             <?php endif; // content is visible ?>
         <?php endwhile; // while loop ?>
         </div>
-    <?php endif; // if / else is there content?? ?>
+    <?php endif; // have_posts ?>
 </div>
 
 <?php get_footer(); ?>

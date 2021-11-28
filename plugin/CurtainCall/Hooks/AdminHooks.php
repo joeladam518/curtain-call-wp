@@ -1,139 +1,134 @@
 <?php
 
-namespace CurtainCallWP\Hooks;
+namespace CurtainCall\Hooks;
 
-use CurtainCallWP\CurtainCall;
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\Production;
+use CurtainCall\CurtainCall;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\Production;
+use CurtainCall\Support\Date;
+use CurtainCall\Support\Str;
+use CurtainCall\View;
 use Throwable;
 use WP_Post;
 
-/**
- * Class AdminController
- * @package CurtainCallWP\Controllers
- */
 class AdminHooks
 {
-    /** @var string  */
-    protected $assets_url;
-    
-    /** @var string  */
-    protected $assets_path;
-    
-    /**
-     * AdminHookController constructor.
-     */
+    protected string $assetsUrl;
+    protected string $assetsPath;
+
     public function __construct()
     {
-        $this->assets_url = ccwpAssetsUrl() . 'admin/';
-        $this->assets_path = ccwpAssetsPath() . 'admin/';
+        $this->assetsUrl = ccwpPluginUrl('assets/admin/');
+        $this->assetsPath = ccwpPluginPath('assets/admin/');
     }
-    
+
     /**
      * Register the stylesheets for the admin area.
      * @return void
      */
-    public function enqueueStyles()
+    public function enqueueStyles(): void
     {
         $handle = CurtainCall::PLUGIN_NAME . '_admin';
-        $admin_css_url = $this->assets_url . 'curtain-call-wp-admin.css';
-        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
-        wp_enqueue_style($handle, $admin_css_url, array(), $version, 'all');
+        $src = $this->assetsUrl . 'curtain-call-wp-admin.css';
+        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
+
+        wp_enqueue_style($handle, $src, [], $version);
     }
-    
+
     /**
      * Register the JavaScript for the admin area.
      * @return void
      */
-    public function enqueueScripts()
+    public function enqueueScripts(): void
     {
         $handle = CurtainCall::PLUGIN_NAME . '_admin';
-        $admin_js_url = $this->assets_url . 'curtain-call-wp-admin.js';
-        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
-        wp_enqueue_script($handle, $admin_js_url, array('jquery'), $version, true);
+        $src = $this->assetsUrl . 'curtain-call-wp-admin.js';
+        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
+
+        wp_enqueue_script($handle, $src, ['jquery'], $version, true);
     }
-    
+
     //  ----------------------------------------------------------------------------------------------------------------
     //  Global Functions
     //  ----------------------------------------------------------------------------------------------------------------
-    
+
     /**
+     * Set the post title based on the information provided in the metaboxes
+     *
      * @param array $data
      * @param array $postarr
+     *
      * @return array
      */
-    public function setPostTitleOnPostSave(array $data, array $postarr)
+    public function setTitleOnPostSave(array $data, array $postarr): array
     {
-        // if this is not a save from the edit post page dont do anything
-        if (! isset($_POST['action'])
-        ||  $_POST['action'] !== 'editpost'
+        // if this is not a save from the edit post page don't do anything
+        if (!isset($postarr['action'])
+        ||  $postarr['action'] !== 'editpost'
         || ($data['post_type'] !== 'ccwp_production' && $data['post_type'] !== 'ccwp_cast_and_crew')
         ) {
             return $data;
         }
-        
-        $title_arr = [];
-        if ($data['post_type'] === 'ccwp_production') {
-            
-            if (isset($_POST['ccwp_production_name'])) {
-                $title_arr[] = sanitize_text_field($_POST['ccwp_production_name']);
+
+        $titleParts = [];
+        if ($data['post_type'] === Production::POST_TYPE) {
+
+            if (isset($postarr['ccwp_production_name'])) {
+                $titleParts[] = sanitize_text_field($_POST['ccwp_production_name']);
             }
-            
+
             /**
              * TODO: If, attached to a single season (post term), append the Season to the post title.
              *       Else, attach the start_date year to the production title.
             **/
-            
-            if (isset($_POST['ccwp_date_start'])) {
-                if ( ! empty($title_arr)) {
-                    $title_arr[] = '-';
+
+            if (isset($postarr['ccwp_date_start'])) {
+                if (!empty($titleParts)) {
+                    $titleParts[] = '-';
                 }
-                
-                $date_start = CurtainCallHelper::toCarbon(
+
+                $date_start = Date::toCarbon(
                     sanitize_text_field($_POST['ccwp_date_start'])
                 );
-                
+
                 if ($date_start) {
-                    $title_arr[] = $date_start->format('Y');
+                    $titleParts[] = $date_start->format('Y');
                 }
             }
-            
-            if (empty($title_arr)) {
-                $title_arr[] = 'Untitled Curtain Call Production';
+
+            if (empty($titleParts)) {
+                $titleParts[] = 'Untitled Curtain Call Production';
             }
-        } else if ($data['post_type'] === 'ccwp_cast_and_crew') {
+        } else if ($data['post_type'] === CastAndCrew::POST_TYPE) {
             if (isset($_POST['ccwp_name_first'])) {
-                $title_arr[] = sanitize_text_field($_POST['ccwp_name_first']);
+                $titleParts[] = sanitize_text_field($_POST['ccwp_name_first']);
             }
-            
+
             if (isset($_POST['ccwp_name_last'])) {
-                $title_arr[] = sanitize_text_field($_POST['ccwp_name_last']);
+                $titleParts[] = sanitize_text_field($_POST['ccwp_name_last']);
             }
-            
-            if (empty($title_arr)) {
-                $title_arr[] = 'Untitled Curtain Call Cast/Crew';
+
+            if (empty($titleParts)) {
+                $titleParts[] = 'Untitled Curtain Call Cast/Crew';
             }
         }
-        
-        if ( ! empty($title_arr)) {
-            $title = implode(' ', $title_arr);
+
+        if (!empty($titleParts)) {
+            $title = implode(' ', $titleParts);
             $title = preg_replace('~\s\s+~', ' ', $title);
-            
+
             $data['post_name']  = sanitize_title($title);
             $data['post_title'] = $title;
         }
-        
+
         return $data;
     }
-    
+
     //  ----------------------------------------------------------------------------------------------------------------
     //  Production Functions
     //  ----------------------------------------------------------------------------------------------------------------
-    
-    /**
-     * @return void
-     */
-    public function addProductionPostMetaBoxes()
+
+    public function addProductionPostMetaBoxes(): void
     {
         add_meta_box(
             'ccwp_add_cast_and_crew_to_production', // Unique ID
@@ -144,7 +139,7 @@ class AdminHooks
             'high' // Priority: (high, low)
             //[ 'example' => 'arguments you can place into the meta_box renderer' ]
         );
-        
+
         add_meta_box(
             'ccwp_production_details', // Unique ID
             __('Production Details', 'curtain-call-wp'), // Box title
@@ -155,40 +150,41 @@ class AdminHooks
             //[ example' => 'arguments you can place into the meta_box renderer' ]
         );
     }
-    
+
     /**
-     * @param $post
-     * @param $metabox
+     * Render the Cast and Crew metabox
+     *
+     * @param WP_Post $post
+     * @param array $metabox
      * @return void
      * @throws Throwable
      */
-    public function renderAddCastAndCrewMetaBox($post, $metabox)
+    public function renderAddCastAndCrewMetaBox(WP_Post $post, array $metabox): void
     {
-        /** @var Production $production */
         $production = Production::make($post);
-        
+
         // Get all castcrew by id and name
         $all_cast_crew_names = $production->getCastCrewNames();
-        
+
         // Get all related cast and crew members to this production
         $production_cast_and_crew_members = $production->getCastAndCrew();
         $cast_members = [];
         $crew_members = [];
-        
+
         // Sort them into cast then crew members
         if (!empty($production_cast_and_crew_members) && is_array($production_cast_and_crew_members)) {
             $cast_members = array_filter($production_cast_and_crew_members, function ($castcrew_member) {
                 return ($castcrew_member->ccwp_join->type == 'cast');
             });
             $cast_members = array_values($cast_members);
-            
+
             $crew_members = array_filter($production_cast_and_crew_members, function ($castcrew_member) {
                 return ($castcrew_member->ccwp_join->type == 'crew');
             });
             $crew_members = array_values($crew_members);
         }
-        
-        ccwpView('admin/metaboxes/production-add-cast-and-crew.php', [
+
+        View::make('admin/metaboxes/production-add-cast-and-crew.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
@@ -197,41 +193,42 @@ class AdminHooks
             'crew_members' => $crew_members,
         ])->render();
     }
-    
+
     /**
+     * Render the Production metabox
+     *
      * @param WP_Post $post
-     * @param $metabox
+     * @param array $metabox
      * @return void
      * @throws Throwable
      */
-    public function renderProductionDetailsMetaBox($post, $metabox)
+    public function renderProductionDetailsMetaBox(WP_Post $post, array $metabox): void
     {
-        $date_start = get_post_meta($post->ID, '_ccwp_production_date_start', true);
-        $date_start = CurtainCallHelper::convertDate($date_start, 'm/d/Y', '');
-        
-        $date_end = get_post_meta($post->ID, '_ccwp_production_date_end', true);
-        $date_end = CurtainCallHelper::convertDate($date_end, 'm/d/Y', '');
+        $dateStart = getCustomField('_ccwp_production_date_start', $post->ID);
+        $dateStart = Date::reformat($dateStart, 'm/d/Y', '');
+        $dateEnd = getCustomField('_ccwp_production_date_end', $post->ID);
+        $dateEnd = Date::reformat($dateEnd, 'm/d/Y', '');
 
-        ccwpView('admin/metaboxes/production-details.php', [
+        View::make('admin/metaboxes/production-details.php', [
             'wp_nonce'   => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
             'post'       => $post,
             'metabox'    => $metabox,
-            'name'       => get_post_meta($post->ID, '_ccwp_production_name', true),
-            'date_start' => $date_start,
-            'date_end'   => $date_end,
-            'show_times' => get_post_meta($post->ID, '_ccwp_production_show_times', true),
-            'ticket_url' => get_post_meta($post->ID, '_ccwp_production_ticket_url', true),
-            'venue'      => get_post_meta($post->ID, '_ccwp_production_venue', true),
-            'press'      => get_post_meta($post->ID, '_ccwp_production_press', true),
+            'name'       => getCustomField('_ccwp_production_name', $post->ID),
+            'date_start' => $dateStart,
+            'date_end'   => $dateEnd,
+            'show_times' => getCustomField('_ccwp_production_show_times', $post->ID),
+            'ticket_url' => getCustomField('_ccwp_production_ticket_url', $post->ID),
+            'venue'      => getCustomField('_ccwp_production_venue', $post->ID),
         ])->render();
     }
-    
+
     /**
-     * @param int $post_id
+     * @param int $postId
+     * @param WP_Post $post
      * @return void
      * @throws Throwable
      */
-    public function saveProductionPostCastAndCrew($post_id)
+    public function saveProductionPostCastAndCrew(int $postId, WP_Post $post): void
     {
         # Verify meta box nonce
         if (
@@ -240,110 +237,100 @@ class AdminHooks
         ) {
             return;
         }
-        
+
         # Return if autosave
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
-    
+
         # Check the user's permissions.
-        if (! current_user_can('edit_post', $post_id)) {
+        if (!current_user_can('edit_post', $postId)) {
             return;
         }
-        
+
         # Store custom fields values
         $production_cast = ! empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
         $production_crew = ! empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
-        
-        $production = Production::find($post_id); //
+
+        $production = Production::make($post);
         $production->saveCastAndCrew('cast', $production_cast);
         $production->saveCastAndCrew('crew', $production_crew);
     }
-    
+
     /**
-     * @param int $post_id
+     * Save the Production Details metabox fields
+     *
+     * @param int $postId
+     * @param WP_Post $post
      * @return void
      */
-    public function saveProductionPostDetails($post_id)
+    public function saveProductionPostDetails(int $postId, WP_Post $post): void
     {
-        # Verify meta box nonce
-        if (
-            ! isset($_POST['ccwp_production_details_box_nonce'])
-        ||  ! wp_verify_nonce($_POST['ccwp_production_details_box_nonce'], basename(__FILE__))
+        if ( # Verify meta box nonce
+            !isset($_POST['ccwp_production_details_box_nonce'])
+        ||  !wp_verify_nonce($_POST['ccwp_production_details_box_nonce'], basename(__FILE__))
         ) {
             return;
         }
-        
-        # Return if autosave
+
+        // Don't auto save these fields
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
-        
-        # Check the user's permissions.
-        if (! current_user_can('edit_post', $post_id)) {
+
+        // Check the user's permissions.
+        if (!current_user_can('edit_post', $postId)) {
             return;
         }
-        
-        # Store custom fields values
-        if (! empty($_REQUEST['ccwp_production_name'])) {
-            update_post_meta($post_id, '_ccwp_production_name', sanitize_text_field($_POST['ccwp_production_name']));
+
+        // Store custom field values
+
+        if (!empty($_REQUEST['ccwp_production_name'])) {
+            update_post_meta($postId, '_ccwp_production_name', sanitize_text_field($_POST['ccwp_production_name']));
         } else {
-            delete_post_meta($post_id, '_ccwp_production_name');
+            delete_post_meta($postId, '_ccwp_production_name');
         }
-        
-        if (! empty($_REQUEST['ccwp_date_start'])) {
+
+        if (!empty($_REQUEST['ccwp_date_start'])) {
             $ccwp_date_start = sanitize_text_field($_POST['ccwp_date_start']);
-            $ccwp_date_start = CurtainCallHelper::convertDate($ccwp_date_start, 'Y-m-d');
-            update_post_meta($post_id, '_ccwp_production_date_start', $ccwp_date_start);
+            $ccwp_date_start = Date::reformat($ccwp_date_start, 'Y-m-d');
+            update_post_meta($postId, '_ccwp_production_date_start', $ccwp_date_start);
         } else {
-            delete_post_meta($post_id, '_ccwp_production_date_start');
+            delete_post_meta($postId, '_ccwp_production_date_start');
         }
-        
-        if (! empty($_REQUEST['ccwp_date_end'])) {
+
+        if (!empty($_REQUEST['ccwp_date_end'])) {
             $ccwp_date_end = sanitize_text_field($_POST['ccwp_date_end']);
-            $ccwp_date_end = CurtainCallHelper::convertDate($ccwp_date_end, 'Y-m-d');
-            update_post_meta($post_id, '_ccwp_production_date_end', $ccwp_date_end);
+            $ccwp_date_end = Date::reformat($ccwp_date_end, 'Y-m-d');
+            update_post_meta($postId, '_ccwp_production_date_end', $ccwp_date_end);
         } else {
-            delete_post_meta($post_id, '_ccwp_production_date_end');
+            delete_post_meta($postId, '_ccwp_production_date_end');
         }
-        
-        if (! empty($_REQUEST['ccwp_show_times'])) {
-            update_post_meta($post_id, '_ccwp_production_show_times', sanitize_text_field($_POST['ccwp_show_times']));
+
+        if (!empty($_REQUEST['ccwp_show_times'])) {
+            update_post_meta($postId, '_ccwp_production_show_times', sanitize_text_field($_POST['ccwp_show_times']));
         } else {
-            delete_post_meta($post_id, '_ccwp_production_show_times');
+            delete_post_meta($postId, '_ccwp_production_show_times');
         }
-        
-        if (! empty($_REQUEST['ccwp_ticket_url'])) {
-            update_post_meta($post_id, '_ccwp_production_ticket_url', sanitize_text_field($_POST['ccwp_ticket_url']));
+
+        if (!empty($_REQUEST['ccwp_ticket_url'])) {
+            update_post_meta($postId, '_ccwp_production_ticket_url', sanitize_text_field($_POST['ccwp_ticket_url']));
         } else {
-            delete_post_meta($post_id, '_ccwp_production_ticket_url');
+            delete_post_meta($postId, '_ccwp_production_ticket_url');
         }
-        
-        if (! empty($_REQUEST['ccwp_venue'])) {
-            update_post_meta($post_id, '_ccwp_production_venue', sanitize_text_field($_POST['ccwp_venue']));
+
+        if (!empty($_REQUEST['ccwp_venue'])) {
+            update_post_meta($postId, '_ccwp_production_venue', sanitize_text_field($_POST['ccwp_venue']));
         } else {
-            delete_post_meta($post_id, '_ccwp_production_venue');
-        }
-        
-        if (! empty($_REQUEST['ccwp_press'])) {
-            update_post_meta($post_id, '_ccwp_production_press', sanitize_text_field($_POST['ccwp_press']));
-        } else {
-            delete_post_meta($post_id, '_ccwp_production_press');
-        }
-        
-        if (empty($title_arr)) {
-            $title_arr[] = 'Untitled Curtain Call Production';
+            delete_post_meta($postId, '_ccwp_production_venue');
         }
     }
-    
+
     //----------------------------------------------------------------------------------------------------------------
     //  Cast And Crew Functions
     //----------------------------------------------------------------------------------------------------------------
-    
-    /**
-     * @return void
-     */
-    public function addCastAndCrewPostMetaBoxes()
+
+    public function addCastAndCrewPostMetaBoxes(): void
     {
         add_meta_box(
             'ccwp_cast_and_cast_details', // Unique ID
@@ -355,149 +342,130 @@ class AdminHooks
             //[ 'example' => 'arguments you can place into the meta_box renderer' ]
         );
     }
-    
+
     /**
      * @param WP_Post $post
-     * @param $metabox
+     * @param array metabox
      * @return void
      * @throws Throwable
      */
-    public function ccwp_cast_and_crew_details_box_html($post, $metabox)
+    public function ccwp_cast_and_crew_details_box_html(WP_Post $post, array $metabox): void
     {
-        $castcrew_birthday = get_post_meta($post->ID, '_ccwp_cast_crew_birthday',true);
-        $castcrew_birthday = CurtainCallHelper::convertDate($castcrew_birthday, 'm/d/Y', '');
-        
-        ccwpView('admin/metaboxes/castcrew-details.php', [
-            'wp_nonce'       => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
-            'post'           => $post,
-            'metabox'        => $metabox,
-            'name_first'     => get_post_meta($post->ID, '_ccwp_cast_crew_name_first', true),
-            'name_last'      => get_post_meta($post->ID, '_ccwp_cast_crew_name_last', true),
-            'self_title'     => get_post_meta($post->ID, '_ccwp_cast_crew_self_title', true),
-            'birthday'       => $castcrew_birthday,
-            'hometown'       => get_post_meta($post->ID, '_ccwp_cast_crew_hometown', true),
-            'website_link'   => get_post_meta($post->ID, '_ccwp_cast_crew_website_link', true),
-            'facebook_link'  => get_post_meta($post->ID, '_ccwp_cast_crew_facebook_link', true),
-            'instagram_link' => get_post_meta($post->ID, '_ccwp_cast_crew_instagram_link', true),
-            'twitter_link'   => get_post_meta($post->ID, '_ccwp_cast_crew_twitter_link', true),
-            'fun_fact'       => get_post_meta($post->ID, '_ccwp_cast_crew_fun_fact', true),
+        $birthday = getCustomField('_ccwp_cast_crew_birthday',$post->ID);
+        $birthday = Date::reformat($birthday, 'm/d/Y', '');
+
+        View::make('admin/metaboxes/castcrew-details.php', [
+            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
+            'post' => $post,
+            'metabox' => $metabox,
+            'name_first' => getCustomField('_ccwp_cast_crew_name_first', $post->ID),
+            'name_last' => getCustomField('_ccwp_cast_crew_name_last', $post->ID),
+            'self_title' => getCustomField('_ccwp_cast_crew_self_title', $post->ID),
+            'birthday' => $birthday,
+            'hometown' => getCustomField('_ccwp_cast_crew_hometown', $post->ID),
+            'website_link' => getCustomField('_ccwp_cast_crew_website_link', $post->ID),
+            'facebook_link' => getCustomField('_ccwp_cast_crew_facebook_link', $post->ID),
+            'instagram_link' => getCustomField('_ccwp_cast_crew_instagram_link', $post->ID),
+            'twitter_link' => getCustomField('_ccwp_cast_crew_twitter_link', $post->ID),
+            'fun_fact' => getCustomField('_ccwp_cast_crew_fun_fact', $post->ID),
         ])->render();
     }
-    
-    public function saveCastAndCrewPostDetails($post_id)
+
+    /**
+     * Save the cast and crew metabox fields
+     *
+     * @param int $postId
+     * @param WP_Post $post
+     */
+    public function saveCastAndCrewPostDetails(int $postId, WP_Post $post): void
     {
-        # Verify meta box nonce
-        if (
-            ! isset($_POST['ccwp_cast_and_crew_details_box_nonce'])
-        ||  ! wp_verify_nonce($_POST['ccwp_cast_and_crew_details_box_nonce'], basename(__FILE__))
+        if ( # Verify meta box nonce
+            !isset($_POST['ccwp_cast_and_crew_details_box_nonce'])
+        ||  !wp_verify_nonce($_POST['ccwp_cast_and_crew_details_box_nonce'], basename(__FILE__))
         ) {
             return;
         }
-        /*
-        # Return if autosave
+
+        // Don't auto save these fields
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
-        */
-        # Check the user's permissions.
-        if (! current_user_can('edit_post', $post_id)) {
+
+        // Check the user's permissions.
+        if (!current_user_can('edit_post', $postId)) {
             return;
         }
-        
-        # Store custom fields values
-        
-        if (! empty($_REQUEST['ccwp_name_first'])) {
-            // update data
-            update_post_meta($post_id, '_ccwp_cast_crew_name_first', sanitize_text_field($_POST['ccwp_name_first']));
+
+        // Store custom field values
+
+        if (!empty($_REQUEST['ccwp_name_first'])) {
+            update_post_meta($postId, '_ccwp_cast_crew_name_first', sanitize_text_field($_POST['ccwp_name_first']));
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_name_first');
+            delete_post_meta($postId, '_ccwp_cast_crew_name_first');
         }
-        
-        if (! empty($_REQUEST['ccwp_name_last'])) {
-            // update data
-            update_post_meta($post_id, '_ccwp_cast_crew_name_last', sanitize_text_field($_POST['ccwp_name_last']));
+
+        if (!empty($_REQUEST['ccwp_name_last'])) {
+            update_post_meta($postId, '_ccwp_cast_crew_name_last', sanitize_text_field($_POST['ccwp_name_last']));
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_name_last');
+            delete_post_meta($postId, '_ccwp_cast_crew_name_last');
         }
-        
-        if (! empty($_REQUEST['ccwp_self_title'])) {
-            // update data
-            update_post_meta($post_id, '_ccwp_cast_crew_self_title', sanitize_text_field($_POST['ccwp_self_title']));
+
+        if (!empty($_REQUEST['ccwp_self_title'])) {
+            update_post_meta($postId, '_ccwp_cast_crew_self_title', sanitize_text_field($_POST['ccwp_self_title']));
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_self_title');
+            delete_post_meta($postId, '_ccwp_cast_crew_self_title');
         }
-        
-        if (! empty($_REQUEST['ccwp_birthday'])) {
-            // update data
+
+        if (!empty($_REQUEST['ccwp_birthday'])) {
             $ccwp_birthday = sanitize_text_field($_POST['ccwp_birthday']);
-            $ccwp_birthday = CurtainCallHelper::convertDate($ccwp_birthday, 'Y-m-d');
-            update_post_meta($post_id, '_ccwp_cast_crew_birthday', $ccwp_birthday);
+            $ccwp_birthday = Date::reformat($ccwp_birthday, 'Y-m-d');
+            update_post_meta($postId, '_ccwp_cast_crew_birthday', $ccwp_birthday);
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_birthday');
+            delete_post_meta($postId, '_ccwp_cast_crew_birthday');
         }
-        
-        if (! empty($_REQUEST['ccwp_hometown'])) {
-            // update data
-            update_post_meta($post_id, '_ccwp_cast_crew_hometown', sanitize_text_field($_POST['ccwp_hometown']));
+
+        if (!empty($_REQUEST['ccwp_hometown'])) {
+            update_post_meta($postId, '_ccwp_cast_crew_hometown', sanitize_text_field($_POST['ccwp_hometown']));
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_hometown');
+            delete_post_meta($postId, '_ccwp_cast_crew_hometown');
         }
-        
-        if (! empty($_REQUEST['ccwp_website_link'])) {
-            // update data
-            $link = ccwpStripHttp($_POST['ccwp_website_link']);
+
+        if (!empty($_REQUEST['ccwp_website_link'])) {
+            $link = Str::stripHttp($_POST['ccwp_website_link']);
             $link = sanitize_text_field($link);
-            update_post_meta($post_id, '_ccwp_cast_crew_website_link', $link);
+            update_post_meta($postId, '_ccwp_cast_crew_website_link', $link);
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_website_link');
+            delete_post_meta($postId, '_ccwp_cast_crew_website_link');
         }
-        
-        if (! empty($_REQUEST['ccwp_facebook_link'])) {
-            // update data
-            $link = ccwpStripHttp($_POST['ccwp_facebook_link']);
+
+        if (!empty($_REQUEST['ccwp_facebook_link'])) {
+            $link = Str::stripHttp($_POST['ccwp_facebook_link']);
             $link = sanitize_text_field($link);
-            update_post_meta($post_id, '_ccwp_cast_crew_facebook_link', $link);
+            update_post_meta($postId, '_ccwp_cast_crew_facebook_link', $link);
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_facebook_link');
+            delete_post_meta($postId, '_ccwp_cast_crew_facebook_link');
         }
-    
-        if (! empty($_REQUEST['ccwp_twitter_link'])) {
-            // update data
-            $link = ccwpStripHttp($_POST['ccwp_twitter_link']);
+
+        if (!empty($_REQUEST['ccwp_twitter_link'])) {
+            $link = Str::stripHttp($_POST['ccwp_twitter_link']);
             $link = sanitize_text_field($link);
-            update_post_meta($post_id, '_ccwp_cast_crew_twitter_link', $link);
+            update_post_meta($postId, '_ccwp_cast_crew_twitter_link', $link);
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_twitter_link');
+            delete_post_meta($postId, '_ccwp_cast_crew_twitter_link');
         }
-        
-        if (! empty($_REQUEST['ccwp_instagram_link'])) {
-            // update data
-            $link = ccwpStripHttp($_POST['ccwp_instagram_link']);
+
+        if (!empty($_REQUEST['ccwp_instagram_link'])) {
+            $link = Str::stripHttp($_POST['ccwp_instagram_link']);
             $link = sanitize_text_field($link);
-            update_post_meta($post_id, '_ccwp_cast_crew_instagram_link', $link);
+            update_post_meta($postId, '_ccwp_cast_crew_instagram_link', $link);
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_instagram_link');
+            delete_post_meta($postId, '_ccwp_cast_crew_instagram_link');
         }
-        
-        if (! empty($_REQUEST['ccwp_fun_fact'])) {
-            // update data
-            update_post_meta($post_id, '_ccwp_cast_crew_fun_fact', sanitize_text_field($_POST['ccwp_fun_fact']));
+
+        if (!empty($_REQUEST['ccwp_fun_fact'])) {
+            update_post_meta($postId, '_ccwp_cast_crew_fun_fact', sanitize_text_field($_POST['ccwp_fun_fact']));
         } else {
-            // delete data
-            delete_post_meta($post_id, '_ccwp_cast_crew_fun_fact');
-        }
-        
-        if (empty($title_arr)) {
-            $title_arr[] = 'Untitled Curtain Call Cast/Crew';
+            delete_post_meta($postId, '_ccwp_cast_crew_fun_fact');
         }
     }
 }

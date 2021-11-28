@@ -1,60 +1,56 @@
 <?php
 
-namespace CurtainCallWP\Hooks;
+namespace CurtainCall\Hooks;
 
-use CurtainCallWP\CurtainCall;
-use CurtainCallWP\CurtainCallView;
+use CurtainCall\CurtainCall;
+use CurtainCall\View;
 use WP_Post;
 
-/**
- * Class FrontendController
- * @package CurtainCallWP\Controllers
- */
 class FrontendHooks
 {
-    /** @var string  */
-    protected $assets_url;
-    
-    /** @var string  */
-    protected $assets_path;
-    
-    /**
-     * FrontendHookController constructor.
-     */
+    protected string $assetsUrl;
+    protected string $assetsPath;
+
     public function __construct()
     {
-        $this->assets_url = ccwpAssetsUrl() . 'frontend/';
-        $this->assets_path = ccwpAssetsPath() . 'frontend/';
+        $this->assetsUrl = ccwpPluginUrl('assets/frontend/');
+        $this->assetsPath = ccwpPluginPath('assets/frontend/');
     }
-    
+
     /**
-     * Register the stylesheets for the public-facing side of the site.
+     * Register the stylesheets for the public-facing side of the site
+     *
      * @return void
      */
-    public function enqueueStyles()
+    public function enqueueStyles(): void
     {
-        $frontend_css_url = $this->assets_url . 'curtain-call-wp-frontend.css';
-        $fontawesome = $this->assets_url . 'fontawesomefree.css';
-        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
-        wp_enqueue_style(CurtainCall::PLUGIN_NAME, $frontend_css_url, array(), $version, 'all');
-        wp_enqueue_style('fontawesomefree', $fontawesome, array(), $version, 'all');
+        $fontawesomeSrc = $this->assetsUrl . 'fontawesomefree.css';
+        $frontendSrc = $this->assetsUrl . 'curtain-call-wp-frontend.css';
+        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
+
+        wp_enqueue_style('fontawesomefree', $fontawesomeSrc, [], $version);
+        wp_enqueue_style(CurtainCall::PLUGIN_NAME, $frontendSrc, [], $version);
     }
-    
+
     /**
-     * Register the JavaScript for the public-facing side of the site.
+     * Register the JavaScript for the public-facing side of the site
+     *
      * @return void
      */
-    public function enqueueScripts()
+    public function enqueueScripts(): void
     {
-        $frontend_js_url = $this->assets_url . 'curtain-call-wp-frontend.js';
-        $version = (CCWP_DEBUG) ? rand() : CurtainCall::PLUGIN_VERSION;
-        wp_enqueue_script(CurtainCall::PLUGIN_NAME, $frontend_js_url, array('jquery'), $version, false);
+        $src = $this->assetsUrl . 'curtain-call-wp-frontend.js';
+        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
+
+        wp_enqueue_script(CurtainCall::PLUGIN_NAME, $src, ['jquery'], $version, false);
     }
-    
+
     /**
      * Determine if the current theme has a ccwp post type template
+     *
      * @param string $type
      * @param array  $templates
+     *
      * @return bool
      */
     private function themeHasTemplate(string $type, array $templates): bool
@@ -62,48 +58,54 @@ class FrontendHooks
         $theme_template = locate_template(array_filter($templates, function($item) use($type) {
             return $item !== $type.'.php';
         }));
-        
+
         return !empty($theme_template);
     }
-    
+
     /**
-     * @param  string  $template
-     * @param  string  $type
-     * @param  array   $templates
+     * Override the theme's single template with CurtainCall's custom template
+     *
+     * @param string $template
+     * @param string $type
+     * @param array $templates
+     *
      * @return string
      * @global WP_Post $post
      */
-    public function loadSingleTemplates($template, $type, $templates)
+    public function loadSingleTemplates($template, $type, $templates): string
     {
         global $post;
-        
+
         if ($post->post_type === 'ccwp_production' && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath() . 'frontend/single-ccwp_production.php';
+            return View::path('frontend/single-ccwp_production.php');
         }
-        
+
         if ($post->post_type === 'ccwp_cast_and_crew' && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath() . 'frontend/single-ccwp_cast_and_crew.php';
+            return View::path('frontend/single-ccwp_cast_and_crew.php');
         }
-        
+
         return $template;
     }
-    
+
     /**
-     * @param  string  $template
-     * @param  string  $type
-     * @param  array   $templates
+     * Override the theme's archive template with CurtainCall's custom template
+     *
+     * @param string $template
+     * @param string $type
+     * @param array $templates
+     *
      * @return string
      */
-    public function loadArchiveTemplates($template, $type, $templates)
+    public function loadArchiveTemplates($template, $type, $templates): string
     {
         if (is_post_type_archive('ccwp_production') && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath() . 'frontend/archive-ccwp_production.php';
+            return View::path('frontend/archive-ccwp_production.php');
         }
-        
+
         if (is_post_type_archive('ccwp_cast_and_crew') && !$this->themeHasTemplate($type, $templates)) {
-            return CurtainCallView::dirPath() . 'frontend/archive-ccwp_cast_and_crew.php';
+            return View::path('frontend/archive-ccwp_cast_and_crew.php');
         }
-        
+
         return $template;
     }
 }

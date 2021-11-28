@@ -1,41 +1,44 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
-use CurtainCallWP\CurtainCallView;
-
-if (!function_exists('getCustomField')) {
+if (!function_exists('ccwpPluginPath')) {
     /**
-     * @param string   $field_name
-     * @param int|null $post_id
-     * @return mixed
+     * Return the plugin dir path
+     *
+     * @param string $path
+     * @return string
      */
-    function getCustomField(string $field_name, int $post_id = null)
+    function ccwpPluginPath(string $path = ''): string
     {
-        if (!empty($post_id)) {
-            return get_post_meta($post_id, $field_name, true);
-        }
+        $dirPath = plugin_dir_path(__FILE__);
 
-        return get_post_meta(get_the_ID(), $field_name, true);
+        return trim("{$dirPath}{$path}");
     }
 }
 
-if (!function_exists('ccwpStripHttp')) {
+if (!function_exists('ccwpPluginUrl')) {
     /**
-     * @param string $str
-     * @return string|string[]|null
+     * Return the plugin dir url
+     *
+     * @param string $path
+     * @return string
      */
-    function ccwpStripHttp(string $str)
+    function ccwpPluginUrl(string $path = ''): string
     {
-        return preg_replace('#^https?://#', '', $str);
+        $urlPath = plugin_dir_url(__FILE__);
+
+        return trim("{$urlPath}{$path}");
     }
 }
 
 if (!function_exists('ccwpStripShortCodeGallery')) {
     /**
      * @param string $content
-     * @return string|string[]
+     * @return string
      */
-    function  ccwpStripShortCodeGallery($content) {
-        preg_match_all('/'. get_shortcode_regex() .'/s', $content, $matches, PREG_SET_ORDER);
+    function  ccwpStripShortCodeGallery(string $content): string
+    {
+        preg_match_all('~'.get_shortcode_regex().'~s', $content, $matches, PREG_SET_ORDER);
+
         if (!empty($matches)) {
             foreach ($matches as $shortcode) {
                 if ('gallery' === $shortcode[2]) {
@@ -46,74 +49,24 @@ if (!function_exists('ccwpStripShortCodeGallery')) {
                 }
             }
         }
+
         return $content;
     }
 }
 
-if (!function_exists('ccwpView')) {
+if (!function_exists('getCustomField')) {
     /**
-     * Return a CurtainCall View to render templates
-     * @param string $file_path
-     * @param array  $data
-     * @return CurtainCallView
+     * @param string   $field_name
+     * @param int|null $post_id
+     * @return mixed
      */
-    function ccwpView(string $file_path, array $data): CurtainCallView
+    function getCustomField(string $field_name, ?int $post_id = null)
     {
-        return new CurtainCallView($file_path, $data);
-    }
-}
+        if ($post_id) {
+            return get_post_meta($post_id, $field_name, true);
+        }
 
-if (!function_exists('ccwpAssetsUrl')) {
-    /**
-     * Get the url path of CurtainCallWP's minified assets
-     * @return string
-     */
-    function ccwpAssetsUrl(): string
-    {
-        return trailingslashit(
-            ccwpPluginUrl('assets')
-        );
-    }
-}
-
-if (!function_exists('ccwpAssetsPath')) {
-    /**
-     * Get the dir path of CurtainCallWP's minified assets
-     * @return string
-     */
-    function ccwpAssetsPath(): string
-    {
-        return trailingslashit(
-            ccwpPluginPath('assets')
-        );
-    }
-}
-
-if (!function_exists('ccwpPluginUrl')) {
-    /**
-     * return the plugin dir url
-     * @param string $path
-     * @return string
-     */
-    function ccwpPluginUrl(string $path = ''): string
-    {
-        $url_path = plugin_dir_url(__FILE__);
-
-        return trim("{$url_path}{$path}");
-    }
-}
-
-if (!function_exists('ccwpPluginPath')) {
-    /**
-     * return the plugin dir path
-     * @param string $path
-     * @return string
-     */
-    function ccwpPluginPath(string $path = ''): string
-    {
-        $dir_path = plugin_dir_path(__FILE__);
-
-        return trim("{$dir_path}{$path}");
+        return get_post_meta(get_the_ID(), $field_name, true);
     }
 }
 
@@ -124,9 +77,9 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
          * in a pretty format. Mainly for log messaging.
          *
          * @param bool $return
-         * @return string
+         * @return string|void
          */
-        function fnln(bool $return = false): string
+        function fnln(bool $return = false)
         {
             $backtrace = debug_backtrace()[0];
             $out = basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
@@ -142,13 +95,13 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
     if (!function_exists("pr")) {
         /**
          * Debug print:
-         * print_r() a data structure to the output buffer inside of pre tags.
+         * print_r() a data structure to the output buffer inside pre tags.
          *
          * @param  mixed   $obj The data structure to be dumped... (string, array, stdClass etc.)
          * @param  boolean $exit If true, exit after outputting.
          * @return void
          */
-        function pr($obj, $exit = false): void
+        function pr($obj, bool $exit = false): void
         {
             ob_start();
             print_r($obj);
@@ -163,13 +116,13 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
     if (!function_exists("dmp")) {
         /**
          * Debug dump:
-         * var_dump() a data structure to the output buffer inside of pre tags.
+         * var_dump() a data structure to the output buffer inside pre tags.
          *
          * @param  mixed   $obj The data structure to be dumped... (string, array, stdClass etc.)
          * @param  boolean $exit $exit If true, exit after outputting.
          * @return void
          */
-        function dmp($obj, $exit = false): void
+        function dmp($obj, bool $exit = false): void
         {
             ob_start();
             var_dump($obj);

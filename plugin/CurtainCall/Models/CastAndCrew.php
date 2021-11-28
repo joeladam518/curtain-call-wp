@@ -1,15 +1,13 @@
 <?php
 
-namespace CurtainCallWP\PostTypes;
+namespace CurtainCall\Models;
 
-use CurtainCallWP\Helpers\CurtainCallHelper;
-use CurtainCallWP\PostTypes\Traits\HasProductions;
-use CurtainCallWP\PostTypes\Traits\QueriesWordPressForCastAndCrew;
+use CurtainCall\Models\Traits\HasProductions;
+use CurtainCall\Support\Date;
+use CurtainCall\Support\Str;
 use WP_Query;
 
 /**
- * Class CastAndCrew
- * @package CurtainCallWP\PostTypes
  * @property string $name_first'
  * @property string $name_last'
  * @property string $self_title'
@@ -24,7 +22,6 @@ use WP_Query;
 class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
-    use QueriesWordPressForCastAndCrew;
 
     const POST_TYPE = 'ccwp_cast_and_crew';
     const META_PREFIX = '_ccwp_cast_crew_';
@@ -44,13 +41,37 @@ class CastAndCrew extends CurtainCallPost
     ];
 
     /**
+     * @param WP_Query $query
+     * @return array
+     */
+    public static function getAlphaIndexes(WP_Query $query): array
+    {
+        $alphaIndexes = [];
+
+        if (!$query->have_posts()) {
+            return $alphaIndexes;
+        }
+
+        while ($query->have_posts()) {
+            $query->the_post();
+            if ($lastName = getCustomField('_ccwp_cast_crew_name_last')) {
+                $alphaIndexes[] = Str::firstLetter($lastName, 'upper');
+            }
+        }
+
+        wp_reset_postdata();
+
+        return array_unique($alphaIndexes);
+    }
+
+    /**
      * @return array
      */
     public static function getConfig(): array
     {
         return [
-            'description'   => 'The Cast and Crew for you productions',
-            'labels'        => [
+            'description' => 'The Cast and Crew for you productions',
+            'labels' => [
                 'name'               => _x('Cast and Crew', 'post type general name'),
                 'singular_name'      => _x('Cast or Crew', 'post type singular name'),
                 'add_new'            => _x('Add New', 'Cast or Crew'),
@@ -65,67 +86,83 @@ class CastAndCrew extends CurtainCallPost
                 'parent_item_colon'  => '',
                 'menu_name'          => 'Cast and Crew',
             ],
-            'public'        => true,
-            'menu_position' => 6,
+            'public'            => true,
+            'menu_position'     => 6,
             'show_in_nav_menus' => true,
-            'supports'      => [
+            'has_archive'       => true,
+            'supports' => [
                 'title',
                 'editor',
                 'thumbnail',
             ],
-            'taxonomies'    => [
+            'taxonomies' => [
                 'ccwp_cast_crew_productions',
             ],
-            'has_archive'   => true,
-            'rewrite'       => [
-                'slug' => 'cast-and-crew',
+            'rewrite' => [
+                'slug'       => 'cast-and-crew',
                 'with_front' => true,
-                'feeds' => false,
+                'feeds'      => false,
             ],
         ];
     }
 
     /**
-     * @param WP_Query $query
-     * @return array
+     * Query for castcrew posts
+     *
+     * @param array $additionalArgs
+     * @return WP_Query
      */
-    public static function getAlphaIndexes(WP_Query $query): array
+    public static function getPosts( array $additionalArgs = []): WP_Query
     {
-        $alpha_indexes = [];
-
-        if (!$query->have_posts()) {
-            return $alpha_indexes;
-        }
-
-        while ($query->have_posts()) {
-            $query->the_post();
-            $name_last = getCustomField('_ccwp_cast_crew_name_last');
-            if (!empty($name_last)) {
-                $alpha_indexes[] = strtoupper(substr($name_last, 0, 1));
-            }
-        }
-
-        wp_reset_postdata();
-
-        return array_unique($alpha_indexes);
+        return new WP_Query(array_merge([
+            'post_type' => [
+                'ccwp_cast_and_crew',
+                'post',
+            ],
+            'post_status' => 'publish',
+            'meta_key'    => '_ccwp_cast_crew_name_last',
+            'orderby'     => 'meta_value',
+            'order'       => 'ASC',
+            'nopaging'    => true,
+        ], $additionalArgs));
     }
 
     /**
-     * @param array $productions
+     * @param array|Production[] $productions
      * @return array
      */
     public static function rolesByProductionId(array $productions): array
     {
-        $roles_by_id = [];
-        /** @var Production $production */
+        $rolesById = [];
         foreach ($productions as $production) {
-            if (!isset($roles_by_id[$production->ID])) {
-                $roles_by_id[$production->ID] = [];
+            if (!isset($rolesById[$production->ID])) {
+                $rolesById[$production->ID] = [];
             }
-            $roles_by_id[$production->ID][] = $production->ccwp_join->role;
+            $rolesById[$production->ID][] = $production->ccwp_join->role;
         }
 
-        return $roles_by_id;
+        return $rolesById;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBirthPlace(): string
+    {
+        $birthplace = '';
+        if (isset($this->birthday)) {
+            $birthday = Date::toCarbon($this->birthday);
+            $birthday = $birthday ? $birthday->toFormattedDateString() : '';
+            $birthplace .= "Born on {$birthday}";
+            if (isset($this->hometown)) {
+                $birthplace .= ' in ' . $this->hometown;
+            }
+            $birthplace .= '.';
+        } else if (isset($this->hometown)) {
+            $birthplace .= 'Born in ' . $this->hometown . '.';
+        }
+
+        return $birthplace;
     }
 
     /**
@@ -138,27 +175,6 @@ class CastAndCrew extends CurtainCallPost
         }
 
         return $this->name_first;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBirthPlace(): string
-    {
-        $birthplace = '';
-        if (isset($this->birthday)) {
-            $birthday = CurtainCallHelper::toCarbon($this->birthday);
-            $birthday = $birthday ? $birthday->toFormattedDateString() : '';
-            $birthplace .= "Born on {$birthday}";
-            if (isset($this->hometown)) {
-                $birthplace .= ' in ' . $this->hometown;
-            }
-            $birthplace .= '.';
-        } else if (isset($this->hometown)) {
-            $birthplace .= 'Born in ' . $this->hometown . '.';
-        }
-
-        return $birthplace;
     }
 
     /**
