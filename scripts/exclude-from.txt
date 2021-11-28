@@ -18,6 +18,7 @@
 - yarn-error.log
 - webpack.config.js
 - webpack.mix.js
+- xdebug.ini
 - .git/
 - .github/
 - .idea/
