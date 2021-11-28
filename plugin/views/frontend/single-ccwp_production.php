@@ -13,19 +13,19 @@ get_header( 'single' );
 
         // Production $ticket link
         if (isset($production->ticket_url) && $production->getChronologicalState() !== 'past') {
-            $ticket_link = $production->ticket_url;
+            $ticketLink = $production->ticket_url;
         } else {
             // TODO: 2019-11-15: change this to an option setting
-            $ticket_link = 'https://www.rutheckerdhall.com/events';
+            $ticketLink = 'https://www.rutheckerdhall.com/events';
         }
 
         // Production photo gallery
-        $post_gallery = get_post_gallery();
+        $gallery = get_post_gallery();
     ?>
 
     <?php if (get_post_status($production->getPost()) == 'publish'): ?>
         <main id="main" class="ccwp-main">
-            <div id="content" class="ccwp-main-content-container">
+            <div class="ccwp-main-content-container">
                 <div class="ccwp-post-breadcrumbs">
                     <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                     <a href="/productions">Productions</a>&nbsp;&nbsp;/&nbsp;
@@ -44,18 +44,24 @@ get_header( 'single' );
                                 <?php endif; ?>
 
                                 <div class="show-info">
-                                    <h1 class="ccwp-page-header"><?php echo $productionName; ?></h1>
+                                    <h1 class="ccwp-page-heading">
+                                        <?php echo $productionName; ?>
+                                    </h1>
 
                                     <div class="show-dates-container">
                                         <?php if ($production->getChronologicalState() == 'current'): ?>
-                                            <span class="now-showing-label">Now Showing</span>
+                                            <div class="now-showing-label">Now Showing</div>
                                         <?php endif; ?>
-                                        <span class="show-dates">
-                                            <?php echo $production->getFormattedShowDates(); ?>
-                                        </span>
-                                        <?php if ($production->getChronologicalState() != 'past'): ?>
-                                            <a class="ccwp-btn get-tickets-btn" href="<?php echo $ticket_link ?>" target="_blank">Get Tickets</a>
-                                        <?php endif; ?>
+                                        <div class="ccwp-row">
+                                            <div class="show-dates">
+                                                <?php echo $production->getFormattedShowDates(); ?>
+                                            </div>
+                                            <?php if ($production->getChronologicalState() !== 'past'): ?>
+                                                <a class="ccwp-btn" href="<?php echo $ticketLink ?>" target="_blank">
+                                                    Get Tickets
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
 
                                     <?php if (isset($production->show_times)): ?>
@@ -85,9 +91,9 @@ get_header( 'single' );
                         </div>
 
                         <!-- Production images -->
-                        <?php if (!empty($post_gallery)): ?>
+                        <?php if (!empty($gallery)): ?>
                             <div class="ccwp-post-photo-gallery ccwp-production-photo-gallery">
-                                <?php echo $post_gallery; ?>
+                                <?php echo $gallery; ?>
                             </div>
                         <?php endif; ?>
                     </section>

@@ -14,11 +14,13 @@ $previous_alpha_index = null;
 get_header();
 ?>
 
-<div id="content" class="ccwp-cast-and-crew-page" role="main">
-    <h1 class="ccwp-page-header">Cast and Crew</h1>
-
+<div class="ccwp-cast-and-crew-page">
+    <h1 class="ccwp-page-heading">Cast and Crew</h1>
     <?php if (!$result->have_posts()) : ?>
-        <p>Sorry! There are currently no cast or crew members in our directory. Please check back soon!</p>
+        <div class="ccwp-container">
+            <h2>Sorry!</h2>
+            <p>There are currently no cast or crew members in our directory. Please check back soon!</p>
+        </div>
     <?php else: ?>
         <div class="ccwp-alphabet-navigation">
             <?php foreach ($alphabet as $letter): ?>

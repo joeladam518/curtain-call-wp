@@ -14,7 +14,7 @@ get_header( 'single' );
 
     <?php if (get_post_status($castcrew->getPost()) == 'publish'): ?>
         <main id="main" class="ccwp-main">
-            <div id="content" class="ccwp-main-content-container">
+            <div class="ccwp-main-content-container">
                 <div class="ccwp-post-breadcrumbs">
                     <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
                     <a href="/cast-and-crew">Cast &amp; Crew</a>&nbsp;&nbsp;/&nbsp;
@@ -30,7 +30,7 @@ get_header( 'single' );
                         <?php endif; ?>
 
                         <div class="castcrew-profile">
-                            <h1 class="ccwp-page-header"><?php echo $fullName; ?></h1>
+                            <h1 class="ccwp-page-heading"><?php echo $fullName; ?></h1>
 
                             <?php if (isset($castcrew->self_title)): ?>
                                 <h3 class="castcrew-title"><?php echo $castcrew->self_title; ?></h3>

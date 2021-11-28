@@ -32,7 +32,7 @@ $ticket_url = $production->getTicketUrl();
                 </a>
             </h3>
             <?php if (!empty($ticket_url)): ?>
-                <a href="<?php echo $ticket_url; ?>" class="production-tickets" target="_blank">Get Tickets</a>
+                <a href="<?php echo $ticket_url; ?>" class="ccwp-btn" target="_blank">Get Tickets</a>
             <?php endif; ?>
         </div>
 

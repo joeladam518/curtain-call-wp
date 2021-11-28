@@ -25,7 +25,7 @@ function generateFormGroupHtml(type, castcrewId, productionId, name = '') {
         `<input type="hidden" name="${inputName}[${castcrewId}][cast_and_crew_id]" value="${castcrewId}">`,
         `<input type="hidden" name="${inputName}[${castcrewId}][production_id]" value="${productionId}">`,
         `<input type="hidden" name="${inputName}[${castcrewId}][type]" value="cast">`,
-        '<div class="ccwp-row mb-4">',
+        '<div class="ccwp-row">',
         '<div class="ccwp-col name-col">',
         `<div class="ccwp-castcrew-name">${name || ''}</div>`,
         '</div>',
