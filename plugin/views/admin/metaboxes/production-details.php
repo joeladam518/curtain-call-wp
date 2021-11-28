@@ -44,6 +44,7 @@ echo $wp_nonce;
 </div>
 
 <div class="ccwp-form-help-text">
+    <?php /** TODO: change this to the option for tickets */ ?>
     <p>Defaults to rutheckerdhall.com/events if left blank.
 </div>
 
