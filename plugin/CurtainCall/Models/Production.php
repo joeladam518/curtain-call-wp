@@ -33,7 +33,6 @@ class Production extends CurtainCallPost
         'show_times',
         'ticket_url',
         'venue',
-        'press',
     ];
 
     /**
