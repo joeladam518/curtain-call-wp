@@ -1,7 +1,7 @@
 {
     "name": "curtaincallwp",
     "description": "Custom Post types for productions, casts and crews",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "license": "MIT",
     "scripts": {
         "dev": "mix -- --progress",
