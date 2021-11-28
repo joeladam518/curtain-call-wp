@@ -153,7 +153,7 @@ class CurtainCall
         load_plugin_textdomain(
             static::PLUGIN_NAME,
             false,
-            plugin_dir_path(__FILE__) . 'languages/'
+            CCWP_PLUGIN_PATH.'languages/'
         );
     }
 }
