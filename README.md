@@ -12,9 +12,25 @@ A plugin for you to display your productions and their cast and crew.
 7. Activate the `CurtainCallWP` plugin.
 
 **Note**<br>
-The `docker-compose.yml` file also installs phpmyadmin. You can view the database at:
+The `docker-compose.yml` file also installs phpMyAdmin. You can view the database at:
 ```
 http://localhost:${PHP_MYADMIN_PORT}
+```
+
+## Building the plugin
+You can build the plugin locally by running the build script.
+Then you can install the generated zip file in seperate WordPress installation.
+```shell
+$ bash scrtipts/build.sh
+
+# output: curtancallwp.zip
+```
+
+The script takes and optional version argument attach to the file name.
+```shell
+$ bash scrtipts/build.sh 1.0.0
+
+# output: curtancallwp-1.0.0.zip
 ```
 
 

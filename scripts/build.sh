@@ -6,16 +6,15 @@ set -Eeo pipefail
 SCRIPTS_DIR="$(cd "$(dirname "$0")" > /dev/null 2>&1 && pwd -P)"
 REPO_DIR="$(dirname "$SCRIPTS_DIR")"
 PLUGIN_DIR="${REPO_DIR}/plugin"
-VERSION="${VERSION:-"$1"}"
-
-if [ -z "$VERSION" ]; then
-    echo "No version provided. Can't continue." 1>&2
-    exit 1
-fi
-
+VERSION="${VERSION:-"${1:-""}"}"
 ZIP_DIR_NAME="CurtainCallWP"
 ZIP_DIR="${REPO_DIR}/${ZIP_DIR_NAME}"
-ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]')-${VERSION}.zip"
+
+if [ -n "$VERSION" ]; then
+    ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]')-${VERSION}.zip"
+else
+    ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]').zip"
+fi
 
 #echo "     REPO_DIR: ${REPO_DIR}"
 #echo "  SCRIPTS_DIR: ${SCRIPTS_DIR}"
@@ -24,6 +23,7 @@ ZIP_FILE_NAME="$(echo "${ZIP_DIR_NAME}" | tr '[:upper:]' '[:lower:]')-${VERSION}
 #echo " ZIP_DIR_NAME: ${ZIP_DIR_NAME}"
 #echo "ZIP_FILE_NAME: ${ZIP_FILE_NAME}"
 #echo ""
+#exit 0
 
 # Start Logic
 cd "$REPO_DIR" || exit 1
