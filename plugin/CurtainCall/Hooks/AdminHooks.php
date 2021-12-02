@@ -133,7 +133,7 @@ class AdminHooks
         add_meta_box(
             'ccwp_add_cast_and_crew_to_production', // Unique ID
             __('Add Cast And Crew to Production', 'curtain-call-wp'), // Box title
-            array($this, 'renderAddCastAndCrewMetaBox'), // Content callback
+            array($this, 'renderAddCastAndCrewMetabox'), // Content callback
             'ccwp_production', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
@@ -143,7 +143,7 @@ class AdminHooks
         add_meta_box(
             'ccwp_production_details', // Unique ID
             __('Production Details', 'curtain-call-wp'), // Box title
-            array($this, 'renderProductionDetailsMetaBox'), // Content callback
+            array($this, 'renderProductionDetailsMetabox'), // Content callback
             'ccwp_production', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
@@ -159,7 +159,7 @@ class AdminHooks
      * @return void
      * @throws Throwable
      */
-    public function renderAddCastAndCrewMetaBox(WP_Post $post, array $metabox): void
+    public function renderAddCastAndCrewMetabox(WP_Post $post, array $metabox): void
     {
         $production = Production::make($post);
 
@@ -184,7 +184,7 @@ class AdminHooks
             $crew_members = array_values($crew_members);
         }
 
-        View::make('admin/metaboxes/production-add-cast-and-crew.php', [
+        View::make('admin/production-add-castcrew-metabox.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
@@ -202,14 +202,14 @@ class AdminHooks
      * @return void
      * @throws Throwable
      */
-    public function renderProductionDetailsMetaBox(WP_Post $post, array $metabox): void
+    public function renderProductionDetailsMetabox(WP_Post $post, array $metabox): void
     {
         $dateStart = getCustomField('_ccwp_production_date_start', $post->ID);
         $dateStart = Date::reformat($dateStart, 'm/d/Y', '');
         $dateEnd = getCustomField('_ccwp_production_date_end', $post->ID);
         $dateEnd = Date::reformat($dateEnd, 'm/d/Y', '');
 
-        View::make('admin/metaboxes/production-details.php', [
+        View::make('admin/production-details-metabox.php', [
             'wp_nonce'   => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
             'post'       => $post,
             'metabox'    => $metabox,
@@ -335,7 +335,7 @@ class AdminHooks
         add_meta_box(
             'ccwp_cast_and_cast_details', // Unique ID
             __('Cast and Crew Details', CCWP_TEXT_DOMAIN), // Box title
-            array($this, 'ccwp_cast_and_crew_details_box_html'), // Content callback
+            array($this, 'renderCastAndCrewDetailsMetabox'), // Content callback
             'ccwp_cast_and_crew', // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
@@ -349,12 +349,12 @@ class AdminHooks
      * @return void
      * @throws Throwable
      */
-    public function ccwp_cast_and_crew_details_box_html(WP_Post $post, array $metabox): void
+    public function renderCastAndCrewDetailsMetabox(WP_Post $post, array $metabox): void
     {
         $birthday = getCustomField('_ccwp_cast_crew_birthday',$post->ID);
         $birthday = Date::reformat($birthday, 'm/d/Y', '');
 
-        View::make('admin/metaboxes/castcrew-details.php', [
+        View::make('admin/castcrew-details-metabox.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
