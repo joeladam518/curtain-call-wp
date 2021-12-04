@@ -96,20 +96,20 @@ class CurtainCall
         $controller = new AdminHooks();
 
         // All Actions and Filters on the Production custom post type
-        $this->loader->addAction('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes']);
-        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 2);
-        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 2);
+        $this->loader->addAction('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes'], 0);
+        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 3);
+        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 3);
 
         // All Actions and Filters on the Cast and Crew custom post type
         $this->loader->addAction('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 0);
-        $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 2);
+        $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 3);
 
         // All Actions and Filters that concern both post types
-        $this->loader->addFilter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 2);
+        $this->loader->addFilter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 3);
 
-        // Scripts and style to be loaded for the admin area in the WordPress backend
-        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles']);
-        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueScripts']);
+        // Scripts and styles to be loaded for the admin
+        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
+        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
     }
 
     /**
@@ -121,10 +121,10 @@ class CurtainCall
     {
         $controller = new GlobalHooks();
 
-        $this->loader->addAction('init', [$controller, 'createProductionPostType']);
-        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType']);
-        $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy']);
-        //$this->loader->addFilter('rewrite_rules_array', [$controller, 'filterRewriteRulesArray'], 1);
+        $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
+        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
+        $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
+        //$this->loader->addFilter('rewrite_rules_array', [$controller, 'filterRewriteRulesArray']);
     }
 
     /**
@@ -139,8 +139,9 @@ class CurtainCall
         $this->loader->addFilter('single_template', [$controller, 'loadSingleTemplates'], 3);
         $this->loader->addFilter('archive_template', [$controller, 'loadArchiveTemplates'], 3);
 
-        $this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueStyles']);
-        //$this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueScripts']);
+        // Scripts and styles to be loaded for the frontend
+        $this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
+        //$this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
     }
 
     /**
