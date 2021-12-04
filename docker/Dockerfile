@@ -1,8 +1,29 @@
 FROM wordpress
 
+WORKDIR /var/www/html/wp-content
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV TZ=UTC
+ENV LL_ALIAS="alias ll='ls --color=auto --group-directories-first -alphv'"
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Install packages under Debian
-RUN apt-get update && \
-    apt-get -y install git
+RUN apt-get update \
+        && apt-get install -y \
+            apt-transport-https \
+            ca-certificates \
+            git \
+            unzip \
+            vim \
+            wget \
+            zip
+
+# ll alias
+RUN grep -qF "$LL_ALIAS" ~/.bashrc || echo "$LL_ALIAS" >> ~/.bashrc
+
+# Install composer
+RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 # Install XDebug from source as described here:
 # https://xdebug.org/docs/install
@@ -17,9 +38,6 @@ RUN cd /tmp && \
     make && \
     make install && \
     rm -rf /tmp/xdebug
-
-# Copy xdebug.ini to /usr/local/etc/php/conf.d/
-# COPY files-to-copy/ /
 
 # Since this Dockerfile extends the official Docker image `wordpress`,
 # and since `wordpress`, in turn, extends the official Docker image `php`,
