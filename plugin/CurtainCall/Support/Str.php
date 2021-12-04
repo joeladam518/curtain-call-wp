@@ -51,6 +51,17 @@ class Str
     }
 
     /**
+     * Strips extra spaces and replaces them with a single space
+     *
+     * @param string $subject
+     * @return string
+     */
+    public static function stripExtraSpaces(string $subject)
+    {
+        return preg_replace('~\s\s+~', ' ', $subject);
+    }
+
+    /**
      * Strip the protocol from a url
      *
      * @param string $url

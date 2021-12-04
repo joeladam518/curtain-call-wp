@@ -53,73 +53,69 @@ class AdminHooks
     //  ----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Set the post title based on the information provided in the metaboxes
+     * Set the post title based on the information provided in the metaboxes.
+     *
+     * NOTE: This filter fires on every post save regardless of what type it is. It
+     *       is extremely important that we return as early as possible if the data doesn't
+     *       belong to a ccwp post.
      *
      * @param array $data
-     * @param array $postarr
+     * @param array $postArr
      *
      * @return array
      */
-    public function setTitleOnPostSave(array $data, array $postarr): array
+    public function setTitleOnPostSave(array $data, array $postArr): array
     {
-        // if this is not a save from the edit post page don't do anything
-        if (!isset($postarr['action'])
-        ||  $postarr['action'] !== 'editpost'
-        || ($data['post_type'] !== 'ccwp_production' && $data['post_type'] !== 'ccwp_cast_and_crew')
-        ) {
+        if (!isset($postArr['action']) || $postArr['action'] !== 'editpost') {
             return $data;
         }
 
-        $titleParts = [];
-        if ($data['post_type'] === Production::POST_TYPE) {
-
-            if (isset($postarr['ccwp_production_name'])) {
-                $titleParts[] = sanitize_text_field($_POST['ccwp_production_name']);
-            }
-
-            /**
-             * TODO: If, attached to a single season (post term), append the Season to the post title.
-             *       Else, attach the start_date year to the production title.
-            **/
-
-            if (isset($postarr['ccwp_date_start'])) {
-                if (!empty($titleParts)) {
-                    $titleParts[] = '-';
-                }
-
-                $date_start = Date::toCarbon(
-                    sanitize_text_field($_POST['ccwp_date_start'])
-                );
-
-                if ($date_start) {
-                    $titleParts[] = $date_start->format('Y');
-                }
-            }
-
-            if (empty($titleParts)) {
-                $titleParts[] = 'Untitled Curtain Call Production';
-            }
-        } else if ($data['post_type'] === CastAndCrew::POST_TYPE) {
-            if (isset($_POST['ccwp_name_first'])) {
-                $titleParts[] = sanitize_text_field($_POST['ccwp_name_first']);
-            }
-
-            if (isset($_POST['ccwp_name_last'])) {
-                $titleParts[] = sanitize_text_field($_POST['ccwp_name_last']);
-            }
-
-            if (empty($titleParts)) {
-                $titleParts[] = 'Untitled Curtain Call Cast/Crew';
-            }
+        $postType = $postArr['post_type'] ?? null;
+        if ($postType !== Production::POST_TYPE && $postType !== CastAndCrew::POST_TYPE) {
+            return $data;
         }
 
-        if (!empty($titleParts)) {
-            $title = implode(' ', $titleParts);
-            $title = preg_replace('~\s\s+~', ' ', $title);
+        switch ($postType) {
+            case Production::POST_TYPE:
+                $titleParts = [];
+                if (isset($_POST['ccwp_production_name'])) {
+                    $titleParts[] = sanitize_text_field($_POST['ccwp_production_name']);
 
-            $data['post_name']  = sanitize_title($title);
-            $data['post_title'] = $title;
+                    if (isset($_POST['ccwp_date_start'])) {
+                        $dateStart = Date::toCarbon(sanitize_text_field($_POST['ccwp_date_start']));
+
+                        if ($dateStart) {
+                            $titleParts[] = '-';
+                            $titleParts[] = $dateStart->format('Y');
+                        }
+                    }
+                }
+
+                $title = empty($titleParts)
+                    ? "Untitled Curtain Call Production - {$postArr['ID']}"
+                    : Str::stripExtraSpaces(implode(' ', $titleParts));
+                break;
+            case CastAndCrew::POST_TYPE:
+                $titleParts = [];
+                if (isset($_POST['ccwp_name_first'])) {
+                    $titleParts[] = sanitize_text_field($_POST['ccwp_name_first']);
+                }
+
+                if (isset($_POST['ccwp_name_last'])) {
+                    $titleParts[] = sanitize_text_field($_POST['ccwp_name_last']);
+                }
+
+                $title = empty($titleParts)
+                    ? "Untitled Curtain Call Cast/Crew - {$postArr['ID']}"
+                    : Str::stripExtraSpaces(implode(' ', $titleParts));
+                break;
+            default:
+                $title = "Untitled Curtain Call Post - {$postArr['ID']}";
+                break;
         }
+
+        $data['post_name']  = sanitize_title($title);
+        $data['post_title'] = $title;
 
         return $data;
     }
