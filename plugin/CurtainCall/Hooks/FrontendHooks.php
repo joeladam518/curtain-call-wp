@@ -3,6 +3,9 @@
 namespace CurtainCall\Hooks;
 
 use CurtainCall\CurtainCall;
+use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\Production;
+use CurtainCall\Support\Arr;
 use CurtainCall\View;
 use WP_Post;
 
@@ -49,17 +52,20 @@ class FrontendHooks
      * Determine if the current theme has a ccwp post type template
      *
      * @param string $type
-     * @param array  $templates
+     * @param array|string[] $templates
      *
      * @return bool
      */
     private function themeHasTemplate(string $type, array $templates): bool
     {
-        $theme_template = locate_template(array_filter($templates, function($item) use($type) {
-            return $item !== $type.'.php';
-        }));
+        $themeTemplate = locate_template(
+            Arr::filter($templates, fn($item) => $item !== "{$type}.php"),
+            false,
+            false,
+            []
+        );
 
-        return !empty($theme_template);
+        return !empty($themeTemplate);
     }
 
     /**
@@ -67,20 +73,20 @@ class FrontendHooks
      *
      * @param string $template
      * @param string $type
-     * @param array $templates
+     * @param array|string[] $templates
      *
      * @return string
      * @global WP_Post $post
      */
-    public function loadSingleTemplates($template, $type, $templates): string
+    public function loadSingleTemplates(string $template, string $type, array $templates): string
     {
         global $post;
 
-        if ($post->post_type === 'ccwp_production' && !$this->themeHasTemplate($type, $templates)) {
+        if ($post->post_type === Production::POST_TYPE && !$this->themeHasTemplate($type, $templates)) {
             return View::path('frontend/single-ccwp_production.php');
         }
 
-        if ($post->post_type === 'ccwp_cast_and_crew' && !$this->themeHasTemplate($type, $templates)) {
+        if ($post->post_type === CastAndCrew::POST_TYPE && !$this->themeHasTemplate($type, $templates)) {
             return View::path('frontend/single-ccwp_cast_and_crew.php');
         }
 
@@ -92,17 +98,17 @@ class FrontendHooks
      *
      * @param string $template
      * @param string $type
-     * @param array $templates
+     * @param array|string[] $templates
      *
      * @return string
      */
-    public function loadArchiveTemplates($template, $type, $templates): string
+    public function loadArchiveTemplates(string $template, string $type, array $templates): string
     {
-        if (is_post_type_archive('ccwp_production') && !$this->themeHasTemplate($type, $templates)) {
+        if (is_post_type_archive(Production::POST_TYPE) && !$this->themeHasTemplate($type, $templates)) {
             return View::path('frontend/archive-ccwp_production.php');
         }
 
-        if (is_post_type_archive('ccwp_cast_and_crew') && !$this->themeHasTemplate($type, $templates)) {
+        if (is_post_type_archive(CastAndCrew::POST_TYPE) && !$this->themeHasTemplate($type, $templates)) {
             return View::path('frontend/archive-ccwp_cast_and_crew.php');
         }
 
