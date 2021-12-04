@@ -6,16 +6,17 @@ use CurtainCall\View;
 get_header();
 ?>
 
-<div class="ccwp-productions-page">
-    <h1 class="ccwp-page-heading">Productions</h1>
-    <?php if (!have_posts()): ?>
-        <div class="ccwp-container">
-            <h2>Sorry!</h2>
-            <p>There are currently no productions in our directory. Please check back soon!</p>
-        </div>
-    <?php else: ?>
-        <div class="ccwp-container">
-            <?php
+<div class="ccwp-main">
+    <div class="ccwp-main-content-container">
+        <h1 class="ccwp-page-heading">Productions</h1>
+        <?php if (!have_posts()): ?>
+            <div class="ccwp-container">
+                <h2>Sorry!</h2>
+                <p>There are currently no productions in our directory. Please check back soon!</p>
+            </div>
+        <?php else: ?>
+            <div class="ccwp-container">
+                <?php
                 $partialPath = 'frontend/partials/archive-production-section.php';
 
                 View::make($partialPath, [
@@ -32,9 +33,10 @@ get_header();
                     'wp_query' => Production::getPastPosts(),
                     'chronological_state' => 'past',
                 ])->render();
-            ?>
-        </div>
-    <?php endif; ?>
+                ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php get_footer(); ?>

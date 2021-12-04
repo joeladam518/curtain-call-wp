@@ -24,7 +24,9 @@ echo $wp_nonce;
             <?php endforeach; ?>
         </select>
     </div>
-    <button class="button ccwp-production-castcrew-add-btn" type="button" id="ccwp-production-cast-add-btn">Add Cast</button>
+    <button type="button" class="button ccwp-production-castcrew-add-btn" id="ccwp-production-cast-add-btn">
+        Add Cast
+    </button>
 </div>
 
 <div id="ccwp-production-cast-wrap">

@@ -1,23 +1,11 @@
 /* CCWP Single production page */
-
-.single-ccwp_production {
+body.single-ccwp_production {
     article {
         .ccwp-production-info-section {
             margin-bottom: 30px;
         }
 
-        .ccwp-production-poster {
-            width: 100%;
-            padding-right: 0;
-
-            @media screen and (min-width: $br-sm-min){
-                width: 40%;
-                padding-right: 16px;
-            }
-        }
-
         .show-info {
-            width: 100%;
             color: $black;
 
             .show-dates-container {
@@ -61,10 +49,6 @@
                 line-height: 1.2;
                 margin-bottom: 8px;
             }
-
-            @media screen and (min-width: $br-sm-min){
-                width: 60%
-            }
         }
 
         .show-summary {
@@ -96,7 +80,7 @@
                 flex-basis: 100%;
                 margin-bottom: 16px;
 
-                @media screen and (min-width: $br-sm-min) {
+                @include from($br-sm-min) {
                     flex-basis: 50%;
                 }
             }
@@ -128,6 +112,29 @@
                 .castcrew-role {
                     font-size: $size-5;
                     line-height: 1;
+                }
+            }
+        }
+
+
+        &.has-post-thumbnail {
+            .ccwp-production-poster {
+                width: 100%;
+                padding-right: 0;
+                padding-bottom: 16px;
+
+                @include from($br-sm-min) {
+                    width: 40%;
+                    padding-right: 16px;
+                    padding-bottom: 0;
+                }
+            }
+
+            .show-info {
+                width: 100%;
+
+                @include from($br-sm-min) {
+                    width: 60%;
                 }
             }
         }

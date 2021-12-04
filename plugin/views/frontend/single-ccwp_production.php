@@ -24,12 +24,14 @@ get_header( 'single' );
     ?>
 
     <?php if (get_post_status($production->getPost()) == 'publish'): ?>
-        <main id="main" class="ccwp-main">
+        <div class="ccwp-main">
             <div class="ccwp-main-content-container">
-                <div class="ccwp-post-breadcrumbs">
-                    <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
-                    <a href="/productions">Productions</a>&nbsp;&nbsp;/&nbsp;
-                    <span><?php echo $productionName; ?></span>
+                <div class="ccwp-breadcrumbs">
+                    <a class="ccwp-breadcrumb" href="/">Home</a>
+                    <span class="ccwp-breadcrumb-spacer">/</span>
+                    <a class="ccwp-breadcrumb" href="/productions">Productions</a>
+                    <span class="ccwp-breadcrumb-spacer">/</span>
+                    <span class="ccwp-breadcrumb"><?php echo $productionName; ?></span>
                 </div>
 
                 <article id="post-<?php echo $production->ID; ?>" <?php post_class(); ?>>
@@ -137,7 +139,7 @@ get_header( 'single' );
                     <?php endif; // end is $cast and $crew not empty ?>
                 </article>
             </div>
-        </main>
+        </div>
     <?php endif; // content is visible ?>
 <?php endwhile; endif; // end of the loop & end have_posts() ?>
 

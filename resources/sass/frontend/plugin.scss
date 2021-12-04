@@ -1,8 +1,8 @@
-/**
- * All of the CSS for your public-facing functionality should be
- * included in this file.
- */
-@import '../shared/all';
+@import '~@sass/shared/variables';
+@import '~@sass/shared/mixins';
+@import '~@sass/shared/grid';
+
+@import 'shared';
 
 @import 'archive-productions';
 @import 'archive-castcrew';

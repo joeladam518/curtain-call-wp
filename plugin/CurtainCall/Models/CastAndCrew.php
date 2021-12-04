@@ -79,7 +79,7 @@ class CastAndCrew extends CurtainCallPost
                 'edit_item'          => __('Edit cast or crew'),
                 'new_item'           => __('New cast or crew'),
                 'all_items'          => __('All cast and crew'),
-                'view_item'          => __('View cast and crew'),
+                'view_item'          => __('View cast or crew'),
                 'search_items'       => __('Search cast and crew'),
                 'not_found'          => __('No cast or crew found'),
                 'not_found_in_trash' => __('No cast or crew found in the Trash'),

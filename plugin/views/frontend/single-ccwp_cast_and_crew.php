@@ -13,12 +13,14 @@ get_header( 'single' );
     ?>
 
     <?php if (get_post_status($castcrew->getPost()) == 'publish'): ?>
-        <main id="main" class="ccwp-main">
+        <div class="ccwp-main">
             <div class="ccwp-main-content-container">
-                <div class="ccwp-post-breadcrumbs">
-                    <a href="/">Home</a>&nbsp;&nbsp;/&nbsp;
-                    <a href="/cast-and-crew">Cast &amp; Crew</a>&nbsp;&nbsp;/&nbsp;
-                    <span><?php echo $fullName; ?></span>
+                <div class="ccwp-breadcrumbs">
+                    <a class="ccwp-breadcrumb" href="/">Home</a>
+                    <span class="ccwp-breadcrumb-spacer">/</span>
+                    <a class="ccwp-breadcrumb" href="/cast-and-crew">Cast &amp; Crew</a>
+                    <span class="ccwp-breadcrumb-spacer">/</span>
+                    <span class="ccwp-breadcrumb"><?php echo $fullName; ?></span>
                 </div>
 
                 <article id="post-<?php echo $castcrew->ID; ?>" <?php post_class(); ?>>
@@ -58,7 +60,7 @@ get_header( 'single' );
 
                             <?php if (isset($castcrew->website_link)) :?>
                                 <div class="castcrew-website">
-                                    <a href="http://<?php echo $castcrew->website_link; ?>">
+                                    <a href="https://<?php echo $castcrew->website_link; ?>">
                                         <?php echo $castcrew->website_link; ?>
                                     </a>
                                 </div>
@@ -67,19 +69,19 @@ get_header( 'single' );
                             <?php if ($castcrew->hasSocialMedia()): ?>
                                 <div class="castcrew-social">
                                     <?php if (isset($castcrew->facebook_link)): ?>
-                                        <a href="http://<?php echo $castcrew->facebook_link; ?>">
+                                        <a href="https://<?php echo $castcrew->facebook_link; ?>">
                                             <i class="fab fa-facebook-f"></i>
                                         </a>
                                     <?php endif; ?>
 
                                     <?php if (isset($castcrew->instagram_link)): ?>
-                                        <a href="http://<?php echo $castcrew->instagram_link; ?>">
+                                        <a href="https://<?php echo $castcrew->instagram_link; ?>">
                                             <i class="fab fa-instagram"></i>
                                         </a>
                                     <?php endif; ?>
 
                                     <?php if (isset($castcrew->twitter_link)): ?>
-                                        <a href="http://<?php echo $castcrew->twitter_link; ?>">
+                                        <a href="https://<?php echo $castcrew->twitter_link; ?>">
                                             <i class="fab fa-twitter"></i>
                                         </a>
                                     <?php endif; ?>
@@ -89,9 +91,9 @@ get_header( 'single' );
                     </section>
 
                     <?php
-                        $productions_shown = [];
+                        $shownProductions = [];
                         $productions = $castcrew->getProductions();
-                        $roles_by_pid = CastAndCrew::rolesByProductionId($productions);
+                        $rolesByPid = CastAndCrew::rolesByProductionId($productions);
                     ?>
 
                     <?php if (!empty($productions)): ?>
@@ -101,7 +103,7 @@ get_header( 'single' );
 
                                 <div class="ccwp-container">
                                     <?php foreach($productions as $production): ?>
-                                        <?php if (in_array($production->ID, $productions_shown)) continue; ?>
+                                        <?php if (in_array($production->ID, $shownProductions)) continue; ?>
 
                                         <div class="production-wrapper">
                                             <?php if (has_post_thumbnail($production->ID)): ?>
@@ -120,7 +122,7 @@ get_header( 'single' );
                                                 </div>
 
                                                 <div class="castcrew-role">
-                                                    <p><?php echo implode(', ', $roles_by_pid[$production->ID]); ?></p>
+                                                    <p><?php echo implode(', ', $rolesByPid[$production->ID]); ?></p>
                                                 </div>
 
                                                 <div class="production-dates">
@@ -129,7 +131,7 @@ get_header( 'single' );
                                             </div>
                                         </div>
 
-                                        <?php $productions_shown[] = $production->ID; ?>
+                                        <?php $shownProductions[] = $production->ID; ?>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
@@ -137,7 +139,7 @@ get_header( 'single' );
                     <?php endif; // productions array not empty ?>
                 </article>
             </div>
-        </main>
+        </div>
     <?php endif; // content is visible ?>
 <?php endwhile; endif; // end of the loop & end of have_posts() ?>
 
