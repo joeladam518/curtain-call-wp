@@ -41,15 +41,9 @@ class GlobalHooks
     }
 
     /**
-     * View rewrite rules (for debugging)
      *
-     * @param array $rules
-     * @return array
      */
-    public function filterRewriteRulesArray($rules): array
     {
-        //pr($rules,1);
-        return $rules;
     }
 }
 
