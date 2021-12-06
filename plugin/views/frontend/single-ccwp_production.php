@@ -8,16 +8,9 @@ get_header( 'single' );
 
 <?php if (have_posts()): while (have_posts()): the_post(); ?>
     <?php
-        $production     = Production::make(get_post());
+        $production = Production::make(get_post());
         $productionName = $production->name ?? get_the_title();
-
-        // Production $ticket link
-        if (isset($production->ticket_url) && $production->getChronologicalState() !== 'past') {
-            $ticketLink = $production->ticket_url;
-        } else {
-            // TODO: 2019-11-15: change this to an option setting
-            $ticketLink = 'https://www.rutheckerdhall.com/events';
-        }
+        $ticketLink = $production->getTicketUrl();
 
         // Production photo gallery
         $gallery = get_post_gallery();
@@ -58,7 +51,7 @@ get_header( 'single' );
                                             <div class="show-dates">
                                                 <?php echo $production->getFormattedShowDates(); ?>
                                             </div>
-                                            <?php if ($production->getChronologicalState() !== 'past'): ?>
+                                            <?php if ($ticketLink): ?>
                                                 <a class="ccwp-btn" href="<?php echo $ticketLink ?>" target="_blank">
                                                     Get Tickets
                                                 </a>

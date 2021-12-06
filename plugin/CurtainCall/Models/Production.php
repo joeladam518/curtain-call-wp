@@ -272,20 +272,27 @@ class Production extends CurtainCallPost
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTicketUrl(): string
+    public function getTicketUrl(): ?string
     {
-        if ($this->getChronologicalState() == 'past') {
-            return '';
+        if ($this->getChronologicalState() === 'past') {
+            return null;
         }
 
-        if (isset($this->ticket_url)) {
+        if ($this->ticket_url) {
             return $this->ticket_url;
         }
 
-        // TODO: 2019-12-1: change ticket link to a plugin option
-        return 'https://www.rutheckerdhall.com/events';
+        // Get the default ticket url specified in the settings page
+        $url = get_option('ccwp_default_ticket_url', null);
+
+        // get_option() can return false even if default is null
+        if (!$url) {
+            return null;
+        }
+
+        return $url;
     }
 
     /**
