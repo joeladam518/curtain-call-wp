@@ -78,11 +78,11 @@ class AdminHooks
         switch ($postType) {
             case Production::POST_TYPE:
                 $titleParts = [];
-                if (isset($_POST['ccwp_production_name'])) {
-                    $titleParts[] = sanitize_text_field($_POST['ccwp_production_name']);
+                if (isset($postArr['ccwp_production_name'])) {
+                    $titleParts[] = $postArr['ccwp_production_name'];
 
-                    if (isset($_POST['ccwp_date_start'])) {
-                        $dateStart = Date::toCarbon(sanitize_text_field($_POST['ccwp_date_start']));
+                    if (isset($postArr['ccwp_date_start'])) {
+                        $dateStart = Date::toCarbon($postArr['ccwp_date_start']);
 
                         if ($dateStart) {
                             $titleParts[] = '-';
@@ -97,12 +97,12 @@ class AdminHooks
                 break;
             case CastAndCrew::POST_TYPE:
                 $titleParts = [];
-                if (isset($_POST['ccwp_name_first'])) {
-                    $titleParts[] = sanitize_text_field($_POST['ccwp_name_first']);
+                if (isset($postArr['ccwp_name_first'])) {
+                    $titleParts[] = $postArr['ccwp_name_first'];
                 }
 
-                if (isset($_POST['ccwp_name_last'])) {
-                    $titleParts[] = sanitize_text_field($_POST['ccwp_name_last']);
+                if (isset($postArr['ccwp_name_last'])) {
+                    $titleParts[] = $postArr['ccwp_name_last'];
                 }
 
                 $title = empty($titleParts)
@@ -221,10 +221,11 @@ class AdminHooks
     /**
      * @param int $postId
      * @param WP_Post $post
+     * @param bool $update
      * @return void
      * @throws Throwable
      */
-    public function saveProductionPostCastAndCrew(int $postId, WP_Post $post): void
+    public function saveProductionPostCastAndCrew(int $postId, WP_Post $post, bool $update): void
     {
         # Verify meta box nonce
         if (
@@ -258,9 +259,10 @@ class AdminHooks
      *
      * @param int $postId
      * @param WP_Post $post
+     * @param bool $update
      * @return void
      */
-    public function saveProductionPostDetails(int $postId, WP_Post $post): void
+    public function saveProductionPostDetails(int $postId, WP_Post $post, bool $update): void
     {
         if ( # Verify meta box nonce
             !isset($_POST['ccwp_production_details_box_nonce'])
@@ -281,13 +283,13 @@ class AdminHooks
 
         // Store custom field values
 
-        if (!empty($_REQUEST['ccwp_production_name'])) {
+        if (!empty($_POST['ccwp_production_name'])) {
             update_post_meta($postId, '_ccwp_production_name', sanitize_text_field($_POST['ccwp_production_name']));
         } else {
             delete_post_meta($postId, '_ccwp_production_name');
         }
 
-        if (!empty($_REQUEST['ccwp_date_start'])) {
+        if (!empty($_POST['ccwp_date_start'])) {
             $ccwp_date_start = sanitize_text_field($_POST['ccwp_date_start']);
             $ccwp_date_start = Date::reformat($ccwp_date_start, 'Y-m-d');
             update_post_meta($postId, '_ccwp_production_date_start', $ccwp_date_start);
@@ -295,7 +297,7 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_production_date_start');
         }
 
-        if (!empty($_REQUEST['ccwp_date_end'])) {
+        if (!empty($_POST['ccwp_date_end'])) {
             $ccwp_date_end = sanitize_text_field($_POST['ccwp_date_end']);
             $ccwp_date_end = Date::reformat($ccwp_date_end, 'Y-m-d');
             update_post_meta($postId, '_ccwp_production_date_end', $ccwp_date_end);
@@ -303,19 +305,19 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_production_date_end');
         }
 
-        if (!empty($_REQUEST['ccwp_show_times'])) {
+        if (!empty($_POST['ccwp_show_times'])) {
             update_post_meta($postId, '_ccwp_production_show_times', sanitize_text_field($_POST['ccwp_show_times']));
         } else {
             delete_post_meta($postId, '_ccwp_production_show_times');
         }
 
-        if (!empty($_REQUEST['ccwp_ticket_url'])) {
+        if (!empty($_POST['ccwp_ticket_url'])) {
             update_post_meta($postId, '_ccwp_production_ticket_url', sanitize_text_field($_POST['ccwp_ticket_url']));
         } else {
             delete_post_meta($postId, '_ccwp_production_ticket_url');
         }
 
-        if (!empty($_REQUEST['ccwp_venue'])) {
+        if (!empty($_POST['ccwp_venue'])) {
             update_post_meta($postId, '_ccwp_production_venue', sanitize_text_field($_POST['ccwp_venue']));
         } else {
             delete_post_meta($postId, '_ccwp_production_venue');
@@ -372,8 +374,10 @@ class AdminHooks
      *
      * @param int $postId
      * @param WP_Post $post
+     * @param bool $update
+     * @return void
      */
-    public function saveCastAndCrewPostDetails(int $postId, WP_Post $post): void
+    public function saveCastAndCrewPostDetails(int $postId, WP_Post $post, bool $update): void
     {
         if ( # Verify meta box nonce
             !isset($_POST['ccwp_cast_and_crew_details_box_nonce'])
@@ -463,5 +467,26 @@ class AdminHooks
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_fun_fact');
         }
+    }
+
+    public function addPluginSettingsPage(): void
+    {
+        add_submenu_page(
+            'options-general.php',
+            'Curtain Call WP',
+            __('Curtain Call WP', CCWP_TEXT_DOMAIN),
+            'manage_options',
+            'ccwp-settings',
+            [$this, 'renderPluginSettingsPage'],
+        );
+    }
+
+    public function renderPluginSettingsPage(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        View::make('admin/settings-page.php')->render();
     }
 }

@@ -95,6 +95,8 @@ class CurtainCall
     {
         $controller = new AdminHooks();
 
+        $this->loader->addAction('admin_menu', [$controller, 'addPluginSettingsPage'], 0);
+
         // All Actions and Filters on the Production custom post type
         $this->loader->addAction('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes'], 0);
         $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 3);
@@ -121,6 +123,7 @@ class CurtainCall
     {
         $controller = new GlobalHooks();
 
+        $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
         $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
