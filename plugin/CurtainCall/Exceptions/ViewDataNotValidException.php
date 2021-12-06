@@ -2,6 +2,6 @@
 
 namespace CurtainCall\Exceptions;
 
-use RuntimeException;
+use InvalidArgumentException;
 
-final class ViewDataNotValidException extends RuntimeException {}
+final class ViewDataNotValidException extends InvalidArgumentException {}

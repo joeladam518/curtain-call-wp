@@ -15,7 +15,7 @@ class View
     public function __construct(string $path, array $data = [])
     {
         $this->path = trim($path);
-        $this->data = $data;
+        $this->setData($data);
     }
 
     /**
@@ -55,10 +55,6 @@ class View
             throw new ViewNotFoundException( $this->templatePath() . ' does not exist.');
         }
 
-        if (!empty($this->data) && Arr::isList($this->data)) {
-            throw new ViewDataNotValidException('$data is not valid.');
-        }
-
         try {
             ob_start();
             $this->includeTemplate();
@@ -72,6 +68,16 @@ class View
     }
 
     /**
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getData(?string $key = null, $default = null)
+    {
+        return Arr::get($this->data, $key, $default);
+    }
+
+    /**
      * Render the template/partial into html
      *
      * @return void
@@ -80,6 +86,21 @@ class View
     public function render(): void
     {
         echo $this->compile();
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data = []): self
+    {
+        if (!empty($this->data) && Arr::isList($this->data)) {
+            throw new ViewDataNotValidException('$data is not valid. You must provide an associative array.');
+        }
+
+        $this->data = $data;
+
+        return $this;
     }
 
     /**
