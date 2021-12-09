@@ -95,6 +95,8 @@ class GlobalHooks
     }
 
     /**
+     * Generic function to render a simple text field on the settings page
+     *
      * @param array $args
      * @return void
      * @throws Throwable

@@ -74,7 +74,6 @@ class FrontendHooks
      * @param string $template
      * @param string $type
      * @param array|string[] $templates
-     *
      * @return string
      * @global WP_Post $post
      */
@@ -99,7 +98,6 @@ class FrontendHooks
      * @param string $template
      * @param string $type
      * @param array|string[] $templates
-     *
      * @return string
      */
     public function loadArchiveTemplates(string $template, string $type, array $templates): string

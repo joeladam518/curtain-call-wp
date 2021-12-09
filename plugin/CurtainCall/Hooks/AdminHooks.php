@@ -49,7 +49,7 @@ class AdminHooks
     }
 
     //  ----------------------------------------------------------------------------------------------------------------
-    //  Global Functions
+    //  Other Functions
     //  ----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -61,7 +61,6 @@ class AdminHooks
      *
      * @param array $data
      * @param array $postArr
-     *
      * @return array
      */
     public function setTitleOnPostSave(array $data, array $postArr): array
@@ -120,10 +119,43 @@ class AdminHooks
         return $data;
     }
 
+    /**
+     * @return void
+     */
+    public function addPluginSettingsPage(): void
+    {
+        add_submenu_page(
+            'options-general.php',
+            'Curtain Call WP',
+            __('Curtain Call WP', CCWP_TEXT_DOMAIN),
+            'manage_options',
+            'ccwp-settings',
+            [$this, 'renderPluginSettingsPage'],
+        );
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
+    public function renderPluginSettingsPage(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        View::make('admin/settings-page.php')->render();
+    }
+
     //  ----------------------------------------------------------------------------------------------------------------
     //  Production Functions
     //  ----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Add the production meta boxes
+     *
+     * @return void
+     */
     public function addProductionPostMetaBoxes(): void
     {
         add_meta_box(
@@ -328,6 +360,11 @@ class AdminHooks
     //  Cast And Crew Functions
     //----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Add the Cast and crew met boxes
+     *
+     * @return void
+     */
     public function addCastAndCrewPostMetaBoxes(): void
     {
         add_meta_box(
@@ -398,25 +435,25 @@ class AdminHooks
 
         // Store custom field values
 
-        if (!empty($_REQUEST['ccwp_name_first'])) {
+        if (!empty($_POST['ccwp_name_first'])) {
             update_post_meta($postId, '_ccwp_cast_crew_name_first', sanitize_text_field($_POST['ccwp_name_first']));
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_name_first');
         }
 
-        if (!empty($_REQUEST['ccwp_name_last'])) {
+        if (!empty($_POST['ccwp_name_last'])) {
             update_post_meta($postId, '_ccwp_cast_crew_name_last', sanitize_text_field($_POST['ccwp_name_last']));
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_name_last');
         }
 
-        if (!empty($_REQUEST['ccwp_self_title'])) {
+        if (!empty($_POST['ccwp_self_title'])) {
             update_post_meta($postId, '_ccwp_cast_crew_self_title', sanitize_text_field($_POST['ccwp_self_title']));
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_self_title');
         }
 
-        if (!empty($_REQUEST['ccwp_birthday'])) {
+        if (!empty($_POST['ccwp_birthday'])) {
             $ccwp_birthday = sanitize_text_field($_POST['ccwp_birthday']);
             $ccwp_birthday = Date::reformat($ccwp_birthday, 'Y-m-d');
             update_post_meta($postId, '_ccwp_cast_crew_birthday', $ccwp_birthday);
@@ -424,13 +461,13 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_cast_crew_birthday');
         }
 
-        if (!empty($_REQUEST['ccwp_hometown'])) {
+        if (!empty($_POST['ccwp_hometown'])) {
             update_post_meta($postId, '_ccwp_cast_crew_hometown', sanitize_text_field($_POST['ccwp_hometown']));
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_hometown');
         }
 
-        if (!empty($_REQUEST['ccwp_website_link'])) {
+        if (!empty($_POST['ccwp_website_link'])) {
             $link = Str::stripHttp($_POST['ccwp_website_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_website_link', $link);
@@ -438,7 +475,7 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_cast_crew_website_link');
         }
 
-        if (!empty($_REQUEST['ccwp_facebook_link'])) {
+        if (!empty($_POST['ccwp_facebook_link'])) {
             $link = Str::stripHttp($_POST['ccwp_facebook_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_facebook_link', $link);
@@ -446,7 +483,7 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_cast_crew_facebook_link');
         }
 
-        if (!empty($_REQUEST['ccwp_twitter_link'])) {
+        if (!empty($_POST['ccwp_twitter_link'])) {
             $link = Str::stripHttp($_POST['ccwp_twitter_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_twitter_link', $link);
@@ -454,7 +491,7 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_cast_crew_twitter_link');
         }
 
-        if (!empty($_REQUEST['ccwp_instagram_link'])) {
+        if (!empty($_POST['ccwp_instagram_link'])) {
             $link = Str::stripHttp($_POST['ccwp_instagram_link']);
             $link = sanitize_text_field($link);
             update_post_meta($postId, '_ccwp_cast_crew_instagram_link', $link);
@@ -462,31 +499,10 @@ class AdminHooks
             delete_post_meta($postId, '_ccwp_cast_crew_instagram_link');
         }
 
-        if (!empty($_REQUEST['ccwp_fun_fact'])) {
+        if (!empty($_POST['ccwp_fun_fact'])) {
             update_post_meta($postId, '_ccwp_cast_crew_fun_fact', sanitize_text_field($_POST['ccwp_fun_fact']));
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_fun_fact');
         }
-    }
-
-    public function addPluginSettingsPage(): void
-    {
-        add_submenu_page(
-            'options-general.php',
-            'Curtain Call WP',
-            __('Curtain Call WP', CCWP_TEXT_DOMAIN),
-            'manage_options',
-            'ccwp-settings',
-            [$this, 'renderPluginSettingsPage'],
-        );
-    }
-
-    public function renderPluginSettingsPage(): void
-    {
-        if (!current_user_can('manage_options')) {
-            return;
-        }
-
-        View::make('admin/settings-page.php')->render();
     }
 }
