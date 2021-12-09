@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die;
 }

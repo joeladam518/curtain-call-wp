@@ -1,15 +1,13 @@
 <?php
+/**
+ * @var string $chronological_state
+ * @var Production $production
+ */
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die;
 }
 
 use CurtainCall\Models\Production;
-
-/**
- * Expected global variables for this partial
- * @var Production $production
- * @var string     $chronological_state
- */
 
 // Computed for this partial
 $production_permalink = get_post_permalink($production->ID);

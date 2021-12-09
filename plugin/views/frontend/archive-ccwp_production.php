@@ -19,7 +19,7 @@ get_header();
             </div>
         <?php else : ?>
             <div class="ccwp-container">
-                <?php
+            <?php
                 $partialPath = 'frontend/partials/archive-production-section.php';
 
                 View::make($partialPath, [
@@ -36,7 +36,7 @@ get_header();
                     'wp_query' => Production::getPastPosts(),
                     'chronological_state' => 'past',
                 ])->render();
-                ?>
+            ?>
             </div>
         <?php endif; ?>
     </div>

@@ -1,7 +1,4 @@
 <?php
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -12,8 +9,11 @@ if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
  * @var string $show_times
  * @var string $ticket_url
  * @var string $venue
+ */
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 
-**/
 echo $wp_nonce;
 ?>
 <div class="ccwp-form-group">
