@@ -25,7 +25,7 @@ trait HasWordPressPost
      * @param string $key
      * @return bool
      */
-    protected function isWordPressPostAttribute(string $key): bool
+    protected function isPostAttribute(string $key): bool
     {
         return in_array($key, $this->wp_post_attributes);
     }

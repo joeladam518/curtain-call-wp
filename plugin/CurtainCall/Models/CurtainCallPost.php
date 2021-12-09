@@ -188,7 +188,7 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __get($key)
     {
-        if ($this->isWordPressPostAttribute($key)) {
+        if ($this->isPostAttribute($key)) {
             return $this->wp_post->$key;
         }
 
@@ -215,7 +215,7 @@ abstract class CurtainCallPost implements Arrayable
             throw new UnsettableException('You can not set the meta property.');
         }
 
-        if ($this->isWordPressPostAttribute($key)) {
+        if ($this->isPostAttribute($key)) {
             throw new UnsettableException('You can not set "'. $key .'" it is a WordPress post attribute.');
         }
 
@@ -233,7 +233,7 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __isset($key)
     {
-        if ($this->isWordPressPostAttribute($key)) {
+        if ($this->isPostAttribute($key)) {
             return isset($this->wp_post->$key);
         }
 
