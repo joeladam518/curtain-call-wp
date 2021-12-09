@@ -30,7 +30,7 @@ class Query
      */
     public static function select(array $fields = [], bool $prependSelect = true): string
     {
-        $fields = Arr::map($fields, function($field) {
+        $fields = Arr::map($fields, function ($field) {
             $field = str_replace('`', '', $field);
             return static::backtickField($field);
         });
@@ -95,7 +95,7 @@ class Query
     {
         $alias = '`'.CurtainCallPivot::TABLE_ALIAS.'`';
 
-        switch($type) {
+        switch ($type) {
             case 'cast':
                 return " {$clause} {$alias}.`type` = 'cast' ";
             case 'crew':

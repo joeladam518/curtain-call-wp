@@ -218,7 +218,7 @@ class Production extends CurtainCallPost
 
         if ($now->gt($endDate)) {
             $this->chronological_state = 'past';
-        } else if ($now->lt($startDate)) {
+        } elseif ($now->lt($startDate)) {
             $this->chronological_state = 'future';
         } else {
             $this->chronological_state = 'current';

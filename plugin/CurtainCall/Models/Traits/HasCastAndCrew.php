@@ -151,7 +151,7 @@ trait HasCastAndCrew
         // Determine the production's castcrew to be deleted
         if (!empty($currentIds) && !empty($newIds)) {
             $toDeleteIds = array_values(array_diff($currentIds, $newIds));
-        } else if (!empty($currentIds) && empty($newIds)) {
+        } elseif (!empty($currentIds) && empty($newIds)) {
             $toDeleteIds = $currentIds;
         } else {
             $toDeleteIds = [];

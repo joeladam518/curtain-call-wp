@@ -1,4 +1,7 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 
 use CurtainCall\Models\Production;
 use CurtainCall\View;
@@ -9,12 +12,12 @@ get_header();
 <div class="ccwp-main">
     <div class="ccwp-main-content-container">
         <h1 class="ccwp-page-heading">Productions</h1>
-        <?php if (!have_posts()): ?>
+        <?php if (!have_posts()) : ?>
             <div class="ccwp-container">
                 <h2>Sorry!</h2>
                 <p>There are currently no productions in our directory. Please check back soon!</p>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <div class="ccwp-container">
                 <?php
                 $partialPath = 'frontend/partials/archive-production-section.php';

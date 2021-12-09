@@ -1,18 +1,23 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 
 use CurtainCall\Models\CastAndCrew;
 
-get_header( 'single' );
+get_header('single');
 ?>
 
-<?php if (have_posts()): while (have_posts()): the_post(); ?>
-    <?php
-        $castcrew   = CastAndCrew::make(get_post());
-        $fullName   = $castcrew->getFullName();
-        $birthplace = $castcrew->getBirthPlace();
-    ?>
+<?php if (have_posts()) :
+    while (have_posts()) :
+        the_post(); ?>
+            <?php
+            $castcrew   = CastAndCrew::make(get_post());
+            $fullName   = $castcrew->getFullName();
+            $birthplace = $castcrew->getBirthPlace();
+            ?>
 
-    <?php if (get_post_status($castcrew->getPost()) == 'publish'): ?>
+            <?php if (get_post_status($castcrew->getPost()) == 'publish') : ?>
         <div class="ccwp-main">
             <div class="ccwp-main-content-container">
                 <div class="ccwp-breadcrumbs">
@@ -34,11 +39,11 @@ get_header( 'single' );
                         <div class="castcrew-profile">
                             <h1 class="ccwp-page-heading"><?php echo $fullName; ?></h1>
 
-                            <?php if (isset($castcrew->self_title)): ?>
+                            <?php if (isset($castcrew->self_title)) : ?>
                                 <h3 class="castcrew-title"><?php echo $castcrew->self_title; ?></h3>
                             <?php endif; ?>
 
-                            <?php if ($birthplace != ''): ?>
+                            <?php if ($birthplace != '') : ?>
                                 <p class="castcrew-birthplace"><?php echo $birthplace; ?></p>
                             <?php endif; ?>
 
@@ -52,7 +57,7 @@ get_header( 'single' );
                                 <?php endif; ?>
                             </div>
 
-                            <?php if (isset($castcrew->website_link) || $castcrew->hasSocialMedia()): ?>
+                            <?php if (isset($castcrew->website_link) || $castcrew->hasSocialMedia()) : ?>
                                 <h4 class="connect-with-castcrew">
                                     Connect with <?php echo $castcrew->name_first; ?>!
                                 </h4>
@@ -66,21 +71,21 @@ get_header( 'single' );
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($castcrew->hasSocialMedia()): ?>
+                            <?php if ($castcrew->hasSocialMedia()) : ?>
                                 <div class="castcrew-social">
-                                    <?php if (isset($castcrew->facebook_link)): ?>
+                                    <?php if (isset($castcrew->facebook_link)) : ?>
                                         <a href="https://<?php echo $castcrew->facebook_link; ?>">
                                             <i class="fab fa-facebook-f"></i>
                                         </a>
                                     <?php endif; ?>
 
-                                    <?php if (isset($castcrew->instagram_link)): ?>
+                                    <?php if (isset($castcrew->instagram_link)) : ?>
                                         <a href="https://<?php echo $castcrew->instagram_link; ?>">
                                             <i class="fab fa-instagram"></i>
                                         </a>
                                     <?php endif; ?>
 
-                                    <?php if (isset($castcrew->twitter_link)): ?>
+                                    <?php if (isset($castcrew->twitter_link)) : ?>
                                         <a href="https://<?php echo $castcrew->twitter_link; ?>">
                                             <i class="fab fa-twitter"></i>
                                         </a>
@@ -96,17 +101,19 @@ get_header( 'single' );
                         $rolesByPid = CastAndCrew::rolesByProductionId($productions);
                     ?>
 
-                    <?php if (!empty($productions)): ?>
+                    <?php if (!empty($productions)) : ?>
                         <section class="ccwp-section ccwp-directory-section">
                             <div class="ccwp-directory-list castcrew-production-list">
                                 <h2>Productions</h2>
 
                                 <div class="ccwp-container">
-                                    <?php foreach($productions as $production): ?>
-                                        <?php if (in_array($production->ID, $shownProductions)) continue; ?>
+                                    <?php foreach ($productions as $production) : ?>
+                                        <?php if (in_array($production->ID, $shownProductions)) {
+                                            continue;
+                                        } ?>
 
                                         <div class="production-wrapper">
-                                            <?php if (has_post_thumbnail($production->ID)): ?>
+                                            <?php if (has_post_thumbnail($production->ID)) : ?>
                                                 <div class="production-poster">
                                                     <a href="<?php the_permalink($production->ID); ?>">
                                                         <?php echo get_the_post_thumbnail($production->ID, 'full'); ?>
@@ -140,7 +147,8 @@ get_header( 'single' );
                 </article>
             </div>
         </div>
-    <?php endif; // content is visible ?>
-<?php endwhile; endif; // end of the loop & end of have_posts() ?>
+            <?php endif; // content is visible ?>
+    <?php endwhile;
+endif; // end of the loop & end of have_posts() ?>
 
 <?php get_footer(); ?>

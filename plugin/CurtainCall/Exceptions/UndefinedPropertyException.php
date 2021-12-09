@@ -4,4 +4,6 @@ namespace CurtainCall\Exceptions;
 
 use Exception;
 
-final class UndefinedPropertyException extends Exception {}
+final class UndefinedPropertyException extends Exception
+{
+}

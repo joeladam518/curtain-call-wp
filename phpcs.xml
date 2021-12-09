@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="PHP_CodeSniffer">
+    <file>./plugin</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/public/*</exclude-pattern>
+    <exclude-pattern>./plugin/assets/*</exclude-pattern>
+    <exclude-pattern>./plugin/languages/*</exclude-pattern>
+    <exclude-pattern>*.js</exclude-pattern>
+    <exclude-pattern>*.scss</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
+
+    <rule ref="PSR2" />
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="1000" />
+            <property name="absoluteLineLimit" value="0" />
+        </properties>
+    </rule>
+</ruleset>

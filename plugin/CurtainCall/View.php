@@ -52,7 +52,7 @@ class View
     public function compile(): string
     {
         if (!file_exists($this->templatePath())) {
-            throw new ViewNotFoundException( $this->templatePath() . ' does not exist.');
+            throw new ViewNotFoundException($this->templatePath() . ' does not exist.');
         }
 
         try {

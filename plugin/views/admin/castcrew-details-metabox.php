@@ -1,4 +1,7 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 /**
  * @var string $wp_nonce
  * @var WP_Post $post

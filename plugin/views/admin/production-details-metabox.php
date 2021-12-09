@@ -1,4 +1,7 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -13,7 +16,6 @@
 **/
 echo $wp_nonce;
 ?>
-
 <div class="ccwp-form-group">
     <label for="ccwp_production_name">Production Name</label>
     <input type="text" id="ccwp_production_name" name="ccwp_production_name" value="<?php echo $name; ?>">

@@ -112,7 +112,7 @@ class CastAndCrew extends CurtainCallPost
      * @param array $additionalArgs
      * @return WP_Query
      */
-    public static function getPosts( array $additionalArgs = []): WP_Query
+    public static function getPosts(array $additionalArgs = []): WP_Query
     {
         return new WP_Query(array_merge([
             'post_type' => [
@@ -158,7 +158,7 @@ class CastAndCrew extends CurtainCallPost
                 $birthplace .= ' in ' . $this->hometown;
             }
             $birthplace .= '.';
-        } else if (isset($this->hometown)) {
+        } elseif (isset($this->hometown)) {
             $birthplace .= 'Born in ' . $this->hometown . '.';
         }
 

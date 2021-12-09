@@ -1,4 +1,7 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Support\Str;
@@ -22,29 +25,30 @@ get_header();
                 <h2>Sorry!</h2>
                 <p>There are currently no cast or crew members in our directory. Please check back soon!</p>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <div class="ccwp-alphabet-navigation">
-                <?php foreach ($alphabet as $letter): ?>
-                    <?php if (in_array($letter, $alpha_indexes)): ?>
+                <?php foreach ($alphabet as $letter) : ?>
+                    <?php if (in_array($letter, $alpha_indexes)) : ?>
                         <a href="#<?php echo $letter; ?>"><?php echo $letter; ?></a>
-                    <?php else: ?>
+                    <?php else : ?>
                         <span><?php echo $letter; ?></span>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
 
             <div class="ccwp-container ccwp-alphabet-container">
-            <?php while ($result->have_posts()): $result->the_post(); ?>
+            <?php while ($result->have_posts()) :
+                $result->the_post(); ?>
                 <?php
                     $castcrew = CastAndCrew::make(get_post());
                     $castcrew_permalink = get_post_permalink($castcrew->getPost());
                 ?>
 
-                <?php if ($castcrew->post_status == 'publish' && isset($castcrew->name_last)): ?>
+                <?php if ($castcrew->post_status == 'publish' && isset($castcrew->name_last)) : ?>
                     <?php $current_alpha_index = Str::firstLetter($castcrew->name_last, 'upper') ?>
 
-                    <?php if ($current_alpha_index != $previous_alpha_index): ?>
-                        <?php if ($previous_alpha_index !== null): ?>
+                    <?php if ($current_alpha_index != $previous_alpha_index) : ?>
+                        <?php if ($previous_alpha_index !== null) : ?>
                             </div>
                         <?php endif; ?>
                         <h3 class="ccwp-alphabet-header" id="<?php echo $current_alpha_index; ?>"><?php echo $current_alpha_index; ?></h3>
@@ -52,7 +56,7 @@ get_header();
                     <?php endif; ?>
 
                     <div class="castcrew-wrapper">
-                        <?php if (has_post_thumbnail($castcrew->getPost())): ?>
+                        <?php if (has_post_thumbnail($castcrew->getPost())) : ?>
                             <div class="castcrew-headshot">
                                 <a href="<?php echo $castcrew_permalink; ?>">
                                     <?php echo get_the_post_thumbnail($castcrew->getPost(), 'thumbnail'); ?>

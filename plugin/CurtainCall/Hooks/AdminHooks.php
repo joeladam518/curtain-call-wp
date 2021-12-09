@@ -260,8 +260,7 @@ class AdminHooks
     public function saveProductionPostCastAndCrew(int $postId, WP_Post $post, bool $update): void
     {
         # Verify meta box nonce
-        if (
-            ! isset($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'])
+        if (! isset($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'])
         ||  ! wp_verify_nonce($_POST['ccwp_add_cast_and_crew_to_production_box_nonce'], basename(__FILE__))
         ) {
             return;
@@ -386,7 +385,7 @@ class AdminHooks
      */
     public function renderCastAndCrewDetailsMetabox(WP_Post $post, array $metabox): void
     {
-        $birthday = getCustomField('_ccwp_cast_crew_birthday',$post->ID);
+        $birthday = getCustomField('_ccwp_cast_crew_birthday', $post->ID);
         $birthday = Date::reformat($birthday, 'm/d/Y', '');
 
         View::make('admin/castcrew-details-metabox.php', [
