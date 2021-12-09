@@ -26,7 +26,7 @@ class Production extends CurtainCallPost
     const SEASONS_TAXONOMY = 'ccwp_production_seasons';
 
     /** @var array|string[] */
-    protected $ccwp_meta_keys = [
+    protected $ccwp_meta = [
         'name',
         'date_start',
         'date_end',

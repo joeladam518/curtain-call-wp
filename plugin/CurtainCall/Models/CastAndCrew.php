@@ -27,7 +27,7 @@ class CastAndCrew extends CurtainCallPost
     const META_PREFIX = '_ccwp_cast_crew_';
 
     /** @var array|string[] */
-    protected $ccwp_meta_keys = [
+    protected $ccwp_meta = [
         'name_first',
         'name_last',
         'self_title',

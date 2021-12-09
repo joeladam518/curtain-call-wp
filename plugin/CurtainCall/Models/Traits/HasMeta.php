@@ -7,7 +7,7 @@ trait HasMeta
     /** @var array */
     protected $meta = [];
     /** @var array|string[] */
-    protected $ccwp_meta_keys = [];
+    protected $ccwp_meta = [];
 
     /**
      * @param string $key
@@ -28,7 +28,7 @@ trait HasMeta
      */
     protected function isCCWPMeta(string $key): bool
     {
-        return in_array($key, $this->ccwp_meta_keys);
+        return in_array($key, $this->ccwp_meta);
     }
 
     /**
@@ -152,6 +152,7 @@ trait HasMeta
         if ($result = delete_post_meta($this->ID, $this->getMetaKey($key))) {
             $this->__unset($key);
         }
+
         return $result;
     }
 }
