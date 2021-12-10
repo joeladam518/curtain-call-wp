@@ -1,7 +1,4 @@
-<?php
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Support\Str;

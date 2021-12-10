@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -10,9 +10,6 @@
  * @var string $ticket_url
  * @var string $venue
  */
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
 
 echo $wp_nonce;
 ?>

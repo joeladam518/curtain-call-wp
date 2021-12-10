@@ -1,7 +1,4 @@
-<?php
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
 // show error/update messages
 settings_errors('ccwp_messages');

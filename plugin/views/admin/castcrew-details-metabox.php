@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -14,9 +14,6 @@
  * @var string $instagram_link
  * @var string $fun_fact
  */
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
 
 echo $wp_nonce;
 ?>

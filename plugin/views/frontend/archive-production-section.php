@@ -1,12 +1,8 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 /**
  * @var string $chronological_state
  * @var WP_Query $wp_query
  */
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
-
 use CurtainCall\Models\Production;
 use CurtainCall\View;
 

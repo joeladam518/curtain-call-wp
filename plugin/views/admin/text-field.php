@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 /**
  * @var string $id
  * @var string $name
@@ -9,9 +9,6 @@
  * @var string|null $value
  * @var string|null $helpText
  */
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
 ?>
 
 <div class="ccwp-input-wrap">

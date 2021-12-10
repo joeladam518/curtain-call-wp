@@ -1,4 +1,4 @@
-<?php
+<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -7,10 +7,6 @@
  * @var array|CastAndCrew[] $cast_members
  * @var array|CastAndCrew[] $crew_members
  */
-if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
-}
-
 use CurtainCall\Models\CastAndCrew;
 
 echo $wp_nonce;
