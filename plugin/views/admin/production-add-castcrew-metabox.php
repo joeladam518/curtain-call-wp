@@ -134,7 +134,7 @@ echo $wp_nonce;
                 >
                 <div class="ccwp-row">
                     <div class="ccwp-col name-col">
-                        <div class="ccwp-castcrew-name"><?php echo $crew_member->post_title;  ?></div>
+                        <div class="ccwp-castcrew-name"><?php echo $crew_member->post_title; ?></div>
                     </div>
                     <div class="ccwp-col role-col">
                         <input
