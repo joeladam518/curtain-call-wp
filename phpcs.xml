@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="PHP_CodeSniffer">
-    <file>./plugin</file>
+    <file>./plugin/CurtainCall</file>
+    <file>./plugin/CurtainCallWP.php</file>
+    <file>./plugin/functions.php</file>
 
+    <exclude-pattern>./plugin/assets/*</exclude-pattern>
+    <exclude-pattern>./plugin/languages/*</exclude-pattern>
+    <exclude-pattern>./plugin/views/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/public/*</exclude-pattern>
-    <exclude-pattern>./plugin/assets/*</exclude-pattern>
-    <exclude-pattern>./plugin/languages/*</exclude-pattern>
     <exclude-pattern>*.js</exclude-pattern>
     <exclude-pattern>*.scss</exclude-pattern>
     <exclude-pattern>*.css</exclude-pattern>
