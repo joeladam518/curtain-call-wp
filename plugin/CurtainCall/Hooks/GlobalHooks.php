@@ -5,7 +5,6 @@ namespace CurtainCall\Hooks;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Arr;
-use CurtainCall\Support\Str;
 use CurtainCall\View;
 use Throwable;
 
@@ -106,7 +105,7 @@ class GlobalHooks
         $name = Arr::get($args, 'input-name');
         $optionValue = get_option($name, null);
 
-        View::make('admin/partials/text-field.php', [
+        View::make('admin/text-field.php', [
             'name' => $name,
             'id' => Arr::get($args, 'label_for'),
             'classes' => Arr::get($args, 'input-classes', []),

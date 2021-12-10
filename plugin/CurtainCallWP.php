@@ -13,7 +13,6 @@
  * Text Domain:       curtain-call-wp
  * Domain Path:       /languages
 **/
-
 if (!defined('ABSPATH')) {
     die;
 }

@@ -24,7 +24,7 @@ $wp_query->rewind_posts();
         <?php
             while ($wp_query->have_posts()) {
                 $wp_query->the_post();
-                View::make('frontend/partials/archive-production-row.php', [
+                View::make('frontend/archive-production-row.php', [
                     'chronological_state' => $chronological_state,
                     'production' => Production::make(get_post()),
                 ])->render();

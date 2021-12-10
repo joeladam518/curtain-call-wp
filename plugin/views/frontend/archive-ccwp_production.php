@@ -19,24 +19,24 @@ get_header();
             </div>
         <?php else : ?>
             <div class="ccwp-container">
-            <?php
-                $partialPath = 'frontend/partials/archive-production-section.php';
+                <?php
+                    $partialPath = 'frontend/archive-production-section.php';
 
-                View::make($partialPath, [
-                    'wp_query' => Production::getCurrentPosts(),
-                    'chronological_state' => 'current',
-                ])->render();
+                    View::make($partialPath, [
+                        'wp_query' => Production::getCurrentPosts(),
+                        'chronological_state' => 'current',
+                    ])->render();
 
-                View::make($partialPath, [
-                    'wp_query' => Production::getFuturePosts(),
-                    'chronological_state' => 'future',
-                ])->render();
+                    View::make($partialPath, [
+                        'wp_query' => Production::getFuturePosts(),
+                        'chronological_state' => 'future',
+                    ])->render();
 
-                View::make($partialPath, [
-                    'wp_query' => Production::getPastPosts(),
-                    'chronological_state' => 'past',
-                ])->render();
-            ?>
+                    View::make($partialPath, [
+                        'wp_query' => Production::getPastPosts(),
+                        'chronological_state' => 'past',
+                    ])->render();
+                ?>
             </div>
         <?php endif; ?>
     </div>

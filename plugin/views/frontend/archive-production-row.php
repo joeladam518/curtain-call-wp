@@ -43,7 +43,9 @@ $ticket_url = $production->getTicketUrl();
                     <span class="now-showing">Now Showing</span>
             <?php endif; ?>
 
-            <span class="production-dates"><?php echo $production->getFormattedShowDates(); ?></span>
+            <span class="production-dates">
+                <?php echo $production->getFormattedShowDates(); ?>
+            </span>
 
             <?php if ($chronological_state == 'current') : ?>
                 </div>
@@ -51,11 +53,15 @@ $ticket_url = $production->getTicketUrl();
             <?php endif; ?>
 
             <?php if (isset($production->show_times)) : ?>
-                <span class="production-times"><?php echo $production->show_times; ?></span>
+                <span class="production-times">
+                    <?php echo $production->show_times; ?>
+                </span>
             <?php endif; ?>
 
             <?php if (isset($production->venue)) : ?>
-                <span class="production-venue"><?php echo $production->venue; ?></span>
+                <span class="production-venue">
+                    <?php echo $production->venue; ?>
+                </span>
             <?php endif; ?>
 
             <?php if ($chronological_state == 'current') : ?>
@@ -64,7 +70,9 @@ $ticket_url = $production->getTicketUrl();
         </div>
 
         <?php if (!empty($production_excerpt)) : ?>
-            <div class="production-excerpt"><?php echo $production_excerpt; ?></div>
+            <div class="production-excerpt">
+                <?php echo $production_excerpt; ?>
+            </div>
         <?php endif;?>
     </div>
 </div>
