@@ -12,6 +12,7 @@ class Deactivator implements LifeCycleHook
         unregister_post_type(CastAndCrew::POST_TYPE);
         unregister_post_type(Production::POST_TYPE);
         unregister_taxonomy(Production::SEASONS_TAXONOMY);
+        unregister_setting('ccwp-settings', 'ccwp_default_ticket_url');
         flush_rewrite_rules(false);
     }
 }

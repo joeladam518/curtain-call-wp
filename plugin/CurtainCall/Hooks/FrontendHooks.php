@@ -53,7 +53,6 @@ class FrontendHooks
      *
      * @param string $type
      * @param array|string[] $templates
-     *
      * @return bool
      */
     private function themeHasTemplate(string $type, array $templates): bool

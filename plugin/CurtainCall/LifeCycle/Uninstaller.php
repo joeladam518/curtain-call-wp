@@ -21,6 +21,7 @@ class Uninstaller implements LifeCycleHook
         $wpdb->flush();
 
         delete_option('ccwp_db_version');
+        delete_option('ccwp_default_ticket_url');
         flush_rewrite_rules(false);
     }
 
