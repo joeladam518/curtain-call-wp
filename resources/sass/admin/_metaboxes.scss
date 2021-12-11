@@ -76,6 +76,10 @@
                 margin-bottom: 1px;
             }
         }
+
+        .ccwp-production-castcrew-add-btn {
+            margin-bottom: 0;
+        }
     }
 
     .ccwp-production-castcrew-form-group {
@@ -93,17 +97,15 @@
         margin-bottom: 7px;
 
         .ccwp-col {
-            justify-content: center;
-            align-items: flex-start;
-            padding-left: 1%;
-            padding-right: 1%;
+            padding-left: 0;
+            padding-right: 0;
 
-            &:first-child {
-                padding-left: 0;
+            &:not(:first-child) {
+                padding-left: 6px;
             }
 
-            &:last-child {
-                padding-right: 0;
+            &:not(:last-child) {
+                padding-right: 6px;
             }
 
             input[type="text"] {
@@ -112,14 +114,16 @@
 
             &.name-col {
                 width: 25%;
-                @media screen and (min-width: 768px){
+
+                @include from($br-sm-min) {
                     width: 24%;
                 }
             }
 
             &.role-col {
                 width: 25%;
-                @media screen and (min-width: 768px){
+
+                @include from($br-sm-min) {
                     width: 32%;
                 }
             }

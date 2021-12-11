@@ -9,11 +9,10 @@
  * @var string $show_times
  * @var string $ticket_url
  * @var string $venue
+ */
 
-**/
 echo $wp_nonce;
 ?>
-
 <div class="ccwp-form-group">
     <label for="ccwp_production_name">Production Name</label>
     <input type="text" id="ccwp_production_name" name="ccwp_production_name" value="<?php echo $name; ?>">
@@ -44,8 +43,7 @@ echo $wp_nonce;
 </div>
 
 <div class="ccwp-form-help-text">
-    <?php /** TODO: change this to the option for tickets */ ?>
-    <p>Defaults to rutheckerdhall.com/events if left blank.
+    <p>The "Default Tickets Url" will be used if no value is provided here.</p>
 </div>
 
 <div class="ccwp-form-group">

@@ -37,10 +37,10 @@ trait HasProductions
         /** @var Production[] $productions */
         $productions = static::toCurtainCallPosts($productions);
 
-        usort($productions , function(Production $productionA, Production $productionB) {
+        usort($productions, function (Production $productionA, Production $productionB) {
             if ($productionA->hasStartDate() && !$productionB->hasStartDate()) {
                 return -1;
-            } else if ($productionB->hasStartDate() && !$productionA->hasStartDate()) {
+            } elseif ($productionB->hasStartDate() && !$productionA->hasStartDate()) {
                 return 1;
             } else {
                 $startDateA = Date::toCarbon($productionA->date_start);
@@ -51,7 +51,7 @@ trait HasProductions
                 if (isset($startDateA) && isset($startDateB)) {
                     if ($startDateA->lt($startDateB)) {
                         return 1;
-                    } else if ($startDateA->gt($startDateB)) {
+                    } elseif ($startDateA->gt($startDateB)) {
                         return -1;
                     } else {
                         return 0;
@@ -59,7 +59,7 @@ trait HasProductions
                 } else {
                     if ($startDateA === null && $startDateB !== null) {
                         return -1;
-                    } else if ($startDateA !== null && $startDateB === null) {
+                    } elseif ($startDateA !== null && $startDateB === null) {
                         return 1;
                     } else {
                         return 0;

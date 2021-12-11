@@ -1,7 +1,4 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
-
-use CurtainCall\Models\CastAndCrew;
-
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -10,6 +7,8 @@ use CurtainCall\Models\CastAndCrew;
  * @var array|CastAndCrew[] $cast_members
  * @var array|CastAndCrew[] $crew_members
  */
+use CurtainCall\Models\CastAndCrew;
+
 echo $wp_nonce;
 ?>
 
@@ -19,23 +18,25 @@ echo $wp_nonce;
         <label for="ccwp-production-cast-select">Add Cast: </label>
         <select id="ccwp-production-cast-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Cast</option>
-            <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name): ?>
+            <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name) : ?>
             <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
-    <button class="button ccwp-production-castcrew-add-btn" type="button" id="ccwp-production-cast-add-btn">Add Cast</button>
+    <button type="button" class="button ccwp-production-castcrew-add-btn" id="ccwp-production-cast-add-btn">
+        Add Cast
+    </button>
 </div>
 
 <div id="ccwp-production-cast-wrap">
-    <?php if (!empty($cast_members) && is_array($cast_members)): ?>
+    <?php if (!empty($cast_members) && is_array($cast_members)) : ?>
         <div class="ccwp-row label-row">
             <div class="ccwp-col name-col">Name</div>
             <div class="ccwp-col role-col">Role</div>
             <div class="ccwp-col billing-col">Billing</div>
             <div class="ccwp-col action-col">&nbsp;</div>
         </div>
-        <?php foreach($cast_members as $cast_member): ?>
+        <?php foreach ($cast_members as $cast_member) : ?>
             <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-cast-<?php echo $cast_member->ID; ?>">
                 <input
                     type="hidden"
@@ -93,7 +94,7 @@ echo $wp_nonce;
         <label for="ccwp-production-crew-select">Add Crew: </label>
         <select id="ccwp-production-crew-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Crew</option>
-            <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name): ?>
+            <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name) : ?>
             <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
             <?php endforeach; ?>
         </select>
@@ -102,7 +103,7 @@ echo $wp_nonce;
 </div>
 
 <div id="ccwp-production-crew-wrap">
-    <?php if (!empty($crew_members) && is_array($crew_members)): ?>
+    <?php if (!empty($crew_members) && is_array($crew_members)) : ?>
         <div class="ccwp-row label-row">
             <div class="ccwp-col name-col">Name</div>
             <div class="ccwp-col role-col">Role</div>
@@ -110,7 +111,7 @@ echo $wp_nonce;
             <div class="ccwp-col action-col">&nbsp;</div>
         </div>
 
-        <?php foreach($crew_members as $crew_member): ?>
+        <?php foreach ($crew_members as $crew_member) : ?>
             <div class="form-group ccwp-production-castcrew-form-group" id="ccwp-production-crew-<?php echo $crew_member->ID; ?>">
                 <input
                     type="hidden"
@@ -129,7 +130,7 @@ echo $wp_nonce;
                 >
                 <div class="ccwp-row">
                     <div class="ccwp-col name-col">
-                        <div class="ccwp-castcrew-name"><?php echo $crew_member->post_title;  ?></div>
+                        <div class="ccwp-castcrew-name"><?php echo $crew_member->post_title; ?></div>
                     </div>
                     <div class="ccwp-col role-col">
                         <input

@@ -15,7 +15,7 @@ class View
     public function __construct(string $path, array $data = [])
     {
         $this->path = trim($path);
-        $this->data = $data;
+        $this->setData($data);
     }
 
     /**
@@ -44,45 +44,15 @@ class View
     }
 
     /**
-     * Render the template/partial into html
-     *
-     * @param bool $return
-     * @return string|void
-     * @throws ViewDataNotValidException|ViewNotFoundException|Throwable
-     */
-    public function render(bool $return = false)
-    {
-        if ($return) {
-            return $this->compile();
-        }
-
-        echo $this->compile();
-    }
-
-    /**
-     * The absolute path to the template/partial.
-     *
-     * @return string
-     */
-    public function templatePath(): string
-    {
-        return static::path($this->path);
-    }
-
-    /**
-     * Compile the php template/partial into html
+     * Compile the php template/partial into a html string
      *
      * @return string
      * @throws ViewDataNotValidException|ViewNotFoundException|Throwable
      */
-    protected function compile(): string
+    public function compile(): string
     {
-        if (count($this->data) > 0 && Arr::isList($this->data)) {
-            throw new ViewDataNotValidException('$data is not valid.');
-        }
-
         if (!file_exists($this->templatePath())) {
-            throw new ViewNotFoundException( $this->templatePath().' does not exist.');
+            throw new ViewNotFoundException($this->templatePath() . ' does not exist.');
         }
 
         try {
@@ -98,6 +68,52 @@ class View
     }
 
     /**
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getData(?string $key = null, $default = null)
+    {
+        return Arr::get($this->data, $key, $default);
+    }
+
+    /**
+     * Render the template/partial into html
+     *
+     * @return void
+     * @throws ViewDataNotValidException|ViewNotFoundException|Throwable
+     */
+    public function render(): void
+    {
+        echo $this->compile();
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setData(array $data = []): self
+    {
+        if (!empty($this->data) && Arr::isList($this->data)) {
+            throw new ViewDataNotValidException('$data is not valid. You must provide an associative array.');
+        }
+
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * The absolute path to the template/partial.
+     *
+     * @return string
+     */
+    public function templatePath(): string
+    {
+        return static::path($this->path);
+    }
+
+    /**
      * Include the template/partial
      *
      * @return void
@@ -105,7 +121,7 @@ class View
     protected function includeTemplate(): void
     {
         if (!empty($this->data)) {
-            extract($this->data);
+            extract($this->data, EXTR_OVERWRITE);
         }
 
         include $this->templatePath();

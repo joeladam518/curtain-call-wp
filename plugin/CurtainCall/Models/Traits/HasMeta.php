@@ -2,12 +2,14 @@
 
 namespace CurtainCall\Models\Traits;
 
+use CurtainCall\Support\Arr;
+
 trait HasMeta
 {
     /** @var array */
     protected $meta = [];
     /** @var array|string[] */
-    protected $ccwp_meta_keys = [];
+    protected $ccwp_meta = [];
 
     /**
      * @param string $key
@@ -28,7 +30,7 @@ trait HasMeta
      */
     protected function isCCWPMeta(string $key): bool
     {
-        return in_array($key, $this->ccwp_meta_keys);
+        return in_array($key, $this->ccwp_meta);
     }
 
     /**
@@ -53,9 +55,7 @@ trait HasMeta
      */
     protected function loadMeta()
     {
-        $this->meta = array_map(function($item){
-            return $item[0] ?? null;
-        }, $this->fetchAllMeta());
+        $this->meta = Arr::map($this->fetchAllMeta(), fn($item) => $item[0] ?? null);
 
         return $this;
     }
@@ -83,17 +83,17 @@ trait HasMeta
      */
     protected function getMeta(string $key)
     {
-        $meta_key = $this->getMetaKey($key);
+        $metaKey = $this->getMetaKey($key);
 
-        if (array_key_exists($meta_key, $this->meta)) {
-            return $this->meta[$meta_key];
+        if (array_key_exists($metaKey, $this->meta)) {
+            return $this->meta[$metaKey];
         }
 
-        $meta_value = $this->fetchMeta($key);
+        $metaValue = $this->fetchMeta($key);
 
-        $this->setMeta($key, $meta_value);
+        $this->setMeta($key, $metaValue);
 
-        return $meta_value;
+        return $metaValue;
     }
 
     /**
@@ -152,6 +152,7 @@ trait HasMeta
         if ($result = delete_post_meta($this->ID, $this->getMetaKey($key))) {
             $this->__unset($key);
         }
+
         return $result;
     }
 }

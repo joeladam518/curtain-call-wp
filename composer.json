@@ -12,9 +12,9 @@
         "cast",
         "crew"
     ],
-    "require": {},
     "require-dev": {
-        "johnpbloch/wordpress": "*"
+        "johnpbloch/wordpress": "*",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "config": {
         "optimize-autoloader": true,

@@ -27,7 +27,7 @@ class CastAndCrew extends CurtainCallPost
     const META_PREFIX = '_ccwp_cast_crew_';
 
     /** @var array|string[] */
-    protected $ccwp_meta_keys = [
+    protected $ccwp_meta = [
         'name_first',
         'name_last',
         'self_title',
@@ -79,7 +79,7 @@ class CastAndCrew extends CurtainCallPost
                 'edit_item'          => __('Edit cast or crew'),
                 'new_item'           => __('New cast or crew'),
                 'all_items'          => __('All cast and crew'),
-                'view_item'          => __('View cast and crew'),
+                'view_item'          => __('View cast or crew'),
                 'search_items'       => __('Search cast and crew'),
                 'not_found'          => __('No cast or crew found'),
                 'not_found_in_trash' => __('No cast or crew found in the Trash'),
@@ -112,7 +112,7 @@ class CastAndCrew extends CurtainCallPost
      * @param array $additionalArgs
      * @return WP_Query
      */
-    public static function getPosts( array $additionalArgs = []): WP_Query
+    public static function getPosts(array $additionalArgs = []): WP_Query
     {
         return new WP_Query(array_merge([
             'post_type' => [
@@ -158,7 +158,7 @@ class CastAndCrew extends CurtainCallPost
                 $birthplace .= ' in ' . $this->hometown;
             }
             $birthplace .= '.';
-        } else if (isset($this->hometown)) {
+        } elseif (isset($this->hometown)) {
             $birthplace .= 'Born in ' . $this->hometown . '.';
         }
 

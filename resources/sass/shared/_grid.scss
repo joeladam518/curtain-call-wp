@@ -1,5 +1,3 @@
-@use "sass:map";
-
 .ccwp-section {
     width: auto;
 }
@@ -43,11 +41,21 @@
     &.mb-4 {
         margin-bottom: 16px;
     }
+
+    &.mt-5 {
+        margin-top: 20px;
+    }
+    &.mb-5 {
+        margin-bottom: 20px;
+    }
 }
 
 .ccwp-col {
-    display: flex;
-    flex-flow: column nowrap;
+    display: block;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    max-width: 100%;
     padding-left: 16px;
     padding-right: 16px;
 }

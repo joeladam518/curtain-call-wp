@@ -1,23 +1,11 @@
 /* Productions Directory */
-
-.post-type-archive-ccwp_production {
-    .ccwp-productions-page {
-        padding-top: 20px;
-        padding-left: 8px;
-        padding-right: 8px;
-        > .ccwp-container {
-            > .ccwp-section {
-                margin-bottom: 90px;
-            }
-        }
-    }
-
+body.post-type-archive-ccwp_production {
     .productions-directory-row {
         display: flex;
         flex-flow: column nowrap;
         margin-bottom: 45px;
 
-        @media (min-width: $br-sm-min) {
+        @include from($br-sm-min) {
             flex-flow: row wrap;
         }
     }
@@ -37,7 +25,7 @@
             margin: 0 auto;
         }
 
-        @media (min-width: $br-sm-min) {
+        @include from($br-sm-min) {
             flex-basis: 50%;
             padding-right: 50px;
             margin-bottom: 0;
@@ -50,7 +38,7 @@
         flex-shrink: 0;
 
         .now-showing {
-            font-size: 1.2rem;
+            font-size: 1.25em;
             font-weight: bold;
         }
 
@@ -70,7 +58,7 @@
 
         .production-dates {
             display: block;
-            font-size: 1.2rem;
+            font-size: 1.2em;
             font-weight: bold;
             color: $black;
         }
@@ -85,7 +73,9 @@
         }
     }
 
-    .current-productions-section {
+    .ccwp-current-productions-section {
+        margin-bottom: 75px;
+
         .production-poster {
             flex-basis: 100%;
             img {
@@ -95,25 +85,29 @@
     }
 
     .ccwp-future-productions-section {
+        margin-bottom: 75px;
+
         > h2 {
-            margin-bottom: 35px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba($black,.1);
             color: $black;
             text-align: left;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba($black,.1);
+            margin-bottom: 35px;
         }
     }
 
     .ccwp-past-productions-section {
-        > h2 {
-            padding: 20px 0;
-            margin-bottom: 50px;
-            color: $white;
-            background-color: rgba(132,132,132,.6);
-            text-align: center;
+        margin-bottom: 75px;
 
-            @media screen and (max-width: 778px) {
-                margin: 0 -20px 20px;
+        > h2 {
+            background-color: rgba($medium-grey, .6);
+            color: $white;
+            text-align: center;
+            padding: 20px 0;
+            margin: 0 -16px 50px;
+
+            @include from($br-sm-min) {
+                margin: 0 -16px 25px;
             }
         }
     }

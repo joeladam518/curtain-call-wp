@@ -1,4 +1,4 @@
-<?php if (!defined('ABSPATH')) die;
+<?php
 /**
  * Plugin Name:       CurtainCallWP
  * Plugin URI:        https://github.com/joeladam518/CurtainCallWP
@@ -13,6 +13,9 @@
  * Text Domain:       curtain-call-wp
  * Domain Path:       /languages
 **/
+if (!defined('ABSPATH')) {
+    die;
+}
 
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');
 define('CCWP_PLUGIN_VERSION', '0.5.0');

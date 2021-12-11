@@ -1,4 +1,7 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die;
+}
 
 if (!function_exists('ccwpPluginPath')) {
     /**
@@ -35,7 +38,7 @@ if (!function_exists('ccwpStripShortCodeGallery')) {
      * @param string $content
      * @return string
      */
-    function  ccwpStripShortCodeGallery(string $content): string
+    function ccwpStripShortCodeGallery(string $content): string
     {
         preg_match_all('~'.get_shortcode_regex().'~s', $content, $matches, PREG_SET_ORDER);
 
@@ -109,7 +112,9 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
             ob_end_clean();
             $out = '<pre>' . $out . '</pre>' . PHP_EOL;
             echo $out;
-            if ($exit) { exit; }
+            if ($exit) {
+                exit;
+            }
         }
     }
 
@@ -130,7 +135,9 @@ if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
             ob_end_clean();
             $out = '<pre>' . $out . '</pre>' . PHP_EOL;
             echo $out;
-            if ($exit) { exit; }
+            if ($exit) {
+                exit;
+            }
         }
     }
 }

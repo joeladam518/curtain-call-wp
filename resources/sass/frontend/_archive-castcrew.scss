@@ -1,14 +1,9 @@
 /* Cast and Crew */
-.post-type-archive-ccwp_cast_and_crew {
-    .ccwp-cast-and-crew-page {
-        padding-top: 20px;
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-
+body.post-type-archive-ccwp_cast_and_crew {
     .ccwp-alphabet-navigation {
-        margin-bottom: 30px;
-        font-size: 17px;
+        font-size: 18px;
+        line-height: 1.4;
+        margin-bottom: 32px;
 
         a, span {
             padding: 0 5px;
@@ -25,32 +20,38 @@
         }
 
         span {
-            color: rgba($black,.3);
+            color: rgba($black, .3);
         }
     }
 
     .ccwp-alphabet-header {
         font-style: normal;
         font-size: 24px;
-        line-height: 34px;
+        line-height: 1.2;
         text-transform: none;
         padding-left: 20px;
         margin-bottom: 20px;
     }
 
-    .ccwp-row {
-        flex-flow: row wrap;
-        margin-bottom: 0;
+    .ccwp-alphabet-container{
+        .ccwp-row {
+            justify-content: center;
+
+            @include from($br-xs-min) {
+                justify-content: flex-start;
+            }
+        }
     }
 
     .castcrew-wrapper {
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
-        flex-basis: 250px;
+        flex-basis: 232px;
         flex-shrink: 0;
-        margin-right: 40px;
-        margin-bottom: 40px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: 32px;
     }
 
     .castcrew-headshot {
@@ -62,6 +63,7 @@
     }
 
     .castcrew-name {
+        line-height: 1.4;
         margin: 0;
 
         a {
@@ -75,7 +77,8 @@
     }
 
     .castcrew-self-title {
-        color: rgba($black,.5);
+        line-height: 1.6;
+        color: rgba($black, .5);
         margin-bottom: 10px;
     }
 }

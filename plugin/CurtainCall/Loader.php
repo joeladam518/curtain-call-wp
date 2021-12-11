@@ -27,8 +27,8 @@ class Loader
      */
     public function __construct()
     {
-        $this->actions    = [];
-        $this->filters    = [];
+        $this->actions = [];
+        $this->filters = [];
         $this->shortcodes = [];
     }
 
@@ -94,7 +94,7 @@ class Loader
      */
     public function run(): void
     {
-        foreach($this->filters as $filter) {
+        foreach ($this->filters as $filter) {
             add_filter(
                 $filter['name'],
                 $filter['callback'],
@@ -103,7 +103,7 @@ class Loader
             );
         }
 
-        foreach($this->actions as $action) {
+        foreach ($this->actions as $action) {
             add_action(
                 $action['name'],
                 $action['callback'],
@@ -112,7 +112,7 @@ class Loader
             );
         }
 
-        foreach($this->shortcodes as $shortcode) {
+        foreach ($this->shortcodes as $shortcode) {
             add_shortcode(
                 $shortcode['name'],
                 $shortcode['callback']

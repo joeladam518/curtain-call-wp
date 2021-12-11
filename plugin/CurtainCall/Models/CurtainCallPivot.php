@@ -92,8 +92,9 @@ class CurtainCallPivot implements Arrayable
 
     /**
      * @param array $data
+     * @return void
      */
-    public function load(array $data)
+    public function load(array $data): void
     {
         foreach ($data as $key => $value) {
             if (static::isField($key)) {

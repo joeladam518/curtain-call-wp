@@ -13,7 +13,8 @@
  * @var string $twitter_link
  * @var string $instagram_link
  * @var string $fun_fact
-**/
+ */
+
 echo $wp_nonce;
 ?>
 
