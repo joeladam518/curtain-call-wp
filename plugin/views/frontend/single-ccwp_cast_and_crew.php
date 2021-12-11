@@ -1,6 +1,7 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
 use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Support\Str;
 
 get_header('single');
 ?>
@@ -71,8 +72,8 @@ get_header('single');
 
                                 <?php if (isset($castcrew->website_link)) :?>
                                     <div class="castcrew-website">
-                                        <a href="https://<?php echo $castcrew->website_link; ?>">
-                                            <?php echo $castcrew->website_link; ?>
+                                        <a href="<?php echo $castcrew->website_link; ?>">
+                                            <?php echo Str::stripHttp($castcrew->website_link); ?>
                                         </a>
                                     </div>
                                 <?php endif; ?>
@@ -80,19 +81,19 @@ get_header('single');
                                 <?php if ($castcrew->hasSocialMedia()) : ?>
                                     <div class="castcrew-social">
                                         <?php if (isset($castcrew->facebook_link)) : ?>
-                                            <a href="https://<?php echo $castcrew->facebook_link; ?>">
+                                            <a href="<?php echo $castcrew->facebook_link; ?>">
                                                 <i class="fab fa-facebook-f"></i>
                                             </a>
                                         <?php endif; ?>
 
                                         <?php if (isset($castcrew->instagram_link)) : ?>
-                                            <a href="https://<?php echo $castcrew->instagram_link; ?>">
+                                            <a href="<?php echo $castcrew->instagram_link; ?>">
                                                 <i class="fab fa-instagram"></i>
                                             </a>
                                         <?php endif; ?>
 
                                         <?php if (isset($castcrew->twitter_link)) : ?>
-                                            <a href="https://<?php echo $castcrew->twitter_link; ?>">
+                                            <a href="<?php echo $castcrew->twitter_link; ?>">
                                                 <i class="fab fa-twitter"></i>
                                             </a>
                                         <?php endif; ?>

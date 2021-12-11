@@ -160,22 +160,20 @@ class AdminHooks
     {
         add_meta_box(
             'ccwp_add_cast_and_crew_to_production', // Unique ID
-            __('Add Cast And Crew to Production', 'curtain-call-wp'), // Box title
-            array($this, 'renderAddCastAndCrewMetabox'), // Content callback
-            'ccwp_production', // Post type
+            __('Add Cast And Crew to Production', CCWP_TEXT_DOMAIN), // Box title
+            [$this, 'renderAddCastAndCrewMetabox'], // Content callback
+            Production::POST_TYPE, // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
-            //[ 'example' => 'arguments you can place into the meta_box renderer' ]
         );
 
         add_meta_box(
             'ccwp_production_details', // Unique ID
-            __('Production Details', 'curtain-call-wp'), // Box title
-            array($this, 'renderProductionDetailsMetabox'), // Content callback
-            'ccwp_production', // Post type
+            __('Production Details', CCWP_TEXT_DOMAIN), // Box title
+            [$this, 'renderProductionDetailsMetabox'], // Content callback
+            Production::POST_TYPE, // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
-            //[ example' => 'arguments you can place into the meta_box renderer' ]
         );
     }
 
@@ -343,7 +341,11 @@ class AdminHooks
         }
 
         if (!empty($_POST['ccwp_ticket_url'])) {
-            update_post_meta($postId, '_ccwp_production_ticket_url', sanitize_text_field($_POST['ccwp_ticket_url']));
+            update_post_meta(
+                $postId,
+                '_ccwp_production_ticket_url',
+                esc_url_raw($_POST['ccwp_ticket_url'], ['http', 'https'])
+            );
         } else {
             delete_post_meta($postId, '_ccwp_production_ticket_url');
         }
@@ -369,11 +371,10 @@ class AdminHooks
         add_meta_box(
             'ccwp_cast_and_cast_details', // Unique ID
             __('Cast and Crew Details', CCWP_TEXT_DOMAIN), // Box title
-            array($this, 'renderCastAndCrewDetailsMetabox'), // Content callback
-            'ccwp_cast_and_crew', // Post type
+            [$this, 'renderCastAndCrewDetailsMetabox'], // Content callback
+            CastAndCrew::POST_TYPE, // Post type
             'normal', // Context: (normal, side, advanced)
             'high' // Priority: (high, low)
-            //[ 'example' => 'arguments you can place into the meta_box renderer' ]
         );
     }
 
@@ -467,33 +468,41 @@ class AdminHooks
         }
 
         if (!empty($_POST['ccwp_website_link'])) {
-            $link = Str::stripHttp($_POST['ccwp_website_link']);
-            $link = sanitize_text_field($link);
-            update_post_meta($postId, '_ccwp_cast_crew_website_link', $link);
+            update_post_meta(
+                $postId,
+                '_ccwp_cast_crew_website_link',
+                esc_url_raw($_POST['ccwp_website_link'], ['http', 'https'])
+            );
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_website_link');
         }
 
         if (!empty($_POST['ccwp_facebook_link'])) {
-            $link = Str::stripHttp($_POST['ccwp_facebook_link']);
-            $link = sanitize_text_field($link);
-            update_post_meta($postId, '_ccwp_cast_crew_facebook_link', $link);
+            update_post_meta(
+                $postId,
+                '_ccwp_cast_crew_facebook_link',
+                esc_url_raw($_POST['ccwp_facebook_link'], ['http', 'https'])
+            );
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_facebook_link');
         }
 
         if (!empty($_POST['ccwp_twitter_link'])) {
-            $link = Str::stripHttp($_POST['ccwp_twitter_link']);
-            $link = sanitize_text_field($link);
-            update_post_meta($postId, '_ccwp_cast_crew_twitter_link', $link);
+            update_post_meta(
+                $postId,
+                '_ccwp_cast_crew_twitter_link',
+                esc_url_raw($_POST['ccwp_twitter_link'], ['http', 'https'])
+            );
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_twitter_link');
         }
 
         if (!empty($_POST['ccwp_instagram_link'])) {
-            $link = Str::stripHttp($_POST['ccwp_instagram_link']);
-            $link = sanitize_text_field($link);
-            update_post_meta($postId, '_ccwp_cast_crew_instagram_link', $link);
+            update_post_meta(
+                $postId,
+                '_ccwp_cast_crew_instagram_link',
+                esc_url_raw($_POST['ccwp_instagram_link'], ['http', 'https'])
+            );
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_instagram_link');
         }

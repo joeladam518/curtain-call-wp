@@ -70,9 +70,7 @@ class GlobalHooks
         register_setting('ccwp-settings', 'ccwp_default_ticket_url', [
             'type' => 'string',
             'description' => 'The default tickets url to use if no production ticket url is defined.',
-            'sanitize_callback' => function ($value) {
-                return esc_url_raw($value);
-            },
+            'sanitize_callback' => fn($value) => esc_url_raw($value, ['http', 'https']),
             'show_in_rest' => false,
             'default' => null,
         ]);
