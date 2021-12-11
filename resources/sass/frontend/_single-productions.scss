@@ -119,12 +119,13 @@ body.single-ccwp_production {
 
         &.has-post-thumbnail {
             .ccwp-production-poster {
-                width: 100%;
+                max-width: 100%;
+                width: auto;
                 padding-right: 0;
                 padding-bottom: 16px;
 
                 @include from($br-sm-min) {
-                    width: 40%;
+                    max-width: 40%;
                     padding-right: 16px;
                     padding-bottom: 0;
                 }
