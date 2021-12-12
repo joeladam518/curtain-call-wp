@@ -115,21 +115,6 @@ class CurtainCall
     }
 
     /**
-     * Register all hook related to bother the admin and frontend functionality
-     *
-     * @return void
-     */
-    protected function registerGlobalHooks(): void
-    {
-        $controller = new GlobalHooks();
-
-        $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
-        $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
-        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
-        $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
-    }
-
-    /**
      * Register all the hooks related to the public-facing functionality of the plugin.
      *
      * @return void
@@ -144,6 +129,21 @@ class CurtainCall
         // Scripts and styles to be loaded for the frontend
         $this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
         //$this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
+    }
+
+    /**
+     * Register all hook related to bother the admin and frontend functionality
+     *
+     * @return void
+     */
+    protected function registerGlobalHooks(): void
+    {
+        $controller = new GlobalHooks();
+
+        $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
+        $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
+        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
+        $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
     }
 
     /**
