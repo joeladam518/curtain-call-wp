@@ -38,11 +38,11 @@ npm install
 
 echo ""
 echo "# Refresh the autoload files"
-cd "${PLUGIN_DIR}" && composer dumpautoload
+cd "$PLUGIN_DIR" && composer dumpautoload
 
 echo ""
 echo "# Build production assets"
-npm run prod
+cd "$REPO_DIR" && npm run prod
 
 # Copy the plugin to the directory to be zipped
 echo ""
