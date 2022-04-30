@@ -14,7 +14,7 @@
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.15.0",
         "laravel-mix": "^6.0.0",
-        "moment": "^2.29.1",
+        "moment": "^2.29.2",
         "pikaday": "^1.8.0",
         "sass": "^1.43.0",
         "sass-loader": "^12.3.0",
