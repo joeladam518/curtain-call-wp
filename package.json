@@ -16,8 +16,8 @@
         "laravel-mix": "^6.0.0",
         "moment": "^2.29.2",
         "pikaday": "^1.8.0",
-        "sass": "^1.43.0",
-        "sass-loader": "^12.3.0",
+        "sass": "^1.54.0",
+        "sass-loader": "^13.3.0",
         "select2": "^4.0.13"
     },
     "author": "Joel Haker",

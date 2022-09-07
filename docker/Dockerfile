@@ -32,7 +32,7 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 RUN cd /tmp && \
     git clone git://github.com/xdebug/xdebug.git && \
     cd xdebug && \
-    git checkout xdebug_3_0 && \
+    git checkout xdebug_3_1 && \
     phpize && \
     ./configure --enable-xdebug && \
     make && \

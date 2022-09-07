@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "nesbot/carbon": "^2.54.0"
     },
     "config": {
