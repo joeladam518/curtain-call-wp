@@ -1,7 +1,7 @@
 <?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
 
 use CurtainCall\Models\Production;
-use CurtainCall\View;
+use CurtainCall\Support\View;
 
 get_header();
 ?>

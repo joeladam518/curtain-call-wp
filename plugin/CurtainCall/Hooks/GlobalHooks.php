@@ -5,7 +5,7 @@ namespace CurtainCall\Hooks;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Arr;
-use CurtainCall\View;
+use CurtainCall\Support\View;
 use Throwable;
 
 class GlobalHooks

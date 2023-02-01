@@ -1,10 +1,9 @@
 <?php
 
-namespace CurtainCall;
+namespace CurtainCall\Support;
 
 use CurtainCall\Exceptions\ViewDataNotValidException;
 use CurtainCall\Exceptions\ViewNotFoundException;
-use CurtainCall\Support\Arr;
 use Throwable;
 
 class View
@@ -56,15 +55,23 @@ class View
         }
 
         try {
+            $level = ob_get_level();
             ob_start();
-            $this->includeTemplate();
-            $output = ob_get_clean();
+
+            (function ($path) {
+                if (!empty($this->data)) {
+                    extract($this->data, EXTR_OVERWRITE);
+                }
+                include $path;
+            })($this->templatePath());
+
+            return ob_get_clean();
         } catch (Throwable $e) {
-            ob_end_clean();
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
             throw $e;
         }
-
-        return $output;
     }
 
     /**
@@ -111,19 +118,5 @@ class View
     public function templatePath(): string
     {
         return static::path($this->path);
-    }
-
-    /**
-     * Include the template/partial
-     *
-     * @return void
-     */
-    protected function includeTemplate(): void
-    {
-        if (!empty($this->data)) {
-            extract($this->data, EXTR_OVERWRITE);
-        }
-
-        include $this->templatePath();
     }
 }

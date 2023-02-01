@@ -3,8 +3,9 @@
  * @var string $chronological_state
  * @var WP_Query $wp_query
  */
+
 use CurtainCall\Models\Production;
-use CurtainCall\View;
+use CurtainCall\Support\View;
 
 $wp_query->rewind_posts();
 ?>

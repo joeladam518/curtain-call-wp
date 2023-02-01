@@ -7,7 +7,7 @@ use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
-use CurtainCall\View;
+use CurtainCall\Support\View;
 use Throwable;
 use WP_Post;
 
