@@ -21,14 +21,14 @@ http://localhost:${PHP_MYADMIN_PORT}
 You can build the plugin locally by running the build script.
 Then you can install the generated zip file in seperate WordPress installation.
 ```shell
-$ bash scrtipts/build.sh
+$ bash scripts/build.sh
 
 # output: curtaincallwp.zip
 ```
 
 The script takes and optional version argument attach to the file name.
 ```shell
-$ bash scrtipts/build.sh 1.0.0
+$ bash scripts/build.sh 1.0.0
 
 # output: curtaincallwp-1.0.0.zip
 ```
