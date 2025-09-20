@@ -13,6 +13,7 @@ get_header('single');
 
             $production = Production::make(get_post());
             $productionName = $production->name ?? get_the_title();
+            $postStatus = get_post_status($production->getPost());
             $productionCastCrew = [
                 'cast' => $production->getCastAndCrew('cast'),
                 'crew' => $production->getCastAndCrew('crew'),
@@ -21,8 +22,7 @@ get_header('single');
             // Production photo gallery
             $gallery = get_post_gallery();
         ?>
-
-        <?php if (get_post_status($production->getPost()) == 'publish') : ?>
+        <?php if ($postStatus === 'publish' || $postStatus === 'draft') : ?>
             <div class="ccwp-main">
                 <div class="ccwp-main-content-container">
                     <div class="ccwp-breadcrumbs">

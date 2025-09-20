@@ -10,13 +10,12 @@ get_header('single');
     <?php while (have_posts()) : ?>
         <?php
             the_post();
-
             $castcrew = CastAndCrew::make(get_post());
             $fullName = $castcrew->getFullName();
             $birthplace = $castcrew->getBirthPlace();
+            $postStatus = get_post_status($castcrew->getPost())
         ?>
-
-        <?php if (get_post_status($castcrew->getPost()) == 'publish') : ?>
+        <?php if ($postStatus === 'publish' || $postStatus === 'draft') : ?>
             <div class="ccwp-main">
                 <div class="ccwp-main-content-container">
                     <div class="ccwp-breadcrumbs">
