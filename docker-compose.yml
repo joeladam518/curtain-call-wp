@@ -1,4 +1,4 @@
-version: '3.1'
+---
 
 services:
   mariadb:
@@ -36,7 +36,7 @@ services:
 
   wpsite.test:
     container_name: wpsite_code
-    image: 'wordpress:latest'
+    image: 'wordpress:php8.4-fpm-alpine'
     build:
       context: ./docker
       dockerfile: Dockerfile

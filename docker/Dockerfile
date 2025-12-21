@@ -25,19 +25,10 @@ RUN grep -qF "$LL_ALIAS" ~/.bashrc || echo "$LL_ALIAS" >> ~/.bashrc
 # Install composer
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
-# Install XDebug from source as described here:
-# https://xdebug.org/docs/install
-# Available branches of XDebug could be seen here:
-# https://github.com/xdebug/xdebug/branches
-RUN cd /tmp && \
-    git clone git://github.com/xdebug/xdebug.git && \
-    cd xdebug && \
-    git checkout xdebug_3_1 && \
-    phpize && \
-    ./configure --enable-xdebug && \
-    make && \
-    make install && \
-    rm -rf /tmp/xdebug
+# Install the latest stable Xdebug via PECL (builds against the image's PHP)
+# This keeps Xdebug up-to-date without pinning a specific branch.
+RUN pecl install xdebug \
+    && rm -rf /tmp/pear
 
 # Since this Dockerfile extends the official Docker image `wordpress`,
 # and since `wordpress`, in turn, extends the official Docker image `php`,
