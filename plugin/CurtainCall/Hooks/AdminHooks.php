@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Hooks;
 
 use CurtainCall\CurtainCall;

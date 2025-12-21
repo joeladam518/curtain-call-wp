@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Hooks;
 
 use CurtainCall\CurtainCall;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
-use CurtainCall\Support\Arr;
 use CurtainCall\Support\View;
+use Illuminate\Support\Arr;
 use WP_Post;
 
 class FrontendHooks
@@ -58,7 +60,7 @@ class FrontendHooks
     private function themeHasTemplate(string $type, array $templates): bool
     {
         $themeTemplate = locate_template(
-            Arr::filter($templates, fn($item) => $item !== "{$type}.php"),
+            Arr::where($templates, fn($item) => $item !== "{$type}.php"),
             false,
             false,
             []

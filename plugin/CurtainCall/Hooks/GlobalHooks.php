@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Hooks;
 
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
-use CurtainCall\Support\Arr;
 use CurtainCall\Support\View;
+use Illuminate\Support\Arr;
 use Throwable;
 
 class GlobalHooks

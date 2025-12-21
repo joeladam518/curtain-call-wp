@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Models\Traits;
 
-use CurtainCall\Support\Arr;
+use Illuminate\Support\Arr;
 
 trait HasMeta
 {

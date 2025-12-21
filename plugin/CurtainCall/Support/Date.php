@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Support;
 
 use Carbon\CarbonImmutable as Carbon;

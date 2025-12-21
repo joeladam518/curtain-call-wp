@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Models;
 
-use CurtainCall\Models\Interfaces\Arrayable;
 use CurtainCall\Models\Traits\HasAttributes;
-use CurtainCall\Support\Arr;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use wpdb;
 
 /**

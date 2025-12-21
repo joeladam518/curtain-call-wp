@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Models\Traits;
 
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
-use CurtainCall\Support\Arr;
 use CurtainCall\Support\Query;
+use Illuminate\Support\Arr;
 use Throwable;
 use wpdb;
 

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Models\Traits;
 
-use CurtainCall\Models\Interfaces\Arrayable;
+use Illuminate\Contracts\Support\Arrayable;
 
 trait HasAttributes
 {
