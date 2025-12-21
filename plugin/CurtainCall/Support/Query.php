@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Support;
 
 use CurtainCall\Models\CurtainCallPivot;
+use Illuminate\Support\Arr;
 
 class Query
 {

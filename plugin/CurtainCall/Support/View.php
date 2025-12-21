@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CurtainCall\Support;
 
 use CurtainCall\Exceptions\ViewDataNotValidException;
 use CurtainCall\Exceptions\ViewNotFoundException;
+use Illuminate\Support\Arr;
 use Throwable;
 
 class View
