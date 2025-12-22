@@ -1,0 +1,14 @@
+{
+    "files": [],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@js": ["./resources/js"],
+            "@styles": ["./resources/styles"]
+        }
+    },
+    "references": [
+        { "path": "tsconfig.node.json" },
+        { "path": "tsconfig.web.json" }
+    ]
+}

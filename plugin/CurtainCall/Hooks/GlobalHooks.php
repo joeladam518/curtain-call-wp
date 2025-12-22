@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall\Hooks;
 
+use CurtainCall\CurtainCall;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\View;
@@ -115,5 +116,110 @@ class GlobalHooks
             'helpText' => Arr::get($args, 'input-help-text'),
             'value' => $optionValue
         ])->render();
+    }
+
+    /**
+     * Register postmeta so it is available in the REST API / block editor
+     *
+     * @return void
+     */
+    public function registerPostMeta(): void
+    {
+        // Cast & Crew meta
+        $castCrewMeta = [
+            'name_first'    => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'name_last'     => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'self_title'    => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'birthday'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'hometown'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'website_link'  => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'facebook_link' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'twitter_link'  => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'instagram_link'=> ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'fun_fact'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+        ];
+
+        foreach ($castCrewMeta as $key => $schema) {
+            register_post_meta(
+                'ccwp_cast_and_crew',
+                "_ccwp_cast_crew_{$key}",
+                [
+                    'type'              => $schema['type'],
+                    'single'            => true,
+                    'sanitize_callback' => $schema['sanitize'],
+                    'show_in_rest'      => true,
+                    'auth_callback'     => fn() => current_user_can('edit_posts'),
+                ]
+            );
+        }
+
+        // Production meta
+        $productionMeta = [
+            'name'       => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'date_start' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'date_end'   => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'show_times' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'ticket_url' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'venue'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+        ];
+
+        foreach ($productionMeta as $key => $schema) {
+            register_post_meta(
+                'ccwp_production',
+                "_ccwp_production_{$key}",
+                [
+                    'type'              => $schema['type'],
+                    'single'            => true,
+                    'sanitize_callback' => $schema['sanitize'],
+                    'show_in_rest'      => true,
+                    'auth_callback'     => fn() => current_user_can('edit_posts'),
+                ]
+            );
+        }
+    }
+
+    public function addImportMap(): void
+    {
+        // Skip if WordPress 6.5+ handles this natively
+        if (function_exists('wp_register_script_module')) {
+            return;
+        }
+
+        // Create import map for WordPress packages
+        $importMap = [
+            'imports' => [
+                '@wordpress/plugins' => includes_url('js/dist/plugins.min.js'),
+                '@wordpress/edit-post' => includes_url('js/dist/edit-post.min.js'),
+                '@wordpress/editor' => includes_url('js/dist/editor.min.js'),
+                '@wordpress/components' => includes_url('js/dist/components.min.js'),
+                '@wordpress/element' => includes_url('js/dist/element.min.js'),
+                '@wordpress/data' => includes_url('js/dist/data.min.js'),
+                '@wordpress/i18n' => includes_url('js/dist/i18n.min.js'),
+                '@wordpress/api-fetch' => includes_url('js/dist/api-fetch.min.js'),
+                '@wordpress/blocks' => includes_url('js/dist/blocks.min.js'),
+                '@wordpress/block-editor' => includes_url('js/dist/block-editor.min.js'),
+                '@wordpress/compose' => includes_url('js/dist/compose.min.js'),
+                'jquery' => includes_url('js/jquery/jquery.min.js'),
+            ]
+        ];
+
+        echo '<script type="importmap">' . wp_json_encode($importMap) . '</script>';
+    }
+
+    public function addModuleTagToScripts(string $tag, string $handle, string $src): string
+    {
+        $handles = [
+            CurtainCall::PLUGIN_NAME . '_admin',
+            CurtainCall::PLUGIN_NAME . '_editor_sidebar',
+            CurtainCall::PLUGIN_NAME . '_frontend'
+        ];
+
+        // Add type="module" for ES module scripts (unless already handled by wp_enqueue_script_module)
+        if (in_array($handle, $handles, true) && !function_exists('wp_register_script_module')) {
+            // Convert to importmap-compatible script tag
+            $tag = str_replace(' src=', ' type="module" src=', $tag);
+        }
+
+        return $tag;
     }
 }

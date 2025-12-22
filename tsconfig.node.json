@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "allowImportingTsExtensions": true,
+        "composite": true,
+        "lib": ["esnext"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "target": "ESNext",
+        "types": [
+            "node",
+        ]
+    },
+    "include": [
+        "rollup.config.*",
+    ]
+}

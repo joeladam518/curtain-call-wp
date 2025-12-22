@@ -5,22 +5,22 @@ body.post-type-archive-ccwp_cast_and_crew {
         line-height: 1.4;
         margin-bottom: 32px;
 
-        a, span {
+        & a, & span {
             padding: 0 5px;
         }
 
-        a {
-            color: $black;
+        & a {
+            color: var(--black);
             text-decoration: none;
 
             &:hover {
-                color: $red;
+                color: var(--red);
                 text-decoration: none;
             }
         }
 
-        span {
-            color: rgba($black, .3);
+        & span {
+            color: rgba(0, 0, 0, .3);
         }
     }
 
@@ -34,10 +34,10 @@ body.post-type-archive-ccwp_cast_and_crew {
     }
 
     .ccwp-alphabet-container{
-        .ccwp-row {
+        & .ccwp-row {
             justify-content: center;
 
-            @include from($br-xs-min) {
+            @media (--from-xs) {
                 justify-content: flex-start;
             }
         }
@@ -66,11 +66,11 @@ body.post-type-archive-ccwp_cast_and_crew {
         line-height: 1.4;
         margin: 0;
 
-        a {
+        & a {
             text-decoration: none;
 
             &:hover {
-                color: $red;
+                color: var(--red);
                 text-decoration: none;
             }
         }
@@ -78,7 +78,7 @@ body.post-type-archive-ccwp_cast_and_crew {
 
     .castcrew-self-title {
         line-height: 1.6;
-        color: rgba($black, .5);
+        color: rgba(0, 0, 0, .5);
         margin-bottom: 10px;
     }
 }

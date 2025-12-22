@@ -44,10 +44,49 @@ class AdminHooks
     public function enqueueScripts(): void
     {
         $handle = CurtainCall::PLUGIN_NAME . '_admin';
-        $src = $this->assetsUrl . 'curtain-call-wp-admin.js';
+        $src = $this->assetsUrl . 'curtain-call-wp-metaboxes.js';
         $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
 
         wp_enqueue_script($handle, $src, ['jquery'], $version, true);
+    }
+
+    /**
+     * Enqueue assets for the block editor (Gutenberg)
+     * @return void
+     */
+    public function enqueueEditorAssets(): void
+    {
+        // Only load on our CPTs
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        $postType = $screen?->post_type;
+        if ($postType !== Production::POST_TYPE && $postType !== CastAndCrew::POST_TYPE) {
+            return;
+        }
+
+        // Editor sidebar bundle built by Vite
+        $handle = CurtainCall::PLUGIN_NAME . '_editor_sidebar';
+        $src = ccwpPluginUrl('assets/admin/curtain-call-wp-sidebar.js');
+        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
+
+        // Dependencies on WordPress packages
+        $deps = [
+            'wp-plugins',
+            'wp-edit-post',
+            'wp-editor',
+            'wp-components',
+            'wp-element',
+            'wp-data',
+            'wp-i18n',
+            'wp-api-fetch',
+        ];
+
+        wp_enqueue_script($handle, $src, $deps, $version, true);
+
+        // Provide REST base and nonce to the script
+        wp_localize_script($handle, 'CCWP_SETTINGS', [
+            'root'  => esc_url_raw(rest_url()),
+            'nonce' => wp_create_nonce('wp_rest'),
+        ]);
     }
 
     //  ----------------------------------------------------------------------------------------------------------------

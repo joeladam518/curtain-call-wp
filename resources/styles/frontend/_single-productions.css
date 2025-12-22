@@ -1,3 +1,4 @@
+
 /* CCWP Single production page */
 body.single-ccwp_production {
     article {
@@ -6,10 +7,10 @@ body.single-ccwp_production {
         }
 
         .show-info {
-            color: $black;
+            color: var(--black);
 
             .show-dates-container {
-                color: $black;
+                color: var(--black);
                 margin-bottom: 8px;
 
                 .now-showing-label {
@@ -57,7 +58,7 @@ body.single-ccwp_production {
 
         .ccwp-directory-section {
             padding: 30px 0;
-            border-top: 1px solid rgba($black, .1);
+            border-top: 1px solid rgba(var(--black), .1);
         }
 
         .production-cast-list,
@@ -80,7 +81,7 @@ body.single-ccwp_production {
                 flex-basis: 100%;
                 margin-bottom: 16px;
 
-                @include from($br-sm-min) {
+                @media (--from-sm) {
                     flex-basis: 50%;
                 }
             }
@@ -95,22 +96,22 @@ body.single-ccwp_production {
                 flex-grow: 1;
 
                 .castcrew-name {
-                    font-size: $size-6;
+                    font-size: var(--size-6);
                     line-height: 1;
                     margin-bottom: 8px;
 
                     a {
                         text-decoration: none;
-                        color: $black;
+                        color: var(--black);
 
                         &:hover {
-                            color: $red;
+                            color: var(--red);
                         }
                     }
                 }
 
                 .castcrew-role {
-                    font-size: $size-5;
+                    font-size: var(--size-5);
                     line-height: 1;
                 }
             }
@@ -124,7 +125,7 @@ body.single-ccwp_production {
                 padding-right: 0;
                 padding-bottom: 16px;
 
-                @include from($br-sm-min) {
+                @media (--from-sm) {
                     max-width: 40%;
                     padding-right: 16px;
                     padding-bottom: 0;
@@ -134,7 +135,7 @@ body.single-ccwp_production {
             .show-info {
                 width: 100%;
 
-                @include from($br-sm-min) {
+                @media (--from-sm) {
                     width: 60%;
                 }
             }

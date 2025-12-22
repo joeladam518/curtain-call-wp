@@ -1,0 +1,16 @@
+@custom-media --between-xs-sm (min-width: 528px) and (max-width: 768px);
+@custom-media --between-sm-md (min-width: 769px) and (max-width: 1023px);
+@custom-media --between-md-lg (min-width: 1024px) and (max-width: 1215px);
+@custom-media --between-lg-xl (min-width: 1216px) and (max-width: 1407px);
+
+@custom-media --from-xs (min-width: 528px);
+@custom-media --from-sm (min-width: 769px);
+@custom-media --from-md (min-width: 1024px);
+@custom-media --from-lg (min-width: 1216px);
+@custom-media --from-xl (min-width: 1408px);
+
+@custom-media --to-ss (max-width: 527px);
+@custom-media --to-xs (max-width: 768px);
+@custom-media --to-sm (max-width: 1023px);
+@custom-media --to-md (max-width: 1215px);
+@custom-media --to-lg (max-width: 1407px);

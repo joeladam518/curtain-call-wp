@@ -9,11 +9,11 @@ body.single-ccwp_cast_and_crew,
 body.single-ccwp_production,
 body.post-type-archive-ccwp_cast_and_crew,
 body.post-type-archive-ccwp_production {
-    * {
+    & * {
         box-sizing: border-box;
     }
 
-    h1,h2,h3,h4,h5,h6 {
+    & h1, & h2, & h3, & h4, & h5, & h6 {
         &:before {
             content:none;
         }
@@ -22,7 +22,7 @@ body.post-type-archive-ccwp_production {
         }
     }
 
-    .ccwp-main {
+    & .ccwp-main {
         width: 100%;
         padding-top: var(--ccwp-main-padding-top);
         padding-right: 0;
@@ -30,7 +30,7 @@ body.post-type-archive-ccwp_production {
         padding-left: 0;
     }
 
-    .ccwp-main-content-container {
+    & .ccwp-main-content-container {
         width: auto;
         max-width: var(--ccwp-main-container-max-width);
         padding-top: var(--ccwp-main-container-padding-top);
@@ -39,45 +39,46 @@ body.post-type-archive-ccwp_production {
         margin: 0 auto;
     }
 
-    .ccwp-breadcrumbs {
+    & .ccwp-breadcrumbs {
         margin-bottom: 20px;
 
-        .ccwp-breadcrumb,
-        .ccwp-breadcrumb-spacer {
+        & .ccwp-breadcrumb,
+        & .ccwp-breadcrumb-spacer {
             display: inline-block;
             padding: 0;
             margin: 0
         }
 
-        a.ccwp-breadcrumb {
-            color: $text;
+        & a.ccwp-breadcrumb {
+            color: var(--text);
             text-decoration: none;
+
             &:hover {
-                color: $red;
+                color: var(--red);
             }
         }
 
-        span.ccwp-breadcrumb {
+        & span.ccwp-breadcrumb {
             color: inherit;
         }
 
-        .ccwp-breadcrumb-spacer {
+        & .ccwp-breadcrumb-spacer {
             margin: 0 4px;
         }
     }
 
-    .ccwp-page-heading {
+    & .ccwp-page-heading {
         margin-top: 0;
         margin-block-start: 0;
         line-height: 1;
         margin-bottom: 16px;
     }
 
-    .ccwp-btn {
+    & .ccwp-btn {
         display: block;
         width: 120px;
-        background-color: $red;
-        color: $white;
+        background-color: var(--red);
+        color: var(--white);
         text-align: center;
         text-decoration: none;
         padding: 5px 0;

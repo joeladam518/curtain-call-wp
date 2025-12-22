@@ -60,6 +60,7 @@ class Production extends CurtainCallPost
                 'menu_name'          => 'Productions',
             ],
             'public'            => true,
+            'show_in_rest'      => true,
             'menu_position'     => 5,
             'show_in_nav_menus' => true,
             'has_archive' => true,
@@ -67,6 +68,7 @@ class Production extends CurtainCallPost
                 'title',
                 'editor',
                 'thumbnail',
+                'custom-fields',
             ],
             'taxonomies' => [
                 'ccwp_production_seasons'
@@ -87,6 +89,7 @@ class Production extends CurtainCallPost
         // Add new taxonomy, make it hierarchical (like categories)
         return [
             'hierarchical' => true,
+            'show_in_rest' => true,
             'labels' => [
                 'name'              => __('Seasons', CCWP_TEXT_DOMAIN),
                 'singular_name'     => __('Season', CCWP_TEXT_DOMAIN),

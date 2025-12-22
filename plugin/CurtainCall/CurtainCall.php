@@ -13,8 +13,8 @@ use CurtainCall\LifeCycle\Uninstaller;
 
 class CurtainCall
 {
-    const PLUGIN_NAME = CCWP_PLUGIN_NAME;
-    const PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
+    public const string PLUGIN_NAME = CCWP_PLUGIN_NAME;
+    public const string PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
 
     /**
      * The loader that's responsible for maintaining and
@@ -33,10 +33,10 @@ class CurtainCall
      *
      * Include the following files that make up the plugin:
      *
-     * Loader         - Orchestrates the hooks of the plugin.
-     * GlobalHooks    - Defines the hooks that happen for both Admin and Frontend
-     * AdminHooks     - Defines the hooks for the admin area.
-     * FrontendHooks  - Defines the hooks for the public side of the site.
+     * Loader - Orchestrates the hooks of the plugin.
+     * GlobalHooks - Defines the hooks that happen for both Admin and Frontend
+     * AdminHooks - Defines the hooks for the admin area.
+     * FrontendHooks - Defines the hooks for the public side of the site.
      */
     public function __construct()
     {
@@ -114,6 +114,8 @@ class CurtainCall
         // Scripts and styles to be loaded for the admin
         $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
         $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
+        // Block editor-only assets
+        $this->loader->addAction('enqueue_block_editor_assets', [$controller, 'enqueueEditorAssets'], 0);
     }
 
     /**
@@ -142,10 +144,15 @@ class CurtainCall
     {
         $controller = new GlobalHooks();
 
+        $this->loader->addFilter('script_loader_tag', [$controller, 'addModuleTagToScripts'], 3);
+
         $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
         $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
+        $this->loader->addAction('init', [$controller, 'registerPostMeta'], 0);
+        $this->loader->addAction('rest_api_init', [\CurtainCall\Rest\RelationsController::class, 'registerRoutes'], 0);
+        $this->loader->addAction('init', [\CurtainCall\Blocks\ArchiveBlocks::class, 'register'], 0);
     }
 
     /**

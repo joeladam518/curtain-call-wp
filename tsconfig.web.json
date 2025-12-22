@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "target": "ES2020",
+        "lib": ["DOM", "DOM.Iterable", "ES2020"],
+        "module": "ESNext",
+        "jsx": "preserve",
+        "strict": true,
+        "noImplicitAny": true,
+        "declaration": false,
+        "declarationMap": false,
+        "moduleResolution": "Bundler",
+        "composite": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true,
+        "types": [
+            "@wordpress/block-editor",
+            "@wordpress/blocks",
+            "@wordpress/components",
+            "@wordpress/data",
+            "@wordpress/element",
+            "@wordpress/i18n",
+            "@wordpress/rich-text",
+            "@wordpress/plugins",
+            "@wordpress/edit-post",
+            "@wordpress/api-fetch",
+            "jquery",
+            "react",
+            "react-dom"
+        ]
+    },
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.tsx",
+        "resources/js/**/*.d.ts"
+    ]
+}

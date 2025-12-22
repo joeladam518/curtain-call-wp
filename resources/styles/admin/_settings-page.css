@@ -5,7 +5,7 @@
         margin: 7px 0 16px;
         color: rgba(0, 0, 0, .5);
 
-        p {
+        & p {
             margin-top: 0;
             margin-left: 1px;
             margin-right: 1px;

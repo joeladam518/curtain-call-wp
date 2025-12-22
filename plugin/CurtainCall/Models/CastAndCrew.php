@@ -89,6 +89,7 @@ class CastAndCrew extends CurtainCallPost
                 'menu_name'          => 'Cast and Crew',
             ],
             'public'            => true,
+            'show_in_rest'      => true,
             'menu_position'     => 6,
             'show_in_nav_menus' => true,
             'has_archive'       => true,
@@ -96,6 +97,7 @@ class CastAndCrew extends CurtainCallPost
                 'title',
                 'editor',
                 'thumbnail',
+                'custom-fields',
             ],
             'taxonomies' => [
                 'ccwp_cast_crew_productions',

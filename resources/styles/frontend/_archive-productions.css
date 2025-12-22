@@ -5,7 +5,7 @@ body.post-type-archive-ccwp_production {
         flex-flow: column nowrap;
         margin-bottom: 45px;
 
-        @include from($br-sm-min) {
+        @media (--from-sm) {
             flex-flow: row wrap;
         }
     }
@@ -18,14 +18,14 @@ body.post-type-archive-ccwp_production {
         padding-right: 0;
         margin-bottom: 15px;
 
-        img {
+        & img {
             width: auto;
             height: auto;
             max-height: 250px;
             margin: 0 auto;
         }
 
-        @include from($br-sm-min) {
+        @media (--from-sm) {
             flex-basis: 50%;
             padding-right: 50px;
             margin-bottom: 0;
@@ -37,48 +37,49 @@ body.post-type-archive-ccwp_production {
         flex-grow: 1;
         flex-shrink: 0;
 
-        .now-showing {
+        & .now-showing {
             font-size: 1.25em;
             font-weight: bold;
         }
 
-        .production-name-container {
+        & .production-name-container {
             display: flex;
             flex-flow: row wrap;
             align-items: center;
             margin-bottom: 10px;
         }
 
-        .production-name {
+        & .production-name {
             margin-top: 0;
             margin-block-start: 0;
             margin-right: 30px;
             margin-bottom: 0;
         }
 
-        .production-dates {
+        & .production-dates {
             display: block;
             font-size: 1.2em;
             font-weight: bold;
-            color: $black;
+            color: var(--black);
         }
 
-        .production-times {
+        & .production-times {
             display: block;
-            color: $black;
+            color: var(--black);
         }
 
-        .production-venue {
-            color: $black;
+        & .production-venue {
+            color: var(--black);
         }
     }
 
     .ccwp-current-productions-section {
         margin-bottom: 75px;
 
-        .production-poster {
+        & .production-poster {
             flex-basis: 100%;
-            img {
+
+            & img {
                 max-height: 250px;
             }
         }
@@ -87,11 +88,11 @@ body.post-type-archive-ccwp_production {
     .ccwp-future-productions-section {
         margin-bottom: 75px;
 
-        > h2 {
-            color: $black;
+        & > h2 {
+            color: var(--black);
             text-align: left;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba($black,.1);
+            border-bottom: 1px solid rgba(0, 0, 0, .1);
             margin-bottom: 35px;
         }
     }
@@ -99,14 +100,14 @@ body.post-type-archive-ccwp_production {
     .ccwp-past-productions-section {
         margin-bottom: 75px;
 
-        > h2 {
-            background-color: rgba($medium-grey, .6);
-            color: $white;
+        & > h2 {
+            background-color: rgba(132, 132, 132, .6);
+            color: var(--white);
             text-align: center;
             padding: 20px 0;
             margin: 0 -16px 50px;
 
-            @include from($br-sm-min) {
+            @media (--from-sm) {
                 margin: 0 -16px 25px;
             }
         }

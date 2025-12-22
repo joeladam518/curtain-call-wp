@@ -10,13 +10,13 @@
         align-items: center;
         margin-bottom: 10px;
 
-        label {
+        & label {
             padding-right: 15px;
             text-align: right;
         }
 
-        input,
-        textarea {
+        & input,
+        & textarea {
             flex-grow: 1;
         }
     }
@@ -24,7 +24,7 @@
     .ccwp-form-help-text {
         color: rgba(0, 0, 0, .5);
 
-        p {
+        & p {
             margin-top: -5px;
         }
     }
@@ -32,7 +32,7 @@
 
 #ccwp_production_details {
     .ccwp-form-group {
-        label {
+        & label {
             flex-basis: 200px;
         }
     }
@@ -44,7 +44,7 @@
 
 #ccwp_cast_and_cast_details {
     .ccwp-form-group {
-        label {
+        & label {
             flex-basis: 100px;
         }
     }
@@ -62,14 +62,14 @@
         align-items: flex-end;
         margin-bottom: 20px;
 
-        .ccwp-select-form-group {
+        & .ccwp-select-form-group {
             display: flex;
             flex-flow: column nowrap;
             justify-content: flex-start;
             align-items: flex-start;
             margin-right: 7px;
 
-            label {
+            & label {
                 display: inline-block;
                 font-size: 14px;
                 font-weight: 700;
@@ -77,13 +77,13 @@
             }
         }
 
-        .ccwp-production-castcrew-add-btn {
+        & .ccwp-production-castcrew-add-btn {
             margin-bottom: 0;
         }
     }
 
     .ccwp-production-castcrew-form-group {
-        .ccwp-castcrew-name {
+        & .ccwp-castcrew-name {
             line-height: 2;
             font-size: 14px;
         }
@@ -96,7 +96,7 @@
         align-items: stretch;
         margin-bottom: 7px;
 
-        .ccwp-col {
+        & .ccwp-col {
             padding-left: 0;
             padding-right: 0;
 
@@ -108,14 +108,14 @@
                 padding-right: 6px;
             }
 
-            input[type="text"] {
+            & input[type="text"] {
                 width: 100%;
             }
 
             &.name-col {
                 width: 25%;
 
-                @include from($br-sm-min) {
+                @media (--from-sm) {
                     width: 24%;
                 }
             }
@@ -123,7 +123,7 @@
             &.role-col {
                 width: 25%;
 
-                @include from($br-sm-min) {
+                @media (--from-sm) {
                     width: 32%;
                 }
             }
