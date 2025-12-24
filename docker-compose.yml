@@ -36,7 +36,7 @@ services:
 
   wpsite.test:
     container_name: wpsite_code
-    image: 'wordpress:php8.4-fpm-alpine'
+    #image: 'wordpress:latest' # <- actually defined in the dockerfile
     build:
       context: ./docker
       dockerfile: Dockerfile
@@ -62,6 +62,18 @@ services:
       - myadmin
     networks:
       - wpdev
+
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+    networks:
+      - wpdev
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 networks:
   wpdev:
