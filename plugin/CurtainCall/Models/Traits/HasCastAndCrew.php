@@ -16,6 +16,7 @@ trait HasCastAndCrew
     /**
      * @param string $type
      * @return array
+     * @throws Throwable
      * @global wpdb $wpdb
      */
     public function getCastCrewIds(string $type = 'both'): array
@@ -49,6 +50,7 @@ trait HasCastAndCrew
 
     /**
      * @return array
+     * @throws Throwable
      * @global wpdb $wpdb
      */
     public function getCastCrewNames(): array
@@ -112,6 +114,7 @@ trait HasCastAndCrew
      * @param string $type
      * @param array $castcrew
      * @return void
+     * @throws Throwable
      */
     public function saveCastAndCrew(string $type, array $castcrew = []): void
     {

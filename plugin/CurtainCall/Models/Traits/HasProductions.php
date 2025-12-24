@@ -8,12 +8,14 @@ use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Query;
+use Throwable;
 use wpdb;
 
 trait HasProductions
 {
     /**
-     * @return array|Production[]
+     * @return Production[]
+     * @throws Throwable
      * @global wpdb $wpdb
      */
     public function getProductions(): array
