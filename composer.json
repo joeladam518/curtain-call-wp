@@ -12,6 +12,9 @@
         "cast",
         "crew"
     ],
+    "require": {
+        "php": "^8.1"
+    },
     "require-dev": {
         "johnpbloch/wordpress": "^6.9.0",
         "squizlabs/php_codesniffer": "^4.0.0"
