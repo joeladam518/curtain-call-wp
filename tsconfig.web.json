@@ -16,6 +16,12 @@
         "skipLibCheck": true,
         "isolatedModules": true,
         "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@js": ["./resources/js"],
+            "@styles": ["./resources/styles"],
+            "@images": ["./resources/images"]
+        },
         "forceConsistentCasingInFileNames": true,
         "types": [
             "@wordpress/block-editor",
