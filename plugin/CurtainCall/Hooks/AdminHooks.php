@@ -228,7 +228,7 @@ final class AdminHooks
 
         $productionMetaboxesHandle = CurtainCall::PLUGIN_NAME . '_admin_production_metaboxes';
         $productionMetaboxesSrc = ccwpPluginUrl('assets/admin/curtain-call-wp-production-metaboxes.js');
-        wp_register_script_module(
+        wp_register_script(
             $productionMetaboxesHandle,
             $productionMetaboxesSrc,
             [
@@ -243,13 +243,11 @@ final class AdminHooks
                 'wp-i18n',
                 'wp-plugins',
             ],
-            $version,
-            ['in_footer' => true]
         );
 
         $castcrewMetaboxesHandle = CurtainCall::PLUGIN_NAME . '_admin_castcrew_metaboxes';
         $castcrewMetaboxesSrc = ccwpPluginUrl('assets/admin/curtain-call-wp-castcrew-metaboxes.js');
-        wp_register_script_module(
+        wp_register_script(
             $castcrewMetaboxesHandle,
             $castcrewMetaboxesSrc,
             [
@@ -264,13 +262,11 @@ final class AdminHooks
                 'wp-i18n',
                 'wp-plugins',
             ],
-            $version,
-            ['in_footer' => true]
         );
 
         $sidebarHandle = CurtainCall::PLUGIN_NAME . '_editor_sidebar';
         $sidebarSrc = ccwpPluginUrl('assets/admin/curtain-call-wp-sidebar.js');
-        wp_register_script_module(
+        wp_register_script(
             $sidebarHandle,
             $sidebarSrc,
             [
@@ -285,8 +281,6 @@ final class AdminHooks
                 'wp-i18n',
                 'wp-plugins',
             ],
-            $version,
-            ['in_footer' => true]
         );
     }
 
