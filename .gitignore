@@ -2,6 +2,7 @@
 .mariadb/
 node_modules/
 vendor/
+.rollup.cache/
 
 # folders used in build
 /CurtainCallWP
