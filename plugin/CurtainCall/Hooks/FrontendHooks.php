@@ -38,19 +38,6 @@ class FrontendHooks
     }
 
     /**
-     * Register the JavaScript for the public-facing side of the site
-     *
-     * @return void
-     */
-    public function enqueueScripts(): void
-    {
-        $src = $this->assetsUrl . 'curtain-call-wp-frontend.js';
-        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
-
-        wp_enqueue_script(CurtainCall::PLUGIN_NAME, $src, ['jquery'], $version, false);
-    }
-
-    /**
      * Determine if the current theme has a ccwp post type template
      *
      * @param string $type

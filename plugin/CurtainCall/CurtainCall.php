@@ -100,21 +100,22 @@ class CurtainCall
         $this->loader->addAction('init', [$controller, 'registerJavascript'], 0);
         $this->loader->addAction('admin_menu', [$controller, 'addPluginSettingsPage'], 0);
 
-        // All Actions and Filters on the Production custom post type
+        // Production custom post-type meta-boxes
         $this->loader->addAction('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes'], 0);
         $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 3);
         $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 3);
 
-        // All Actions and Filters on the Cast and Crew custom post type
+        // CastCrew custom post-type meta-boxes
         $this->loader->addAction('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 0);
         $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 3);
 
-        // All Actions and Filters that concern both post-types
+        // Set the title on save
         $this->loader->addFilter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 3);
 
-        // Scripts and styles to be loaded for the admin
+        // Enqueue scripts and styles for the admin
         $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
         $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
+
         // Block editor-only assets
         $this->loader->addAction('enqueue_block_editor_assets', [$controller, 'enqueueEditorAssets'], 0);
     }
@@ -131,9 +132,8 @@ class CurtainCall
         $this->loader->addFilter('single_template', [$controller, 'loadSingleTemplates'], 3);
         $this->loader->addFilter('archive_template', [$controller, 'loadArchiveTemplates'], 3);
 
-        // Scripts and styles to be loaded for the frontend
+        // Enqueue scripts and styles for the frontend
         $this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
-        //$this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
     }
 
     /**
@@ -146,11 +146,12 @@ class CurtainCall
         $controller = new GlobalHooks();
         $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
-        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
+        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
         $this->loader->addAction('init', [$controller, 'registerPostMeta'], 0);
-        $this->loader->addAction('rest_api_init', [\CurtainCall\Rest\RelationsController::class, 'registerRoutes'], 0);
-        $this->loader->addAction('init', [\CurtainCall\Blocks\ArchiveBlocks::class, 'register'], 0);
+
+        $this->loader->addAction('init', [ArchiveBlocks::class, 'register'], 0);
+        $this->loader->addAction('rest_api_init', [RelationsController::class, 'registerRoutes'], 0);
     }
 
     /**
