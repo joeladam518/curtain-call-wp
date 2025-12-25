@@ -9,25 +9,53 @@ import replace from '@rollup/plugin-replace';
 import postcss from 'rollup-plugin-postcss';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import copyFontAwesome from './cp-fontawesome';
+import copyFontAwesome from './cp-fontawesome.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
 const outDir = path.resolve(__dirname, 'plugin/assets');
 
 export default defineConfig([
-    // Admin metaboxes (legacy)
+    // CastCrew admin metaboxes (React)
     {
-        input: 'resources/js/admin/metaboxes.ts',
+        input: path.resolve(__dirname, 'resources/js/admin/castcrew-metaboxes.tsx'),
         output: {
-            file: path.resolve(outDir, 'admin/curtain-call-wp-metaboxes.js'),
+            file: path.resolve(outDir, 'admin/curtain-call-wp-castcrew-metaboxes.js'),
             format: 'iife',
             sourcemap: true,
             globals: {
-                jquery: 'jQuery',
+                'jquery': 'jQuery',
+                'react': 'wp.element',
+                'react-dom': 'wp.element',
+                '@wordpress/element': 'wp.element',
+                '@wordpress/blocks': 'wp.blocks',
+                '@wordpress/block-editor': 'wp.blockEditor',
+                '@wordpress/components': 'wp.components',
+                '@wordpress/compose': 'wp.compose',
+                '@wordpress/data': 'wp.data',
+                '@wordpress/i18n': 'wp.i18n',
+                '@wordpress/plugins': 'wp.plugins',
+                '@wordpress/api-fetch': 'wp.apiFetch',
+                '@wordpress/edit-post': 'wp.editPost',
+                '@wordpress/editor': 'wp.editor',
             },
         },
-        external: ['jquery'],
+        external: [
+            'jquery',
+            'react',
+            'react-dom',
+            '@wordpress/api-fetch',
+            '@wordpress/block-editor',
+            '@wordpress/blocks',
+            '@wordpress/components',
+            '@wordpress/compose',
+            '@wordpress/data',
+            '@wordpress/edit-post',
+            '@wordpress/editor',
+            '@wordpress/element',
+            '@wordpress/i18n',
+            '@wordpress/plugins',
+        ],
         plugins: [
             alias({
                 entries: [
@@ -37,7 +65,7 @@ export default defineConfig([
                 ]
             }),
             resolve({
-                browser: true,
+                extensions: ['.js', '.jsx', '.ts', '.tsx', '.svg'],
             }),
             commonjs(),
             typescript({
@@ -45,17 +73,28 @@ export default defineConfig([
                 composite: false,
             }),
             svgr(),
-            postcss({
-                inject: true,
-                minimize: true,
+            babel({
+                babelHelpers: 'bundled',
+                presets: ['@babel/preset-react'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                plugins: [
+                    ['@babel/plugin-transform-react-jsx', {
+                        pragma: 'wp.element.createElement',
+                        pragmaFrag: 'wp.element.Fragment',
+                    }]
+                ],
+            }),
+            replace({
+                'process.env.NODE_ENV': JSON.stringify('production'),
+                preventAssignment: true,
             }),
         ],
     },
-    // Admin metaboxes (React)
+    // Production admin metaboxes (React)
     {
-        input: 'resources/js/admin/metaboxes-react.tsx',
+        input: path.resolve(__dirname, 'resources/js/admin/production-metaboxes.tsx'),
         output: {
-            file: path.resolve(outDir, 'admin/curtain-call-wp-metaboxes-react.js'),
+            file: path.resolve(outDir, 'admin/curtain-call-wp-production-metaboxes.js'),
             format: 'iife',
             sourcemap: true,
             globals: {
@@ -127,7 +166,7 @@ export default defineConfig([
     },
     // Admin sidebar
     {
-        input: 'resources/js/admin/sidebar.tsx',
+        input: path.resolve(__dirname, 'resources/js/admin/sidebar.tsx'),
         output: {
             file: path.resolve(outDir, 'admin/curtain-call-wp-sidebar.js'),
             format: 'iife',
@@ -201,7 +240,7 @@ export default defineConfig([
     },
     // Admin styles
     {
-        input: 'resources/styles/admin/plugin.css',
+        input: path.resolve(__dirname, 'resources/styles/admin/plugin.css'),
         output: {
             file: path.resolve(outDir, 'admin/curtain-call-wp-admin.css'),
         },
@@ -215,7 +254,7 @@ export default defineConfig([
     },
     // Frontend styles
     {
-        input: 'resources/styles/frontend/plugin.css',
+        input: path.resolve(__dirname, 'resources/styles/frontend/plugin.css'),
         output: {
             file: path.resolve(outDir, 'frontend/curtain-call-wp-frontend.css'),
         },
@@ -229,7 +268,7 @@ export default defineConfig([
     },
     // FontAwesome
     {
-        input: 'resources/styles/fontawesome/fontawesome.css',
+        input: path.resolve(__dirname, 'resources/styles/fontawesome/fontawesome.css'),
         output: {
             file: path.resolve(outDir, 'frontend/fontawesomefree.css'),
         },
