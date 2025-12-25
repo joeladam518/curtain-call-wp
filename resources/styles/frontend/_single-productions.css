@@ -1,4 +1,3 @@
-
 /* CCWP Single production page */
 body.single-ccwp_production {
     article {
@@ -17,7 +16,7 @@ body.single-ccwp_production {
                     line-height: 1;
                     font-size: 1.25em;
                     margin-right: 0;
-                    color: $light-grey;
+                    color: var(--light-grey);
                     font-weight: bold;
                     margin-bottom: 4px;
                 }
