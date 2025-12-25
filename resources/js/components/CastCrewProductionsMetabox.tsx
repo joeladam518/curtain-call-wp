@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {CastCrewProduction} from '../../types/metaboxes';
+import {CastCrewProduction} from '../types/metaboxes';
 
 export type CastCrewProductionMetaboxProps = {
     castCrewId: number | null,
