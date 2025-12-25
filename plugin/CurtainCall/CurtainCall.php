@@ -13,8 +13,8 @@ use CurtainCall\LifeCycle\Uninstaller;
 
 class CurtainCall
 {
-    public const string PLUGIN_NAME = CCWP_PLUGIN_NAME;
-    public const string PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
+    public const PLUGIN_NAME = CCWP_PLUGIN_NAME;
+    public const PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
 
     /**
      * The loader that's responsible for maintaining and
