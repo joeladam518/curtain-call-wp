@@ -27,6 +27,22 @@ final class AdminHooks
         $this->assetsPath = ccwpPluginPath('assets/admin/');
     }
 
+    private function getPostType(): ?string
+    {
+        $screen = get_current_screen();
+        $postType = $screen?->post_type;
+
+        if (!$postType && isset($_GET['post_type'])) {
+            $postType = sanitize_text_field($_GET['post_type']);
+        }
+
+        if (!$postType && isset($_GET['post'])) {
+            $postType = get_post_type((int)$_GET['post']);
+        }
+
+        return $postType ?: null;
+    }
+
     /**
      * Register the stylesheets for the admin area.
      * @return void
@@ -46,7 +62,7 @@ final class AdminHooks
      */
     public function enqueueScripts(): void
     {
-        $postType = ccwpGetPostType();
+        $postType = $this->getPostType();
 
         if ($postType === Production::POST_TYPE) {
             $post = get_post();
@@ -189,7 +205,8 @@ final class AdminHooks
      */
     public function enqueueEditorAssets(): void
     {
-        $postType = ccwpGetPostType();
+        $postType = $this->getPostType();
+
         if (!$postType || ($postType !== Production::POST_TYPE && $postType !== CastAndCrew::POST_TYPE)) {
             return;
         }

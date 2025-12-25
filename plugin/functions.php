@@ -3,30 +3,6 @@ if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die;
 }
 
-if (!function_exists('ccwpGetPostType')) {
-    /**
-     * Return the post-type from the current screen or $_GET['post_type']
-     *
-     * @param WP_Screen|null $screen = null
-     * @return string|null
-     */
-    function ccwpGetPostType(?WP_Screen $screen = null): string|null
-    {
-        $screen ??= get_current_screen();
-        $postType = $screen?->post_type;
-
-        if (!$postType && isset($_GET['post_type'])) {
-            $postType = sanitize_text_field($_GET['post_type']);
-        }
-
-        if (!$postType && isset($_GET['post'])) {
-            $postType = get_post_type((int)$_GET['post']);
-        }
-
-        return $postType ?: null;
-    }
-}
-
 if (!function_exists('ccwpPluginPath')) {
     /**
      * Return the plugin dir path
