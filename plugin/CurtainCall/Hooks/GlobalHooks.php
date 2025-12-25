@@ -177,49 +177,4 @@ class GlobalHooks
             );
         }
     }
-
-    public function addImportMap(): void
-    {
-        // Skip if WordPress 6.5+ handles this natively
-        if (function_exists('wp_register_script_module')) {
-            return;
-        }
-
-        // Create import map for WordPress packages
-        $importMap = [
-            'imports' => [
-                '@wordpress/plugins' => includes_url('js/dist/plugins.min.js'),
-                '@wordpress/edit-post' => includes_url('js/dist/edit-post.min.js'),
-                '@wordpress/editor' => includes_url('js/dist/editor.min.js'),
-                '@wordpress/components' => includes_url('js/dist/components.min.js'),
-                '@wordpress/element' => includes_url('js/dist/element.min.js'),
-                '@wordpress/data' => includes_url('js/dist/data.min.js'),
-                '@wordpress/i18n' => includes_url('js/dist/i18n.min.js'),
-                '@wordpress/api-fetch' => includes_url('js/dist/api-fetch.min.js'),
-                '@wordpress/blocks' => includes_url('js/dist/blocks.min.js'),
-                '@wordpress/block-editor' => includes_url('js/dist/block-editor.min.js'),
-                '@wordpress/compose' => includes_url('js/dist/compose.min.js'),
-                'jquery' => includes_url('js/jquery/jquery.min.js'),
-            ]
-        ];
-
-        echo '<script type="importmap">' . wp_json_encode($importMap) . '</script>';
-    }
-
-    public function addModuleTagToScripts(string $tag, string $handle, string $src): string
-    {
-        $handles = [
-            CurtainCall::PLUGIN_NAME . '_admin',
-            CurtainCall::PLUGIN_NAME . '_editor_sidebar',
-            CurtainCall::PLUGIN_NAME . '_frontend'
-        ];
-
-        // Add type="module" for ES module scripts (unless already handled by wp_enqueue_script_module)
-        if (in_array($handle, $handles, true) && !function_exists('wp_register_script_module')) {
-            // Convert to importmap-compatible script tag
-            $tag = str_replace(' src=', ' type="module" src=', $tag);
-        }
-
-        return $tag;
-    }
 }

@@ -108,7 +108,7 @@ class CurtainCall
         $this->loader->addAction('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 0);
         $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 3);
 
-        // All Actions and Filters that concern both post types
+        // All Actions and Filters that concern both post-types
         $this->loader->addFilter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 3);
 
         // Scripts and styles to be loaded for the admin
@@ -143,9 +143,6 @@ class CurtainCall
     protected function registerGlobalHooks(): void
     {
         $controller = new GlobalHooks();
-
-        $this->loader->addFilter('script_loader_tag', [$controller, 'addModuleTagToScripts'], 3);
-
         $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
         $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
         $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
