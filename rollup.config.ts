@@ -1,5 +1,7 @@
-import { defineConfig } from 'rollup';
-import { babel } from '@rollup/plugin-babel';
+import {defineConfig} from 'rollup';
+import alias from '@rollup/plugin-alias';
+import svgr from '@svgr/rollup';
+import {babel} from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
@@ -14,7 +16,7 @@ const __dirname = path.dirname(__filename)
 const outDir = path.resolve(__dirname, 'plugin/assets');
 
 export default defineConfig([
-    // Admin metaboxes
+    // Admin metaboxes (legacy)
     {
         input: 'resources/js/admin/metaboxes.ts',
         output: {
@@ -27,6 +29,13 @@ export default defineConfig([
         },
         external: ['jquery'],
         plugins: [
+            alias({
+                entries: [
+                    {find: '@js', replacement: path.resolve(__dirname, 'resources/js')},
+                    {find: '@styles', replacement: path.resolve(__dirname, 'resources/styles')},
+                    {find: '@images', replacement: path.resolve(__dirname, 'resources/images')},
+                ]
+            }),
             resolve({
                 browser: true,
             }),
@@ -35,21 +44,22 @@ export default defineConfig([
                 tsconfig: './tsconfig.web.json',
                 composite: false,
             }),
+            svgr(),
             postcss({
                 inject: true,
                 minimize: true,
             }),
         ],
     },
-    // Admin sidebar
+    // Admin metaboxes (React)
     {
-        input: 'resources/js/admin/sidebar.tsx',
+        input: 'resources/js/admin/metaboxes-react.tsx',
         output: {
-            file: path.resolve(outDir, 'admin/curtain-call-wp-sidebar.js'),
+            file: path.resolve(outDir, 'admin/curtain-call-wp-metaboxes-react.js'),
             format: 'iife',
             sourcemap: true,
             globals: {
-                jquery: 'jQuery',
+                'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
                 '@wordpress/element': 'wp.element',
@@ -82,14 +92,96 @@ export default defineConfig([
             '@wordpress/plugins',
         ],
         plugins: [
+            alias({
+                entries: [
+                    {find: '@js', replacement: path.resolve(__dirname, 'resources/js')},
+                    {find: '@styles', replacement: path.resolve(__dirname, 'resources/styles')},
+                    {find: '@images', replacement: path.resolve(__dirname, 'resources/images')},
+                ]
+            }),
             resolve({
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx', '.svg'],
             }),
             commonjs(),
             typescript({
                 tsconfig: './tsconfig.web.json',
                 composite: false,
             }),
+            svgr(),
+            babel({
+                babelHelpers: 'bundled',
+                presets: ['@babel/preset-react'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                plugins: [
+                    ['@babel/plugin-transform-react-jsx', {
+                        pragma: 'wp.element.createElement',
+                        pragmaFrag: 'wp.element.Fragment',
+                    }]
+                ],
+            }),
+            replace({
+                'process.env.NODE_ENV': JSON.stringify('production'),
+                preventAssignment: true,
+            }),
+        ],
+    },
+    // Admin sidebar
+    {
+        input: 'resources/js/admin/sidebar.tsx',
+        output: {
+            file: path.resolve(outDir, 'admin/curtain-call-wp-sidebar.js'),
+            format: 'iife',
+            sourcemap: true,
+            globals: {
+                'jquery': 'jQuery',
+                'react': 'wp.element',
+                'react-dom': 'wp.element',
+                '@wordpress/element': 'wp.element',
+                '@wordpress/blocks': 'wp.blocks',
+                '@wordpress/block-editor': 'wp.blockEditor',
+                '@wordpress/components': 'wp.components',
+                '@wordpress/compose': 'wp.compose',
+                '@wordpress/data': 'wp.data',
+                '@wordpress/i18n': 'wp.i18n',
+                '@wordpress/plugins': 'wp.plugins',
+                '@wordpress/api-fetch': 'wp.apiFetch',
+                '@wordpress/edit-post': 'wp.editPost',
+                '@wordpress/editor': 'wp.editor',
+            },
+        },
+        external: [
+            'jquery',
+            'react',
+            'react-dom',
+            '@wordpress/api-fetch',
+            '@wordpress/block-editor',
+            '@wordpress/blocks',
+            '@wordpress/components',
+            '@wordpress/compose',
+            '@wordpress/data',
+            '@wordpress/edit-post',
+            '@wordpress/editor',
+            '@wordpress/element',
+            '@wordpress/i18n',
+            '@wordpress/plugins',
+        ],
+        plugins: [
+            alias({
+                entries: [
+                    {find: '@js', replacement: path.resolve(__dirname, 'resources/js')},
+                    {find: '@styles', replacement: path.resolve(__dirname, 'resources/styles')},
+                    {find: '@images', replacement: path.resolve(__dirname, 'resources/images')},
+                ]
+            }),
+            resolve({
+                extensions: ['.js', '.jsx', '.ts', '.tsx', '.svg'],
+            }),
+            commonjs(),
+            typescript({
+                tsconfig: './tsconfig.web.json',
+                composite: false,
+            }),
+            svgr(),
             babel({
                 babelHelpers: 'bundled',
                 presets: ['@babel/preset-react'],
