@@ -4,8 +4,8 @@
  * Plugin URI: https://github.com/joeladam518/CurtainCallWP
  * Description: CMS for theatres looking to display their productions, casts, and crews
  * Version: 0.7.0
- * Requires at least: 6.3
- * Requires PHP: 8.3
+ * Requires at least: 6.5
+ * Requires PHP: 8.1
  * Author: Joel Haker, Gregg Hilferding, David Sams
  * Author URI: https://joelhaker.com/
  * License: MIT
