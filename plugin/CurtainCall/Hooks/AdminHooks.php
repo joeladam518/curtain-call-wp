@@ -450,7 +450,7 @@ final class AdminHooks
             $crew_members = array_values($crew_members);
         }
 
-        View::make('admin/production-add-castcrew-metabox.php', [
+        View::make('admin/production-castcrew-metabox.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_cast_and_crew_to_production_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,

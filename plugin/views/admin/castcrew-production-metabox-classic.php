@@ -17,4 +17,4 @@
 
 echo $wp_nonce;
 ?>
-<div id="ccwp-cast-crew-details-react-root"></div>
+<div id="ccwp-cast-crew-productions-react-root"></div>

@@ -7,6 +7,7 @@
  * @var array|CastAndCrew[] $cast_members
  * @var array|CastAndCrew[] $crew_members
  */
+
 use CurtainCall\Models\CastAndCrew;
 
 echo $wp_nonce;
@@ -19,7 +20,7 @@ echo $wp_nonce;
         <select id="ccwp-production-cast-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Cast</option>
             <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name) : ?>
-            <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
+                <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -95,7 +96,7 @@ echo $wp_nonce;
         <select id="ccwp-production-crew-select" class="ccwp-admin-select-box" style="width: 250px;">
             <option value="0">Select Crew</option>
             <?php foreach ($all_cast_crew_names as $post_id => $castcrew_name) : ?>
-            <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
+                <option value="<?php echo $post_id; ?>"><?php echo $castcrew_name; ?></option>
             <?php endforeach; ?>
         </select>
     </div>
