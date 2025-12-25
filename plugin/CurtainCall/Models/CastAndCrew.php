@@ -10,15 +10,15 @@ use CurtainCall\Support\Str;
 use WP_Query;
 
 /**
- * @property string $name_first'
- * @property string $name_last'
- * @property string $self_title'
- * @property string $birthday'
- * @property string $hometown'
- * @property string $website_link'
- * @property string $facebook_link'
- * @property string $twitter_link'
- * @property string $instagram_link'
+ * @property string $name_first
+ * @property string $name_last
+ * @property string $self_title
+ * @property string $birthday
+ * @property string $hometown
+ * @property string $website_link
+ * @property string $facebook_link
+ * @property string $twitter_link
+ * @property string $instagram_link
  * @property string $fun_fact
  */
 class CastAndCrew extends CurtainCallPost
