@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace CurtainCall;
 
+use CurtainCall\Blocks\ArchiveBlocks;
 use CurtainCall\Hooks\AdminHooks;
 use CurtainCall\Hooks\FrontendHooks;
 use CurtainCall\Hooks\GlobalHooks;
 use CurtainCall\LifeCycle\Activator;
 use CurtainCall\LifeCycle\Deactivator;
 use CurtainCall\LifeCycle\Uninstaller;
+use CurtainCall\Rest\RelationsController;
 
 class CurtainCall
 {
