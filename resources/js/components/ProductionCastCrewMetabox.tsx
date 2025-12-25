@@ -1,7 +1,7 @@
 import {Button, ComboboxControl, TextControl} from '@wordpress/components';
 import React, {FC, useState} from 'react';
-import MemberType from '../../enums/MemberType';
-import {ProductionCastCrew, ProductionDetails} from '../../types/metaboxes';
+import MemberType from '../enums/MemberType';
+import {ProductionCastCrew} from '../types/metaboxes';
 
 type UpdateData = {
     role?: string;
