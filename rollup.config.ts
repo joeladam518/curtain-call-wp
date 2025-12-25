@@ -6,27 +6,12 @@ import typescript from '@rollup/plugin-typescript';
 import replace from '@rollup/plugin-replace';
 import postcss from 'rollup-plugin-postcss';
 import path from 'node:path';
-import fs from 'fs-extra';
 import { fileURLToPath } from 'node:url';
+import copyFontAwesome from './cp-fontawesome';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
 const outDir = path.resolve(__dirname, 'plugin/assets');
-
-function copyFontAwesome() {
-    return {
-        name: 'copy-fontawesome',
-        async writeBundle() {
-            const src = path.resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts');
-            const dest = path.resolve(outDir, 'fonts/fontawesome');
-
-            if (fs.existsSync(src)) {
-                await fs.ensureDir(dest);
-                await fs.copy(src, dest);
-            }
-        },
-    };
-}
 
 export default defineConfig([
     // Admin metaboxes
@@ -162,7 +147,7 @@ export default defineConfig([
                 minimize: true,
                 sourceMap: true,
             }),
-            copyFontAwesome(),
+            copyFontAwesome({outDir}),
         ],
     },
 ]);

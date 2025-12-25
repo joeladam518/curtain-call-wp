@@ -19,6 +19,7 @@
         ]
     },
     "include": [
+        "cp-fontawesome.*",
         "rollup.config.*",
     ]
 }
