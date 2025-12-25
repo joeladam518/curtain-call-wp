@@ -97,6 +97,7 @@ class CurtainCall
     {
         $controller = new AdminHooks();
 
+        $this->loader->addAction('init', [$controller, 'registerJavascript'], 0);
         $this->loader->addAction('admin_menu', [$controller, 'addPluginSettingsPage'], 0);
 
         // All Actions and Filters on the Production custom post type
