@@ -5,7 +5,7 @@ declare global {
     interface Window {
         CCWP_DATA?: {
             initialDetails?: ProductionDetails | CastCrewDetails | null | undefined;
-            options?: ({label: string, value: string})[];
+            options?: ({label: string; value: string})[];
             cast?: ProductionCastCrew<MemberType.Cast>[];
             crew?: ProductionCastCrew<MemberType.Crew>[];
             productions?: CastCrewProduction[];

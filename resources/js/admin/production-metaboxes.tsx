@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 initialDetails={window?.CCWP_DATA?.initialDetails as ProductionDetails | undefined}
             />,
             productionDetailsRoot
-        )
+        );
     }
 
     const productionCastCrewRoot = document.getElementById('ccwp-production-cast-crew-react-root');

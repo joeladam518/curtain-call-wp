@@ -19,7 +19,7 @@ const useIsEditorReady = () => {
     return useMemo(
         () => isEditorReady || isCleanNewPost || blockCount > 0,
         [isEditorReady, isCleanNewPost, blockCount]
-    )
-}
+    );
+};
 
 export default useIsEditorReady;

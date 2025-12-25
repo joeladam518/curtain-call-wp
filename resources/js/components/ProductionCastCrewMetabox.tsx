@@ -6,21 +6,21 @@ import {ProductionCastCrew} from '../types/metaboxes';
 type UpdateData = {
     role?: string;
     custom_order?: number;
-}
+};
 
 export type MetaboxState = {
     cast: ProductionCastCrew<MemberType.Cast>[];
     crew: ProductionCastCrew<MemberType.Crew>[];
     selectedCastId: string;
     selectedCrewId: string;
-}
+};
 
 export type ProductionCastCrewMetaboxProps = {
     productionId: number | null;
-    options: ({label: string, value: string})[];
-    cast: ProductionCastCrew<MemberType.Cast>[] ;
+    options: ({label: string; value: string})[];
+    cast: ProductionCastCrew<MemberType.Cast>[];
     crew: ProductionCastCrew<MemberType.Crew>[];
-}
+};
 
 const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     productionId,
@@ -28,11 +28,6 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     cast: initialCast,
     crew: initialCrew,
 }) => {
-    //const [cast, setCast] = useState<CastCrewMember[]>(initialCast);
-    //const [crew, setCrew] = useState<CastCrewMember[]>(initialCrew);
-    //const [selectedCastId, setSelectedCastId] = useState<string>('0');
-    //const [selectedCrewId, setSelectedCrewId] = useState<string>('0');
-
     const [state, setMetaboxState] = useState<MetaboxState>({
         cast: initialCast ?? [],
         crew: initialCrew ?? [],
@@ -110,14 +105,29 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
         const inputName = `ccwp_add_${type}_to_production`;
         return (
             <div key={`${type}-${member.ID}`} className="form-group ccwp-production-castcrew-form-group">
-                <input type="hidden" name={`${inputName}[${member.ID}][cast_and_crew_id]`} value={member.ID} />
-                <input type="hidden" name={`${inputName}[${member.ID}][production_id]`} value={productionId} />
-                <input type="hidden" name={`${inputName}[${member.ID}][type]`} value={type} />
-                <div className="ccwp-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <div className="ccwp-col name-col" style={{ flex: '1' }}>
+                <input
+                    type="hidden"
+                    name={`${inputName}[${member.ID}][cast_and_crew_id]`}
+                    value={member.ID}
+                />
+                <input
+                    type="hidden"
+                    name={`${inputName}[${member.ID}][production_id]`}
+                    value={productionId ?? ''}
+                />
+                <input
+                    type="hidden"
+                    name={`${inputName}[${member.ID}][type]`}
+                    value={type}
+                />
+                <div
+                    className="ccwp-row"
+                    style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}
+                >
+                    <div className="ccwp-col name-col" style={{flex: '1'}}>
                         <div className="ccwp-castcrew-name"><strong>{member.name}</strong></div>
                     </div>
-                    <div className="ccwp-col role-col" style={{ flex: '1' }}>
+                    <div className="ccwp-col role-col" style={{flex: '1'}}>
                         <TextControl
                             value={member.role}
                             onChange={val => updateMember(type, member.ID, {role: val})}
@@ -125,7 +135,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                             placeholder="role"
                         />
                     </div>
-                    <div className="ccwp-col billing-col" style={{ flex: '0 0 100px' }}>
+                    <div className="ccwp-col billing-col" style={{flex: '0 0 100px'}}>
                         <TextControl
                             value={member.order}
                             onChange={val => updateMember(type, member.ID, {custom_order: parseInt(val, 10) || 0})}
@@ -159,7 +169,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                 <Button
                     isSecondary
                     onClick={() => addMember(MemberType.Cast)}
-                    style={{ marginBottom: '8px' }}
+                    style={{marginBottom: '8px'}}
                 >
                     Add Cast
                 </Button>

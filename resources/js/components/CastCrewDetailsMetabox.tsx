@@ -1,4 +1,4 @@
-import React, {FC, useMemo, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {TextControl} from '@wordpress/components';
 import useHasPostTitle from '../hooks/useHasPostTitle';
 import {updatePostTitle} from '../utils/post';
@@ -7,9 +7,9 @@ import {CastCrewDetails} from '../types/metaboxes';
 
 export type CastCrewDetailsMetaboxProps = {
     initialDetails?: CastCrewDetails | null | undefined;
-}
+};
 
-const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({ initialDetails }) => {
+const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails}) => {
     const hasPostTitle = useHasPostTitle();
     const [state, setState] = useState<CastCrewDetails>({
         ID: initialDetails?.ID || 0,
@@ -22,25 +22,25 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({ initialDetail
         facebook_link: initialDetails?.facebook_link || '',
         twitter_link: initialDetails?.twitter_link || '',
         instagram_link: initialDetails?.instagram_link || '',
-        fun_fact: initialDetails?.fun_fact || ''
+        fun_fact: initialDetails?.fun_fact || '',
     });
 
     const setFirstName = (value: string) => {
-        setState(current => {
+        setState((current) => {
             if (!hasPostTitle) {
                 updatePostTitle(`${value || ''} ${current.name_last || ''}`.trim());
             }
             return ({...current, name_first: value});
         });
-    }
+    };
     const setLastName = (value: string) => {
-        setState(current => {
+        setState((current) => {
             if (!hasPostTitle) {
                 updatePostTitle(`${current.name_first || ''} ${value || ''}`.trim());
             }
-            return ({ ...current, name_last: value });
+            return ({...current, name_last: value});
         });
-    }
+    };
     const setTitle = (value: string) => setState(current => ({...current, self_title: value}));
     const setBirthday = (value: string) => setState(current => ({...current, birthday: value}));
     const setHometown = (value: string) => setState(current => ({...current, hometown: value}));
@@ -57,7 +57,10 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({ initialDetail
                 value={state.name_first}
                 onChange={setFirstName}
                 name="ccwp_name_first"
-                help="*Required. These fields are used to auto-generate the post title with the cast or crew member's full name."
+                help={
+                    '*Required. These fields are used to auto-generate the post title with ' +
+                    "the cast or crew member's full name."
+                }
             />
             <TextControl
                 label="Last Name*"
@@ -70,10 +73,13 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({ initialDetail
                 value={state.self_title}
                 onChange={setTitle}
                 name="ccwp_self_title"
-                help="*Required. If the cast or crew member has many roles across different productions, try to use the one they identify with the most. Ex. Director, Actor, Choreographer, etc."
+                help={
+                    '*Required. If the cast or crew member has many roles across different productions, ' +
+                    'try to use the one they identify with the most. Ex. Director, Actor, Choreographer, etc.'
+                }
             />
             <DatePickerControl
-                inputFormat="MM/DD/YYYY"
+                inputFormat="MM/dd/yyyy"
                 label="Birthday"
                 name="ccwp_birthday"
                 onChange={setBirthday}
