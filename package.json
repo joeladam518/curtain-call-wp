@@ -32,7 +32,6 @@
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@rollup/plugin-replace": "^6.0.1",
         "@rollup/plugin-typescript": "^12.1.2",
-        "@svgr/rollup": "^8.1.0",
         "@types/jquery": "^3.5.33",
         "@types/wordpress__api-fetch": "^3.2.4",
         "@types/wordpress__block-editor": "^11.5.17",

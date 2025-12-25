@@ -1,6 +1,5 @@
 import {defineConfig} from 'rollup';
 import alias from '@rollup/plugin-alias';
-import svgr from '@svgr/rollup';
 import {babel} from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
@@ -72,7 +71,6 @@ export default defineConfig([
                 tsconfig: './tsconfig.web.json',
                 composite: false,
             }),
-            svgr(),
             babel({
                 babelHelpers: 'bundled',
                 presets: ['@babel/preset-react'],
@@ -139,14 +137,13 @@ export default defineConfig([
                 ]
             }),
             resolve({
-                extensions: ['.js', '.jsx', '.ts', '.tsx', '.svg'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
             }),
             commonjs(),
             typescript({
                 tsconfig: './tsconfig.web.json',
                 composite: false,
             }),
-            svgr(),
             babel({
                 babelHelpers: 'bundled',
                 presets: ['@babel/preset-react'],
@@ -220,7 +217,6 @@ export default defineConfig([
                 tsconfig: './tsconfig.web.json',
                 composite: false,
             }),
-            svgr(),
             babel({
                 babelHelpers: 'bundled',
                 presets: ['@babel/preset-react'],

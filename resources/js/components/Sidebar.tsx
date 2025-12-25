@@ -3,7 +3,7 @@ import {PluginSidebar} from '@wordpress/editor';
 import {Button, SelectControl, TextControl, Spinner, Notice} from '@wordpress/components';
 import {useSelect} from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import Icon from '@images/icons/theatre-curtains.svg'
+import Icon from '../icons/TheatreCurtains';
 
 type Relation = {
     production_id: number;
