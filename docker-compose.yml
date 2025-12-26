@@ -48,6 +48,9 @@ services:
       WORDPRESS_DB_PASSWORD: '${DB_PASSWORD}'
       WORDPRESS_DB_NAME: '${DB_DATABASE}'
       WORDPRESS_DEBUG: 'true'
+      WP_DEBUG_LOG: 'true'
+      WP_DEBUG_DISPLAY: 'true'
+      SCRIPT_DEBUG: 'true'
       PHP_IDE_CONFIG: 'serverName=docker'
       XDEBUG_CONFIG: 'remote_host=host.docker.internal'
     extra_hosts:

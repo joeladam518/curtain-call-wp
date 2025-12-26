@@ -22,23 +22,7 @@
             "@styles": ["./resources/styles"],
             "@images": ["./resources/images"]
         },
-        "forceConsistentCasingInFileNames": true,
-        "types": [
-            "@wordpress/api-fetch",
-            "@wordpress/block-editor",
-            "@wordpress/blocks",
-            "@wordpress/components",
-            "@wordpress/data",
-            "@wordpress/edit-post",
-            "@wordpress/editor",
-            "@wordpress/element",
-            "@wordpress/i18n",
-            "@wordpress/plugins",
-            "@wordpress/rich-text",
-            "jquery",
-            "react",
-            "react-dom"
-        ]
+        "forceConsistentCasingInFileNames": true
     },
     "include": [
         "resources/js/**/*.ts",

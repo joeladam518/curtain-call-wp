@@ -1,6 +1,7 @@
 import React, {FC, useState} from 'react';
 import {TextControl} from '@wordpress/components';
 import useHasPostTitle from '../hooks/useHasPostTitle';
+import {dateToFormat} from '../utils/dates';
 import {updatePostTitle} from '../utils/post';
 import DatePickerControl from './DatePickerControl';
 import {ProductionDetails} from '../types/metaboxes';
@@ -8,7 +9,7 @@ import {isValid, format} from 'date-fns';
 
 const getYear = (start: string | null | undefined, end: string | null | undefined): string | undefined => {
     const date = start || end || undefined;
-    return date && isValid(date) ? format(date, 'YYYY') : undefined;
+    return date && isValid(date) ? format(date, 'yyyy') : undefined;
 };
 
 const formatYear = (year: string | undefined): string => {
@@ -23,8 +24,8 @@ const ProductionDetailsMetabox: FC<ProductionDetailsMetaboxProps> = ({initialDet
     const hasPostTitle = useHasPostTitle();
     const [state, setState] = useState({
         name: initialDetails?.name || '',
-        startDate: initialDetails?.date_start || '',
-        endDate: initialDetails?.date_end || '',
+        startDate: dateToFormat(initialDetails?.date_start, {input: 'yyyy-MM-dd', output: 'MM/dd/yyyy'}) || '',
+        endDate: dateToFormat(initialDetails?.date_end, {input: 'yyyy-MM-dd', output: 'MM/dd/yyyy'}) || '',
         showTimes: initialDetails?.show_times || '',
         ticketUrl: initialDetails?.ticket_url || '',
         venue: initialDetails?.venue || '',
@@ -87,19 +88,15 @@ const ProductionDetailsMetabox: FC<ProductionDetailsMetaboxProps> = ({initialDet
                 }}
             >
                 <DatePickerControl
-                    inputFormat="MM/dd/yyyy"
-                    label="Production Dates - Openeding*"
+                    label="Production Dates - Openening*"
                     name="ccwp_date_start"
                     onChange={setStartDate}
-                    onChangeFormat="yyyy-MM-dd"
                     value={state.startDate}
                 />
                 <DatePickerControl
-                    inputFormat="MM/dd/yyyy"
                     label="Production Dates - Closing*"
                     name="ccwp_date_end"
                     onChange={setEndDate}
-                    onChangeFormat="yyyy-MM-dd"
                     value={state.endDate}
                 />
             </div>

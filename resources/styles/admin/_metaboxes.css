@@ -37,10 +37,6 @@
         }
     }
 
-    .ccwp-date-form-group {
-        flex-direction: column;
-    }
-
     .ccwp-form-group + .ccwp-form-help-text {
         margin-left: 220px;
     }

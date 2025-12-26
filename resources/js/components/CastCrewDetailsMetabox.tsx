@@ -1,6 +1,7 @@
 import React, {FC, useState} from 'react';
 import {TextControl} from '@wordpress/components';
 import useHasPostTitle from '../hooks/useHasPostTitle';
+import {dateToFormat} from '../utils/dates';
 import {updatePostTitle} from '../utils/post';
 import DatePickerControl from './DatePickerControl';
 import {CastCrewDetails} from '../types/metaboxes';
@@ -16,7 +17,7 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
         name_first: initialDetails?.name_first || '',
         name_last: initialDetails?.name_last || '',
         self_title: initialDetails?.self_title || '',
-        birthday: initialDetails?.birthday || '',
+        birthday: dateToFormat(initialDetails?.birthday, {input: 'yyyy-MM-dd', output: 'MM/dd/yyyy'}) || '',
         hometown: initialDetails?.hometown || '',
         website_link: initialDetails?.website_link || '',
         facebook_link: initialDetails?.facebook_link || '',
@@ -79,11 +80,9 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
                 }
             />
             <DatePickerControl
-                inputFormat="MM/dd/yyyy"
                 label="Birthday"
                 name="ccwp_birthday"
                 onChange={setBirthday}
-                onChangeFormat="YYYY-MM-DD"
                 value={state.birthday}
             />
             <TextControl

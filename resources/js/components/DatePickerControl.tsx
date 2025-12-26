@@ -1,125 +1,134 @@
-import React, {FC, useState, useRef, useEffect, useCallback, useMemo} from 'react';
-import {DatePicker, Popover} from '@wordpress/components';
-import {format, formatISO, parse, isValid} from 'date-fns';
+import {type FC, useState, useRef, useMemo, memo, useEffect, type ChangeEvent, type KeyboardEvent} from 'react';
+import {DatePicker, Popover, BaseControl} from '@wordpress/components';
+import {format, parseISO, isValid} from 'date-fns';
 import {useMaskito} from '@maskito/react';
-import {maskitoDateOptionsGenerator} from '@maskito/kit';
-import type {MaskitoDateMode} from '@maskito/kit';
+import {maskitoDateOptionsGenerator, type MaskitoDateMode} from '@maskito/kit';
+import {dateToFormat} from '../utils/dates';
 
-interface DatePickerControlProps {
+type DatePickerControlState = {
+    isVisible: boolean;
+}
+
+type DatePickerControlProps = {
     help?: string;
+    hideLabelFromVision?: boolean
     inputFormat?: string;
     label: string;
     mask?: MaskitoDateMode;
     name: string;
-    onChange: (date: string) => void;
-    onChangeFormat?: string;
+    onChange?: (date: string) => void;
     value: string;
+    valueFormat?: string;
 }
 
-const DatePickerControl: FC<DatePickerControlProps> = ({
+const DatePickerControl: FC<DatePickerControlProps> = memo(({
     help,
+    hideLabelFromVision = false,
     inputFormat = 'yyyy-MM-dd',
     label,
     mask = ('mm/dd/yyyy' as MaskitoDateMode),
     name,
     onChange,
-    onChangeFormat = 'yyyy-MM-dd',
     value,
+    valueFormat = 'MM/dd/yyyy'
 }) => {
-    const [isVisible, setIsVisible] = useState(false);
-    const anchorRef = useRef<HTMLDivElement>(null!);
-    const [anchorRect, setAnchorRect] = useState<DOMRect>({height: 0, width: 0, x: 0, y: 0} as DOMRect);
-
-    // Sync input value with prop value
-    const getDisplayValue = useCallback((dateValue: string) => {
-        if (!dateValue) {
-            return '';
-        }
-        try {
-            const date = new Date(dateValue);
-            return isValid(date) ? format(date, inputFormat) : '';
-        } catch {
-            return '';
-        }
-    }, [inputFormat]);
-
-    const [inputValue, setInputValue] = useState(getDisplayValue(value));
-
-    useEffect(() => {
-        setInputValue(getDisplayValue(value));
-    }, [value, getDisplayValue]);
-
-    useEffect(() => {
-        if (anchorRef.current) {
-            setAnchorRect(anchorRef.current.getBoundingClientRect());
-        }
-    }, [anchorRef]);
-
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        setInputValue(newValue);
-
-        const parsedDate = parse(newValue, inputFormat, new Date());
-        if (isValid(parsedDate)) {
-            onChange(format(parsedDate, onChangeFormat));
-        }
-    };
-
-    const handleDatePickerChange = (newDate: string | null) => {
-        if (newDate) {
-            const date = new Date(newDate);
-            onChange(format(date, onChangeFormat));
-            setInputValue(format(date, inputFormat));
-        } else {
-            onChange('');
-            setInputValue('');
-        }
-    };
-
-    const showPicker = () => setIsVisible(true);
-
+    const [state, setState] = useState<DatePickerControlState>({isVisible: false});
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const datePickerRef = useRef<HTMLDivElement | null>(null);
     const maskitoOptions = useMemo(
         () => maskitoDateOptionsGenerator({mode: mask, separator: '/'}),
         [mask]
     );
-
     const maskitoRef = useMaskito({options: maskitoOptions});
 
+    const datePickerValue = useMemo<string | undefined>(
+        () => dateToFormat(value, {input: valueFormat, output: 'iso'}),
+        [value, valueFormat]
+    );
+
+    const hiddenInputValue = useMemo<string>(
+        () => dateToFormat(value, {input: valueFormat, output: inputFormat}) || '',
+        [value, valueFormat, inputFormat]
+    );
+
+    const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
+        onChange?.(newValue || '');
+    };
+
+    const handleDatePickerChange = (newValue: string | null) => {
+        if (!newValue) {
+            return;
+        }
+        const newDate = parseISO(newValue);
+        if (!isValid(newDate)) {
+            return;
+        }
+        const formattedDate = format(newDate, valueFormat);
+        onChange?.(formattedDate);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            setState(current => ({...current, isVisible: false}));
+            inputRef.current?.blur();
+        }
+    }
+
+    useEffect(() => {
+        const closePopover = () => {
+            if (
+                !!inputRef.current &&
+                !!datePickerRef.current &&
+                inputRef.current !== document.activeElement &&
+                datePickerRef.current !== document.activeElement &&
+                !datePickerRef.current.contains(document.activeElement as Node)
+            ) {
+                setState(current => ({...current, isVisible: false}));
+            }
+        }
+
+        document.addEventListener('focusin', closePopover);
+
+        return () => {
+            document.removeEventListener('focusin', closePopover);
+        }
+    }, []);
+
     return (
-        <div className="ccwp-date-form-group" style={{marginBottom: '15px'}}>
-            <div ref={anchorRef} className="components-base-control">
-                <div className="components-base-control__field">
-                    {label && (
-                        <label className="components-base-control__label">
-                            {label}
-                        </label>
-                    )}
-                    <input
-                        ref={maskitoRef as any}
-                        className="components-text-control__input"
-                        value={inputValue}
-                        onFocus={showPicker}
-                        onInput={handleTextChange}
-                        placeholder={inputFormat.toLowerCase()}
-                        autoComplete="off"
-                    />
-                </div>
-                {help && (
-                    <p className="components-base-control__help">
-                        {help}
-                    </p>
-                )}
-            </div>
-            {isVisible && (
+        <div style={{width: 'auto', marginBottom: '15px'}}>
+            <BaseControl
+                __nextHasNoMarginBottom={true}
+                __associatedWPComponentName="DatePickerControl"
+                help={help}
+                hideLabelFromVision={hideLabelFromVision}
+                label={label}
+            >
+                <input
+                    ref={inputElement => {
+                        maskitoRef(inputElement)
+                        inputRef.current = inputElement;
+                    }}
+                    className="components-text-control__input"
+                    onFocus={() => {
+                        setState(current => ({...current, isVisible: true}));
+                    }}
+                    onKeyDown={handleKeyDown}
+                    value={value}
+                    onInput={handleTextChange}
+                    placeholder={mask.toLowerCase()}
+                    autoComplete="off"
+                />
+            </BaseControl>
+            {state.isVisible && (
                 <Popover
-                    anchorRect={anchorRect as any}
-                    onClose={(() => setIsVisible(false)) as any}
                     placement="bottom-start"
                     focusOnMount={false as any}
                 >
-                    <div style={{padding: '10px'}}>
+                    <div ref={datePickerRef} style={{padding: '10px'}}>
                         <DatePicker
-                            currentDate={value ? formatISO(value) : undefined}
+                            currentDate={datePickerValue}
                             onChange={handleDatePickerChange}
                         />
                     </div>
@@ -128,10 +137,10 @@ const DatePickerControl: FC<DatePickerControlProps> = ({
             <input
                 type="hidden"
                 name={name}
-                value={value ? format(value, inputFormat) : ''}
+                value={hiddenInputValue}
             />
         </div>
     );
-};
+});
 
 export default DatePickerControl;
