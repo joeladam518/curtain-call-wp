@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace CurtainCall\Rest;
 
-use CurtainCall\Models\CastAndCrew;
-use CurtainCall\Models\Production;
-use CurtainCall\Support\Query;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
 class RelationsController
 {
-    const NAMESPACE = 'ccwp/v1';
+    public const NAMESPACE = 'ccwp/v1';
 
     public static function registerRoutes(): void
     {
@@ -21,7 +18,7 @@ class RelationsController
             [
                 'methods'  => 'GET',
                 'callback' => [static::class, 'getRelations'],
-                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => false],
                     'cast_and_crew_id' => ['type' => 'integer', 'required' => false],
@@ -31,7 +28,7 @@ class RelationsController
             [
                 'methods'  => 'POST',
                 'callback' => [static::class, 'attach'],
-                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => true],
                     'cast_and_crew_id' => ['type' => 'integer', 'required' => true],
@@ -43,7 +40,7 @@ class RelationsController
             [
                 'methods'  => 'DELETE',
                 'callback' => [static::class, 'detach'],
-                'permission_callback' => fn() => current_user_can('edit_posts'),
+                'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => true],
                     'cast_and_crew_id' => ['type' => 'integer', 'required' => true],
@@ -60,15 +57,23 @@ class RelationsController
         $where = [];
         $params = [];
 
-        if ($pid = (int)$request->get_param('production_id')) {
+        $pid = (int)$request->get_param('production_id');
+
+        if ($pid) {
             $where[] = 'production_id = %d';
             $params[] = $pid;
         }
-        if ($ccid = (int)$request->get_param('cast_and_crew_id')) {
+
+        $ccid = (int)$request->get_param('cast_and_crew_id');
+
+        if ($ccid) {
             $where[] = 'cast_and_crew_id = %d';
             $params[] = $ccid;
         }
-        if ($type = $request->get_param('type')) {
+
+        $type = $request->get_param('type');
+
+        if ($type) {
             $where[] = 'type = %s';
             $params[] = $type;
         }
@@ -79,7 +84,7 @@ class RelationsController
         return new WP_REST_Response($rows ?: [], 200);
     }
 
-    public static function attach(WP_REST_Request $request)
+    public static function attach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         global $wpdb;
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';
@@ -121,7 +126,7 @@ class RelationsController
         return new WP_REST_Response(['ok' => true], 200);
     }
 
-    public static function detach(WP_REST_Request $request)
+    public static function detach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         global $wpdb;
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';

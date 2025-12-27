@@ -27,8 +27,10 @@ class Production extends CurtainCallPost
     const META_PREFIX = '_ccwp_production_';
     const SEASONS_TAXONOMY = 'ccwp_production_seasons';
 
-    /** @var array|string[] */
-    protected $ccwp_meta = [
+    /**
+     * @var list<string>
+     */
+    protected array $ccwp_meta= [
         'name',
         'date_start',
         'date_end',
@@ -246,22 +248,22 @@ class Production extends CurtainCallPost
         $start_date_format = 'F jS';
         $end_date_format   = '';
 
-        if ($chrono_state == 'past' || $start_date->format('Y') != $now->format('Y')) {
-            // Don't show start date year if both dates are in the same year
-            if ($start_date->format('Y') != $end_date->format('Y')) {
+        if ($chrono_state === 'past' || $start_date->format('Y') !== $now->format('Y')) {
+            // Don't show the start date year if both dates are in the same year
+            if ($start_date->format('Y') !== $end_date->format('Y')) {
                 $start_date_format .= ', Y';
             }
         }
 
-        // Don't show end date month if both dates are in the same month
-        if ($start_date->format('F') != $end_date->format('F')) {
+        // Don't show the end date month if both dates are in the same month
+        if ($start_date->format('F') !== $end_date->format('F')) {
             $end_date_format .= 'F ';
         }
 
         $end_date_format .= 'jS';
 
         // End date only gets a year if it's in the past or doesn't match the current year
-        if ($chrono_state == 'past' || $end_date->format('Y') != $now->format('Y')) {
+        if ($chrono_state === 'past' || $end_date->format('Y') !== $now->format('Y')) {
             $end_date_format .= ', Y';
         }
 
@@ -269,7 +271,7 @@ class Production extends CurtainCallPost
         $formatted_end_date = $end_date->format($end_date_format);
 
         // Only show one date if the dates are identical
-        if ($formatted_dates != $formatted_end_date) {
+        if ($formatted_dates !== $formatted_end_date) {
             $formatted_dates .= ' - ' . $formatted_end_date;
         }
 
@@ -305,6 +307,6 @@ class Production extends CurtainCallPost
      */
     public function hasStartDate(): bool
     {
-        return !empty($this->date_start);
+        return (bool) $this->date_start;
     }
 }

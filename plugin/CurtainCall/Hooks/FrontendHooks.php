@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CurtainCall\Hooks;
 
-use CurtainCall\CurtainCall;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\View;
@@ -18,8 +17,8 @@ class FrontendHooks
 
     public function __construct()
     {
-        $this->assetsUrl = ccwpPluginUrl('assets/frontend/');
-        $this->assetsPath = ccwpPluginPath('assets/frontend/');
+        $this->assetsUrl = ccwp_plugin_url('assets/frontend/');
+        $this->assetsPath = ccwp_plugin_path('assets/frontend/');
     }
 
     /**
@@ -31,10 +30,10 @@ class FrontendHooks
     {
         $fontawesomeSrc = $this->assetsUrl . 'fontawesomefree.css';
         $frontendSrc = $this->assetsUrl . 'curtain-call-wp-frontend.css';
-        $version = CCWP_DEBUG ? rand() : CurtainCall::PLUGIN_VERSION;
+        $version = CCWP_DEBUG ? rand() : CCWP_PLUGIN_VERSION;
 
         wp_enqueue_style('fontawesomefree', $fontawesomeSrc, [], $version);
-        wp_enqueue_style(CurtainCall::PLUGIN_NAME, $frontendSrc, [], $version);
+        wp_enqueue_style(CCWP_PLUGIN_NAME, $frontendSrc, [], $version);
     }
 
     /**
@@ -47,13 +46,13 @@ class FrontendHooks
     private function themeHasTemplate(string $type, array $templates): bool
     {
         $themeTemplate = locate_template(
-            Arr::where($templates, fn($item) => $item !== "{$type}.php"),
+            Arr::where($templates, static fn($item) => $item !== "{$type}.php"),
             false,
             false,
             []
         );
 
-        return !empty($themeTemplate);
+        return (bool) $themeTemplate;
     }
 
     /**

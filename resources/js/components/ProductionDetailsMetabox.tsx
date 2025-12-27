@@ -5,11 +5,11 @@ import {dateToFormat} from '../utils/dates';
 import {updatePostTitle} from '../utils/post';
 import DatePickerControl from './DatePickerControl';
 import {ProductionDetails} from '../types/metaboxes';
-import {isValid, format} from 'date-fns';
+import {format} from 'date-fns';
 
 const getYear = (start: string | null | undefined, end: string | null | undefined): string | undefined => {
     const date = start || end || undefined;
-    return date && isValid(date) ? format(date, 'yyyy') : undefined;
+    return date ? (format(date, 'yyyy') || undefined) : undefined;
 };
 
 const formatYear = (year: string | undefined): string => {
@@ -33,30 +33,32 @@ const ProductionDetailsMetabox: FC<ProductionDetailsMetaboxProps> = ({initialDet
 
     const setName = (value: string) => {
         setState((current) => {
-            if (!hasPostTitle) {
-                const year = formatYear(getYear(current.startDate, current.endDate));
-                updatePostTitle(`${value || ''} ${year}`.trim());
-            }
+
             return ({...current, name: value});
         });
+
+        if (!hasPostTitle) {
+            const year = formatYear(getYear(state.startDate, state.endDate));
+            updatePostTitle(`${value || ''} ${year}`.trim());
+        }
     };
     const setStartDate = (value: string) => {
         setState((current) => {
-            if (!hasPostTitle) {
-                const year = formatYear(getYear(value, current.endDate));
-                updatePostTitle(`${current.name || ''} ${year}`.trim());
-            }
+
             return ({...current, startDate: value});
         });
+
+        if (!hasPostTitle) {
+            const year = formatYear(getYear(value, state.endDate));
+            updatePostTitle(`${state.name || ''} ${year}`.trim());
+        }
     };
     const setEndDate = (value: string) => {
-        setState((current) => {
-            if (!hasPostTitle) {
-                const year = formatYear(getYear(current.startDate, value));
-                updatePostTitle(`${current.name || ''} ${year}`.trim());
-            }
-            return ({...current, endDate: value});
-        });
+        setState((current) => ({...current, endDate: value}));
+        if (!hasPostTitle) {
+            const year = formatYear(getYear(state.startDate, value));
+            updatePostTitle(`${state.name || ''} ${year}`.trim());
+        }
     };
     const setShowTimes = (value: string) => {
         setState((current) => {

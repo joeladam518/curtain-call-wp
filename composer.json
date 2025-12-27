@@ -16,14 +16,15 @@
         "php": "^8.1"
     },
     "require-dev": {
-        "johnpbloch/wordpress": "^6.9.0",
-        "squizlabs/php_codesniffer": "^4.0.0"
+        "carthage-software/mago": "^1.0.3",
+        "johnpbloch/wordpress": "^6.9.0"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "carthage-software/mago": true,
             "johnpbloch/wordpress-core-installer": true
         }
     },
@@ -33,6 +34,10 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "lint": "mago lint",
+        "format": "mago format",
+        "analyse": "mago analyse",
+        "guard": "mago guard",
         "plugin-install": "cd plugin && composer install",
         "plugin-update": "cd plugin && composer update",
         "post-install-cmd": "composer run plugin-install",

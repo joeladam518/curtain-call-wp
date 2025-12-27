@@ -1,0 +1,59 @@
+# Welcome to Mago!
+# For full documentation, see https://mago.carthage.software/tools/overview
+php-version = "8.1.0"
+
+[source]
+workspace = "."
+paths = [
+    "./plugin/functions.php",
+    "./plugin/CurtainCallWP.php",
+    "./plugin/CurtainCall/**/*.php",
+    "./plugin/views/**/*.php"
+]
+includes = [
+    "./vendor",
+    "./plugin/vendor",
+    "./public/**/*.php"
+]
+excludes = []
+
+[formatter]
+print-width = 120
+tab-width = 4
+use-tabs = false
+
+[linter]
+integrations = ["WordPress"]
+
+[linter.rules]
+ambiguous-function-call = { enabled = false }
+cyclomatic-complexity = { level = "help" }
+excessive-parameter-list = { enabled = false }
+halstead = { level = "help", difficulty-threshold = 15, effort-threshold = 7000, volume-threshold = 1500 }
+kan-defect = { level = "help" }
+literal-named-argument = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
+no-direct-db-query = { enabled = false }
+no-else-clause = { enabled = false }
+no-empty = { enabled = false }
+no-global = { enabled = false }
+no-redundant-file = { enabled = false }
+no-shorthand-ternary = { enabled = false}
+prefer-early-continue = { enabled = false }
+prefer-first-class-callable = { enabled = false }
+too-many-methods = { enabled = false }
+
+
+[analyzer]
+find-unused-definitions = true
+find-unused-expressions = false
+analyze-dead-code = false
+memoize-properties = true
+allow-possibly-undefined-array-keys = true
+check-throws = false
+check-missing-override = false
+find-unused-parameters = false
+strict-list-index-checks = false
+no-boolean-literal-comparison = false
+check-missing-type-hints = false
+register-super-globals = true

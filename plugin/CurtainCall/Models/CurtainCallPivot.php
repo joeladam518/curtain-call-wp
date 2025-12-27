@@ -51,7 +51,7 @@ class CurtainCallPivot implements Arrayable
             return static::$fields;
         }
 
-        return Arr::map(static::$fields, fn($field) => static::ATTRIBUTE_PREFIX . $field);
+        return Arr::map(static::$fields, static fn($field) => static::ATTRIBUTE_PREFIX . $field);
     }
 
     /**
@@ -80,7 +80,7 @@ class CurtainCallPivot implements Arrayable
     public static function isField(string $value): bool
     {
         $field = static::stripPrefix($value);
-        return in_array($field, static::$fields);
+        return in_array($field, static::$fields, true);
     }
 
     /**
@@ -99,10 +99,10 @@ class CurtainCallPivot implements Arrayable
     public function load(array $data): void
     {
         foreach ($data as $key => $value) {
-            if (static::isField($key)) {
-                $key = static::stripPrefix($key);
+            if (!(static::isField($key))) { continue; }
+
+$key = static::stripPrefix($key);
                 $this->setAttribute($key, $value);
-            }
         }
     }
 

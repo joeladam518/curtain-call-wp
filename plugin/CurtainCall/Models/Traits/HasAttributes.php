@@ -6,11 +6,11 @@ namespace CurtainCall\Models\Traits;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @property array<string, mixed> $attributes
+ */
 trait HasAttributes
 {
-    /** @var array */
-    protected $attributes = [];
-
     /**
      * @param string $key
      * @return bool
@@ -24,7 +24,7 @@ trait HasAttributes
      * @param string $key
      * @return mixed
      */
-    protected function getAttribute(string $key)
+    protected function getAttribute(string $key): mixed
     {
         return $this->attributes[$key] ?? null;
     }
@@ -34,7 +34,7 @@ trait HasAttributes
      * @param mixed  $value
      * @return $this
      */
-    protected function setAttribute(string $key, $value)
+    protected function setAttribute(string $key, mixed $value): static
     {
         $this->attributes[$key] = $value;
 

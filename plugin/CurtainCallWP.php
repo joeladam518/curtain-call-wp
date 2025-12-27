@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Plugin Name: CurtainCallWP
  * Plugin URI: https://github.com/joeladam518/CurtainCallWP
@@ -13,6 +16,7 @@
  * Text Domain: curtain-call-wp
  * Domain Path: /languages
 **/
+
 if (!defined('ABSPATH')) {
     die;
 }

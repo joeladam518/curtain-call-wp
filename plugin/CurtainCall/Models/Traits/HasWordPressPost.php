@@ -8,13 +8,13 @@ use WP_Post;
 use CurtainCall\Exceptions\PostNotFoundException;
 use InvalidArgumentException;
 
+/**
+ * @var string POST_TYPE
+ * @property WP_Post $wp_post
+ * @property string[] $wp_post_attributes
+ */
 trait HasWordPressPost
 {
-    /** @var WP_Post */
-    protected $wp_post;
-    /** @var array|string[] */
-    protected $wp_post_attributes = [];
-
     /**
      * Get the WordPress Post
      *
@@ -57,28 +57,27 @@ trait HasWordPressPost
      */
     protected function isPostAttribute(string $key): bool
     {
-        return in_array($key, $this->wp_post_attributes);
+        return in_array($key, $this->wp_post_attributes, true);
     }
 
     /**
      * Load the WordPress Post
      *
-     * @param int|WP_Post $post
+     * @param WP_Post|string|int $post
      * @return void
      * @throws PostNotFoundException|InvalidArgumentException
      */
-    protected function loadPost($post): void
+    protected function loadPost(int|string|WP_Post $post): void
     {
-        if ($post instanceof WP_Post) {
-            $this->setPost($post);
-        } elseif (is_numeric($post)) {
+        if (is_numeric($post) && (int) $post > 0) {
             $post = $this->fetchPost((int) $post);
-            $this->setPost($post);
-        } else {
+        }
+
+        if (!($post instanceof WP_Post)) {
             throw new InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
         }
 
-        $this->wp_post_attributes = array_keys(get_object_vars($this->wp_post));
+        $this->setPost($post);
     }
 
     /**
@@ -87,7 +86,7 @@ trait HasWordPressPost
      * @param WP_Post $post
      * @return $this
      */
-    protected function setPost(WP_Post $post)
+    protected function setPost(WP_Post $post): static
     {
         if ($post->post_type === static::POST_TYPE) {
             $this->wp_post = $post;
@@ -100,6 +99,8 @@ trait HasWordPressPost
                 )
             );
         }
+
+        $this->wp_post_attributes = array_keys(get_object_vars($this->wp_post));
 
         return $this;
     }

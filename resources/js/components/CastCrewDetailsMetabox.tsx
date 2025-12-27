@@ -27,20 +27,16 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
     });
 
     const setFirstName = (value: string) => {
-        setState((current) => {
-            if (!hasPostTitle) {
-                updatePostTitle(`${value || ''} ${current.name_last || ''}`.trim());
-            }
-            return ({...current, name_first: value});
-        });
+        setState(current => ({...current, name_first: value}));
+        if (!hasPostTitle) {
+            updatePostTitle(`${value || ''} ${state.name_last || ''}`.trim());
+        }
     };
     const setLastName = (value: string) => {
-        setState((current) => {
-            if (!hasPostTitle) {
-                updatePostTitle(`${current.name_first || ''} ${value || ''}`.trim());
-            }
-            return ({...current, name_last: value});
-        });
+        setState(current => ({...current, name_last: value}));
+        if (!hasPostTitle) {
+            updatePostTitle(`${state.name_first || ''} ${value || ''}`.trim());
+        }
     };
     const setTitle = (value: string) => setState(current => ({...current, self_title: value}));
     const setBirthday = (value: string) => setState(current => ({...current, birthday: value}));

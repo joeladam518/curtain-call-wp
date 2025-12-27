@@ -43,7 +43,7 @@ trait HasCastAndCrew
             return [];
         }
 
-        $ids = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
+        $ids = Arr::map($castcrew, static fn($member) => $member['cast_and_crew_id'] ?? null);
 
         return array_unique(array_filter($ids));
     }
@@ -122,7 +122,7 @@ trait HasCastAndCrew
 
         $newIds = [];
         if (!empty($castcrew)) {
-            $newIds = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
+            $newIds = Arr::map($castcrew, static fn($member) => $member['cast_and_crew_id'] ?? null);
             $newIds = array_filter($newIds);
         }
 
@@ -143,11 +143,11 @@ trait HasCastAndCrew
                     continue;
                 }
 
-                if (in_array($member['cast_and_crew_id'], $currentIds)) {
-                    # if in both $newIds and $currentIds, update
+                if (in_array($member['cast_and_crew_id'], $currentIds, true)) {
+                    // if in both $newIds and $currentIds, update
                     $this->updateCastCrew($castcrewId, $type, $role, $order);
                 } else {
-                    # if in $newIds but not in $currentIds, insert
+                    // if in $newIds but not in $currentIds, insert
                     $this->insertCastCrew($castcrewId, $type, $role, $order);
                 }
             }
@@ -164,7 +164,7 @@ trait HasCastAndCrew
 
         // Delete the to be deleted
         if (is_array($toDeleteIds) && count($toDeleteIds) > 0) {
-            # if in the current c/c array but not in the to be saved array delete
+            // if in the current c/c array but not in the to be saved array delete
             foreach ($toDeleteIds as $castcrewId) {
                 $this->deleteCastCrew($castcrewId, $type);
             }

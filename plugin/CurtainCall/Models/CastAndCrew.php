@@ -7,6 +7,7 @@ namespace CurtainCall\Models;
 use CurtainCall\Models\Traits\HasProductions;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -25,11 +26,13 @@ class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
 
-    const POST_TYPE = 'ccwp_cast_and_crew';
-    const META_PREFIX = '_ccwp_cast_crew_';
+    public const POST_TYPE = 'ccwp_cast_and_crew';
+    public const META_PREFIX = '_ccwp_cast_crew_';
 
-    /** @var array|string[] */
-    protected $ccwp_meta = [
+    /**
+     * @var list<string>
+     */
+    protected array $ccwp_meta = [
         'name_first',
         'name_last',
         'self_title',
@@ -56,7 +59,8 @@ class CastAndCrew extends CurtainCallPost
 
         while ($query->have_posts()) {
             $query->the_post();
-            if ($lastName = getCustomField('_ccwp_cast_crew_name_last')) {
+            $lastName = ccwp_get_custom_field('_ccwp_cast_crew_name_last');
+            if ($lastName) {
                 $alphaIndexes[] = Str::firstLetter($lastName, 'upper');
             }
         }

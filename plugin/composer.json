@@ -4,6 +4,9 @@
         "illuminate/collections": "^10.49",
         "nesbot/carbon": "^2.54.0"
     },
+    "require-dev": {
+        "symfony/var-dumper": "^8.0"
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -15,6 +18,11 @@
         },
         "files": [
             "functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "files": [
+            "functions-dev.php"
         ]
     },
     "minimum-stability": "dev",

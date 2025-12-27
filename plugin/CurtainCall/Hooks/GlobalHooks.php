@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CurtainCall\Hooks;
 
-use CurtainCall\CurtainCall;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\View;
@@ -73,7 +72,7 @@ class GlobalHooks
         register_setting('ccwp-settings', 'ccwp_default_ticket_url', [
             'type' => 'string',
             'description' => 'The default tickets url to use if no production ticket url is defined.',
-            'sanitize_callback' => fn($value) => esc_url_raw($value, ['http', 'https']),
+            'sanitize_callback' => static fn($value) => esc_url_raw($value, ['http', 'https']),
             'show_in_rest' => false,
             'default' => null,
         ]);
@@ -148,7 +147,7 @@ class GlobalHooks
                     'single'            => true,
                     'sanitize_callback' => $schema['sanitize'],
                     'show_in_rest'      => true,
-                    'auth_callback'     => fn() => current_user_can('edit_posts'),
+                    'auth_callback'     => static fn() => current_user_can('edit_posts'),
                 ]
             );
         }
@@ -172,7 +171,7 @@ class GlobalHooks
                     'single'            => true,
                     'sanitize_callback' => $schema['sanitize'],
                     'show_in_rest'      => true,
-                    'auth_callback'     => fn() => current_user_can('edit_posts'),
+                    'auth_callback'     => static fn() => current_user_can('edit_posts'),
                 ]
             );
         }

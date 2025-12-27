@@ -23,7 +23,7 @@ class Query
     {
         $query = Arr::wrap($query);
 
-        return implode(' ', Arr::map($query, fn($part) => trim($part)));
+        return implode(' ', Arr::map($query, static fn($part) => trim($part)));
     }
 
     /**
@@ -33,7 +33,7 @@ class Query
      */
     public static function select(array $fields = [], bool $prependSelect = true): string
     {
-        $fields = Arr::map($fields, function ($field) {
+        $fields = Arr::map($fields, static function ($field) {
             $field = str_replace('`', '', $field);
             return static::backtickField($field);
         });
@@ -119,7 +119,7 @@ class Query
         $field = trim($parts[0]);
         $alias = trim($parts[1] ?? '');
 
-        $fieldParts = Arr::map(explode('.', $field), function ($part) {
+        $fieldParts = Arr::map(explode('.', $field), static function ($part) {
             if ($part === '*') {
                 return $part;
             }

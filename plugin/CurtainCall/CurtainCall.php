@@ -13,43 +13,8 @@ use CurtainCall\LifeCycle\Deactivator;
 use CurtainCall\LifeCycle\Uninstaller;
 use CurtainCall\Rest\RelationsController;
 
-class CurtainCall
+final class CurtainCall
 {
-    public const PLUGIN_NAME = CCWP_PLUGIN_NAME;
-    public const PLUGIN_VERSION = CCWP_PLUGIN_VERSION;
-
-    /**
-     * The loader that's responsible for maintaining and
-     * registering all hooks that power the plugin.
-     *
-     * @var Loader
-     */
-    protected Loader $loader;
-
-    /**
-     * Define the core functionality of the plugin.
-     *
-     * Set the plugin name and the plugin version that can be used throughout the plugin.
-     * Load the dependencies, define the locale, and set the hooks for the admin area and
-     * the public-facing side of the site.
-     *
-     * Include the following files that make up the plugin:
-     *
-     * Loader - Orchestrates the hooks of the plugin.
-     * GlobalHooks - Defines the hooks that happen for both Admin and Frontend
-     * AdminHooks - Defines the hooks for the admin area.
-     * FrontendHooks - Defines the hooks for the public side of the site.
-     */
-    public function __construct()
-    {
-        $this->loader = new Loader();
-
-        $this->registerLocales();
-        $this->registerGlobalHooks();
-        $this->registerAdminHooks();
-        $this->registerFrontendHooks();
-    }
-
     /**
      * Register the plugin's life cycle hooks
      *
@@ -58,9 +23,9 @@ class CurtainCall
      */
     public static function registerLifeCycleHooks(string $file): void
     {
-        register_activation_hook($file, array(Activator::class, 'run'));
-        register_deactivation_hook($file, array(Deactivator::class, 'run'));
-        register_uninstall_hook($file, array(Uninstaller::class, 'run'));
+        register_activation_hook($file, [Activator::class, 'run']);
+        register_deactivation_hook($file, [Deactivator::class, 'run']);
+        register_uninstall_hook($file, [Uninstaller::class, 'run']);
     }
 
     /**
@@ -74,7 +39,7 @@ class CurtainCall
      */
     public static function run(): self
     {
-        $plugin = new static();
+        $plugin = new self();
         $plugin->boot();
 
         return $plugin;
@@ -87,7 +52,28 @@ class CurtainCall
      */
     public function boot(): void
     {
-        $this->loader->run();
+        $this->loadGlobalHooks();
+        $this->loadAdminHooks();
+        $this->loadFrontendHooks();
+    }
+
+    /**
+     * Register all hook related to both the admin and frontend functionality
+     *
+     * @return void
+     */
+    private function loadGlobalHooks(): void
+    {
+        $controller = new GlobalHooks();
+
+        add_action('admin_init', [$controller, 'addPluginSettings'], 10, 0);
+        add_action('init', [$controller, 'createProductionPostType'], 10, 0);
+        add_action('init', [$controller, 'createProductionSeasonsTaxonomy'], 10, 0);
+        add_action('init', [$controller, 'createCastAndCrewPostType'], 10, 0);
+        add_action('init', [$controller, 'registerPostMeta'], 10, 0);
+
+        add_action('init', [ArchiveBlocks::class, 'register'], 10, 0);
+        add_action('rest_api_init', [RelationsController::class, 'registerRoutes'], 10, 0);
     }
 
     /**
@@ -95,31 +81,31 @@ class CurtainCall
      *
      * @return void
      */
-    protected function registerAdminHooks(): void
+    private function loadAdminHooks(): void
     {
         $controller = new AdminHooks();
 
-        $this->loader->addAction('init', [$controller, 'registerJavascript'], 0);
-        $this->loader->addAction('admin_menu', [$controller, 'addPluginSettingsPage'], 0);
+        add_action('init', [$controller, 'registerJavascript'], 10, 0);
+        add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
 
         // Production custom post-type meta-boxes
-        $this->loader->addAction('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes'], 0);
-        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 3);
-        $this->loader->addAction('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 3);
+        add_action('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes'], 10, 0);
+        add_action('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 10, 3);
+        add_action('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 10, 3);
 
         // CastCrew custom post-type meta-boxes
-        $this->loader->addAction('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 0);
-        $this->loader->addAction('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 3);
+        add_action('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 10, 0);
+        add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 10, 3);
 
         // Set the title on save
-        $this->loader->addFilter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 3);
+        add_filter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 10, 3);
 
         // Enqueue scripts and styles for the admin
-        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
-        $this->loader->addAction('admin_enqueue_scripts', [$controller, 'enqueueScripts'], 0);
+        add_action('admin_enqueue_scripts', [$controller, 'enqueueStyles'], 10, 0);
+        add_action('admin_enqueue_scripts', [$controller, 'enqueueScripts'], 10, 0);
 
         // Block editor-only assets
-        $this->loader->addAction('enqueue_block_editor_assets', [$controller, 'enqueueEditorAssets'], 0);
+        add_action('enqueue_block_editor_assets', [$controller, 'enqueueEditorAssets'], 10, 0);
     }
 
     /**
@@ -127,33 +113,15 @@ class CurtainCall
      *
      * @return void
      */
-    protected function registerFrontendHooks(): void
+    private function loadFrontendHooks(): void
     {
         $controller = new FrontendHooks();
 
-        $this->loader->addFilter('single_template', [$controller, 'loadSingleTemplates'], 3);
-        $this->loader->addFilter('archive_template', [$controller, 'loadArchiveTemplates'], 3);
+        add_filter('single_template', [$controller, 'loadSingleTemplates'], 10, 3);
+        add_filter('archive_template', [$controller, 'loadArchiveTemplates'], 10, 3);
 
         // Enqueue scripts and styles for the frontend
-        $this->loader->addAction('wp_enqueue_scripts', [$controller, 'enqueueStyles'], 0);
-    }
-
-    /**
-     * Register all hook related to bother the admin and frontend functionality
-     *
-     * @return void
-     */
-    protected function registerGlobalHooks(): void
-    {
-        $controller = new GlobalHooks();
-        $this->loader->addAction('admin_init', [$controller, 'addPluginSettings'], 0);
-        $this->loader->addAction('init', [$controller, 'createProductionPostType'], 0);
-        $this->loader->addAction('init', [$controller, 'createProductionSeasonsTaxonomy'], 0);
-        $this->loader->addAction('init', [$controller, 'createCastAndCrewPostType'], 0);
-        $this->loader->addAction('init', [$controller, 'registerPostMeta'], 0);
-
-        $this->loader->addAction('init', [ArchiveBlocks::class, 'register'], 0);
-        $this->loader->addAction('rest_api_init', [RelationsController::class, 'registerRoutes'], 0);
+        add_action('wp_enqueue_scripts', [$controller, 'enqueueStyles'], 10, 0);
     }
 
     /**
@@ -161,10 +129,10 @@ class CurtainCall
      *
      * @return void
      */
-    protected function registerLocales(): void
+    private function registerLocales(): void
     {
         load_plugin_textdomain(
-            static::PLUGIN_NAME,
+            CCWP_PLUGIN_NAME,
             false,
             CCWP_PLUGIN_PATH.'languages/'
         );

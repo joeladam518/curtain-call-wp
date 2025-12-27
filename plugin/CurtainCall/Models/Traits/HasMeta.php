@@ -6,13 +6,13 @@ namespace CurtainCall\Models\Traits;
 
 use Illuminate\Support\Arr;
 
+/**
+ * @var string META_PREFIX
+ * @property-read string[] $ccwp_meta
+ * @property array<string, mixed> $meta
+ */
 trait HasMeta
 {
-    /** @var array */
-    protected $meta = [];
-    /** @var array|string[] */
-    protected $ccwp_meta = [];
-
     /**
      * @param string $key
      * @return string
@@ -32,7 +32,7 @@ trait HasMeta
      */
     protected function isCCWPMeta(string $key): bool
     {
-        return in_array($key, $this->ccwp_meta);
+        return in_array($key, $this->ccwp_meta, true);
     }
 
     /**
@@ -53,11 +53,19 @@ trait HasMeta
     }
 
     /**
+     * @return list<mixed>
+     */
+    protected function getAllMeta(): array
+    {
+        return Arr::map($this->fetchAllMeta(), static fn($item) => $item[0] ?? null);
+    }
+
+    /**
      * @return $this
      */
-    protected function loadMeta()
+    protected function loadMeta(): static
     {
-        $this->meta = Arr::map($this->fetchAllMeta(), fn($item) => $item[0] ?? null);
+        $this->meta = $this->getAllMeta();
 
         return $this;
     }
@@ -66,7 +74,7 @@ trait HasMeta
      * @param string $key
      * @return false|mixed
      */
-    protected function fetchMeta(string $key)
+    protected function fetchMeta(string $key): mixed
     {
         return get_post_meta($this->ID, $this->getMetaKey($key), true);
     }
@@ -83,7 +91,7 @@ trait HasMeta
      * @param string $key
      * @return mixed
      */
-    protected function getMeta(string $key)
+    protected function getMeta(string $key): mixed
     {
         $metaKey = $this->getMetaKey($key);
 
@@ -103,7 +111,7 @@ trait HasMeta
      * @param mixed  $value
      * @return $this
      */
-    protected function setMeta(string $key, $value)
+    protected function setMeta(string $key, mixed $value): static
     {
         $this->meta[$this->getMetaKey($key)] = $value;
 
@@ -115,9 +123,11 @@ trait HasMeta
      * @param  mixed  $value
      * @return bool
      */
-    public function updateMeta(string $key, $value): bool
+    public function updateMeta(string $key, mixed $value): bool
     {
-        if ($result = update_post_meta($this->ID, $this->getMetaKey($key), $value)) {
+        $result = update_post_meta($this->ID, $this->getMetaKey($key), $value);
+
+        if ($result) {
             $this->setMeta($key, $value);
         }
 
@@ -151,7 +161,9 @@ trait HasMeta
      */
     public function deleteMeta(string $key): bool
     {
-        if ($result = delete_post_meta($this->ID, $this->getMetaKey($key))) {
+        $result = delete_post_meta($this->ID, $this->getMetaKey($key));
+
+        if ($result) {
             $this->__unset($key);
         }
 
