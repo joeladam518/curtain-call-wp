@@ -24,8 +24,11 @@
 - .idea/
 - .mariadb/
 - .vagrant/
+- .rollup.cache/
 - docker/
 - node_modules/
 - public/
 - resources/
 - scripts/
+- functions-dev.php
+- wp-config.php
