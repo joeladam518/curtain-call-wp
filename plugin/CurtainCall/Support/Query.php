@@ -96,7 +96,7 @@ class Query
      */
     public static function wherePivotType(string $type = 'both', string $clause = 'WHERE'): string
     {
-        $alias = '`'.CurtainCallPivot::TABLE_ALIAS.'`';
+        $alias = '`' . CurtainCallPivot::TABLE_ALIAS . '`';
 
         switch ($type) {
             case 'cast':

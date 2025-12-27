@@ -19,10 +19,7 @@ class GlobalHooks
      */
     public function createCastAndCrewPostType(): void
     {
-        register_post_type(
-            CastAndCrew::POST_TYPE,
-            CastAndCrew::getConfig()
-        );
+        register_post_type(CastAndCrew::POST_TYPE, CastAndCrew::getConfig());
         flush_rewrite_rules();
     }
 
@@ -33,10 +30,7 @@ class GlobalHooks
      */
     public function createProductionPostType(): void
     {
-        register_post_type(
-            Production::POST_TYPE,
-            Production::getConfig()
-        );
+        register_post_type(Production::POST_TYPE, Production::getConfig());
         flush_rewrite_rules();
     }
 
@@ -50,7 +44,7 @@ class GlobalHooks
         register_taxonomy(
             Production::SEASONS_TAXONOMY,
             [Production::POST_TYPE],
-            Production::getSeasonsTaxonomyConfig()
+            Production::getSeasonsTaxonomyConfig(),
         );
         flush_rewrite_rules();
     }
@@ -62,12 +56,7 @@ class GlobalHooks
      */
     public function addPluginSettings(): void
     {
-        add_settings_section(
-            'ccwp_default_links',
-            __('Links', CCWP_TEXT_DOMAIN),
-            null,
-            'ccwp'
-        );
+        add_settings_section('ccwp_default_links', __('Links', CCWP_TEXT_DOMAIN), null, 'ccwp');
 
         register_setting('ccwp-settings', 'ccwp_default_ticket_url', [
             'type' => 'string',
@@ -88,8 +77,8 @@ class GlobalHooks
                 'input-name' => 'ccwp_default_ticket_url',
                 'input-placeholder' => 'https://www.rutheckerdhall.com/events',
                 'input-classes' => ['regular-text', 'ltr'],
-                'input-help-text' => 'Used for the "Get Tickets" link when no specific production ticket url is provided.'
-            ]
+                'input-help-text' => 'Used for the "Get Tickets" link when no specific production ticket url is provided.',
+            ],
         );
     }
 
@@ -113,7 +102,7 @@ class GlobalHooks
             'required' => Arr::get($args, 'input-required', false),
             'readonly' => Arr::get($args, 'input-readonly', false),
             'helpText' => Arr::get($args, 'input-help-text'),
-            'value' => $optionValue
+            'value' => $optionValue,
         ])->render();
     }
 
@@ -126,54 +115,46 @@ class GlobalHooks
     {
         // Cast & Crew meta
         $castCrewMeta = [
-            'name_first'    => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
-            'name_last'     => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
-            'self_title'    => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
-            'birthday'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
-            'hometown'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
-            'website_link'  => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'name_first' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'name_last' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'self_title' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'birthday' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'hometown' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'website_link' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
             'facebook_link' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
-            'twitter_link'  => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
-            'instagram_link'=> ['type' => 'string', 'sanitize' => 'esc_url_raw'],
-            'fun_fact'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'twitter_link' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'instagram_link' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
+            'fun_fact' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
         ];
 
         foreach ($castCrewMeta as $key => $schema) {
-            register_post_meta(
-                'ccwp_cast_and_crew',
-                "_ccwp_cast_crew_{$key}",
-                [
-                    'type'              => $schema['type'],
-                    'single'            => true,
-                    'sanitize_callback' => $schema['sanitize'],
-                    'show_in_rest'      => true,
-                    'auth_callback'     => static fn() => current_user_can('edit_posts'),
-                ]
-            );
+            register_post_meta('ccwp_cast_and_crew', "_ccwp_cast_crew_{$key}", [
+                'type' => $schema['type'],
+                'single' => true,
+                'sanitize_callback' => $schema['sanitize'],
+                'show_in_rest' => true,
+                'auth_callback' => static fn() => current_user_can('edit_posts'),
+            ]);
         }
 
         // Production meta
         $productionMeta = [
-            'name'       => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'name' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
             'date_start' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
-            'date_end'   => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'date_end' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
             'show_times' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
             'ticket_url' => ['type' => 'string', 'sanitize' => 'esc_url_raw'],
-            'venue'      => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
+            'venue' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
         ];
 
         foreach ($productionMeta as $key => $schema) {
-            register_post_meta(
-                'ccwp_production',
-                "_ccwp_production_{$key}",
-                [
-                    'type'              => $schema['type'],
-                    'single'            => true,
-                    'sanitize_callback' => $schema['sanitize'],
-                    'show_in_rest'      => true,
-                    'auth_callback'     => static fn() => current_user_can('edit_posts'),
-                ]
-            );
+            register_post_meta('ccwp_production', "_ccwp_production_{$key}", [
+                'type' => $schema['type'],
+                'single' => true,
+                'sanitize_callback' => $schema['sanitize'],
+                'show_in_rest' => true,
+                'auth_callback' => static fn() => current_user_can('edit_posts'),
+            ]);
         }
     }
 }

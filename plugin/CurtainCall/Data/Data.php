@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Arrayable;
 abstract class Data implements ArrayAccess, Arrayable
 {
     abstract public static function fromArray(array $data): self;
+
     abstract public function toArray(): array;
 
     public function offsetExists(mixed $offset): bool

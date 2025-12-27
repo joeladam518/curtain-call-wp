@@ -6,13 +6,13 @@ namespace CurtainCall\Models;
 
 use CurtainCall\Exceptions\UndefinedPropertyException;
 use CurtainCall\Exceptions\UnsettableException;
+use CurtainCall\Models\Traits\HasAttributes;
+use CurtainCall\Models\Traits\HasMeta;
+use CurtainCall\Models\Traits\HasWordPressPost;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
-use WP_Post;
-use CurtainCall\Models\Traits\HasWordPressPost;
-use CurtainCall\Models\Traits\HasMeta;
-use CurtainCall\Models\Traits\HasAttributes;
 use Throwable;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -119,19 +119,15 @@ abstract class CurtainCallPost implements Arrayable
             }
 
             // Convert $postData to WP_Post
-            $post = new WP_Post((object)$postData);
+            $post = new WP_Post((object) $postData);
 
             // Convert $post to CurtainCallPost and add it to the array
             switch ($post->post_type) {
                 case Production::POST_TYPE:
-                    $posts[] = Production::make($post)->setCurtainCallPostJoin(
-                        new CurtainCallPivot($pivotData)
-                    );
+                    $posts[] = Production::make($post)->setCurtainCallPostJoin(new CurtainCallPivot($pivotData));
                     break;
                 case CastAndCrew::POST_TYPE:
-                    $posts[] = CastAndCrew::make($post)->setCurtainCallPostJoin(
-                        new CurtainCallPivot($pivotData)
-                    );
+                    $posts[] = CastAndCrew::make($post)->setCurtainCallPostJoin(new CurtainCallPivot($pivotData));
                     break;
             }
         }
@@ -149,16 +145,12 @@ abstract class CurtainCallPost implements Arrayable
     public function getFeaturedImage(string $size = 'thumbnail', bool $icon = false): ?array
     {
         if (!isset($this->image_cache[$size]) || $this->image_cache[$size] === null) {
-            $imageSrc = wp_get_attachment_image_src(
-                get_post_thumbnail_id($this->ID),
-                $size,
-                $icon
-            );
+            $imageSrc = wp_get_attachment_image_src(get_post_thumbnail_id($this->ID), $size, $icon);
 
             if ($imageSrc && isset($imageSrc[0])) {
                 $this->image_cache[$size] = [
-                    'url'    => $imageSrc[0],
-                    'width'  => $imageSrc[1] ?? null,
+                    'url' => $imageSrc[0],
+                    'width' => $imageSrc[1] ?? null,
                     'height' => $imageSrc[2] ?? null,
                 ];
             } else {
@@ -217,7 +209,7 @@ abstract class CurtainCallPost implements Arrayable
             return $this->getAttribute($key);
         }
 
-        throw new UndefinedPropertyException('Undefined property: '. static::class .'::$'. $key);
+        throw new UndefinedPropertyException('Undefined property: ' . static::class . '::$' . $key);
     }
 
     /**
@@ -231,7 +223,7 @@ abstract class CurtainCallPost implements Arrayable
     public function __set(string $key, mixed $value): void
     {
         if (in_array($key, ['attributes', 'meta', 'ccwp_meta', 'wp_post', 'wp_post_attributes', 'image_cache'], true)) {
-            throw new UnsettableException('You can not set the '.$key.' property.');
+            throw new UnsettableException('You can not set the ' . $key . ' property.');
         }
 
         if ($this->isPostAttribute($key)) {

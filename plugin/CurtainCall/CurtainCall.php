@@ -131,10 +131,6 @@ final class CurtainCall
      */
     private function registerLocales(): void
     {
-        load_plugin_textdomain(
-            CCWP_PLUGIN_NAME,
-            false,
-            CCWP_PLUGIN_PATH.'languages/'
-        );
+        load_plugin_textdomain(CCWP_PLUGIN_NAME, false, CCWP_PLUGIN_PATH . 'languages/');
     }
 }

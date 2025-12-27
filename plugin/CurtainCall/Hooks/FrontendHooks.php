@@ -49,7 +49,7 @@ class FrontendHooks
             Arr::where($templates, static fn($item) => $item !== "{$type}.php"),
             false,
             false,
-            []
+            [],
         );
 
         return (bool) $themeTemplate;

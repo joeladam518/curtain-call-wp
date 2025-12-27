@@ -30,7 +30,7 @@ class Production extends CurtainCallPost
     /**
      * @var list<string>
      */
-    protected array $ccwp_meta= [
+    protected array $ccwp_meta = [
         'name',
         'date_start',
         'date_end',
@@ -47,23 +47,23 @@ class Production extends CurtainCallPost
         return [
             'description' => 'Displays your theatre company\'s productions and their relevant data',
             'labels' => [
-                'name'               => __('Productions', CCWP_TEXT_DOMAIN),
-                'singular_name'      => __('Production', CCWP_TEXT_DOMAIN),
-                'add_new'            => __('Add New', CCWP_TEXT_DOMAIN),
-                'add_new_item'       => __('Add New Production', CCWP_TEXT_DOMAIN),
-                'edit_item'          => __('Edit Production', CCWP_TEXT_DOMAIN),
-                'new_item'           => __('New Production', CCWP_TEXT_DOMAIN),
-                'all_items'          => __('All Productions', CCWP_TEXT_DOMAIN),
-                'view_item'          => __('View Production', CCWP_TEXT_DOMAIN),
-                'search_items'       => __('Search productions', CCWP_TEXT_DOMAIN),
-                'not_found'          => __('No productions found', CCWP_TEXT_DOMAIN),
+                'name' => __('Productions', CCWP_TEXT_DOMAIN),
+                'singular_name' => __('Production', CCWP_TEXT_DOMAIN),
+                'add_new' => __('Add New', CCWP_TEXT_DOMAIN),
+                'add_new_item' => __('Add New Production', CCWP_TEXT_DOMAIN),
+                'edit_item' => __('Edit Production', CCWP_TEXT_DOMAIN),
+                'new_item' => __('New Production', CCWP_TEXT_DOMAIN),
+                'all_items' => __('All Productions', CCWP_TEXT_DOMAIN),
+                'view_item' => __('View Production', CCWP_TEXT_DOMAIN),
+                'search_items' => __('Search productions', CCWP_TEXT_DOMAIN),
+                'not_found' => __('No productions found', CCWP_TEXT_DOMAIN),
                 'not_found_in_trash' => __('No productions found in the Trash', CCWP_TEXT_DOMAIN),
-                'parent_item_colon'  => '',
-                'menu_name'          => 'Productions',
+                'parent_item_colon' => '',
+                'menu_name' => 'Productions',
             ],
-            'public'            => true,
-            'show_in_rest'      => true,
-            'menu_position'     => 5,
+            'public' => true,
+            'show_in_rest' => true,
+            'menu_position' => 5,
             'show_in_nav_menus' => true,
             'has_archive' => true,
             'supports' => [
@@ -73,7 +73,7 @@ class Production extends CurtainCallPost
                 'custom-fields',
             ],
             'taxonomies' => [
-                'ccwp_production_seasons'
+                'ccwp_production_seasons',
             ],
             'rewrite' => [
                 'slug' => 'productions',
@@ -93,23 +93,23 @@ class Production extends CurtainCallPost
             'hierarchical' => true,
             'show_in_rest' => true,
             'labels' => [
-                'name'              => __('Seasons', CCWP_TEXT_DOMAIN),
-                'singular_name'     => __('Season', CCWP_TEXT_DOMAIN),
-                'search_items'      => __('Search Seasons', CCWP_TEXT_DOMAIN),
-                'all_items'         => __('All Seasons', CCWP_TEXT_DOMAIN),
-                'parent_item'       => __('Parent Season', CCWP_TEXT_DOMAIN),
+                'name' => __('Seasons', CCWP_TEXT_DOMAIN),
+                'singular_name' => __('Season', CCWP_TEXT_DOMAIN),
+                'search_items' => __('Search Seasons', CCWP_TEXT_DOMAIN),
+                'all_items' => __('All Seasons', CCWP_TEXT_DOMAIN),
+                'parent_item' => __('Parent Season', CCWP_TEXT_DOMAIN),
                 'parent_item_colon' => __('Parent Season:', CCWP_TEXT_DOMAIN),
-                'edit_item'         => __('Edit Season', CCWP_TEXT_DOMAIN),
-                'update_item'       => __('Update Season', CCWP_TEXT_DOMAIN),
-                'add_new_item'      => __('Add New Season', CCWP_TEXT_DOMAIN),
-                'new_item_name'     => __('New Season Title', CCWP_TEXT_DOMAIN),
-                'menu_name'         => __('Seasons', CCWP_TEXT_DOMAIN),
+                'edit_item' => __('Edit Season', CCWP_TEXT_DOMAIN),
+                'update_item' => __('Update Season', CCWP_TEXT_DOMAIN),
+                'add_new_item' => __('Add New Season', CCWP_TEXT_DOMAIN),
+                'new_item_name' => __('New Season Title', CCWP_TEXT_DOMAIN),
+                'menu_name' => __('Seasons', CCWP_TEXT_DOMAIN),
             ],
-            'show_ui'           => true,
+            'show_ui' => true,
             'show_admin_column' => true,
-            'query_var'         => true,
+            'query_var' => true,
             'rewrite' => [
-                'slug'       => 'seasons',
+                'slug' => 'seasons',
                 'with_front' => true,
             ],
         ];
@@ -129,9 +129,9 @@ class Production extends CurtainCallPost
                 'post',
             ],
             'post_status' => 'publish',
-            'meta_key'    => '_ccwp_production_date_start',
-            'orderby'     => 'meta_value',
-            'nopaging'    => true,
+            'meta_key' => '_ccwp_production_date_start',
+            'orderby' => 'meta_value',
+            'nopaging' => true,
         ], $additionalArgs));
     }
 
@@ -147,13 +147,13 @@ class Production extends CurtainCallPost
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key'     => '_ccwp_production_date_start',
-                    'value'   => Date::today(),
+                    'key' => '_ccwp_production_date_start',
+                    'value' => Date::today(),
                     'compare' => '<',
                 ],
                 [
-                    'key'     => '_ccwp_production_date_end',
-                    'value'   => Date::today(),
+                    'key' => '_ccwp_production_date_end',
+                    'value' => Date::today(),
                     'compare' => '<',
                 ],
             ],
@@ -172,13 +172,13 @@ class Production extends CurtainCallPost
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key'     => '_ccwp_production_date_start',
-                    'value'   => Date::today(),
+                    'key' => '_ccwp_production_date_start',
+                    'value' => Date::today(),
                     'compare' => '<=',
                 ],
                 [
-                    'key'     => '_ccwp_production_date_end',
-                    'value'   => Date::today(),
+                    'key' => '_ccwp_production_date_end',
+                    'value' => Date::today(),
                     'compare' => '>=',
                 ],
             ],
@@ -197,13 +197,13 @@ class Production extends CurtainCallPost
             'meta_query' => [
                 'relation' => 'AND',
                 [
-                    'key'     => '_ccwp_production_date_start',
-                    'value'   => Date::today(),
+                    'key' => '_ccwp_production_date_start',
+                    'value' => Date::today(),
                     'compare' => '>',
                 ],
                 [
-                    'key'     => '_ccwp_production_date_end',
-                    'value'   => Date::today(),
+                    'key' => '_ccwp_production_date_end',
+                    'value' => Date::today(),
                     'compare' => '>',
                 ],
             ],
@@ -246,7 +246,7 @@ class Production extends CurtainCallPost
         $now = Carbon::now();
 
         $start_date_format = 'F jS';
-        $end_date_format   = '';
+        $end_date_format = '';
 
         if ($chrono_state === 'past' || $start_date->format('Y') !== $now->format('Y')) {
             // Don't show the start date year if both dates are in the same year

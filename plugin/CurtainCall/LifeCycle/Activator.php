@@ -28,7 +28,7 @@ class Activator implements LifeCycleHook
             `custom_order` SMALLINT UNSIGNED DEFAULT NULL NULL
         ) {$charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
 }

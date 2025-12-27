@@ -20,9 +20,9 @@ class CurtainCallPivot implements Arrayable
 {
     use HasAttributes;
 
-    const TABLE_NAME  = 'ccwp_castandcrew_production';
+    const TABLE_NAME = 'ccwp_castandcrew_production';
     const TABLE_ALIAS = 'ccwp_join';
-    const ATTRIBUTE_PREFIX =  self::TABLE_ALIAS . '_';
+    const ATTRIBUTE_PREFIX = self::TABLE_ALIAS . '_';
 
     protected static ?string $table;
     protected static ?string $tableWithAlias;
@@ -62,7 +62,7 @@ class CurtainCallPivot implements Arrayable
     {
         global $wpdb;
 
-        return static::$table ??= $wpdb->prefix.static::TABLE_NAME;
+        return static::$table ??= $wpdb->prefix . static::TABLE_NAME;
     }
 
     /**
@@ -70,7 +70,7 @@ class CurtainCallPivot implements Arrayable
      */
     public static function getTableNameWithAlias(): string
     {
-        return static::$tableWithAlias ??= '`'.static::getTableName().'` AS `'.static::TABLE_ALIAS.'`';
+        return static::$tableWithAlias ??= '`' . static::getTableName() . '` AS `' . static::TABLE_ALIAS . '`';
     }
 
     /**
@@ -89,7 +89,7 @@ class CurtainCallPivot implements Arrayable
      */
     public static function stripPrefix(string $field): string
     {
-        return preg_replace('~^'.static::ATTRIBUTE_PREFIX.'~', '', $field);
+        return preg_replace('~^' . static::ATTRIBUTE_PREFIX . '~', '', $field);
     }
 
     /**
@@ -99,10 +99,12 @@ class CurtainCallPivot implements Arrayable
     public function load(array $data): void
     {
         foreach ($data as $key => $value) {
-            if (!(static::isField($key))) { continue; }
+            if (!static::isField($key)) {
+                continue;
+            }
 
-$key = static::stripPrefix($key);
-                $this->setAttribute($key, $value);
+            $key = static::stripPrefix($key);
+            $this->setAttribute($key, $value);
         }
     }
 

@@ -15,10 +15,10 @@ declare(strict_types=1);
  * License URI: https://github.com/joeladam518/CurtainCallWP/blob/master/LICENSE
  * Text Domain: curtain-call-wp
  * Domain Path: /languages
-**/
+ */
 
 if (!defined('ABSPATH')) {
-    die;
+    die();
 }
 
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');

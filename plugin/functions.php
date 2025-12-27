@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die;
+    die();
 }
 
 if (!function_exists('ccwp_plugin_path')) {
@@ -43,7 +43,7 @@ if (!function_exists('ccwp_strip_short_code_gallery')) {
      */
     function ccwp_strip_short_code_gallery(string $content): string
     {
-        preg_match_all('~'.get_shortcode_regex().'~s', $content, $matches, PREG_SET_ORDER);
+        preg_match_all('~' . get_shortcode_regex() . '~s', $content, $matches, PREG_SET_ORDER);
 
         if ($matches) {
             foreach ($matches as $shortcode) {

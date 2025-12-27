@@ -16,29 +16,29 @@ class RelationsController
     {
         register_rest_route(static::NAMESPACE, '/relations', [
             [
-                'methods'  => 'GET',
+                'methods' => 'GET',
                 'callback' => [static::class, 'getRelations'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => false],
                     'cast_and_crew_id' => ['type' => 'integer', 'required' => false],
-                    'type' => ['type' => 'string', 'required' => false, 'enum' => ['cast','crew']],
+                    'type' => ['type' => 'string', 'required' => false, 'enum' => ['cast', 'crew']],
                 ],
             ],
             [
-                'methods'  => 'POST',
+                'methods' => 'POST',
                 'callback' => [static::class, 'attach'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => true],
                     'cast_and_crew_id' => ['type' => 'integer', 'required' => true],
-                    'type' => ['type' => 'string', 'required' => true, 'enum' => ['cast','crew']],
+                    'type' => ['type' => 'string', 'required' => true, 'enum' => ['cast', 'crew']],
                     'role' => ['type' => 'string', 'required' => false],
                     'custom_order' => ['type' => 'integer', 'required' => false],
                 ],
             ],
             [
-                'methods'  => 'DELETE',
+                'methods' => 'DELETE',
                 'callback' => [static::class, 'detach'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
@@ -57,14 +57,14 @@ class RelationsController
         $where = [];
         $params = [];
 
-        $pid = (int)$request->get_param('production_id');
+        $pid = (int) $request->get_param('production_id');
 
         if ($pid) {
             $where[] = 'production_id = %d';
             $params[] = $pid;
         }
 
-        $ccid = (int)$request->get_param('cast_and_crew_id');
+        $ccid = (int) $request->get_param('cast_and_crew_id');
 
         if ($ccid) {
             $where[] = 'cast_and_crew_id = %d';
@@ -89,13 +89,13 @@ class RelationsController
         global $wpdb;
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';
 
-        $pid  = (int)$request->get_param('production_id');
-        $ccid = (int)$request->get_param('cast_and_crew_id');
-        $type = (string)$request->get_param('type');
-        $role = (string)($request->get_param('role') ?? '');
+        $pid = (int) $request->get_param('production_id');
+        $ccid = (int) $request->get_param('cast_and_crew_id');
+        $type = (string) $request->get_param('type');
+        $role = (string) ($request->get_param('role') ?? '');
         $order = $request->get_param('custom_order');
 
-        if (!$pid || !$ccid || !in_array($type, ['cast','crew'], true)) {
+        if (!$pid || !$ccid || !in_array($type, ['cast', 'crew'], true)) {
             return new WP_Error('ccwp_invalid_params', 'Invalid parameters', ['status' => 400]);
         }
 
@@ -105,16 +105,17 @@ class RelationsController
             'cast_and_crew_id' => $ccid,
             'type' => $type,
             'role' => sanitize_text_field($role),
-            'custom_order' => is_null($order) ? null : (int)$order,
+            'custom_order' => is_null($order) ? null : (int) $order,
         ];
 
         // Check existing
         $existing = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$table} WHERE production_id=%d AND cast_and_crew_id=%d",
-            $pid, $ccid
+            $pid,
+            $ccid,
         ));
 
-        if ((int)$existing > 0) {
+        if ((int) $existing > 0) {
             $wpdb->update($table, $data, [
                 'production_id' => $pid,
                 'cast_and_crew_id' => $ccid,
@@ -131,8 +132,8 @@ class RelationsController
         global $wpdb;
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';
 
-        $pid  = (int)$request->get_param('production_id');
-        $ccid = (int)$request->get_param('cast_and_crew_id');
+        $pid = (int) $request->get_param('production_id');
+        $ccid = (int) $request->get_param('cast_and_crew_id');
 
         if (!$pid || !$ccid) {
             return new WP_Error('ccwp_invalid_params', 'Invalid parameters', ['status' => 400]);

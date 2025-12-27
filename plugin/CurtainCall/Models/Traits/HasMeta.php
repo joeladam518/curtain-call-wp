@@ -145,8 +145,8 @@ trait HasMeta
     {
         $updated = false;
         foreach ($this->meta as $key => $value) {
-            if (preg_match('~^'.static::META_PREFIX.'([_a-zA-Z0-9]+)$~', $key)) {
-                if (update_post_meta($this->ID, $key, sanitize_text_field((string)$value)) === true) {
+            if (preg_match('~^' . static::META_PREFIX . '([_a-zA-Z0-9]+)$~', $key)) {
+                if (update_post_meta($this->ID, $key, sanitize_text_field((string) $value)) === true) {
                     $updated = true;
                 }
             }

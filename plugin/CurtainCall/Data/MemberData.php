@@ -8,11 +8,11 @@ final class MemberData extends Data
 {
     public function __construct(
         public readonly int $ID,
-        public readonly string|null $firstName,
-        public readonly string|null $lastName,
-        public readonly string|null $fullName,
-        public readonly string|null $role,
-        public readonly string|null $type,
+        public readonly ?string $firstName,
+        public readonly ?string $lastName,
+        public readonly ?string $fullName,
+        public readonly ?string $role,
+        public readonly ?string $type,
         public readonly int $order = 0,
     ) {}
 
@@ -25,7 +25,7 @@ final class MemberData extends Data
             fullName: $data['full_name'] ?? $data['fullName'] ?? null,
             role: $data['role'] ?? null,
             type: $data['type'] ?? null,
-            order: $data['order'] ?? $data['custom_order'] ??  $data['customOrder'] ?? 0,
+            order: $data['order'] ?? $data['custom_order'] ?? $data['customOrder'] ?? 0,
         );
     }
 

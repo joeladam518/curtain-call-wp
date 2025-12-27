@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models\Traits;
 
-use WP_Post;
 use CurtainCall\Exceptions\PostNotFoundException;
 use InvalidArgumentException;
+use WP_Post;
 
 /**
  * @var string POST_TYPE
@@ -73,7 +73,7 @@ trait HasWordPressPost
             $post = $this->fetchPost((int) $post);
         }
 
-        if (!($post instanceof WP_Post)) {
+        if (!$post instanceof WP_Post) {
             throw new InvalidArgumentException('Can not load $post it must be an int or an instance of WP_Post.');
         }
 
@@ -91,13 +91,11 @@ trait HasWordPressPost
         if ($post->post_type === static::POST_TYPE) {
             $this->wp_post = $post;
         } else {
-            throw new InvalidArgumentException(
-                sprintf(
-                    "Can't set wp_post. \"%s\" is the wrong post type for %s.",
-                    $post->post_type,
-                    static::class
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                "Can't set wp_post. \"%s\" is the wrong post type for %s.",
+                $post->post_type,
+                static::class,
+            ));
         }
 
         $this->wp_post_attributes = array_keys(get_object_vars($this->wp_post));

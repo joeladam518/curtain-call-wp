@@ -6,6 +6,4 @@ namespace CurtainCall\Exceptions;
 
 use Exception;
 
-final class UnsettableException extends Exception
-{
-}
+final class UnsettableException extends Exception {}

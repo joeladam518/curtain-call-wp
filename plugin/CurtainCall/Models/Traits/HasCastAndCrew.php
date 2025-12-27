@@ -30,9 +30,11 @@ trait HasCastAndCrew
                 'ccwp_join.type',
             ]),
             "FROM `{$wpdb->posts}` AS `production_posts`",
-            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            'INNER JOIN '
+                . CurtainCallPivot::getTableNameWithAlias()
+                . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
             "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
-            "WHERE `production_posts`.`ID` = %d",
+            'WHERE `production_posts`.`ID` = %d',
             Query::wherePivotType($type, 'AND'),
         ]);
 
@@ -91,13 +93,15 @@ trait HasCastAndCrew
         global $wpdb;
 
         $query = Query::raw([
-            "SELECT " . Query::selectCastAndCrew(),
+            'SELECT ' . Query::selectCastAndCrew(),
             "FROM `{$wpdb->posts}` AS `production_posts`",
-            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            'INNER JOIN '
+                . CurtainCallPivot::getTableNameWithAlias()
+                . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
             "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
-            "WHERE `production_posts`.`ID` = %d",
+            'WHERE `production_posts`.`ID` = %d',
             Query::wherePivotType($type, 'AND'),
-            "ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC;"
+            'ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC;',
         ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
@@ -129,15 +133,9 @@ trait HasCastAndCrew
         // insert / update the production's castcrew
         if (count($newIds) > 0) {
             foreach ($castcrew as $member) {
-                $castcrewId = is_numeric($member['cast_and_crew_id'])
-                    ? (int) $member['cast_and_crew_id']
-                    : null;
-                $role = !empty($member['role'])
-                    ? sanitize_text_field($member['role'])
-                    : null;
-                $order = is_numeric($member['custom_order'])
-                    ? (int) $member['custom_order']
-                    : null;
+                $castcrewId = is_numeric($member['cast_and_crew_id']) ? (int) $member['cast_and_crew_id'] : null;
+                $role = !empty($member['role']) ? sanitize_text_field($member['role']) : null;
+                $order = is_numeric($member['custom_order']) ? (int) $member['custom_order'] : null;
 
                 if (!$castcrewId) {
                     continue;
@@ -183,21 +181,25 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $wpdb->insert(CurtainCallPivot::getTableName(), [
-            // Data to be inserted
-            'production_id'    => $this->ID,
-            'cast_and_crew_id' => $id,
-            'type'             => $type,
-            'role'             => $role,
-            'custom_order'     => $customOrder,
-        ], [
-            // Format of data to be inserted
-            '%d',
-            '%d',
-            '%s',
-            '%s',
-            '%d',
-        ]);
+        $wpdb->insert(
+            CurtainCallPivot::getTableName(),
+            [
+                // Data to be inserted
+                'production_id' => $this->ID,
+                'cast_and_crew_id' => $id,
+                'type' => $type,
+                'role' => $role,
+                'custom_order' => $customOrder,
+            ],
+            [
+                // Format of data to be inserted
+                '%d',
+                '%d',
+                '%s',
+                '%s',
+                '%d',
+            ],
+        );
 
         $wpdb->flush();
     }
@@ -214,25 +216,31 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $wpdb->update(CurtainCallPivot::getTableName(), [
-            // Data to be updated
-            'role'         => $role,
-            'custom_order' => $customOrder,
-        ], [
-            // Where Clauses
-            'production_id'    => $this->ID,
-            'cast_and_crew_id' => $id,
-            'type'             => $type,
-        ], [
-            // Format of the data to be inserted
-            '%s',
-            '%d',
-        ], [
-            // Formatting of where clause data
-            '%d',
-            '%d',
-            '%s',
-        ]);
+        $wpdb->update(
+            CurtainCallPivot::getTableName(),
+            [
+                // Data to be updated
+                'role' => $role,
+                'custom_order' => $customOrder,
+            ],
+            [
+                // Where Clauses
+                'production_id' => $this->ID,
+                'cast_and_crew_id' => $id,
+                'type' => $type,
+            ],
+            [
+                // Format of the data to be inserted
+                '%s',
+                '%d',
+            ],
+            [
+                // Formatting of where clause data
+                '%d',
+                '%d',
+                '%s',
+            ],
+        );
 
         $wpdb->flush();
     }
@@ -247,17 +255,21 @@ trait HasCastAndCrew
     {
         global $wpdb;
 
-        $wpdb->delete(CurtainCallPivot::getTableName(), [
-            // Where Clauses
-            'production_id'    => $this->ID,
-            'cast_and_crew_id' => $id,
-            'type'             => $type,
-        ], [
-            // Format of where clauses data
-            '%d',
-            '%d',
-            '%s',
-        ]);
+        $wpdb->delete(
+            CurtainCallPivot::getTableName(),
+            [
+                // Where Clauses
+                'production_id' => $this->ID,
+                'cast_and_crew_id' => $id,
+                'type' => $type,
+            ],
+            [
+                // Format of where clauses data
+                '%d',
+                '%d',
+                '%s',
+            ],
+        );
 
         $wpdb->flush();
     }
