@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
-import {Button, Icon, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
+import {Button, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
 import {useSelect} from '@wordpress/data';
 import {PluginSidebar} from '@wordpress/editor';
 import React, {FC, useEffect, useState} from 'react';
