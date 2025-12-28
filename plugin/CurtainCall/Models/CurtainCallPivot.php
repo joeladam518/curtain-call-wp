@@ -24,11 +24,12 @@ class CurtainCallPivot implements Arrayable
     const TABLE_ALIAS = 'ccwp_join';
     const ATTRIBUTE_PREFIX = self::TABLE_ALIAS . '_';
 
+    protected array $attributes = [];
     protected static ?string $table;
     protected static ?string $tableWithAlias;
 
-    /** @var array|string[] */
-    protected static $fields = [
+    /** @var list<string> */
+    protected static array $fields = [
         'production_id',
         'cast_and_crew_id',
         'type',
@@ -151,5 +152,13 @@ class CurtainCallPivot implements Arrayable
     public function toArray(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return $this->toArray();
     }
 }

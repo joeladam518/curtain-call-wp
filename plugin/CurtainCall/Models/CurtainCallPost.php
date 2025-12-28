@@ -275,6 +275,14 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
      * Get the config array used when creating a WP custom post type
      *
      * @return array
