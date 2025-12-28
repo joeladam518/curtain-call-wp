@@ -10,10 +10,10 @@ use CurtainCall\Support\View;
 use Illuminate\Support\Arr;
 use Throwable;
 
-class GlobalHooks
+final class GlobalHooks
 {
     /**
-     * Register the cast/crew custom post type
+     * Register the cast/crew custom post-type
      *
      * @return void
      */
@@ -24,7 +24,7 @@ class GlobalHooks
     }
 
     /**
-     * Register the production custom post type
+     * Register the production custom post-type
      *
      * @return void
      */
@@ -35,7 +35,7 @@ class GlobalHooks
     }
 
     /**
-     * Create the production custom post type taxonomies
+     * Create the production custom post-type taxonomies
      *
      * @return void
      */
@@ -107,13 +107,12 @@ class GlobalHooks
     }
 
     /**
-     * Register postmeta so it is available in the REST API / block editor
+     * Register post-meta so it is available in the REST API / block editor
      *
      * @return void
      */
-    public function registerPostMeta(): void
+    public function registerCastCrewMeta(): void
     {
-        // Cast & Crew meta
         $castCrewMeta = [
             'name_first' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
             'name_last' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
@@ -136,7 +135,15 @@ class GlobalHooks
                 'auth_callback' => static fn() => current_user_can('edit_posts'),
             ]);
         }
+    }
 
+    /**
+     * Register post-meta so it is available in the REST API / block editor
+     *
+     * @return void
+     */
+    public function registerProductionMeta(): void
+    {
         // Production meta
         $productionMeta = [
             'name' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
