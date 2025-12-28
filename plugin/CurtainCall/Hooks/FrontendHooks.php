@@ -10,7 +10,7 @@ use CurtainCall\Support\View;
 use Illuminate\Support\Arr;
 use WP_Post;
 
-class FrontendHooks
+final class FrontendHooks
 {
     protected string $assetsUrl;
     protected string $assetsPath;
@@ -37,7 +37,7 @@ class FrontendHooks
     }
 
     /**
-     * Determine if the current theme has a ccwp post type template
+     * Determine if the current theme has a ccwp post-type template
      *
      * @param string $type
      * @param array|string[] $templates
