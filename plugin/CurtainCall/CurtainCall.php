@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace CurtainCall;
 
 use CurtainCall\Blocks\ArchiveBlocks;
+use CurtainCall\Hooks\AdminCastCrewMetaboxHooks;
 use CurtainCall\Hooks\AdminHooks;
+use CurtainCall\Hooks\AdminProductionMetaboxHooks;
 use CurtainCall\Hooks\FrontendHooks;
 use CurtainCall\Hooks\GlobalHooks;
 use CurtainCall\LifeCycle\Activator;
@@ -54,6 +56,8 @@ final class CurtainCall
     {
         $this->loadGlobalHooks();
         $this->loadAdminHooks();
+        $this->loadCastCrewMetaboxHooks();
+        $this->loadProductionMetaboxHooks();
         $this->loadFrontendHooks();
     }
 
@@ -67,10 +71,12 @@ final class CurtainCall
         $controller = new GlobalHooks();
 
         add_action('admin_init', [$controller, 'addPluginSettings'], 10, 0);
+
         add_action('init', [$controller, 'createProductionPostType'], 10, 0);
         add_action('init', [$controller, 'createProductionSeasonsTaxonomy'], 10, 0);
         add_action('init', [$controller, 'createCastAndCrewPostType'], 10, 0);
-        add_action('init', [$controller, 'registerPostMeta'], 10, 0);
+        add_action('init', [$controller, 'registerCastCrewMeta'], 10, 0);
+        add_action('init', [$controller, 'registerProductionMeta'], 10, 0);
 
         add_action('init', [ArchiveBlocks::class, 'register'], 10, 0);
         add_action('rest_api_init', [RelationsController::class, 'registerRoutes'], 10, 0);
@@ -88,15 +94,6 @@ final class CurtainCall
         add_action('init', [$controller, 'registerJavascript'], 10, 0);
         add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
 
-        // Production custom post-type meta-boxes
-        add_action('add_meta_boxes', [$controller, 'addProductionPostMetaBoxes'], 10, 0);
-        add_action('save_post_ccwp_production', [$controller, 'saveProductionPostDetails'], 10, 3);
-        add_action('save_post_ccwp_production', [$controller, 'saveProductionPostCastAndCrew'], 10, 3);
-
-        // CastCrew custom post-type meta-boxes
-        add_action('add_meta_boxes', [$controller, 'addCastAndCrewPostMetaBoxes'], 10, 0);
-        add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveCastAndCrewPostDetails'], 10, 3);
-
         // Set the title on save
         add_filter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 10, 3);
 
@@ -106,6 +103,23 @@ final class CurtainCall
 
         // Block editor-only assets
         add_action('enqueue_block_editor_assets', [$controller, 'enqueueEditorAssets'], 10, 0);
+    }
+
+    private function loadCastCrewMetaboxHooks(): void
+    {
+        $controller = new AdminCastCrewMetaboxHooks();
+
+        add_action('add_meta_boxes', [$controller, 'addMetaboxes'], 10, 0);
+        add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveDetailsMeta'], 10, 3);
+    }
+
+    private function loadProductionMetaboxHooks(): void
+    {
+        $controller = new AdminProductionMetaboxHooks();
+
+        add_action('add_meta_boxes', [$controller, 'addMetaboxes'], 10, 0);
+        add_action('save_post_ccwp_production', [$controller, 'saveDetailsMeta'], 10, 3);
+        add_action('save_post_ccwp_production', [$controller, 'saveAddCastCrew'], 10, 3);
     }
 
     /**
