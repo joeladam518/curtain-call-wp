@@ -1,6 +1,6 @@
-@import '../shared/_variables.css';
-@import '../shared/_mixins.css';
-@import '../shared/_grid.css';
+@import '../shared/variables.css';
+@import '../shared/mixins.css';
+@import '../shared/grid.css';
 
-@import './_metaboxes.css';
-@import './_settings-page.css';
+@import './metaboxes.css';
+@import './settings-page.css';

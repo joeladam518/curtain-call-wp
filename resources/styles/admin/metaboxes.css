@@ -1,7 +1,15 @@
 #ccwp_production_details,
 #ccwp_cast_and_cast_details {
+    .ccwp-react-metabox {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 10px;
+    }
+
     .inside {
-        padding: 15px 30px 20px;
+        padding: 0 30px 20px;
     }
 
     .ccwp-form-group {

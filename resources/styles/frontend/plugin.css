@@ -1,11 +1,11 @@
-@import '../shared/_variables.css';
-@import '../shared/_mixins.css';
-@import '../shared/_grid.css';
+@import '../shared/variables.css';
+@import '../shared/mixins.css';
+@import '../shared/grid.css';
 
-@import './_shared.css';
+@import './shared.css';
 
-@import './_archive-productions.css';
-@import './_archive-castcrew.css';
+@import './archive-productions.css';
+@import './archive-castcrew.css';
 
-@import './_single-productions.css';
-@import './_single-castcrew.css';
+@import './single-productions.css';
+@import './single-castcrew.css';
