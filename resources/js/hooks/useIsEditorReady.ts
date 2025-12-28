@@ -1,4 +1,5 @@
 import {useSelect} from '@wordpress/data';
+import {store as blockEditorStore} from '@wordpress/block-editor';
 import {store as editorStore} from '@wordpress/editor';
 import {useMemo} from 'react';
 
@@ -12,7 +13,7 @@ const useIsEditorReady = () => {
         []
     );
     const blockCount = useSelect(
-        select => select(editorStore)?.getBlockCount(),
+        select => select(blockEditorStore)?.getBlockCount(),
         []
     );
 
