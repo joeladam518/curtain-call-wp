@@ -50,6 +50,8 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
     return (
         <div className="ccwp-react-metabox">
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="First Name*"
                 value={state.name_first}
                 onChange={setFirstName}
@@ -60,12 +62,16 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
                 }
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Last Name*"
                 value={state.name_last}
                 onChange={setLastName}
                 name="ccwp_name_last"
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Title*"
                 value={state.self_title}
                 onChange={setTitle}
@@ -82,36 +88,48 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
                 value={state.birthday}
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Hometown"
                 value={state.hometown}
                 onChange={setHometown}
                 name="ccwp_hometown"
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Website Link"
                 value={state.website_link}
                 onChange={setWebsiteLink}
                 name="ccwp_website_link"
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Facebook Link"
                 value={state.facebook_link}
                 onChange={setFacebookLink}
                 name="ccwp_facebook_link"
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Twitter Link"
                 value={state.twitter_link}
                 onChange={setTwitterLink}
                 name="ccwp_twitter_link"
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Instagram Link"
                 value={state.instagram_link}
                 onChange={setInstagramLink}
                 name="ccwp_instagram_link"
             />
             <TextControl
+                __next40pxDefaultSize
+                __nextHasNoMarginBottom
                 label="Fun Fact"
                 value={state.fun_fact}
                 onChange={setFunFact}

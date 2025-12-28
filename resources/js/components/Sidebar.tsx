@@ -181,11 +181,15 @@ const Sidebar: FC = () => {
                                 help="Search and select an existing post to attach"
                             />
                             <TextControl
+                                __next40pxDefaultSize
+                                __nextHasNoMarginBottom
                                 label="Role"
                                 value={newRole}
                                 onChange={setNewRole}
                             />
                             <TextControl
+                                __next40pxDefaultSize
+                                __nextHasNoMarginBottom
                                 label="Custom Order"
                                 type="number"
                                 value={newOrder}
@@ -216,6 +220,8 @@ const Sidebar: FC = () => {
                                         <div>Production: {r.production_id} | Cast/Crew: {r.cast_and_crew_id}</div>
                                         <div style={{display: 'flex', gap: 8, marginTop: 6}}>
                                             <TextControl
+                                                __next40pxDefaultSize
+                                                __nextHasNoMarginBottom
                                                 label="Role"
                                                 value={r.role || ''}
                                                 onChange={(val: string) => setRelations(
@@ -223,6 +229,8 @@ const Sidebar: FC = () => {
                                                 )}
                                             />
                                             <TextControl
+                                                __next40pxDefaultSize
+                                                __nextHasNoMarginBottom
                                                 label="Order"
                                                 type="number"
                                                 value={typeof r.custom_order === 'number' ? String(r.custom_order) : ''}

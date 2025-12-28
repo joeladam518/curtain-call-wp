@@ -129,6 +129,8 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     </div>
                     <div className="ccwp-col role-col" style={{flex: '1'}}>
                         <TextControl
+                            __next40pxDefaultSize
+                            __nextHasNoMarginBottom
                             value={member.role}
                             onChange={val => updateMember(type, member.ID, {role: val})}
                             name={`${inputName}[${member.ID}][role]`}
@@ -137,6 +139,8 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     </div>
                     <div className="ccwp-col billing-col" style={{flex: '0 0 100px'}}>
                         <TextControl
+                            __next40pxDefaultSize
+                            __nextHasNoMarginBottom
                             value={member.order}
                             onChange={val => updateMember(type, member.ID, {custom_order: parseInt(val, 10) || 0})}
                             name={`${inputName}[${member.ID}][custom_order]`}

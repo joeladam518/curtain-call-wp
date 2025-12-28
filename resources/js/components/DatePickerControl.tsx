@@ -97,7 +97,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
     }, []);
 
     return (
-        <div style={{width: 'auto', marginBottom: '15px'}}>
+        <div className="ccwp-date-picker-control" style={{width: 'auto', marginBottom: '15px'}}>
             <BaseControl
                 __nextHasNoMarginBottom={true}
                 __associatedWPComponentName="DatePickerControl"
