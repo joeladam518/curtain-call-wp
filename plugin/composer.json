@@ -5,7 +5,7 @@
         "nesbot/carbon": "^2.54.0"
     },
     "require-dev": {
-        "symfony/var-dumper": "^8.0"
+        "symfony/var-dumper": "^6.4.0"
     },
     "config": {
         "optimize-autoloader": true,
