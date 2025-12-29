@@ -1,6 +1,6 @@
 FROM wordpress:php8.1-apache
 
-WORKDIR /var/www/html/wp-content/plugins/CurtainCallWP
+WORKDIR /var/www/html
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=UTC

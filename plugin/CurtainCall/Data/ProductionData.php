@@ -9,7 +9,7 @@ use CurtainCall\Models\Production;
 final class ProductionData extends Data
 {
     public function __construct(
-        public readonly ?int $ID,
+        public readonly int|string|null $ID,
         public readonly ?string $name,
         public readonly ?string $dateStart,
         public readonly ?string $dateEnd,

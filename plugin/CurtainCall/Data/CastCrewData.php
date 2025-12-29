@@ -9,7 +9,7 @@ use CurtainCall\Models\CastAndCrew;
 final class CastCrewData extends Data
 {
     public function __construct(
-        public readonly ?int $ID,
+        public readonly int|string|null $ID,
         public readonly ?string $firstName,
         public readonly ?string $lastName,
         public readonly ?string $fullName,

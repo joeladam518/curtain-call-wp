@@ -153,3 +153,100 @@
         }
     }
 }
+
+#ccwp_add_productions_to_cast_crew {
+    .ccwp-production-castcrew-select-wrap {
+        @media (max-width: 782px) {
+            display: flex !important;
+            flex-flow: column nowrap !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+        }
+
+        & .components-base-control {
+            margin-bottom: 0;
+        }
+
+        & .ccwp-select-form-group {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+            & label {
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 700;
+                margin-bottom: 1px;
+            }
+        }
+
+        & .ccwp-production-castcrew-add-btn {
+            margin-bottom: 0;
+        }
+    }
+
+    .ccwp-production-castcrew-form-group {
+        & .ccwp-production-name {
+            line-height: 2;
+            font-size: 14px;
+        }
+    }
+
+    .ccwp-row {
+        width: 100%;
+        max-width: 650px;
+        justify-content: flex-start;
+        align-items: stretch;
+        margin-bottom: 7px;
+
+        & .ccwp-col {
+            padding-left: 0;
+            padding-right: 0;
+
+            &:not(:first-child) {
+                padding-left: 6px;
+            }
+
+            &:not(:last-child) {
+                padding-right: 6px;
+            }
+
+            & input[type="text"],
+            & input[type="number"] {
+                width: 100%;
+            }
+
+            &.name-col {
+                width: 25%;
+
+                @media (--from-sm) {
+                    width: 24%;
+                }
+            }
+
+            &.role-col {
+                width: 25%;
+
+                @media (--from-sm) {
+                    width: 32%;
+                }
+            }
+
+            &.billing-col {
+                width: 23%;
+            }
+
+            &.action-col {
+                width: 15%;
+            }
+        }
+
+        &.label-row {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+    }
+}

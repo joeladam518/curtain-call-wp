@@ -22,8 +22,6 @@ final class AdminProductionMetaboxHooks
      */
     public function addMetaboxes(): void
     {
-        //$screen = get_current_screen();
-
         add_meta_box(
             'ccwp_production_details', // Unique ID
             __('Production Details', CCWP_TEXT_DOMAIN), // Box title
@@ -33,17 +31,18 @@ final class AdminProductionMetaboxHooks
             'high', // Priority: (high, low)
         );
 
-        //if ($screen && method_exists($screen, 'is_block_editor') && !$screen->is_block_editor()) {
-        add_meta_box(
-            'ccwp_add_cast_and_crew_to_production', // Unique ID
-            __('Add Cast And Crew to Production', CCWP_TEXT_DOMAIN), // Box title
-            [$this, 'renderAddCastCrewMetabox'], // Content callback
-            Production::POST_TYPE, // Post type
-            'normal', // Context: (normal, side, advanced)
-            'high', // Priority: (high, low)
-        );
-
-        //}
+        // Only show the cast/crew metabox in classic editor
+        $screen = get_current_screen();
+        if ($screen && method_exists($screen, 'is_block_editor') && !$screen->is_block_editor()) {
+            add_meta_box(
+                'ccwp_add_cast_and_crew_to_production', // Unique ID
+                __('Add Cast And Crew to Production', CCWP_TEXT_DOMAIN), // Box title
+                [$this, 'renderAddCastCrewMetabox'], // Content callback
+                Production::POST_TYPE, // Post type
+                'normal', // Context: (normal, side, advanced)
+                'high', // Priority: (high, low)
+            );
+        }
     }
 
     /**

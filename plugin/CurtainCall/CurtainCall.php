@@ -111,6 +111,7 @@ final class CurtainCall
 
         add_action('add_meta_boxes', [$controller, 'addMetaboxes'], 10, 0);
         add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveDetailsMeta'], 10, 3);
+        add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveAddProductions'], 10, 3);
     }
 
     private function loadProductionMetaboxHooks(): void

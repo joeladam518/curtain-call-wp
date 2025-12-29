@@ -27,6 +27,19 @@ final class AdminCastCrewMetaboxHooks
             'normal', // Context: (normal, side, advanced)
             'high', // Priority: (high, low)
         );
+
+        // Only show the productions metabox in classic editor
+        $screen = get_current_screen();
+        if ($screen && method_exists($screen, 'is_block_editor') && !$screen->is_block_editor()) {
+            add_meta_box(
+                'ccwp_add_productions_to_cast_crew', // Unique ID
+                __('Add Productions', CCWP_TEXT_DOMAIN), // Box title
+                [$this, 'renderAddProductionsMetabox'], // Content callback
+                CastAndCrew::POST_TYPE, // Post type
+                'normal', // Context: (normal, side, advanced)
+                'high', // Priority: (high, low)
+            );
+        }
     }
 
     /**
@@ -160,5 +173,63 @@ final class AdminCastCrewMetaboxHooks
         } else {
             delete_post_meta($postId, '_ccwp_cast_crew_fun_fact');
         }
+    }
+
+    /**
+     * Render the add productions metabox
+     *
+     * @param WP_Post $post
+     * @param array $metabox
+     * @return void
+     * @throws Throwable
+     */
+    public function renderAddProductionsMetabox(WP_Post $post, array $metabox): void
+    {
+        $castcrew = CastAndCrew::make($post);
+
+        View::make('admin/castcrew-productions-metabox.php', [
+            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_productions_to_cast_crew_box_nonce', true, false),
+            'post' => $post,
+            'metabox' => $metabox,
+            'castcrew' => $castcrew,
+        ])->render();
+    }
+
+    /**
+     * Save the add productions metabox
+     *
+     * @param int $postId
+     * @param WP_Post $post
+     * @param bool $update
+     * @return void
+     * @throws Throwable
+     */
+    public function saveAddProductions(int $postId, WP_Post $post, bool $update): void
+    {
+        // Verify meta box nonce
+        if (
+            !isset($_POST['ccwp_add_productions_to_cast_crew_box_nonce'])
+            || !wp_verify_nonce($_POST['ccwp_add_productions_to_cast_crew_box_nonce'], basename(__FILE__))
+        ) {
+            return;
+        }
+
+        // Don't auto save these fields
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // Check the user's permissions
+        if (!current_user_can('edit_post', $postId)) {
+            return;
+        }
+
+        $castcrew = CastAndCrew::make($post);
+
+        $castData = $_POST['ccwp_add_cast_to_cast_crew'] ?? [];
+        $crewData = $_POST['ccwp_add_crew_to_cast_crew'] ?? [];
+
+        $castcrew->saveProductions('cast', $castData);
+        $castcrew->saveProductions('crew', $crewData);
     }
 }
