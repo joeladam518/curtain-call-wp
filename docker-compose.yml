@@ -36,7 +36,7 @@ services:
 
   wpsite.test:
     container_name: wpsite_code
-    #image: 'wordpress:latest' # <- actually defined in the dockerfile
+    #image: 'wordpress:8.1-apache' # <- defined in the dockerfile
     build:
       context: ./docker
       dockerfile: Dockerfile
@@ -59,6 +59,7 @@ services:
       - './public:/var/www/html'
       - './plugin:/var/www/html/wp-content/plugins/CurtainCallWP'
       - './theme:/var/www/html/wp-content/themes/curtain-call'
+      - './dev/theme:/var/www/html/wp-content/themes/curtain-call'
       - './xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
     depends_on:
       - mariadb
