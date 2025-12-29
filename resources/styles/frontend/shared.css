@@ -50,11 +50,11 @@ body.post-type-archive-ccwp_production {
         }
 
         & a.ccwp-breadcrumb {
-            color: var(--text);
+            color: var(--ccwp-text);
             text-decoration: none;
 
             &:hover {
-                color: var(--red);
+                color: var(--ccwp-red);
             }
         }
 
@@ -77,8 +77,8 @@ body.post-type-archive-ccwp_production {
     & .ccwp-btn {
         display: block;
         width: 120px;
-        background-color: var(--red);
-        color: var(--white);
+        background-color: var(--ccwp-red);
+        color: var(--ccwp-white);
         text-align: center;
         text-decoration: none;
         padding: 5px 0;

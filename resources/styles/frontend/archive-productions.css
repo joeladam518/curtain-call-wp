@@ -5,7 +5,7 @@ body.post-type-archive-ccwp_production {
         flex-flow: column nowrap;
         margin-bottom: 45px;
 
-        @media (--from-sm) {
+        @media (--ccwp-from-sm) {
             flex-flow: row wrap;
         }
     }
@@ -25,7 +25,7 @@ body.post-type-archive-ccwp_production {
             margin: 0 auto;
         }
 
-        @media (--from-sm) {
+        @media (--ccwp-from-sm) {
             flex-basis: 50%;
             padding-right: 50px;
             margin-bottom: 0;
@@ -60,16 +60,16 @@ body.post-type-archive-ccwp_production {
             display: block;
             font-size: 1.2em;
             font-weight: bold;
-            color: var(--black);
+            color: var(--ccwp-black);
         }
 
         & .production-times {
             display: block;
-            color: var(--black);
+            color: var(--ccwp-black);
         }
 
         & .production-venue {
-            color: var(--black);
+            color: var(--ccwp-black);
         }
     }
 
@@ -89,7 +89,7 @@ body.post-type-archive-ccwp_production {
         margin-bottom: 75px;
 
         & > h2 {
-            color: var(--black);
+            color: var(--ccwp-black);
             text-align: left;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(0, 0, 0, .1);
@@ -102,12 +102,12 @@ body.post-type-archive-ccwp_production {
 
         & > h2 {
             background-color: rgba(132, 132, 132, .6);
-            color: var(--white);
+            color: var(--ccwp-white);
             text-align: center;
             padding: 20px 0;
             margin: 0 -16px 50px;
 
-            @media (--from-sm) {
+            @media (--ccwp-from-sm) {
                 margin: 0 -16px 25px;
             }
         }

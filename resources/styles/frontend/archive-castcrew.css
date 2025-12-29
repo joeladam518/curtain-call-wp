@@ -10,11 +10,11 @@ body.post-type-archive-ccwp_cast_and_crew {
         }
 
         & a {
-            color: var(--black);
+            color: var(--ccwp-black);
             text-decoration: none;
 
             &:hover {
-                color: var(--red);
+                color: var(--ccwp-red);
                 text-decoration: none;
             }
         }
@@ -37,7 +37,7 @@ body.post-type-archive-ccwp_cast_and_crew {
         & .ccwp-row {
             justify-content: center;
 
-            @media (--from-xs) {
+            @media (--ccwp-from-xs) {
                 justify-content: flex-start;
             }
         }
@@ -70,7 +70,7 @@ body.post-type-archive-ccwp_cast_and_crew {
             text-decoration: none;
 
             &:hover {
-                color: var(--red);
+                color: var(--ccwp-red);
                 text-decoration: none;
             }
         }

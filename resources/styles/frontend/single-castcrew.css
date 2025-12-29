@@ -7,7 +7,7 @@ body.single-ccwp_cast_and_crew  {
             flex-flow: column nowrap;
             margin-bottom: 40px;
 
-            @media (--from-sm) {
+            @media (--ccwp-from-sm) {
                 flex-flow: row nowrap;
             }
         }
@@ -22,12 +22,12 @@ body.single-ccwp_cast_and_crew  {
                 max-height: 250px;
                 width: auto;
 
-                @media (--from-sm) {
+                @media (--ccwp-from-sm) {
                     max-height: 400px;
                 }
             }
 
-            @media (--from-sm) {
+            @media (--ccwp-from-sm) {
                 margin-right: 40px;
                 margin-bottom: 0;
             }
@@ -35,23 +35,23 @@ body.single-ccwp_cast_and_crew  {
 
         .castcrew-profile {
             .castcrew-title {
-                font-size: var(--size-6);
-                color: var(--black);
+                font-size: var(--ccwp-size-6);
+                color: var(--ccwp-black);
             }
 
             .castcrew-birthplace {
-                font-size: var(--size-5);
-                color: var(--black);
+                font-size: var(--ccwp-size-5);
+                color: var(--ccwp-black);
             }
 
 
             .connect-with-castcrew {
-                font-size: var(--size-5);
+                font-size: var(--ccwp-size-5);
                 margin: 20px 0 15px;
             }
 
             .castcrew-website {
-                font-size: var(--size-4);
+                font-size: var(--ccwp-size-4);
                 margin: -10px 0 0;
 
                 a {
@@ -59,7 +59,7 @@ body.single-ccwp_cast_and_crew  {
 
                     &:hover {
                         text-decoration: none;
-                        color: var(--yellow);
+                        color: var(--ccwp-yellow);
                     }
                 }
             }
@@ -72,11 +72,11 @@ body.single-ccwp_cast_and_crew  {
                     margin-right: 10px;
 
                     i {
-                        font-size: var(--size-6);
+                        font-size: var(--ccwp-size-6);
                     }
 
                     &:hover {
-                        color: var(--yellow);
+                        color: var(--ccwp-yellow);
                         text-decoration: none;
                     }
                 }
@@ -85,7 +85,7 @@ body.single-ccwp_cast_and_crew  {
 
         .ccwp-directory-section {
             padding: 30px 0;
-            border-top: var(--border-normal);
+            border-top: var(--ccwp-border-normal);
         }
 
         .castcrew-production-list {
@@ -119,13 +119,13 @@ body.single-ccwp_cast_and_crew  {
                     max-width: 100%;
                 }
 
-                @media (--from-sm) {
+                @media (--ccwp-from-sm) {
                     flex-basis: 325px;
                     margin-right: 25px;
                     text-align: center;
                 }
 
-                @media (--from-md) {
+                @media (--ccwp-from-md) {
                     flex-basis: 400px;
                 }
             }
@@ -137,22 +137,22 @@ body.single-ccwp_cast_and_crew  {
                     margin-bottom: 5px;
 
                     a {
-                        font-size: var(--size-7);
+                        font-size: var(--ccwp-size-7);
                         text-decoration: none;
-                        color: var(--black);
+                        color: var(--ccwp-black);
 
                         &:hover {
-                            color: var(--red);
+                            color: var(--ccwp-red);
                         }
                     }
                 }
 
                 .castcrew-role {
-                    font-size: var(--size-6);
+                    font-size: var(--ccwp-size-6);
                 }
 
                 .production-dates {
-                    font-size: var(--size-5);
+                    font-size: var(--ccwp-size-5);
                 }
             }
         }

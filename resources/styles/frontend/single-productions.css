@@ -6,17 +6,17 @@ body.single-ccwp_production {
         }
 
         .show-info {
-            color: var(--black);
+            color: var(--ccwp-black);
 
             .show-dates-container {
-                color: var(--black);
+                color: var(--ccwp-black);
                 margin-bottom: 8px;
 
                 .now-showing-label {
                     line-height: 1;
                     font-size: 1.25em;
                     margin-right: 0;
-                    color: var(--light-grey);
+                    color: var(--ccwp-light-grey);
                     font-weight: bold;
                     margin-bottom: 4px;
                 }
@@ -57,7 +57,7 @@ body.single-ccwp_production {
 
         .ccwp-directory-section {
             padding: 30px 0;
-            border-top: 1px solid rgba(var(--black), .1);
+            border-top: 1px solid rgba(var(--ccwp-black), .1);
         }
 
         .production-cast-list,
@@ -80,7 +80,7 @@ body.single-ccwp_production {
                 flex-basis: 100%;
                 margin-bottom: 16px;
 
-                @media (--from-sm) {
+                @media (--ccwp-from-sm) {
                     flex-basis: 50%;
                 }
             }
@@ -95,22 +95,22 @@ body.single-ccwp_production {
                 flex-grow: 1;
 
                 .castcrew-name {
-                    font-size: var(--size-6);
+                    font-size: var(--ccwp-size-6);
                     line-height: 1;
                     margin-bottom: 8px;
 
                     a {
                         text-decoration: none;
-                        color: var(--black);
+                        color: var(--ccwp-black);
 
                         &:hover {
-                            color: var(--red);
+                            color: var(--ccwp-red);
                         }
                     }
                 }
 
                 .castcrew-role {
-                    font-size: var(--size-5);
+                    font-size: var(--ccwp-size-5);
                     line-height: 1;
                 }
             }
@@ -124,7 +124,7 @@ body.single-ccwp_production {
                 padding-right: 0;
                 padding-bottom: 16px;
 
-                @media (--from-sm) {
+                @media (--ccwp-from-sm) {
                     max-width: 40%;
                     padding-right: 16px;
                     padding-bottom: 0;
@@ -134,7 +134,7 @@ body.single-ccwp_production {
             .show-info {
                 width: 100%;
 
-                @media (--from-sm) {
+                @media (--ccwp-from-sm) {
                     width: 60%;
                 }
             }
