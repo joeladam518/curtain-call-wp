@@ -6,7 +6,7 @@ import Row from './Row';
 
 type UpdateData = {
     role?: string;
-    custom_order?: number;
+    order?: number;
 };
 
 export type MetaboxState = {
@@ -39,27 +39,37 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     const setCast = (cast: ProductionCastCrew<MemberType.Cast>[]) => setMetaboxState(
         current => ({...current, cast})
     );
-    const addCast = (cast: ProductionCastCrew<MemberType.Cast>) => setMetaboxState(
-        current => ({...current, cast: [...current.cast, cast]})
-    );
+    const addCast = (cast: ProductionCastCrew<MemberType.Cast>) => setMetaboxState(current => {
+        const castMembers = [...current.cast];
+        castMembers.push(cast);
+        return {...current, cast: castMembers};
+    });
     const setCrew = (crew: ProductionCastCrew<MemberType.Crew>[]) => setMetaboxState(
         current => ({...current, crew})
     );
-    const addCrew = (crew: ProductionCastCrew<MemberType.Crew>) => setMetaboxState(
-        current => ({...current, crew: [...current.crew, crew]})
-    );
+    const addCrew = (crew: ProductionCastCrew<MemberType.Crew>) => setMetaboxState(current => {
+        const crewMembers = [...current.crew];
+        crewMembers.push(crew);
+        return {...current, crew: crewMembers};
+    });
     const setSelectedCastId = (id: string) => setMetaboxState(current => ({...current, selectedCastId: id}));
     const setSelectedCrewId = (id: string) => setMetaboxState(current => ({...current, selectedCrewId: id}));
 
     const addMember = (type: MemberType) => {
-        const idVal = type === MemberType.Cast ? state.selectedCastId : state.selectedCrewId;
+        console.log(`addMember() - adding ${type} member`)
 
+        const idVal = type === MemberType.Cast ? state.selectedCastId : state.selectedCrewId;
         const id = parseInt(idVal, 10);
+
+        console.log(`addMember() - selected ID: ${id}`)
+
         if (!id) {
             return;
         }
 
-        const option = options.find(m => parseInt(m.value, 10) === id);
+        const option = options.find(member => member.value === idVal);
+        console.log(`addMember() - found option: ${option?.label}`)
+
         if (!option) {
             return;
         }
@@ -74,14 +84,12 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
             type,
         };
 
+        console.log(`addMember() - creating new ${type} member`, newMember)
+
         if (type === MemberType.Cast) {
-            if (!state.cast.some(m => m.ID === id)) {
-                addCast(newMember as ProductionCastCrew<MemberType.Cast>);
-            }
+            addCast(newMember as ProductionCastCrew<MemberType.Cast>);
         } else if (type === MemberType.Crew) {
-            if (!state.crew.some(m => m.ID === id)) {
-                addCrew(newMember as ProductionCastCrew<MemberType.Crew>);
-            }
+            addCrew(newMember as ProductionCastCrew<MemberType.Crew>);
         }
     };
 
@@ -94,13 +102,28 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     };
 
     const updateMember = (type: MemberType, id: number | string, data: UpdateData) => {
+        console.log('updateMember() - type', type)
+        console.log('updateMember() - id', id)
+        console.log('updateMember() - data', data)
+
+
         const updateFn = (members: ProductionCastCrew[]) => members.map(m => m.ID === id ? {...m, ...data} : m);
         if (type === MemberType.Cast) {
-            setCast(updateFn(state.cast) as ProductionCastCrew<MemberType.Cast>[]);
+            const newCast = updateFn(state.cast) as ProductionCastCrew<MemberType.Cast>[]
+
+            console.log(`updateMember() - updating cast member #${id}`, newCast)
+
+            setCast(newCast);
         } else if (type === MemberType.Crew) {
-            setCrew(updateFn(state.crew) as ProductionCastCrew<MemberType.Crew>[]);
+            const newCrew = updateFn(state.crew) as ProductionCastCrew<MemberType.Crew>[]
+
+            console.log(`updateMember() - updating crew member #${id}`, newCrew)
+
+            setCrew(newCrew);
         }
     };
+
+    console.log(state);
 
     return (
         <div className="ccwp-react-metabox">
@@ -111,6 +134,8 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
             >
                 <div style={{flex: '1'}}>
                     <ComboboxControl
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
                         label="Add Cast"
                         value={state.selectedCastId}
                         options={[{label: 'Select Cast', value: '0'}, ...options]}
@@ -151,6 +176,8 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                 style={{marginTop: '25px'}}
             >
                 <ComboboxControl
+                    __next40pxDefaultSize
+                    __nextHasNoMarginBottom
                     label="Add Crew"
                     value={state.selectedCrewId}
                     options={[{label: 'Select Crew', value: '0'}, ...options]}
