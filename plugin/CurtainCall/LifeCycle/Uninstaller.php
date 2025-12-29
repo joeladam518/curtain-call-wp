@@ -13,7 +13,7 @@ class Uninstaller implements LifeCycleHook
 {
     public static function run(): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         static::deleteTable(CurtainCallPivot::getTableName());
         static::deletePosts(CastAndCrew::POST_TYPE);
@@ -29,7 +29,7 @@ class Uninstaller implements LifeCycleHook
 
     protected static function deletePosts(string $postType): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = "DELETE FROM `{$wpdb->posts}` WHERE `post_type` = '{$postType}';";
 
@@ -38,7 +38,7 @@ class Uninstaller implements LifeCycleHook
 
     protected static function deletePostMeta(): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = Query::raw([
             "DELETE FROM `{$wpdb->postmeta}`",
@@ -50,7 +50,7 @@ class Uninstaller implements LifeCycleHook
 
     protected static function deleteTable(string $table): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = "DROP TABLE IF EXISTS {$table};";
 
@@ -59,7 +59,7 @@ class Uninstaller implements LifeCycleHook
 
     protected static function deleteTaxonomy(string $taxonomy): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = Query::raw("
             DELETE FROM `{$wpdb->terms}`

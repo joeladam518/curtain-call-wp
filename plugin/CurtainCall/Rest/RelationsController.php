@@ -51,8 +51,7 @@ class RelationsController
 
     public static function getRelations(WP_REST_Request $request): WP_REST_Response
     {
-        global $wpdb;
-
+        $wpdb = ccwp_get_wpdb();
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';
         $where = [];
         $params = [];
@@ -86,9 +85,8 @@ class RelationsController
 
     public static function attach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';
-
         $pid = (int) $request->get_param('production_id');
         $ccid = (int) $request->get_param('cast_and_crew_id');
         $type = (string) $request->get_param('type');
@@ -129,7 +127,7 @@ class RelationsController
 
     public static function detach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
         $table = $wpdb->prefix . 'ccwp_castandcrew_production';
 
         $pid = (int) $request->get_param('production_id');

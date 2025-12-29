@@ -6,13 +6,13 @@ namespace CurtainCall\Models\Traits;
 
 use Illuminate\Support\Arr;
 
-/**
- * @var string META_PREFIX
- * @property-read string[] $ccwp_meta
- * @property array<string, mixed> $meta
- */
 trait HasMeta
 {
+    /** @var array<array-key, mixed> $this->meta */
+    protected array $meta = [];
+    /** @var list<string> */
+    protected array $ccwp_meta = [];
+
     /**
      * @param string $key
      * @return string

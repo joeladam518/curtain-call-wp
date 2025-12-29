@@ -21,7 +21,7 @@ trait HasCastAndCrew
      */
     public function getCastCrewIds(string $type = 'both'): array
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $query = Query::raw([
             Query::select([
@@ -51,13 +51,13 @@ trait HasCastAndCrew
     }
 
     /**
-     * @return array
+     * @return array<int, string>
      * @throws Throwable
      * @global wpdb $wpdb
      */
     public function getCastCrewNames(): array
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $query = Query::raw([
             Query::select([
@@ -90,7 +90,7 @@ trait HasCastAndCrew
      */
     public function getCastAndCrew(string $type = 'both'): array
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $query = Query::raw([
             'SELECT ' . Query::selectCastAndCrew(),
@@ -179,7 +179,7 @@ trait HasCastAndCrew
      */
     protected function insertCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $wpdb->insert(
             CurtainCallPivot::getTableName(),
@@ -214,7 +214,7 @@ trait HasCastAndCrew
      */
     protected function updateCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $wpdb->update(
             CurtainCallPivot::getTableName(),
@@ -253,7 +253,7 @@ trait HasCastAndCrew
      */
     protected function deleteCastCrew(int $id, string $type): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $wpdb->delete(
             CurtainCallPivot::getTableName(),

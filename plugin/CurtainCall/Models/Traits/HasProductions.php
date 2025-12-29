@@ -20,7 +20,7 @@ trait HasProductions
      */
     public function getProductions(): array
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $query = Query::raw([
             'SELECT ' . Query::selectProductions(),

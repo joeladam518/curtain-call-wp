@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall\Hooks;
 
+use CurtainCall\Data\CastCrewData;
 use CurtainCall\Data\ProductionData;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
@@ -49,9 +50,7 @@ final class AdminHooks
     {
         $handle = CCWP_PLUGIN_NAME . '_admin_metaboxes';
         $src = $this->assetsUrl . 'curtain-call-wp-admin.css';
-        $version = defined('CCWP_DEBUG') && CCWP_DEBUG === true
-            ? rand()
-            : CCWP_PLUGIN_VERSION;
+        $version = $this->getVersion();
 
         wp_enqueue_style($handle, $src, [], $version);
     }
@@ -99,54 +98,67 @@ final class AdminHooks
 
     public function registerJavascript(): void
     {
-        $version = defined('CCWP_DEBUG') && CCWP_DEBUG === true
-            ? rand()
-            : CCWP_PLUGIN_VERSION;
+        $version = $this->getVersion();
 
         $productionMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_production_metaboxes';
         $productionMetaboxesSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-production-metaboxes.js');
-        wp_register_script($productionMetaboxesHandle, $productionMetaboxesSrc, [
-            'react',
-            'react-dom',
-            'wp-api-fetch',
-            'wp-components',
-            'wp-data',
-            'wp-edit-post',
-            'wp-editor',
-            'wp-element',
-            'wp-i18n',
-            'wp-plugins',
-        ], $version);
+        wp_register_script(
+            $productionMetaboxesHandle,
+            $productionMetaboxesSrc,
+            [
+                'react',
+                'react-dom',
+                'wp-api-fetch',
+                'wp-components',
+                'wp-data',
+                'wp-edit-post',
+                'wp-editor',
+                'wp-element',
+                'wp-i18n',
+                'wp-plugins',
+            ],
+            $version,
+        );
 
         $castcrewMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_castcrew_metaboxes';
         $castcrewMetaboxesSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-castcrew-metaboxes.js');
-        wp_register_script($castcrewMetaboxesHandle, $castcrewMetaboxesSrc, [
-            'react',
-            'react-dom',
-            'wp-api-fetch',
-            'wp-components',
-            'wp-data',
-            'wp-edit-post',
-            'wp-editor',
-            'wp-element',
-            'wp-i18n',
-            'wp-plugins',
-        ], $version);
+        wp_register_script(
+            $castcrewMetaboxesHandle,
+            $castcrewMetaboxesSrc,
+            [
+                'react',
+                'react-dom',
+                'wp-api-fetch',
+                'wp-components',
+                'wp-data',
+                'wp-edit-post',
+                'wp-editor',
+                'wp-element',
+                'wp-i18n',
+                'wp-plugins',
+            ],
+            $version,
+        );
 
         $sidebarHandle = CCWP_PLUGIN_NAME . '_editor_sidebar';
         $sidebarSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-sidebar.js');
-        wp_register_script($sidebarHandle, $sidebarSrc, [
-            'react',
-            'react-dom',
-            'wp-api-fetch',
-            'wp-components',
-            'wp-data',
-            'wp-edit-post',
-            'wp-editor',
-            'wp-element',
-            'wp-i18n',
-            'wp-plugins',
-        ], $version);
+        wp_register_script(
+            $sidebarHandle,
+            $sidebarSrc,
+            [
+                'react',
+                'react-dom',
+                'wp-api-fetch',
+                'wp-components',
+                'wp-data',
+                'wp-edit-post',
+                'wp-editor',
+                'wp-element',
+                'wp-i18n',
+                'wp-plugins',
+            ],
+            $version,
+        );
     }
 
     /**
@@ -256,7 +268,7 @@ final class AdminHooks
                 ->map(static fn(WP_Post $post) => Production::make($post))
                 ->map(static fn(Production $production) => [
                     'label' => $production->name,
-                    'value' => (string) $production->ID
+                    'value' => (string) $production->ID,
                 ])
                 ->values()
                 ->all();
@@ -266,20 +278,14 @@ final class AdminHooks
         }
 
         try {
-            /** @var Production[] $productions */
-            $productions = collect(
-                $castCrew?->getProductions() ?? [],
-            )->map(static fn(Production $production) => ProductionData::fromArray([
-                'ID' => $production->ID,
-                'dateEnd' => $production->date_end,
-                'dateStart' => $production->date_start,
-                'name' => $production->name,
-                'order' => $production->ccwp_join->custom_order ?? 0,
-                'role' => $production->ccwp_join?->role,
-                'type' => $production->ccwp_join?->type,
-            ]))->toArray();
-        } catch (Throwable) {
-            /** @var Production[] $productions */
+            /** @var list<array<string, mixed>> $productions */
+            $productions = collect($castCrew?->getProductions() ?? [])
+                ->sort(fn(Production $a, Production $b) => [$b->date_start, $a->name] <=> [$a->date_start, $b->name])
+                ->map(static fn(Production $production) => ProductionData::fromProduction($production))
+                ->values()
+                ->toArray();
+        } catch (Throwable $e) {
+            /** @var list<array<string, mixed>> $productions */
             $productions = [];
         }
 
@@ -337,20 +343,37 @@ final class AdminHooks
         }
 
         try {
+            /** @var array<string, array<string, mixed>> $members */
             $members = collect($production?->getCastAndCrew() ?? [])
                 ->groupBy('ccwp_join.type')
-                ->map(static fn(Collection $members) => $members->sortBy(['ccwp_join.custom_order', 'name_last']))
-                ->all();
-        } catch (Throwable $e) {
-            dump($e);
+                ->map(
+                    static fn(Collection $group) => $group
+                        ->sort(
+                            fn(CastAndCrew $a, CastAndCrew $b) => (
+                                [
+                                    $a->ccwp_join->custom_order,
+                                    $b->name_last
+                                ] <=> [
+                                    $b->ccwp_join->custom_order,
+                                    $a->name_last,
+                                ]
+                            ),
+                        )
+                        ->map(static fn(CastAndCrew $member) => CastCrewData::fromCastCrew($member))
+                        ->values()
+                        ->toArray(),
+                )
+                ->toArray();
+        } catch (Throwable) {
+            /** @var array<string, array<string, mixed>> $members */
             $members = [];
         }
 
         wp_localize_script($productionMetaboxesHandle, 'CCWP_DATA', [
             'initialDetails' => $productionDetails,
             'options' => $options,
-            'cast' => $members['cast']?->all() ?? [],
-            'crew' => $members['crew']?->all() ?? [],
+            'cast' => $members['cast'] ?? [],
+            'crew' => $members['crew'] ?? [],
         ]);
     }
 
@@ -399,5 +422,15 @@ final class AdminHooks
         return empty($titleParts)
             ? "Untitled Curtain Call Cast/Crew - {$postArr['ID']}"
             : Str::stripExtraSpaces(implode(' ', $titleParts));
+    }
+
+    /**
+     * Get the version to use for enqueued assets. Debug mode will use a random version to force reloads.
+     *
+     * @return string
+     */
+    private function getVersion(): string
+    {
+        return defined('CCWP_DEBUG') && CCWP_DEBUG === true ? (string) rand() : CCWP_PLUGIN_VERSION;
     }
 }

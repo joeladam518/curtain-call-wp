@@ -7,7 +7,6 @@ namespace CurtainCall\Models;
 use CurtainCall\Models\Traits\HasProductions;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
-use WP_Post;
 use WP_Query;
 
 /**
@@ -51,6 +50,7 @@ class CastAndCrew extends CurtainCallPost
      */
     public static function getAlphaIndexes(WP_Query $query): array
     {
+        /** @var string[] $alphaIndexes */
         $alphaIndexes = [];
 
         if (!$query->have_posts()) {
@@ -59,7 +59,10 @@ class CastAndCrew extends CurtainCallPost
 
         while ($query->have_posts()) {
             $query->the_post();
+
+            /** @var string|null $lastName */
             $lastName = ccwp_get_custom_field('_ccwp_cast_crew_name_last');
+
             if ($lastName) {
                 $alphaIndexes[] = Str::firstLetter($lastName, 'upper');
             }
@@ -136,17 +139,32 @@ class CastAndCrew extends CurtainCallPost
     }
 
     /**
-     * @param array|Production[] $productions
-     * @return array
+     * @param Production[] $productions
+     * @return array<int, string[]>
      */
     public static function rolesByProductionId(array $productions): array
     {
+        /** @var array<int, string[]> $rolesById */
         $rolesById = [];
+
         foreach ($productions as $production) {
-            if (!isset($rolesById[$production->ID])) {
-                $rolesById[$production->ID] = [];
+            $id = $production->ID;
+
+            if (!$id) {
+                continue;
             }
-            $rolesById[$production->ID][] = $production->ccwp_join->role;
+
+            $role = $production->ccwp_join->role;
+
+            if (!$role) {
+                continue;
+            }
+
+            if (!isset($rolesById[$id])) {
+                $rolesById[$id] = [];
+            }
+
+            $rolesById[$id][] = $role;
         }
 
         return $rolesById;
@@ -190,6 +208,6 @@ class CastAndCrew extends CurtainCallPost
      */
     public function hasSocialMedia(): bool
     {
-        return isset($this->facebook_link) || isset($this->instagram_link) || isset($this->twitter_link);
+        return $this->facebook_link || $this->instagram_link || $this->twitter_link;
     }
 }

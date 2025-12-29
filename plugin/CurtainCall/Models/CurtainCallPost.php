@@ -10,7 +10,6 @@ use CurtainCall\Models\Traits\HasAttributes;
 use CurtainCall\Models\Traits\HasMeta;
 use CurtainCall\Models\Traits\HasWordPressPost;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Arr;
 use Throwable;
 use WP_Post;
 use WP_Query;
@@ -55,14 +54,7 @@ abstract class CurtainCallPost implements Arrayable
     public const POST_TYPE = 'ccwp_post';
     public const META_PREFIX = '_ccwp_';
 
-    /** @var array<string, mixed> */
-    protected array $attributes = [];
-    /** @var list<string> */
-    protected array $ccwp_meta = [];
     protected array $image_cache = [];
-    protected array $meta = [];
-    protected WP_Post $wp_post;
-    protected array $wp_post_attributes = [];
 
     /**
      * @param int|string|WP_Post $post
@@ -218,7 +210,7 @@ abstract class CurtainCallPost implements Arrayable
      * @param string $key
      * @param mixed  $value
      * @return void
-     * @throws UnsettableException;
+     * @throws UnsettableException
      */
     public function __set(string $key, mixed $value): void
     {

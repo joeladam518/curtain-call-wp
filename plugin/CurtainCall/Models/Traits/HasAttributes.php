@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace CurtainCall\Models\Traits;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 
-/**
- * @property array<string, mixed> $attributes
- */
 trait HasAttributes
 {
+    /** @var array<array-key, mixed> $this->attributes */
+    protected array $attributes = [];
+
     /**
      * @param string $key
      * @return bool
@@ -46,15 +47,8 @@ trait HasAttributes
      */
     protected function attributesToArray(): array
     {
-        $attributes = [];
-        foreach ($this->attributes as $key => $value) {
-            if ($value instanceof Arrayable) {
-                $attributes[$key] = $value->toArray();
-            } else {
-                $attributes[$key] = $value;
-            }
-        }
-
-        return $attributes;
+        return Arr::mapWithKeys($this->attributes, static fn($value, $key) => (
+            $value instanceof Arrayable ? [$key => $value->toArray()] : [$key => $value]
+        ));
     }
 }

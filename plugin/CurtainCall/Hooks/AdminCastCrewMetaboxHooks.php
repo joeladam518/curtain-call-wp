@@ -37,9 +37,6 @@ final class AdminCastCrewMetaboxHooks
      */
     public function renderDetailsMetabox(WP_Post $post, array $metabox): void
     {
-        $birthday = ccwp_get_custom_field('_ccwp_cast_crew_birthday', $post->ID);
-        $birthday = Date::reformat($birthday, 'm/d/Y', '');
-
         View::make('admin/castcrew-details-metabox.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
             'post' => $post,
@@ -47,7 +44,7 @@ final class AdminCastCrewMetaboxHooks
             'name_first' => ccwp_get_custom_field('_ccwp_cast_crew_name_first', $post->ID),
             'name_last' => ccwp_get_custom_field('_ccwp_cast_crew_name_last', $post->ID),
             'self_title' => ccwp_get_custom_field('_ccwp_cast_crew_self_title', $post->ID),
-            'birthday' => $birthday,
+            'birthday' => ccwp_get_custom_field('_ccwp_cast_crew_birthday', $post->ID),
             'hometown' => ccwp_get_custom_field('_ccwp_cast_crew_hometown', $post->ID),
             'website_link' => ccwp_get_custom_field('_ccwp_cast_crew_website_link', $post->ID),
             'facebook_link' => ccwp_get_custom_field('_ccwp_cast_crew_facebook_link', $post->ID),

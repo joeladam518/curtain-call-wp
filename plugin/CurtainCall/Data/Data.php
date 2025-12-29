@@ -9,8 +9,15 @@ use Illuminate\Contracts\Support\Arrayable;
 
 abstract class Data implements ArrayAccess, Arrayable
 {
+    /**
+     * @param array<string, mixed> $data
+     * @return static
+     */
     abstract public static function fromArray(array $data): self;
 
+    /**
+     * @return array<string, mixed>
+     */
     abstract public function toArray(): array;
 
     public function offsetExists(mixed $offset): bool

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace CurtainCall\Hooks;
 
+use CurtainCall\Data\CastCrewData;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\View;
+use Illuminate\Support\Collection;
 use Throwable;
 use WP_Post;
 
@@ -40,6 +42,7 @@ final class AdminProductionMetaboxHooks
             'normal', // Context: (normal, side, advanced)
             'high', // Priority: (high, low)
         );
+
         //}
     }
 
@@ -53,18 +56,13 @@ final class AdminProductionMetaboxHooks
      */
     public function renderDetailsMetabox(WP_Post $post, array $metabox): void
     {
-        $dateStart = ccwp_get_custom_field('_ccwp_production_date_start', $post->ID);
-        $dateStart = Date::reformat($dateStart, 'm/d/Y', '');
-        $dateEnd = ccwp_get_custom_field('_ccwp_production_date_end', $post->ID);
-        $dateEnd = Date::reformat($dateEnd, 'm/d/Y', '');
-
         View::make('admin/production-details-metabox.php', [
             'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
             'post' => $post,
             'metabox' => $metabox,
             'name' => ccwp_get_custom_field('_ccwp_production_name', $post->ID),
-            'date_start' => $dateStart,
-            'date_end' => $dateEnd,
+            'date_start' => ccwp_get_custom_field('_ccwp_production_date_start', $post->ID),
+            'date_end' => ccwp_get_custom_field('_ccwp_production_date_end', $post->ID),
             'show_times' => ccwp_get_custom_field('_ccwp_production_show_times', $post->ID),
             'ticket_url' => ccwp_get_custom_field('_ccwp_production_ticket_url', $post->ID),
             'venue' => ccwp_get_custom_field('_ccwp_production_venue', $post->ID),
@@ -155,14 +153,37 @@ final class AdminProductionMetaboxHooks
      */
     public function renderAddCastCrewMetabox(WP_Post $post, array $metabox): void
     {
-        $production = Production::make($post);
+        try {
+            /** @var Production $production */
+            $production = Production::make($post);
+        } catch (Throwable) {
+            $production = null;
+        }
 
         try {
-            /** @var CastAndCrew[] $members */
-            $members = collect($production->getCastAndCrew() ?? [])
+            /** @var array<string, array<string, mixed>> $members */
+            $members = collect($production?->getCastAndCrew() ?? [])
                 ->groupBy('ccwp_join.type')
-                ->all();
+                ->map(
+                    static fn(Collection $group) => $group
+                        ->sort(
+                            fn(CastAndCrew $a, CastAndCrew $b) => (
+                                [
+                                    $a->ccwp_join->custom_order,
+                                    $b->name_last
+                                ] <=> [
+                                    $b->ccwp_join->custom_order,
+                                    $a->name_last,
+                                ]
+                            ),
+                        )
+                        ->map(static fn(CastAndCrew $member) => CastCrewData::fromCastCrew($member))
+                        ->values()
+                        ->toArray(),
+                )
+                ->toArray();
         } catch (Throwable) {
+            /** @var array<string, array<string, mixed>> $members */
             $members = [];
         }
 
@@ -182,8 +203,8 @@ final class AdminProductionMetaboxHooks
             'post' => $post,
             'metabox' => $metabox,
             'options' => $options,
-            'cast_members' => $members['cast']?->all() ?? [],
-            'crew_members' => $members['crew']?->all() ?? [],
+            'cast_members' => $members['cast'] ?? [],
+            'crew_members' => $members['crew'] ?? [],
         ])->render();
     }
 
@@ -215,9 +236,12 @@ final class AdminProductionMetaboxHooks
         }
 
         // Store custom fields values
+        /** @var array<string, mixed> $production_cast */
         $production_cast = !empty($_POST['ccwp_add_cast_to_production']) ? $_POST['ccwp_add_cast_to_production'] : [];
+        /** @var array<string, mixed> $production_crew */
         $production_crew = !empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
 
+        /** @var Production $production */
         $production = Production::make($post);
         $production->saveCastAndCrew('cast', $production_cast);
         $production->saveCastAndCrew('crew', $production_crew);

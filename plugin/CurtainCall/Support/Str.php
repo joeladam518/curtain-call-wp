@@ -7,7 +7,7 @@ namespace CurtainCall\Support;
 class Str
 {
     /**
-     * @return array|string[]
+     * @return list<string>
      */
     public static function alphabet(): array
     {
@@ -50,16 +50,11 @@ class Str
     {
         $letter = static::substr($value, 0, 1);
 
-        switch (static::lower($case)) {
-            case 'upper':
-            case 'uppercase':
-                return static::upper($letter);
-            case 'lower':
-            case 'lowercase':
-                return static::lower($letter);
-            default:
-                return $letter;
-        }
+        return match (static::lower($case)) {
+            'upper', 'uppercase' => static::upper($letter),
+            'lower', 'lowercase' => static::lower($letter),
+            default => $letter,
+        };
     }
 
     /**

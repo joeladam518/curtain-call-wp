@@ -248,30 +248,32 @@ class Production extends CurtainCallPost
         $start_date_format = 'F jS';
         $end_date_format = '';
 
-        if ($chrono_state === 'past' || $start_date->format('Y') !== $now->format('Y')) {
+        if ($chrono_state === 'past' || $start_date?->format('Y') !== $now->format('Y')) {
             // Don't show the start date year if both dates are in the same year
-            if ($start_date->format('Y') !== $end_date->format('Y')) {
+            if ($start_date?->format('Y') !== $end_date?->format('Y')) {
                 $start_date_format .= ', Y';
             }
         }
 
         // Don't show the end date month if both dates are in the same month
-        if ($start_date->format('F') !== $end_date->format('F')) {
+        if ($start_date?->format('F') !== $end_date?->format('F')) {
             $end_date_format .= 'F ';
         }
 
         $end_date_format .= 'jS';
 
         // End date only gets a year if it's in the past or doesn't match the current year
-        if ($chrono_state === 'past' || $end_date->format('Y') !== $now->format('Y')) {
+        if ($chrono_state === 'past' || $end_date?->format('Y') !== $now?->format('Y')) {
             $end_date_format .= ', Y';
         }
 
-        $formatted_dates = $start_date->format($start_date_format);
-        $formatted_end_date = $end_date->format($end_date_format);
+        /** @var string $formatted_dates */
+        $formatted_dates = $start_date?->format($start_date_format);
+        /** @var string $formatted_end_date */
+        $formatted_end_date = $end_date?->format($end_date_format);
 
         // Only show one date if the dates are identical
-        if ($formatted_dates !== $formatted_end_date) {
+        if ($formatted_dates && $formatted_end_date && $formatted_dates !== $formatted_end_date) {
             $formatted_dates .= ' - ' . $formatted_end_date;
         }
 
@@ -292,9 +294,10 @@ class Production extends CurtainCallPost
         }
 
         // Get the default ticket url specified in the settings page
+        /** @var string|false|null $url */
         $url = get_option('ccwp_default_ticket_url', null);
 
-        // get_option() can return false even if default is null
+        // get_option() can return false even if the default is null
         if (!$url) {
             return null;
         }

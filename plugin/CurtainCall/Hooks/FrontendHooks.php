@@ -9,11 +9,12 @@ use CurtainCall\Models\Production;
 use CurtainCall\Support\View;
 use Illuminate\Support\Arr;
 use WP_Post;
+use WP_Screen;
 
 final class FrontendHooks
 {
-    protected string $assetsUrl;
-    protected string $assetsPath;
+    private string $assetsUrl;
+    private string $assetsPath;
 
     public function __construct()
     {
@@ -30,7 +31,7 @@ final class FrontendHooks
     {
         $fontawesomeSrc = $this->assetsUrl . 'fontawesomefree.css';
         $frontendSrc = $this->assetsUrl . 'curtain-call-wp-frontend.css';
-        $version = CCWP_DEBUG ? rand() : CCWP_PLUGIN_VERSION;
+        $version = $this->getVersion();
 
         wp_enqueue_style('fontawesomefree', $fontawesomeSrc, [], $version);
         wp_enqueue_style(CCWP_PLUGIN_NAME, $frontendSrc, [], $version);
@@ -66,13 +67,13 @@ final class FrontendHooks
      */
     public function loadSingleTemplates(string $template, string $type, array $templates): string
     {
-        global $post;
+        $postType = $this->getPostType();
 
-        if ($post->post_type === Production::POST_TYPE && !$this->themeHasTemplate($type, $templates)) {
+        if ($postType === Production::POST_TYPE && !$this->themeHasTemplate($type, $templates)) {
             return View::path('frontend/single-ccwp_production.php');
         }
 
-        if ($post->post_type === CastAndCrew::POST_TYPE && !$this->themeHasTemplate($type, $templates)) {
+        if ($postType === CastAndCrew::POST_TYPE && !$this->themeHasTemplate($type, $templates)) {
             return View::path('frontend/single-ccwp_cast_and_crew.php');
         }
 
@@ -98,5 +99,42 @@ final class FrontendHooks
         }
 
         return $template;
+    }
+
+    /**
+     * Get the version to use for enqueued assets. Debug mode will use a random version to force reloads.
+     *
+     * @return string
+     */
+    private function getVersion(): string
+    {
+        return defined('CCWP_DEBUG') && CCWP_DEBUG === true ? (string) rand() : CCWP_PLUGIN_VERSION;
+    }
+
+    /**
+     * Get the current post type
+     *
+     * @return string|null
+     */
+    private function getPostType(): ?string
+    {
+        /** @var WP_Post|array{post_type: string|null}|null $post */
+        $post = get_post();
+
+        if ($post instanceof WP_Post && isset($post->post_type)) {
+            return $post->post_type;
+        }
+
+        if (is_array($post) && isset($post['post_type'])) {
+            return $post['post_type'];
+        }
+
+        $screen = get_current_screen();
+
+        if ($screen instanceof WP_Screen && isset($screen->post_type)) {
+            return $screen->post_type;
+        }
+
+        return null;
     }
 }

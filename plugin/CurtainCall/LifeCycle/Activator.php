@@ -15,8 +15,7 @@ class Activator implements LifeCycleHook
 
     protected static function createPluginTables(): void
     {
-        global $wpdb;
-
+        $wpdb = ccwp_get_wpdb();
         $table_name = "{$wpdb->prefix}ccwp_castandcrew_production";
         $charset_collate = $wpdb->get_charset_collate();
 

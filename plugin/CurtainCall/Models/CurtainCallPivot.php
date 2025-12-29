@@ -14,7 +14,7 @@ use wpdb;
  * @property int    $cast_and_crew_id
  * @property string $type
  * @property string $role
- * @property int    $custom_order
+ * @property string $custom_order -> numeric
  */
 class CurtainCallPivot implements Arrayable
 {
@@ -24,7 +24,6 @@ class CurtainCallPivot implements Arrayable
     const TABLE_ALIAS = 'ccwp_join';
     const ATTRIBUTE_PREFIX = self::TABLE_ALIAS . '_';
 
-    protected array $attributes = [];
     protected static ?string $table;
     protected static ?string $tableWithAlias;
 
@@ -61,7 +60,7 @@ class CurtainCallPivot implements Arrayable
      */
     public static function getTableName(): string
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         return static::$table ??= $wpdb->prefix . static::TABLE_NAME;
     }

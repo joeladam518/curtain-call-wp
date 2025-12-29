@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
+
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die();
 }
@@ -43,6 +45,8 @@ if (!function_exists('ccwp_strip_short_code_gallery')) {
      */
     function ccwp_strip_short_code_gallery(string $content): string
     {
+        /** @var string[][] $matches */
+        $matches = [];
         preg_match_all('~' . get_shortcode_regex() . '~s', $content, $matches, PREG_SET_ORDER);
 
         if ($matches) {
@@ -75,6 +79,33 @@ if (!function_exists('ccwp_get_custom_field')) {
             return get_post_meta($post_id, $field_name, true);
         }
 
-        return get_post_meta(get_the_ID(), $field_name, true);
+        $id = get_the_ID();
+
+        if ($id === false) {
+            return null;
+        }
+
+        return get_post_meta($id, $field_name, true);
+    }
+}
+
+if (!function_exists('ccwp_get_wpdb')) {
+    /**
+     * Get the global wpdb object
+     *
+     * @return wpdb
+     * @throws WordpressDbInstanceNotFoundException
+     */
+    function ccwp_get_wpdb(): wpdb
+    {
+        /** @var wpdb|null $wpdb */
+        // @mago-ignore lint:no-global analysis:no-global
+        $wpdb = $GLOBALS['wpdb'] ?? null;
+
+        if (!$wpdb) {
+            throw new WordpressDbInstanceNotFoundException();
+        }
+
+        return $wpdb;
     }
 }

@@ -21,6 +21,7 @@ excludes = []
 print-width = 120
 tab-width = 4
 use-tabs = false
+empty-line-after-opening-tag = false
 
 [linter]
 integrations = ["WordPress"]
@@ -36,7 +37,6 @@ no-boolean-flag-parameter = { enabled = false }
 no-direct-db-query = { enabled = false }
 no-else-clause = { enabled = false }
 no-empty = { enabled = false }
-no-global = { enabled = false }
 no-redundant-file = { enabled = false }
 no-shorthand-ternary = { enabled = false}
 prefer-early-continue = { enabled = false }

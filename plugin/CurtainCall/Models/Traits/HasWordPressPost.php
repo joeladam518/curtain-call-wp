@@ -8,13 +8,12 @@ use CurtainCall\Exceptions\PostNotFoundException;
 use InvalidArgumentException;
 use WP_Post;
 
-/**
- * @var string POST_TYPE
- * @property WP_Post $wp_post
- * @property string[] $wp_post_attributes
- */
 trait HasWordPressPost
 {
+    protected WP_Post $wp_post;
+    /** @var list<string> */
+    protected array $wp_post_attributes = [];
+
     /**
      * Get the WordPress Post
      *
@@ -34,7 +33,7 @@ trait HasWordPressPost
      */
     protected function fetchPost(int $postId): WP_Post
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $query = "SELECT * FROM {$wpdb->posts} WHERE `ID` = %d AND `post_type` = %s LIMIT 1";
         $sql = $wpdb->prepare($query, $postId, static::POST_TYPE);
