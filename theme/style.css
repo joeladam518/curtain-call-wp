@@ -40,6 +40,8 @@ html {
 body {
     display: flex;
     flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: stretch;
     color: #222;
     min-height: 100vh;
     font-size: inherit;
@@ -252,6 +254,7 @@ footer.site-footer {
 }
 
 main.site-main {
+    flex-basis: 100%;
     flex-grow: 1;
     padding: 0 1rem;
     margin: 2rem auto;
