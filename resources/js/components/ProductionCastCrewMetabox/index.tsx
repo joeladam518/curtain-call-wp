@@ -1,7 +1,8 @@
-import {Button, ComboboxControl, TextControl} from '@wordpress/components';
-import React, {FC, useState} from 'react';
-import MemberType from '../enums/MemberType';
-import {ProductionCastCrew} from '../types/metaboxes';
+import {FC, useState} from 'react';
+import {Button, ComboboxControl} from '@wordpress/components';
+import MemberType from '../../enums/MemberType';
+import {ProductionCastCrew} from '../../types/metaboxes';
+import Row from './Row';
 
 type UpdateData = {
     role?: string;
@@ -16,7 +17,7 @@ export type MetaboxState = {
 };
 
 export type ProductionCastCrewMetaboxProps = {
-    productionId: number | null;
+    productionId: number | string | null;
     options: ({label: string; value: string})[];
     cast: ProductionCastCrew<MemberType.Cast>[];
     crew: ProductionCastCrew<MemberType.Crew>[];
@@ -50,7 +51,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     const setSelectedCastId = (id: string) => setMetaboxState(current => ({...current, selectedCastId: id}));
     const setSelectedCrewId = (id: string) => setMetaboxState(current => ({...current, selectedCrewId: id}));
 
-    const addMember = <Type extends MemberType>(type: Type) => {
+    const addMember = (type: MemberType) => {
         const idVal = type === MemberType.Cast ? state.selectedCastId : state.selectedCrewId;
 
         const id = parseInt(idVal, 10);
@@ -63,11 +64,11 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
             return;
         }
 
-        const newMember: ProductionCastCrew<Type> = {
+        const newMember: ProductionCastCrew = {
             ID: id,
             firstName: '',
             lastName: '',
-            name: option.label,
+            fullName: option.label,
             order: 0,
             role: '',
             type,
@@ -75,16 +76,16 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
 
         if (type === MemberType.Cast) {
             if (!state.cast.some(m => m.ID === id)) {
-                addCast(newMember);
+                addCast(newMember as ProductionCastCrew<MemberType.Cast>);
             }
         } else if (type === MemberType.Crew) {
             if (!state.crew.some(m => m.ID === id)) {
-                addCrew(newMember);
+                addCrew(newMember as ProductionCastCrew<MemberType.Crew>);
             }
         }
     };
 
-    const removeMember = (type: MemberType, id: number) => {
+    const removeMember = (type: MemberType, id: number | string) => {
         if (type === MemberType.Cast) {
             setCast(state.cast.filter(m => m.ID !== id));
         } else if (type === MemberType.Crew) {
@@ -92,67 +93,13 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
         }
     };
 
-    const updateMember = <Type extends MemberType>(type: Type, id: number, data: UpdateData) => {
-        const updateFn = (members: ProductionCastCrew<Type>[]) => members.map(m => m.ID === id ? {...m, ...data} : m);
+    const updateMember = (type: MemberType, id: number | string, data: UpdateData) => {
+        const updateFn = (members: ProductionCastCrew[]) => members.map(m => m.ID === id ? {...m, ...data} : m);
         if (type === MemberType.Cast) {
-            setCast(updateFn(state.cast));
+            setCast(updateFn(state.cast) as ProductionCastCrew<MemberType.Cast>[]);
         } else if (type === MemberType.Crew) {
-            setCrew(updateFn(state.crew));
+            setCrew(updateFn(state.crew) as ProductionCastCrew<MemberType.Crew>[]);
         }
-    };
-
-    const renderMemberRow = <Type extends MemberType>(type: Type, member: ProductionCastCrew<Type>) => {
-        const inputName = `ccwp_add_${type}_to_production`;
-        return (
-            <div key={`${type}-${member.ID}`} className="form-group ccwp-production-castcrew-form-group">
-                <input
-                    type="hidden"
-                    name={`${inputName}[${member.ID}][cast_and_crew_id]`}
-                    value={member.ID}
-                />
-                <input
-                    type="hidden"
-                    name={`${inputName}[${member.ID}][production_id]`}
-                    value={productionId ?? ''}
-                />
-                <input
-                    type="hidden"
-                    name={`${inputName}[${member.ID}][type]`}
-                    value={type}
-                />
-                <div
-                    className="ccwp-row"
-                    style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}
-                >
-                    <div className="ccwp-col name-col" style={{flex: '1'}}>
-                        <div className="ccwp-castcrew-name"><strong>{member.name}</strong></div>
-                    </div>
-                    <div className="ccwp-col role-col" style={{flex: '1'}}>
-                        <TextControl
-                            __next40pxDefaultSize
-                            __nextHasNoMarginBottom
-                            value={member.role}
-                            onChange={val => updateMember(type, member.ID, {role: val})}
-                            name={`${inputName}[${member.ID}][role]`}
-                            placeholder="role"
-                        />
-                    </div>
-                    <div className="ccwp-col billing-col" style={{flex: '0 0 100px'}}>
-                        <TextControl
-                            __next40pxDefaultSize
-                            __nextHasNoMarginBottom
-                            value={member.order}
-                            onChange={val => updateMember(type, member.ID, {custom_order: parseInt(val, 10) || 0})}
-                            name={`${inputName}[${member.ID}][custom_order]`}
-                            placeholder="order"
-                        />
-                    </div>
-                    <div className="ccwp-col action-col">
-                        <Button isDestructive onClick={() => removeMember(type, member.ID)}>Delete</Button>
-                    </div>
-                </div>
-            </div>
-        );
     };
 
     return (
@@ -187,7 +134,15 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                         <div className="ccwp-col action-col">&nbsp;</div>
                     </div>
                 )}
-                {state.cast.map(m => renderMemberRow(MemberType.Cast, m))}
+                {state.cast.map((member: ProductionCastCrew, index: number) => (
+                    <Row
+                        key={`add_cast_row_${member.ID}_${index}`}
+                        productionId={productionId}
+                        member={member}
+                        onUpdate={updateMember}
+                        onRemove={removeMember}
+                    />
+                ))}
             </div>
 
             {/* Crew Section */}
@@ -217,7 +172,15 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                         <div className="ccwp-col action-col">&nbsp;</div>
                     </div>
                 )}
-                {state.crew.map(m => renderMemberRow(MemberType.Crew, m))}
+                {state.crew.map((member: ProductionCastCrew, index: number)  => (
+                    <Row
+                        key={`add_crew_row_${member.ID}_${index}`}
+                        productionId={productionId}
+                        member={member}
+                        onUpdate={updateMember}
+                        onRemove={removeMember}
+                    />
+                ))}
             </div>
         </div>
     );

@@ -1,4 +1,3 @@
-import React from 'react';
 import {render} from '@wordpress/element';
 import ProductionDetailsMetabox from '../components/ProductionDetailsMetabox';
 import ProductionCastCrewMetabox from '../components/ProductionCastCrewMetabox';

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {CastCrewProduction} from '../types/metaboxes';
 
 export type CastCrewProductionMetaboxProps = {

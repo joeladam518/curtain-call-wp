@@ -1,10 +1,12 @@
+import {FC, useEffect, useMemo, useState} from 'react';
 import apiFetch from '@wordpress/api-fetch';
 import {Button, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
+import {store as coreDataStore} from '@wordpress/core-data';
 import {useSelect} from '@wordpress/data';
-import {PluginSidebar} from '@wordpress/editor';
-import React, {FC, useEffect, useState} from 'react';
+import {PluginSidebar, store as editorStore} from '@wordpress/editor';
 import MemberType from '../enums/MemberType';
 import Icon from '../icons/TheatreCurtains';
+import {EditorSelectors} from '../types/stores';
 
 type Relation = {
     production_id: number;
@@ -24,15 +26,13 @@ const Sidebar: FC = () => {
     const [newOrder, setNewOrder] = useState<string>('');
 
     // Determine the current post and post type from the editor
-    const postId = useSelect<string | number>(select => select('core/editor').getCurrentPostId(), []);
-    const postType = useSelect<string>(select => select('core/editor').getCurrentPostType(), []);
-
+    const postId = useSelect(select => (select(editorStore) as EditorSelectors).getCurrentPostId(), []);
+    const postType = useSelect(select => (select(editorStore) as EditorSelectors).getCurrentPostType(), []);
     const isProduction = postType === 'ccwp_production';
     const isCastCrew = postType === 'ccwp_cast_and_crew';
 
-    // Load searchable options from core store
-    const options = useSelect((select) => {
-        const core = select('core');
+    const core = useSelect(select => select(coreDataStore), []);
+    const options = useMemo(() => {
         if (isProduction) {
             // Get cast & crew posts
             const records = core.getEntityRecords(
@@ -42,6 +42,7 @@ const Sidebar: FC = () => {
             ) || [];
             return (records as any[]).map((r: any) => ({label: r.title?.rendered || `#${r.id}`, value: String(r.id)}));
         }
+
         if (isCastCrew) {
             const records = core.getEntityRecords(
                 'postType',
@@ -50,8 +51,9 @@ const Sidebar: FC = () => {
             ) || [];
             return (records as any[]).map((r: any) => ({label: r.title?.rendered || `#${r.id}`, value: String(r.id)}));
         }
+
         return [];
-    }, [postType, isProduction, isCastCrew]);
+    }, [core, postType, isProduction, isCastCrew]);
 
     const attach = async () => {
         if (!postId || !newTargetId) {
@@ -149,7 +151,7 @@ const Sidebar: FC = () => {
             path: '/ccwp/v1/relations?' + new URLSearchParams(query).toString(),
             headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
         })
-            .then((rows: Relation[]) => setRelations(rows || []))
+            .then((value: unknown) => setRelations((value || []) as Relation[]))
             .catch((e: any) => setError(e?.message || 'Failed to load relations'))
             .finally(() => setLoading(false));
     }, [isCastCrew, isProduction, postId, postType]);
@@ -170,7 +172,10 @@ const Sidebar: FC = () => {
                             <SelectControl<MemberType>
                                 label="Type"
                                 value={newType}
-                                options={[{label: 'Cast', value: 'cast'}, {label: 'Crew', value: 'crew'}]}
+                                options={[
+                                    {label: 'Cast', value: MemberType.Cast},
+                                    {label: 'Crew', value: MemberType.Crew}
+                                ]}
                                 onChange={(v: MemberType) => setNewType(v)}
                             />
                             <SelectControl<string>

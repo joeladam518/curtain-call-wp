@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import {FC, useState} from 'react';
 import {TextControl} from '@wordpress/components';
 import useHasPostTitle from '../hooks/useHasPostTitle';
 import {dateToFormat} from '../utils/dates';
