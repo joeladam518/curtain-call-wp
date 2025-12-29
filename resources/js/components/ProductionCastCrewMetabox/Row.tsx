@@ -9,9 +9,9 @@ type UpdateData = {
 };
 
 export type RowProps = {
-    key: string
+    key: string;
     productionId: string | number | null;
-    member: ProductionCastCrew
+    member: ProductionCastCrew;
     onUpdate?: (type: MemberType, id: number | string, data: UpdateData) => void;
     onRemove?: (type: MemberType, id: number | string) => void;
 };
@@ -80,8 +80,8 @@ const Row: FC<RowProps> = ({
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 Row.displayName = 'ProductionCastCrewMetaboxRow';
 

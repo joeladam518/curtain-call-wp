@@ -7,25 +7,25 @@ import {
     parse as parseFns,
     parseISO,
     type ParseOptions,
-    toDate
+    toDate,
 } from 'date-fns';
 
 type DateToFormatInputValue = Date | string | null | undefined;
 type DateToFormatOptions = {
-    input?: string,
-    output?: string,
-    formatOptions?: FormatOptions
-    parseOptions?: ParseOptions
-}
+    input?: string;
+    output?: string;
+    formatOptions?: FormatOptions;
+    parseOptions?: ParseOptions;
+};
 
 export function dateToFormat(
     value: Date | null | undefined,
     format?: string
-): string | undefined
+): string | undefined;
 export function dateToFormat(
     value: DateToFormatInputValue,
     options?: DateToFormatOptions
-): string | undefined
+): string | undefined;
 export function dateToFormat(
     value: DateToFormatInputValue,
     options?: DateToFormatOptions | string

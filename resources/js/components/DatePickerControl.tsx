@@ -7,11 +7,11 @@ import {dateToFormat} from '../utils/dates';
 
 type DatePickerControlState = {
     isVisible: boolean;
-}
+};
 
 type DatePickerControlProps = {
     help?: string;
-    hideLabelFromVision?: boolean
+    hideLabelFromVision?: boolean;
     inputFormat?: string;
     label: string;
     mask?: MaskitoDateMode;
@@ -19,7 +19,7 @@ type DatePickerControlProps = {
     onChange?: (date: string) => void;
     value: string;
     valueFormat?: string;
-}
+};
 
 const DatePickerControl: FC<DatePickerControlProps> = memo(({
     help,
@@ -30,7 +30,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
     name,
     onChange,
     value,
-    valueFormat = 'MM/dd/yyyy'
+    valueFormat = 'MM/dd/yyyy',
 }) => {
     const [state, setState] = useState<DatePickerControlState>({isVisible: false});
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -74,7 +74,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
             setState(current => ({...current, isVisible: false}));
             inputRef.current?.blur();
         }
-    }
+    };
 
     useEffect(() => {
         const closePopover = () => {
@@ -87,13 +87,13 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
             ) {
                 setState(current => ({...current, isVisible: false}));
             }
-        }
+        };
 
         document.addEventListener('focusin', closePopover);
 
         return () => {
             document.removeEventListener('focusin', closePopover);
-        }
+        };
     }, []);
 
     return (
@@ -106,8 +106,8 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
                 label={label}
             >
                 <input
-                    ref={inputElement => {
-                        maskitoRef(inputElement)
+                    ref={(inputElement) => {
+                        maskitoRef(inputElement);
                         inputRef.current = inputElement;
                     }}
                     className="components-text-control__input"
@@ -142,5 +142,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
         </div>
     );
 });
+
+DatePickerControl.displayName = 'DatePickerControl';
 
 export default DatePickerControl;

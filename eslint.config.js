@@ -49,6 +49,7 @@ export default tseslint.config(
         rules: {
             ...reactPlugin.configs.recommended.rules,
             ...reactHooksPlugin.configs.recommended.rules,
+            'react/prop-types': 'off',
             'react/react-in-jsx-scope': 'off', // Not needed in modern React
             '@stylistic/array-bracket-newline': ['error', 'consistent'],
             '@stylistic/array-bracket-spacing': ['error', 'never'],

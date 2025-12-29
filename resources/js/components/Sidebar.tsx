@@ -53,7 +53,7 @@ const Sidebar: FC = () => {
         }
 
         return [];
-    }, [core, postType, isProduction, isCastCrew]);
+    }, [core, isProduction, isCastCrew]);
 
     const attach = async () => {
         if (!postId || !newTargetId) {
@@ -174,7 +174,7 @@ const Sidebar: FC = () => {
                                 value={newType}
                                 options={[
                                     {label: 'Cast', value: MemberType.Cast},
-                                    {label: 'Crew', value: MemberType.Crew}
+                                    {label: 'Crew', value: MemberType.Crew},
                                 ]}
                                 onChange={(v: MemberType) => setNewType(v)}
                             />
@@ -201,7 +201,7 @@ const Sidebar: FC = () => {
                                 onChange={setNewOrder}
                             />
                             <Button
-                                isPrimary
+                                variant="primary"
                                 onClick={attach}
                                 disabled={!newTargetId}
                             >Attach
@@ -268,10 +268,11 @@ const Sidebar: FC = () => {
                                         </div>
                                     </div>
                                     <Button
-                                        isSecondary
+                                        variant="secondary"
                                         isDestructive
                                         onClick={() => detach(r)}
-                                    >Remove
+                                    >
+                                        Remove
                                     </Button>
                                 </div>
                             ))}

@@ -118,7 +118,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     />
                 </div>
                 <Button
-                    isSecondary
+                    variant="secondary"
                     onClick={() => addMember(MemberType.Cast)}
                     style={{marginBottom: '8px'}}
                 >
@@ -157,7 +157,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     onChange={value => setSelectedCrewId(value || '0')}
                 />
                 <Button
-                    isSecondary
+                    variant="secondary"
                     onClick={() => addMember(MemberType.Crew)}
                 >
                     Add Crew
@@ -172,7 +172,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                         <div className="ccwp-col action-col">&nbsp;</div>
                     </div>
                 )}
-                {state.crew.map((member: ProductionCastCrew, index: number)  => (
+                {state.crew.map((member: ProductionCastCrew, index: number) => (
                     <Row
                         key={`add_crew_row_${member.ID}_${index}`}
                         productionId={productionId}
