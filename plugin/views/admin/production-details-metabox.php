@@ -1,4 +1,11 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+
+declare(strict_types=1);
+
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die();
+}
+
 /**
  * @var string $wp_nonce
  * @var WP_Post $post
@@ -11,6 +18,7 @@
  * @var string $venue
  */
 
+// @mago-ignore lint:no-unescaped-output
 echo $wp_nonce;
 ?>
 <div id="ccwp-production-details-react-root"></div>
