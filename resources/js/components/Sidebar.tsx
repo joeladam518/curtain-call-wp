@@ -1,7 +1,6 @@
 import {FC, useEffect, useMemo, useState} from 'react';
 import apiFetch from '@wordpress/api-fetch';
-import {Button, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
-import {store as coreDataStore} from '@wordpress/core-data';
+import {Button, Notice, ComboboxControl, SelectControl, Spinner, TextControl} from '@wordpress/components';
 import {useSelect} from '@wordpress/data';
 import {PluginSidebar, store as editorStore} from '@wordpress/editor';
 import MemberType from '../enums/MemberType';
@@ -31,7 +30,7 @@ const Sidebar: FC = () => {
     const isProduction = postType === 'ccwp_production';
     const isCastCrew = postType === 'ccwp_cast_and_crew';
 
-    const core = useSelect(select => select(coreDataStore), []);
+    const core = useSelect(select => select('core'), []);
     const options = useMemo(() => {
         if (isProduction) {
             // Get cast & crew posts
@@ -178,7 +177,9 @@ const Sidebar: FC = () => {
                                 ]}
                                 onChange={(v: MemberType) => setNewType(v)}
                             />
-                            <SelectControl<string>
+                            <ComboboxControl
+                                __next40pxDefaultSize
+                                __nextHasNoMarginBottom
                                 label={isProduction ? 'Cast/Crew' : 'Production'}
                                 value={newTargetId}
                                 options={[{label: 'Select…', value: ''}, ...options]}
@@ -204,8 +205,7 @@ const Sidebar: FC = () => {
                                 variant="primary"
                                 onClick={attach}
                                 disabled={!newTargetId}
-                            >Attach
-                            </Button>
+                            >Attach</Button>
                         </div>
                         <div>
                             {relations.length === 0 && <p>No relations yet.</p>}
@@ -263,17 +263,14 @@ const Sidebar: FC = () => {
                                                         headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
                                                     });
                                                 }}
-                                            >Save
-                                            </Button>
+                                            >Save</Button>
                                         </div>
                                     </div>
                                     <Button
                                         variant="secondary"
                                         isDestructive
                                         onClick={() => detach(r)}
-                                    >
-                                        Remove
-                                    </Button>
+                                    >Remove</Button>
                                 </div>
                             ))}
                         </div>
