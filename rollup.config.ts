@@ -36,6 +36,7 @@ export default defineConfig([
                 '@wordpress/element': 'wp.element',
                 '@wordpress/i18n': 'wp.i18n',
                 '@wordpress/plugins': 'wp.plugins',
+                '@wordpress/primitives': 'wp.primitives',
                 'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
@@ -53,6 +54,7 @@ export default defineConfig([
             "@wordpress/element",
             "@wordpress/i18n",
             "@wordpress/plugins",
+            "@wordpress/primitives",
             "jquery",
             "react",
             "react-dom"
@@ -110,6 +112,7 @@ export default defineConfig([
                 '@wordpress/element': 'wp.element',
                 '@wordpress/i18n': 'wp.i18n',
                 '@wordpress/plugins': 'wp.plugins',
+                '@wordpress/primitives': 'wp.primitives',
                 'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
@@ -127,6 +130,7 @@ export default defineConfig([
             "@wordpress/element",
             "@wordpress/i18n",
             "@wordpress/plugins",
+            "@wordpress/primitives",
             "jquery",
             "react",
             "react-dom"
@@ -184,6 +188,7 @@ export default defineConfig([
                 '@wordpress/element': 'wp.element',
                 '@wordpress/i18n': 'wp.i18n',
                 '@wordpress/plugins': 'wp.plugins',
+                '@wordpress/primitives': 'wp.primitives',
                 'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
@@ -201,6 +206,7 @@ export default defineConfig([
             "@wordpress/element",
             "@wordpress/i18n",
             "@wordpress/plugins",
+            "@wordpress/primitives",
             "jquery",
             "react",
             "react-dom"

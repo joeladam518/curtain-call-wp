@@ -56,19 +56,14 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     const setSelectedCrewId = (id: string) => setMetaboxState(current => ({...current, selectedCrewId: id}));
 
     const addMember = (type: MemberType) => {
-        console.log(`addMember() - adding ${type} member`)
-
         const idVal = type === MemberType.Cast ? state.selectedCastId : state.selectedCrewId;
         const id = parseInt(idVal, 10);
-
-        console.log(`addMember() - selected ID: ${id}`)
 
         if (!id) {
             return;
         }
 
         const option = options.find(member => member.value === idVal);
-        console.log(`addMember() - found option: ${option?.label}`)
 
         if (!option) {
             return;
@@ -83,8 +78,6 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
             role: '',
             type,
         };
-
-        console.log(`addMember() - creating new ${type} member`, newMember)
 
         if (type === MemberType.Cast) {
             addCast(newMember as ProductionCastCrew<MemberType.Cast>);
@@ -102,28 +95,15 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     };
 
     const updateMember = (type: MemberType, id: number | string, data: UpdateData) => {
-        console.log('updateMember() - type', type)
-        console.log('updateMember() - id', id)
-        console.log('updateMember() - data', data)
-
-
         const updateFn = (members: ProductionCastCrew[]) => members.map(m => m.ID === id ? {...m, ...data} : m);
         if (type === MemberType.Cast) {
             const newCast = updateFn(state.cast) as ProductionCastCrew<MemberType.Cast>[]
-
-            console.log(`updateMember() - updating cast member #${id}`, newCast)
-
             setCast(newCast);
         } else if (type === MemberType.Crew) {
             const newCrew = updateFn(state.crew) as ProductionCastCrew<MemberType.Crew>[]
-
-            console.log(`updateMember() - updating crew member #${id}`, newCrew)
-
             setCrew(newCrew);
         }
     };
-
-    console.log(state);
 
     return (
         <div className="ccwp-react-metabox">

@@ -60,18 +60,13 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
     const setOrder = (order: number) => setMetaboxState(current => ({...current, order}));
 
     const addProduction = () => {
-        console.log(`addProduction() - adding ${state.selectedType} production`)
-
         const id = parseInt(state.selectedProductionId, 10);
-
-        console.log(`addProduction() - selected ID: ${id}`)
 
         if (!id) {
             return;
         }
 
         const option = options.find(production => production.value === state.selectedProductionId);
-        console.log(`addProduction() - found option: ${option?.label}`)
 
         if (!option) {
             return;
@@ -86,8 +81,6 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
             role: state.role || null,
             type: state.selectedType,
         };
-
-        console.log(`addProduction() - creating new ${state.selectedType} production`, newProduction)
 
         if (state.selectedType === MemberType.Cast) {
             addCast(newProduction as CastCrewProduction<MemberType.Cast>);
@@ -113,28 +106,15 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
     };
 
     const updateProduction = (type: MemberType, id: number | string, data: UpdateData) => {
-        console.log('updateProduction() - type', type)
-        console.log('updateProduction() - id', id)
-        console.log('updateProduction() - data', data)
-
-
         const updateFn = (productions: CastCrewProduction[]) => productions.map(p => p.ID === id ? {...p, ...data} : p);
         if (type === MemberType.Cast) {
             const newCast = updateFn(state.cast) as CastCrewProduction<MemberType.Cast>[]
-
-            console.log(`updateProduction() - updating cast production #${id}`, newCast)
-
             setCast(newCast);
         } else if (type === MemberType.Crew) {
             const newCrew = updateFn(state.crew) as CastCrewProduction<MemberType.Crew>[]
-
-            console.log(`updateProduction() - updating crew production #${id}`, newCrew)
-
             setCrew(newCrew);
         }
     };
-
-    console.log(state);
 
     return (
         <div className="ccwp-react-metabox">

@@ -57,6 +57,7 @@
         "@typescript-eslint/eslint-plugin": "^8.50.1",
         "@typescript-eslint/parser": "^8.50.1",
         "@wordpress/core-data": "^7.37.0",
+        "@wordpress/icons": "^11.4.0",
         "@wordpress/interactivity": "^6.37.0",
         "autoprefixer": "^10.4.20",
         "date-fns": "^4.1.0",

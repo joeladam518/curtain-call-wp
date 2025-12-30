@@ -97,7 +97,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
     }, []);
 
     return (
-        <div className="ccwp-date-picker-control" style={{width: 'auto', marginBottom: '15px'}}>
+        <div className="ccwp-date-picker-control">
             <BaseControl
                 __nextHasNoMarginBottom={true}
                 __associatedWPComponentName="DatePickerControl"
@@ -110,7 +110,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
                         maskitoRef(inputElement);
                         inputRef.current = inputElement;
                     }}
-                    className="components-text-control__input"
+                    className="components-text-control__input is-next-40px-default-size"
                     onFocus={() => {
                         setState(current => ({...current, isVisible: true}));
                     }}
@@ -126,7 +126,7 @@ const DatePickerControl: FC<DatePickerControlProps> = memo(({
                     placement="bottom-start"
                     focusOnMount={false as any}
                 >
-                    <div ref={datePickerRef} style={{padding: '10px'}}>
+                    <div ref={datePickerRef} className="ccwp-date-picker-container">
                         <DatePicker
                             currentDate={datePickerValue}
                             onChange={handleDatePickerChange}

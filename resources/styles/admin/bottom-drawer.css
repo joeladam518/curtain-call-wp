@@ -1,0 +1,303 @@
+/* Bottom Drawer - WordPress Metabox Style */
+
+.ccwp-bottom-drawer-wrapper {
+    max-width: 100%;
+}
+
+/* Main postbox container */
+.ccwp-bottom-drawer {
+    position: relative;
+    min-width: 255px;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0;
+}
+
+/* Postbox header */
+.ccwp-bottom-drawer .bottom-drawer-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #c3c4c7;
+    background: #fff;
+    flex-shrink: 0;
+    height: 32px;
+    padding-inline: 24px 12px;
+    margin: 0;
+}
+
+.ccwp-bottom-drawer .bottom-drawer-separator {
+    display: block;
+    cursor: row-resize;
+    inset: 0;
+    position: absolute;
+    width: 64px;
+    appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    padding-block: 0;
+    padding-inline: 0;
+    margin: 0;
+}
+
+.ccwp-bottom-drawer .bottom-drawer-separator::before {
+    background-color: #ddd;
+    border-radius: 2px;
+    content: "";
+    height: 4px;
+    inset-block: calc(50% - 2px) auto;
+    outline: 2px solid #0000;
+    outline-offset: -2px;
+    position: absolute;
+    transform: translateX(-50%);
+    width: inherit;
+    transition: width .3s ease-out;
+}
+
+.ccwp-bottom-drawer .bottom-drawer-separator:hover::before {
+    width: 80px;
+    background-color: var(--wp-admin-theme-color);
+}
+
+.ccwp-bottom-drawer .bottom-drawer-title {
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+.ccwp-bottom-drawer .drawer-toggle {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    outline: none;
+    inset: 0;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    padding-block: 0;
+    padding-inline: 0;
+    border: none;
+    margin: 0;
+}
+
+.ccwp-bottom-drawer .drawer-toggle:hover {
+    background: #f0f0f1;
+}
+
+.ccwp-bottom-drawer .drawer-toggle:focus {
+    box-shadow: 0 0 0 var(--wp-admin-border-width-focus) var(--wp-admin-theme-color);
+    outline: 2px solid transparent;
+}
+
+/* Toggle indicator (arrow) */
+.ccwp-bottom-drawer .toggle-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+.ccwp-bottom-drawer .toggle-indicator::before {
+    content: "\f142";
+    display: inline-block;
+    font: normal 20px/1 dashicons;
+    speak: never;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: none !important;
+    color: #787c82;
+}
+
+.ccwp-bottom-drawer.closed .toggle-indicator::before {
+    content: "\f140";
+}
+
+/* Inside content area */
+.ccwp-bottom-drawer .bottom-drawer-content {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+}
+
+.ccwp-bottom-drawer.closed .bottom-drawer-content {
+    display: none;
+}
+
+/* Count badge */
+.ccwp-bottom-drawer .ccwp-drawer-count-badge {
+    background: #2271b1;
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.ccwp-drawer-empty-message {
+    color: #787c82;
+    text-align: center;
+    padding: 40px 20px;
+    margin: 0;
+    font-size: 14px;
+}
+
+.ccwp-drawer-section {
+    margin-bottom: 20px;
+}
+
+.ccwp-drawer-section:last-child {
+    margin-bottom: 0;
+}
+
+.ccwp-drawer-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #dcdcde;
+}
+
+.ccwp-drawer-relation-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 120px auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 2px;
+    transition: background 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.ccwp-drawer-relation-row:hover {
+    background: #f0f0f1;
+    border-color: #c3c4c7;
+}
+
+.ccwp-drawer-relation-row:last-child {
+    margin-bottom: 0;
+}
+
+.ccwp-drawer-relation-id {
+    font-weight: 500;
+    color: #2c3338;
+    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Adjust WordPress component spacing within drawer */
+.ccwp-drawer-relation-row .components-base-control {
+    margin-bottom: 0;
+}
+
+.ccwp-drawer-relation-row .components-text-control__input {
+    font-size: 13px;
+    padding: 6px 8px;
+}
+
+.ccwp-drawer-relation-row .components-button {
+    height: 32px;
+    font-size: 12px;
+    padding: 0 12px;
+}
+
+/* Loading spinner */
+.ccwp-bottom-drawer .components-spinner {
+    margin: 40px auto;
+    display: block;
+}
+
+/* Notice styling within drawer */
+.ccwp-bottom-drawer .components-notice {
+    margin: 0 0 16px 0;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1280px) {
+    .ccwp-drawer-relation-row {
+        grid-template-columns: 80px 1fr 100px auto auto;
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    .ccwp-drawer-relation-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .ccwp-drawer-relation-row .components-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ccwp-drawer-resize-handle {
+        height: 16px !important;
+    }
+
+    .ccwp-drawer-resize-handle::before {
+        width: 60px;
+        height: 4px;
+        background-image: linear-gradient(
+            to bottom,
+            #c3c4c7 0,
+            #c3c4c7 1.5px,
+            transparent 1.5px,
+            transparent 2.5px,
+            #c3c4c7 2.5px,
+            #c3c4c7 4px
+        ) !important;
+        background-size: 100% 4px;
+    }
+}
+
+@media screen and (max-width: 782px) {
+    .ccwp-bottom-drawer .bottom-drawer-content {
+        padding: 10px;
+    }
+
+    .ccwp-drawer-resize-handle {
+        height: 20px !important;
+    }
+
+    .ccwp-drawer-resize-handle::before {
+        width: 80px;
+        height: 5px;
+        background-image: linear-gradient(
+            to bottom,
+            #c3c4c7 0,
+            #c3c4c7 2px,
+            transparent 2px,
+            transparent 3px,
+            #c3c4c7 3px,
+            #c3c4c7 5px
+        ) !important;
+        background-size: 100% 5px;
+    }
+}
