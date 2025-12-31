@@ -1,4 +1,3 @@
-
 import {Button, TextControl} from '@wordpress/components';
 import {FC} from 'react';
 import MemberType from '../../enums/MemberType';

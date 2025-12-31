@@ -39,7 +39,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     const setCast = (cast: ProductionCastCrew<MemberType.Cast>[]) => setMetaboxState(
         current => ({...current, cast})
     );
-    const addCast = (cast: ProductionCastCrew<MemberType.Cast>) => setMetaboxState(current => {
+    const addCast = (cast: ProductionCastCrew<MemberType.Cast>) => setMetaboxState((current) => {
         const castMembers = [...current.cast];
         castMembers.push(cast);
         return {...current, cast: castMembers};
@@ -47,7 +47,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     const setCrew = (crew: ProductionCastCrew<MemberType.Crew>[]) => setMetaboxState(
         current => ({...current, crew})
     );
-    const addCrew = (crew: ProductionCastCrew<MemberType.Crew>) => setMetaboxState(current => {
+    const addCrew = (crew: ProductionCastCrew<MemberType.Crew>) => setMetaboxState((current) => {
         const crewMembers = [...current.crew];
         crewMembers.push(crew);
         return {...current, crew: crewMembers};
@@ -97,10 +97,10 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
     const updateMember = (type: MemberType, id: number | string, data: UpdateData) => {
         const updateFn = (members: ProductionCastCrew[]) => members.map(m => m.ID === id ? {...m, ...data} : m);
         if (type === MemberType.Cast) {
-            const newCast = updateFn(state.cast) as ProductionCastCrew<MemberType.Cast>[]
+            const newCast = updateFn(state.cast) as ProductionCastCrew<MemberType.Cast>[];
             setCast(newCast);
         } else if (type === MemberType.Crew) {
-            const newCrew = updateFn(state.crew) as ProductionCastCrew<MemberType.Crew>[]
+            const newCrew = updateFn(state.crew) as ProductionCastCrew<MemberType.Crew>[];
             setCrew(newCrew);
         }
     };

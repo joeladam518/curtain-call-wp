@@ -10,18 +10,18 @@ export type AttachData = {
     type: MemberType;
     role?: string;
     customOrder?: number;
-}
+};
 
 export type DetachData = {
     productionId: string | number;
     castcrewId: string | number;
-}
+};
 
 export type RelationsState = {
-    relations: ((CastCrewData[]) | (ProductionData[])),
-    loading: boolean,
-    error: string | null,
-}
+    relations: ((CastCrewData[]) | (ProductionData[]));
+    loading: boolean;
+    error: string | null;
+};
 
 const DEFAULT_STATE: RelationsState = {
     relations: [],
@@ -53,8 +53,6 @@ const actions = {
     },
 
     fetchCastCrew: (productionId: string | number, type?: MemberType) => async ({dispatch}: {dispatch: any}) => {
-        console.log('fetchCastCrew()', productionId, type);
-
         dispatch(actions.setLoading(true));
         dispatch(actions.setError(null));
 
@@ -75,7 +73,6 @@ const actions = {
                 headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
             });
             const records = (value || []) as Record<string, unknown>[];
-            console.log('fetchCastCrew() records', records);
             const castcrew = records.map(record => CastCrewData.fromRecord(record));
             dispatch(actions.setRelations(castcrew));
         } catch (e: any) {
@@ -87,8 +84,6 @@ const actions = {
     },
 
     fetchProductions: (castcrewId: string | number) => async ({dispatch}: {dispatch: any}) => {
-        console.log('fetchProductions()', castcrewId);
-
         dispatch(actions.setLoading(true));
         dispatch(actions.setError(null));
 
@@ -105,7 +100,6 @@ const actions = {
                 headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
             });
             const records = (value || []) as Record<string, unknown>[];
-            console.log('fetchProductions() records', records);
             const productions = records.map(record => ProductionData.fromRecord(record));
             dispatch(actions.setRelations(productions));
         } catch (e: any) {
@@ -151,14 +145,14 @@ const actions = {
         await dispatch(actions.fetchProductions(props.castcrewId));
     },
 
-    detach: (props: DetachData) => async ({dispatch, select}: {dispatch: any; select: any}) => {
+    detach: (props: DetachData) => async ({dispatch}: {dispatch: any}) => {
         dispatch(actions.setLoading(true));
         dispatch(actions.setError(null));
 
         const query: Record<string, string> = {
             production_id: props.productionId.toString(),
             cast_and_crew_id: props.castcrewId.toString(),
-        }
+        };
 
         try {
             await apiFetch({
@@ -190,9 +184,9 @@ const actions = {
 };
 
 type Action =
-    | ReturnType<typeof actions.setRelations>
-    | ReturnType<typeof actions.setLoading>
-    | ReturnType<typeof actions.setError>
+    | ReturnType<typeof actions.setRelations> |
+    ReturnType<typeof actions.setLoading> |
+    ReturnType<typeof actions.setError>;
 
 const selectors = {
     getRelations(state: RelationsState): ((CastCrewData[]) | (ProductionData[])) {
@@ -255,11 +249,11 @@ export type RelationsStoreSelectors = {
     getError: () => string | null;
 };
 
-declare module "@wordpress/data" {
-    function dispatch(key: "ccwp/relations"): RelationsStoreActions;
-    function select(key: "ccwp/relations"): RelationsStoreSelectors;
-    function useDispatch(key: "ccwp/relations"): RelationsStoreActions;
-    function useSelect(key: "ccwp/relations"): RelationsStoreSelectors;
+declare module '@wordpress/data' {
+    function dispatch(key: 'ccwp/relations'): RelationsStoreActions;
+    function select(key: 'ccwp/relations'): RelationsStoreSelectors;
+    function useDispatch(key: 'ccwp/relations'): RelationsStoreActions;
+    function useSelect(key: 'ccwp/relations'): RelationsStoreSelectors;
 }
 
 // Create and register the store

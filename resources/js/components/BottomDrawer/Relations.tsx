@@ -15,7 +15,7 @@ type RelationsProps = {
     onSave?: (data: AttachData) => void;
     postId: string | number;
     postType: PostType;
-    relations: ((CastCrewData[]) | (ProductionData[]))
+    relations: ((CastCrewData[]) | (ProductionData[]));
     title?: string;
 };
 
@@ -28,7 +28,7 @@ const Relations: FC<RelationsProps> = ({
     postId,
     postType,
     relations,
-    title
+    title,
 }) => {
     if (isFetching) {
         return (
@@ -83,7 +83,7 @@ const Relations: FC<RelationsProps> = ({
             Invalid Post Type
         </p>
     );
-}
+};
 
 Relations.displayName = 'Relations';
 

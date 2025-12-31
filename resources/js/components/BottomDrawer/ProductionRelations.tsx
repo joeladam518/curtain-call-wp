@@ -11,7 +11,7 @@ type ProductionRelationsProps = {
     onRemove?: (data: DetachData) => void;
     onSave?: (data: AttachData) => void;
     productionId: string | number;
-}
+};
 
 const ProductionRelations: FC<ProductionRelationsProps> = ({
     isRemoving = false,
@@ -21,8 +21,8 @@ const ProductionRelations: FC<ProductionRelationsProps> = ({
     onSave,
     productionId,
 }) => {
-    const castMembers = useMemo(() => members.filter((member) => member.memberType === MemberType.Cast), [members]);
-    const crewMembers = useMemo(() => members.filter((member) => member.memberType === MemberType.Crew), [members]);
+    const castMembers = useMemo(() => members.filter(member => member.memberType === MemberType.Cast), [members]);
+    const crewMembers = useMemo(() => members.filter(member => member.memberType === MemberType.Crew), [members]);
 
     return (
         <>
@@ -50,7 +50,7 @@ const ProductionRelations: FC<ProductionRelationsProps> = ({
                     <h3 className="ccwp-drawer-section-title">
                         Crew ({crewMembers.length})
                     </h3>
-                    {crewMembers.map(((crew, index) => (
+                    {crewMembers.map((crew, index) => (
                         <CastCrewRow
                             key={`production-crew-${productionId}-${crew.id}-${index}`}
                             castcrew={crew}
@@ -65,7 +65,7 @@ const ProductionRelations: FC<ProductionRelationsProps> = ({
             )}
         </>
     );
-}
+};
 
 ProductionRelations.displayName = 'ProductionRelations';
 

@@ -1,9 +1,8 @@
 import {Notice, Tooltip} from '@wordpress/components';
-//import {useMediaQuery} from '@wordpress/compose';
 import {useDispatch, useSelect} from '@wordpress/data';
 import {store as editorStore} from '@wordpress/editor';
 import {__} from '@wordpress/i18n';
-import {type FC, useEffect, useMemo, useRef, useState} from 'react';
+import {type FC, useEffect, useRef, useState} from 'react';
 import CastCrewData from '../../data/CastCrewData';
 import ProductionData from '../../data/ProductionData';
 import PostType from '../../enums/PostType';
@@ -13,10 +12,10 @@ import {AttachData, DetachData, STORE_NAME} from '../../stores/relations-store';
 import Relations from './Relations';
 
 type DrawerContentState = {
-    isCollapsed: boolean,
-    isSaving: boolean,
-    isRemoving: boolean,
-    drawerHeight: number
+    isCollapsed: boolean;
+    isSaving: boolean;
+    isRemoving: boolean;
+    drawerHeight: number;
 };
 
 const DrawerContent: FC = () => {
@@ -24,7 +23,7 @@ const DrawerContent: FC = () => {
         isCollapsed: false,
         isSaving: false,
         isRemoving: false,
-        drawerHeight: 400
+        drawerHeight: 400,
     });
     const setIsCollapsed = (value: boolean) => setState(prevState => ({...prevState, isCollapsed: value}));
     const setIsSaving = (value: boolean) => setState(prevState => ({...prevState, isSaving: value}));
@@ -37,9 +36,6 @@ const DrawerContent: FC = () => {
     const startYRef = useRef(0);
     const startHeightRef = useRef(0);
 
-    // TODO: show/hide things based on width
-    //const isShort = useMediaQuery('(max-height: 549px)');
-
     const postId: string | number = useSelect(select => select(editorStore).getCurrentPostId(), []);
     const postType: PostType = useSelect(select => select(editorStore).getCurrentPostType(), []);
     const relations = useSelect(
@@ -50,9 +46,6 @@ const DrawerContent: FC = () => {
     const fetchingError = useSelect(select => select(STORE_NAME).getError() as string | null, []);
     const {attachCastCrew, attachProduction, detach, fetchCastCrew, fetchProductions} = useDispatch(STORE_NAME);
     const title = postType === PostType.Production ? 'Cast & Crew' : 'Productions';
-    console.log('DrawerContent.postId', postId);
-    console.log('DrawerContent.postType', postType);
-    console.log('DrawerContent.relations', relations);
 
     const fetchRelations = async () => {
         if (!postId || !postType) {
@@ -69,7 +62,7 @@ const DrawerContent: FC = () => {
         } catch (e) {
             console.error('Error fetching relations:', e);
         }
-    }
+    };
 
     const handleSave = async (data: AttachData) => {
         if (!postId || !postType) {
@@ -90,7 +83,7 @@ const DrawerContent: FC = () => {
         } finally {
             setIsSaving(false);
         }
-    }
+    };
 
     const handleRemove = async (data: DetachData) => {
         if (!postId || !postType) {
@@ -114,7 +107,9 @@ const DrawerContent: FC = () => {
     // Handle resize
     useEffect(() => {
         const handleMouseDown = (e: MouseEvent) => {
-            if (resizeHandleRef.current && !resizeHandleRef.current.contains(e.target as Node)) return;
+            if (resizeHandleRef.current && !resizeHandleRef.current.contains(e.target as Node)) {
+                return;
+            }
 
             isResizingRef.current = true;
             startYRef.current = e.clientY;
@@ -126,7 +121,9 @@ const DrawerContent: FC = () => {
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            if (!isResizingRef.current) return;
+            if (!isResizingRef.current) {
+                return;
+            }
 
             const deltaY = startYRef.current - e.clientY;
             const newHeight = Math.min(Math.max(startHeightRef.current + deltaY, 200), 800);
@@ -156,12 +153,13 @@ const DrawerContent: FC = () => {
         if (postId && postType) {
             fetchRelations().then();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postId, postType]);
 
     return (
         <div
             ref={drawerRef}
-            className={`ccwp-bottom-drawer${state.isCollapsed  ? ' closed' : ''}`}
+            className={`ccwp-bottom-drawer${state.isCollapsed ? ' closed' : ''}`}
             style={{height: state.isCollapsed ? 'auto' : `${state.drawerHeight}px`}}
         >
             <div className="bottom-drawer-header">

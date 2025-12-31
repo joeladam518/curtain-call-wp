@@ -8,7 +8,7 @@ export type ProductionEntityMeta = {
     _ccwp_production_show_times: string;
     _ccwp_production_ticket_url: string;
     _ccwp_production_venue: string;
-}
+};
 
 export interface ProductionPost extends Post {
     post_type: 'ccwp_production';

@@ -8,7 +8,7 @@ export type ProductionRowState = {
     order: string;
     role: string;
     type: MemberType;
-}
+};
 
 export type ProductionRowProps = {
     castcrewId: string | number;
@@ -17,7 +17,7 @@ export type ProductionRowProps = {
     onRemove?: (data: DetachData) => void;
     onSave?: (data: AttachData) => void;
     production: ProductionData;
-}
+};
 
 const ProductionRow: FC<ProductionRowProps> = ({
     castcrewId,
@@ -103,8 +103,8 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 Remove
             </Button>
         </div>
-    )
-}
+    );
+};
 
 ProductionRow.displayName = 'ProductionRow';
 

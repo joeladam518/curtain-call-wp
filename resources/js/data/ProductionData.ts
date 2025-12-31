@@ -10,8 +10,8 @@ type ProductionDataProps = {
     venue?: string | null;
     memberType?: string | null;
     role?: string | null;
-    order?: string | number | null
-}
+    order?: string | number | null;
+};
 
 export default class ProductionData {
     public endDate: string | null;
@@ -40,8 +40,7 @@ export default class ProductionData {
             : null;
     }
 
-    public static fromRecord(record: Record<string, unknown>): ProductionData
-    {
+    public static fromRecord(record: Record<string, unknown>): ProductionData {
         const endDate = record?.endDate as string | null | undefined;
         const id = (record?.id || record?.ID) as string | number | null | undefined;
         const name = record?.name as string | null | undefined;
@@ -64,7 +63,7 @@ export default class ProductionData {
             venue: venue || null,
             memberType: memberType || type || null,
             role: role || null,
-            order: order || null
+            order: order || null,
         });
     }
 
@@ -80,6 +79,6 @@ export default class ProductionData {
             startDate: entity?.meta?._ccwp_production_date_start || null,
             ticketUrl: entity?.meta?._ccwp_production_ticket_url || null,
             venue: entity?.meta?._ccwp_production_venue || null,
-        })
+        });
     }
 }

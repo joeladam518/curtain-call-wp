@@ -10,8 +10,8 @@ type UpdateData = {
 };
 
 export type MetaboxState = {
-    cast: CastCrewProduction<MemberType.Cast>[];
-    crew: CastCrewProduction<MemberType.Crew>[];
+    cast: CastCrewProduction[];
+    crew: CastCrewProduction[];
     selectedProductionId: string;
     selectedType: MemberType;
     role: string;
@@ -30,8 +30,8 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
     productions: initialProductions,
 }) => {
     const [state, setMetaboxState] = useState<MetaboxState>({
-        cast: initialProductions?.filter(p => p.type === MemberType.Cast) as CastCrewProduction<MemberType.Cast>[] ?? [],
-        crew: initialProductions?.filter(p => p.type === MemberType.Crew) as CastCrewProduction<MemberType.Crew>[] ?? [],
+        cast: initialProductions?.filter(p => p.type === MemberType.Cast) as CastCrewProduction[] ?? [],
+        crew: initialProductions?.filter(p => p.type === MemberType.Crew) as CastCrewProduction[] ?? [],
         selectedProductionId: '0',
         selectedType: MemberType.Cast,
         role: '',
@@ -41,7 +41,7 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
     const setCast = (cast: CastCrewProduction<MemberType.Cast>[]) => setMetaboxState(
         current => ({...current, cast})
     );
-    const addCast = (cast: CastCrewProduction<MemberType.Cast>) => setMetaboxState(current => {
+    const addCast = (cast: CastCrewProduction<MemberType.Cast>) => setMetaboxState((current) => {
         const castProductions = [...current.cast];
         castProductions.push(cast);
         return {...current, cast: castProductions};
@@ -49,12 +49,15 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
     const setCrew = (crew: CastCrewProduction<MemberType.Crew>[]) => setMetaboxState(
         current => ({...current, crew})
     );
-    const addCrew = (crew: CastCrewProduction<MemberType.Crew>) => setMetaboxState(current => {
+    const addCrew = (crew: CastCrewProduction<MemberType.Crew>) => setMetaboxState((current) => {
         const crewProductions = [...current.crew];
         crewProductions.push(crew);
         return {...current, crew: crewProductions};
     });
-    const setSelectedProductionId = (id: string) => setMetaboxState(current => ({...current, selectedProductionId: id}));
+    const setSelectedProductionId = (id: string) => setMetaboxState(current => ({
+        ...current,
+        selectedProductionId: id,
+    }));
     const setSelectedType = (type: MemberType) => setMetaboxState(current => ({...current, selectedType: type}));
     const setRole = (role: string) => setMetaboxState(current => ({...current, role}));
     const setOrder = (order: number) => setMetaboxState(current => ({...current, order}));
@@ -108,10 +111,10 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
     const updateProduction = (type: MemberType, id: number | string, data: UpdateData) => {
         const updateFn = (productions: CastCrewProduction[]) => productions.map(p => p.ID === id ? {...p, ...data} : p);
         if (type === MemberType.Cast) {
-            const newCast = updateFn(state.cast) as CastCrewProduction<MemberType.Cast>[]
+            const newCast = updateFn(state.cast) as CastCrewProduction<MemberType.Cast>[];
             setCast(newCast);
         } else if (type === MemberType.Crew) {
-            const newCrew = updateFn(state.crew) as CastCrewProduction<MemberType.Crew>[]
+            const newCrew = updateFn(state.crew) as CastCrewProduction<MemberType.Crew>[];
             setCrew(newCrew);
         }
     };
@@ -121,7 +124,13 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
             {/* Add Production Form */}
             <div
                 className="ccwp-production-castcrew-select-wrap"
-                style={{display: 'grid', gridTemplateColumns: '2fr 1fr 2fr 1fr auto', gap: '10px', alignItems: 'end', marginBottom: '20px'}}
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: '2fr 1fr 2fr 1fr auto',
+                    gap: '10px',
+                    alignItems: 'end',
+                    marginBottom: '20px',
+                }}
             >
                 <ComboboxControl
                     __next40pxDefaultSize

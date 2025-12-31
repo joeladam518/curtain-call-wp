@@ -11,12 +11,12 @@ export type CastCrewDataProps = {
     instagramLink?: string | null;
     lastName?: string | null;
     memberType?: string | null;
-    order?: string | number | null
+    order?: string | number | null;
     role?: string | null;
     title?: string | null;
     twitterLink?: string | null;
     websiteLink?: string | null;
-}
+};
 
 export default class CastCrewData {
     public birthday: string | null;
@@ -29,7 +29,7 @@ export default class CastCrewData {
     public instagramLink: string | null;
     public lastName: string | null;
     public memberType: string | null;
-    public order: number | null
+    public order: number | null;
     public role: string | null;
     public title: string | null;
     public twitterLink: string | null;
@@ -58,8 +58,7 @@ export default class CastCrewData {
         this.websiteLink = props.websiteLink ?? null;
     }
 
-    public static fromRecord(record: Record<string, unknown>): CastCrewData
-    {
+    public static fromRecord(record: Record<string, unknown>): CastCrewData {
         const birthday = record?.birthday as string | null | undefined;
         const facebookLink = record?.facebook_link as string | null | undefined;
         const firstName = record?.firstName as string | null | undefined;

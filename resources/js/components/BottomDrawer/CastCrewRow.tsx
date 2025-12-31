@@ -1,5 +1,5 @@
 import {FC, useMemo, useState} from 'react';
-import {Button, SelectControl, TextControl} from '@wordpress/components';
+import {Button, TextControl} from '@wordpress/components';
 import CastCrewData from '../../data/CastCrewData';
 import MemberType from '../../enums/MemberType';
 import {AttachData, DetachData} from '../../stores/relations-store';
@@ -8,7 +8,7 @@ export type ProductionRowState = {
     type: MemberType;
     role: string;
     order: string;
-}
+};
 
 export type ProductionRowProps = {
     castcrew: CastCrewData;
@@ -17,7 +17,7 @@ export type ProductionRowProps = {
     onRemove?: (data: DetachData) => void;
     onSave?: (data: AttachData) => void;
     productionId: string | number;
-}
+};
 
 const CastCrewRow: FC<ProductionRowProps> = ({
     castcrew,
@@ -32,7 +32,6 @@ const CastCrewRow: FC<ProductionRowProps> = ({
         role: castcrew.role || '',
         order: castcrew.order ? castcrew.order.toString() : '0',
     });
-    const setType = (type: MemberType) => setState(current => ({...current, type}));
     const setRole = (role: string) => setState(current => ({...current, role}));
     const setOrder = (order: string) => setState(current => ({...current, order}));
     const isBusy = isSaving || isRemoving;
@@ -93,8 +92,8 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 Remove
             </Button>
         </div>
-    )
-}
+    );
+};
 
 CastCrewRow.displayName = 'ProductionRow';
 

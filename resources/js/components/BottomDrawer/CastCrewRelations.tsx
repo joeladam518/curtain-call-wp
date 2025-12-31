@@ -10,7 +10,7 @@ type CastCrewRelationsProps = {
     onRemove?: (data: DetachData) => void;
     onSave?: (data: AttachData) => void;
     productions: ProductionData[];
-}
+};
 
 const CastCrewRelations: FC<CastCrewRelationsProps> = ({
     castcrewId,
@@ -34,8 +34,8 @@ const CastCrewRelations: FC<CastCrewRelationsProps> = ({
                 />
             ))}
         </>
-    )
-}
+    );
+};
 
 CastCrewRelations.displayName = 'CastCrewRelations';
 

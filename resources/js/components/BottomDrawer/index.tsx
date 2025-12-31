@@ -1,12 +1,11 @@
-import {type FC, useEffect, useRef, useState} from 'react';
+import {type FC, useLayoutEffect, useState} from 'react';
 import {createPortal} from 'react-dom';
 import DrawerContent from './DrawerContent';
 
 const BottomDrawer: FC = () => {
     const [container, setContainer] = useState<HTMLElement | null>(null);
-    const containerRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         // Find or create the drawer container
         let drawerContainer = document.getElementById('ccwp-bottom-drawer-container');
 
@@ -16,20 +15,16 @@ const BottomDrawer: FC = () => {
             drawerContainer.className = 'ccwp-bottom-drawer-wrapper';
 
             // Find the navigable region
-            const navigableRegion = document.querySelector('.admin-ui-navigable-region.interface-interface-skeleton__content');
+            const navigableRegion = document.querySelector(
+                '.admin-ui-navigable-region.interface-interface-skeleton__content'
+            );
 
             if (navigableRegion) {
-                // Find the metabox container
+                // Insert the drawer container after the metaboxes if they are there (which they should be)
                 const metaboxContainer = navigableRegion.querySelector('#postbox-container-0, .metabox-holder');
-
                 if (metaboxContainer && metaboxContainer.nextSibling) {
-                    // Insert after metabox container
                     navigableRegion.insertBefore(drawerContainer, metaboxContainer.nextSibling);
-                } else if (metaboxContainer) {
-                    // Append after metabox container
-                    navigableRegion.appendChild(drawerContainer);
                 } else {
-                    // No metabox container found, just append to navigable region
                     navigableRegion.appendChild(drawerContainer);
                 }
             } else {
@@ -42,8 +37,8 @@ const BottomDrawer: FC = () => {
             }
         }
 
-        containerRef.current = drawerContainer as HTMLDivElement;
-        setContainer(drawerContainer);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setContainer(drawerContainer as HTMLDivElement);
     }, []);
 
     if (!container) {

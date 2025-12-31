@@ -5,14 +5,13 @@ import TheatreCurtains from '../icons/TheatreCurtains';
 // Import the store to ensure it's registered
 import '../stores/relations-store';
 
-// Register the attach sidebar
+// Register the attach sidebar panel
 registerPlugin('ccwp-sidebar', {
-    icon: TheatreCurtains,
-    render: Sidebar
+    render: Sidebar,
 });
 
 // Register the bottom drawer
 registerPlugin('ccwp-bottom-drawer', {
     icon: TheatreCurtains,
-    render: Index
+    render: Index,
 });

@@ -1,12 +1,11 @@
 import {Button, ComboboxControl, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
 import {useDispatch, useSelect} from '@wordpress/data';
-import {PluginSidebar, store as editorStore} from '@wordpress/editor';
-import {FC, useEffect, useMemo, useState} from 'react';
+import {PluginDocumentSettingPanel, store as editorStore} from '@wordpress/editor';
+import {FC, useMemo, useState} from 'react';
 import CastCrewData from '../data/CastCrewData';
 import ProductionData from '../data/ProductionData';
 import MemberType from '../enums/MemberType';
 import PostType from '../enums/PostType';
-import Icon from '../icons/TheatreCurtains';
 import {STORE_NAME} from '../stores/relations-store';
 import {CastCrewEntity} from '../types/cast-and-crew';
 import {ProductionEntity} from '../types/production';
@@ -17,7 +16,7 @@ type SidebarState = {
     role: string;
     order: string;
     successMessage: string | null;
-}
+};
 
 const Sidebar: FC = () => {
     const [state, setState] = useState<SidebarState>({
@@ -29,7 +28,7 @@ const Sidebar: FC = () => {
     });
     const setTargetId = (id: string | number | null | undefined) => setState(current => ({
         ...current,
-        targetId: id || ''
+        targetId: id || '',
     }));
     const setType = (type: MemberType) => setState(current => ({...current, type}));
     const setRole = (role: string) => setState(current => ({...current, role}));
@@ -38,7 +37,7 @@ const Sidebar: FC = () => {
 
     const postId: string | number = useSelect(select => select(editorStore).getCurrentPostId(), []);
     const postType: PostType = useSelect(select => select(editorStore).getCurrentPostType(), []);
-    const {relations, loading, error} = useSelect(select => {
+    const {relations, loading, error} = useSelect((select) => {
         const store = select(STORE_NAME);
         return {
             relations: store.getRelations() as ((CastCrewData[]) | (ProductionData[])),
@@ -46,15 +45,15 @@ const Sidebar: FC = () => {
             error: store.getError() as string | null,
         };
     }, []);
-    const {attachCastCrew, attachProduction, fetchCastCrew, fetchProductions} = useDispatch(STORE_NAME);
+    const {attachCastCrew, attachProduction} = useDispatch(STORE_NAME);
     const fetchPostType = useMemo(
         () => {
             if (postType === PostType.CastCrew) {
-                return PostType.Production
+                return PostType.Production;
             }
 
             if (postType === PostType.Production) {
-                return PostType.CastCrew
+                return PostType.CastCrew;
             }
 
             return undefined;
@@ -81,7 +80,7 @@ const Sidebar: FC = () => {
                             record.title?.rendered ||
                             `#${record.id}`
                         ),
-                        value: String(record.id)
+                        value: String(record.id),
                     });
                 });
             }
@@ -89,7 +88,7 @@ const Sidebar: FC = () => {
             if (fetchPostType === PostType.Production) {
                 return (records as ProductionEntity[]).map((record: ProductionEntity) => ({
                     label: record?.meta?._ccwp_production_name || record?.title?.rendered || `#${record.id}`,
-                    value: String(record.id)
+                    value: String(record.id),
                 }));
             }
 
@@ -112,7 +111,7 @@ const Sidebar: FC = () => {
                     castcrewId: postId,
                     type: state.type,
                     role: state.role,
-                    customOrder: parseInt(state.order, 10) || 0
+                    customOrder: parseInt(state.order, 10) || 0,
                 });
             } else if (postType === PostType.Production) {
                 await attachCastCrew({
@@ -120,7 +119,7 @@ const Sidebar: FC = () => {
                     castcrewId: state.targetId,
                     type: state.type,
                     role: state.role,
-                    customOrder: parseInt(state.order, 10) || 0
+                    customOrder: parseInt(state.order, 10) || 0,
                 });
             } else {
                 console.error(`Unsupported post type - "${postType}"`);
@@ -136,14 +135,14 @@ const Sidebar: FC = () => {
         }
     };
 
-    const title = postType === PostType.Production ? 'Attach Cast & Crew' : 'Attach to Production';
+    const title = postType === PostType.Production ? 'Attach Cast & Crew' : 'Attach Productions';
     const targetLabel = postType === PostType.Production ? 'Cast/Crew Member' : 'Production';
 
     return (
-        <PluginSidebar
+        <PluginDocumentSettingPanel
             name="ccwp-sidebar-attach"
             title={title}
-            icon={<Icon /> as any}
+            initialOpen={true}
         >
             <div
                 style={{
@@ -151,18 +150,25 @@ const Sidebar: FC = () => {
                     flexDirection: 'column',
                     alignItems: 'stretch',
                     justifyContent: 'flex-start',
-                    gap: '15px',
-                    padding: '16px',
+                    gap: '12px',
                 }}
             >
                 {!!error && (
-                    <Notice status="error" isDismissible={false} style={{marginBottom: '16px'}}>
+                    <Notice
+                        status="error"
+                        isDismissible={false}
+                        style={{marginBottom: '16px'}}
+                    >
                         {error || ''}
                     </Notice>
                 )}
 
                 {!!state.successMessage && (
-                    <Notice status="success" isDismissible={false} style={{marginBottom: '16px'}}>
+                    <Notice
+                        status="success"
+                        isDismissible={false}
+                        style={{marginBottom: '16px'}}
+                    >
                         {state.successMessage}
                     </Notice>
                 )}
@@ -176,7 +182,7 @@ const Sidebar: FC = () => {
                         alignItems: 'stretch',
                         justifyContent: 'flex-start',
                         gap: '15px',
-                        marginBottom: '12px'
+                        marginBottom: '12px',
                     }}
                 >
                     <p style={{marginBottom: '16px', color: '#757575'}}>
@@ -234,11 +240,19 @@ const Sidebar: FC = () => {
                     </Button>
                 </div>
 
-                <p style={{fontSize: '12px', color: '#757575', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #ddd'}}>
+                <p
+                    style={{
+                        fontSize: '12px',
+                        color: '#757575',
+                        marginTop: '16px',
+                        paddingTop: '16px',
+                        borderTop: '1px solid #ddd',
+                    }}
+                >
                     View and edit attached items in the drawer below the editor.
                 </p>
             </div>
-        </PluginSidebar>
+        </PluginDocumentSettingPanel>
     );
 };
 
