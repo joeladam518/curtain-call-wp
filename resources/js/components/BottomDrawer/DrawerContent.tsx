@@ -1,14 +1,18 @@
 import {Notice, Tooltip} from '@wordpress/components';
-import {useDispatch, useSelect} from '@wordpress/data';
+import {useSelect} from '@wordpress/data';
 import {store as editorStore} from '@wordpress/editor';
 import {__} from '@wordpress/i18n';
 import {type FC, useEffect, useRef, useState} from 'react';
-import CastCrewData from '../../data/CastCrewData';
-import ProductionData from '../../data/ProductionData';
 import PostType from '../../enums/PostType';
 import ChevronDown from '../../icons/ChevronDown';
 import ChevronUp from '../../icons/ChevronUp';
-import {AttachData, DetachData, STORE_NAME} from '../../stores/relations-store';
+import {
+    type AttachData,
+    type DetachData,
+    relationsStore,
+    type RelationsStoreSelectors,
+    useDispatch as useRelationsDispatch,
+} from '../../stores/relations-store';
 import Relations from './Relations';
 
 type DrawerContentState = {
@@ -36,15 +40,12 @@ const DrawerContent: FC = () => {
     const startYRef = useRef(0);
     const startHeightRef = useRef(0);
 
-    const postId: string | number = useSelect(select => select(editorStore).getCurrentPostId(), []);
-    const postType: PostType = useSelect(select => select(editorStore).getCurrentPostType(), []);
-    const relations = useSelect(
-        select => select(STORE_NAME).getRelations() as ((CastCrewData[]) | (ProductionData[])),
-        []
-    );
-    const isFetching = useSelect(select => select(STORE_NAME).isLoading() as boolean, []);
-    const fetchingError = useSelect(select => select(STORE_NAME).getError() as string | null, []);
-    const {attachCastCrew, attachProduction, detach, fetchCastCrew, fetchProductions} = useDispatch(STORE_NAME);
+    const postId = useSelect(select => select(editorStore).getCurrentPostId(), []) as string | number | null;
+    const postType = useSelect(select => select(editorStore).getCurrentPostType(), []) as PostType | null;
+    const relations = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getRelations(), []);
+    const isFetching = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).isLoading(), []);
+    const fetchingError = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getError(), []);
+    const {attachCastCrew, attachProduction, detach, fetchCastCrew, fetchProductions} = useRelationsDispatch();
     const title = postType === PostType.Production ? 'Cast & Crew' : 'Productions';
 
     const fetchRelations = async () => {
@@ -205,7 +206,7 @@ const DrawerContent: FC = () => {
                         onRemove={handleRemove}
                         onSave={handleSave}
                         postId={postId}
-                        postType={postType}
+                        postType={postType as PostType}
                         relations={relations}
                         title={title}
                     />

@@ -1,12 +1,15 @@
 import {Button, ComboboxControl, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
-import {useDispatch, useSelect} from '@wordpress/data';
+import {useSelect} from '@wordpress/data';
+import {store as coreStore} from '@wordpress/core-data';
 import {PluginDocumentSettingPanel, store as editorStore} from '@wordpress/editor';
 import {FC, useMemo, useState} from 'react';
-import CastCrewData from '../data/CastCrewData';
-import ProductionData from '../data/ProductionData';
 import MemberType from '../enums/MemberType';
 import PostType from '../enums/PostType';
-import {STORE_NAME} from '../stores/relations-store';
+import {
+    relationsStore,
+    type RelationsStoreSelectors,
+    useDispatch as useRelationsDispatch,
+} from '../stores/relations-store';
 import {CastCrewEntity} from '../types/cast-and-crew';
 import {ProductionEntity} from '../types/production';
 
@@ -35,17 +38,12 @@ const Sidebar: FC = () => {
     const setOrder = (order: string) => setState(current => ({...current, order}));
     const setSuccessMessage = (message: string | null) => setState(current => ({...current, successMessage: message}));
 
-    const postId: string | number = useSelect(select => select(editorStore).getCurrentPostId(), []);
-    const postType: PostType = useSelect(select => select(editorStore).getCurrentPostType(), []);
-    const {relations, loading, error} = useSelect((select) => {
-        const store = select(STORE_NAME);
-        return {
-            relations: store.getRelations() as ((CastCrewData[]) | (ProductionData[])),
-            loading: store.isLoading() as boolean,
-            error: store.getError() as string | null,
-        };
-    }, []);
-    const {attachCastCrew, attachProduction} = useDispatch(STORE_NAME);
+    const postId = useSelect(select => select(editorStore).getCurrentPostId(), []) as string | number | null;
+    const postType = useSelect(select => select(editorStore).getCurrentPostType(), []) as PostType | null;
+    const relations = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getRelations(), []);
+    const isFetching = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).isLoading(), []);
+    const fetchingError = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getError(), []);
+    const {attachCastCrew, attachProduction} = useRelationsDispatch();
     const fetchPostType = useMemo(
         () => {
             if (postType === PostType.CastCrew) {
@@ -61,9 +59,9 @@ const Sidebar: FC = () => {
         [postType]
     );
     const records = useSelect(
-        select => select('core').getEntityRecords(
+        select => select(coreStore).getEntityRecords(
             'postType',
-            fetchPostType,
+            fetchPostType as string,
             {per_page: -1, _fields: ['id', 'title', 'meta']}
         ) || [],
         [fetchPostType]
@@ -108,14 +106,14 @@ const Sidebar: FC = () => {
             if (postType === PostType.CastCrew) {
                 await attachProduction({
                     productionId: state.targetId,
-                    castcrewId: postId,
+                    castcrewId: postId as string | number,
                     type: state.type,
                     role: state.role,
                     customOrder: parseInt(state.order, 10) || 0,
                 });
             } else if (postType === PostType.Production) {
                 await attachCastCrew({
-                    productionId: postId,
+                    productionId: postId as string | number,
                     castcrewId: state.targetId,
                     type: state.type,
                     role: state.role,
@@ -142,6 +140,7 @@ const Sidebar: FC = () => {
         <PluginDocumentSettingPanel
             name="ccwp-sidebar-attach"
             title={title}
+            // @ts-ignore
             initialOpen={true}
         >
             <div
@@ -153,13 +152,12 @@ const Sidebar: FC = () => {
                     gap: '12px',
                 }}
             >
-                {!!error && (
+                {!!fetchingError && (
                     <Notice
                         status="error"
                         isDismissible={false}
-                        style={{marginBottom: '16px'}}
                     >
-                        {error || ''}
+                        {fetchingError || ''}
                     </Notice>
                 )}
 
@@ -167,13 +165,12 @@ const Sidebar: FC = () => {
                     <Notice
                         status="success"
                         isDismissible={false}
-                        style={{marginBottom: '16px'}}
                     >
                         {state.successMessage}
                     </Notice>
                 )}
 
-                {loading && <Spinner />}
+                {isFetching && <Spinner />}
 
                 <div
                     style={{
@@ -189,7 +186,7 @@ const Sidebar: FC = () => {
                         Currently attached: <strong>{relations.length}</strong>
                     </p>
 
-                    <SelectControl<MemberType>
+                    <SelectControl
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                         label="Type"
@@ -233,7 +230,7 @@ const Sidebar: FC = () => {
                     <Button
                         variant="primary"
                         onClick={handleAttach}
-                        disabled={!state.targetId || loading}
+                        disabled={!state.targetId || isFetching}
                         style={{width: '100%'}}
                     >
                         Attach

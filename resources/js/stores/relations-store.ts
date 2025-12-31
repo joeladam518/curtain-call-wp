@@ -1,5 +1,6 @@
 import {createReduxStore, register} from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
+import {useDispatch as useWpDispatch, useSelect as useWpSelect} from '@wordpress/data';
 import CastCrewData from '../data/CastCrewData';
 import ProductionData from '../data/ProductionData';
 import MemberType from '../enums/MemberType';
@@ -192,11 +193,9 @@ const selectors = {
     getRelations(state: RelationsState): ((CastCrewData[]) | (ProductionData[])) {
         return state.relations || [];
     },
-
     isLoading(state: RelationsState): boolean {
         return state.loading;
     },
-
     getError(state: RelationsState): string | null {
         return state.error;
     },
@@ -230,17 +229,17 @@ function reducer(state: RelationsState = DEFAULT_STATE, action: Action): Relatio
 
 // Type definitions for use in components
 export type RelationsStoreActions = {
-    setRelations: typeof actions.setRelations;
-    setLoading: typeof actions.setLoading;
-    setError: typeof actions.setError;
-    fetchCastCrew: typeof actions.fetchCastCrew;
-    fetchProductions: typeof actions.fetchProductions;
-    attach: typeof actions.attach;
-    attachCastCrew: typeof actions.attachCastCrew;
-    attachProduction: typeof actions.attachProduction;
-    detach: typeof actions.detach;
-    detachCastCrew: typeof actions.detachCastCrew;
-    detachProduction: typeof actions.detachProduction;
+    setRelations: (relations: ((CastCrewData[]) | (ProductionData[]))) => void;
+    setLoading: (isLoading: boolean) => void;
+    setError: (error: string | null) => void;
+    fetchCastCrew: (productionId: string | number, type?: MemberType) => Promise<void>;
+    fetchProductions: (castcrewId: string | number) => Promise<void>;
+    attach: (props: AttachData) => Promise<void>;
+    attachCastCrew: (props: AttachData) => Promise<void>;
+    attachProduction: (props: AttachData) => Promise<void>;
+    detach: (props: DetachData) => Promise<void>;
+    detachCastCrew: (props: DetachData) => Promise<void>;
+    detachProduction: (props: DetachData) => Promise<void>;
 };
 
 export type RelationsStoreSelectors = {
@@ -248,13 +247,6 @@ export type RelationsStoreSelectors = {
     isLoading: () => boolean;
     getError: () => string | null;
 };
-
-declare module '@wordpress/data' {
-    function dispatch(key: 'ccwp/relations'): RelationsStoreActions;
-    function select(key: 'ccwp/relations'): RelationsStoreSelectors;
-    function useDispatch(key: 'ccwp/relations'): RelationsStoreActions;
-    function useSelect(key: 'ccwp/relations'): RelationsStoreSelectors;
-}
 
 // Create and register the store
 export const STORE_NAME = 'ccwp/relations';
@@ -264,5 +256,12 @@ export const relationsStore = createReduxStore(STORE_NAME, {
     actions,
     selectors,
 });
+
+declare module '@wordpress/data' {
+    function dispatch(key: 'ccwp/relations'): RelationsStoreActions;
+    function select(key: 'ccwp/relations'): RelationsStoreSelectors;
+}
+
+export const useDispatch = () => useWpDispatch(relationsStore) as RelationsStoreActions;
 
 register(relationsStore);

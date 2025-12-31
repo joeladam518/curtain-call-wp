@@ -102,9 +102,9 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
 
     const removeProduction = (type: MemberType, id: number | string) => {
         if (type === MemberType.Cast) {
-            setCast(state.cast.filter(p => p.ID !== id));
+            setCast(state.cast.filter(p => p.ID !== id) as CastCrewProduction<MemberType.Cast>[]);
         } else if (type === MemberType.Crew) {
-            setCrew(state.crew.filter(p => p.ID !== id));
+            setCrew(state.crew.filter(p => p.ID !== id) as CastCrewProduction<MemberType.Crew>[]);
         }
     };
 

@@ -1,25 +1,19 @@
 import {useSelect} from '@wordpress/data';
-import {store as blockEditorStore} from '@wordpress/block-editor';
 import {store as editorStore} from '@wordpress/editor';
 import {useMemo} from 'react';
 
 const useIsEditorReady = () => {
     const isEditorReady = useSelect(
-        select => select(editorStore)?.__unstableIsEditorReady(),
+        select => select(editorStore)?.__unstableIsEditorReady() as boolean,
         []
     );
     const isCleanNewPost = useSelect(
-        select => select(editorStore)?.isCleanNewPost(),
+        select => select(editorStore)?.isCleanNewPost() as boolean,
         []
     );
-    const blockCount = useSelect(
-        select => select(blockEditorStore)?.getBlockCount(),
-        []
-    );
-
     return useMemo(
-        () => isEditorReady || isCleanNewPost || blockCount > 0,
-        [isEditorReady, isCleanNewPost, blockCount]
+        () => isEditorReady || isCleanNewPost,
+        [isEditorReady, isCleanNewPost]
     );
 };
 

@@ -4,7 +4,8 @@
         "target": "ES2020",
         "lib": ["DOM", "DOM.Iterable", "ES2020"],
         "module": "ESNext",
-        "jsx": "preserve",
+        "jsx": "react-jsx",
+        "jsxImportSource": "react",
         "strict": true,
         "noImplicitAny": true,
         "declaration": false,
@@ -28,5 +29,11 @@
         "resources/js/**/*.ts",
         "resources/js/**/*.tsx",
         "resources/js/**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "plugin",
+        "public",
+        "vendor",
     ]
 }

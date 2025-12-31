@@ -31,7 +31,6 @@ export default class CastCrewData {
     public memberType: string | null;
     public order: number | null;
     public role: string | null;
-    public title: string | null;
     public twitterLink: string | null;
     public websiteLink: string | null;
 

@@ -13,8 +13,8 @@ type RelationsProps = {
     isSaving?: boolean;
     onRemove?: (data: DetachData) => void;
     onSave?: (data: AttachData) => void;
-    postId: string | number;
-    postType: PostType;
+    postId: string | number | null;
+    postType: PostType | null;
     relations: ((CastCrewData[]) | (ProductionData[]));
     title?: string;
 };
