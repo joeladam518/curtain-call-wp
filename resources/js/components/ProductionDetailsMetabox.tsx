@@ -9,8 +9,12 @@ import {format} from 'date-fns';
 
 const getYear = (start: string | null | undefined, end: string | null | undefined): string | undefined => {
     const date = start || end || undefined;
-    return date ? (format(date, 'yyyy') || undefined) : undefined;
-};
+    try {
+        return date ? (format(date, 'yyyy') || undefined) : undefined;
+    } catch {
+        return undefined;
+    }
+}
 
 const formatYear = (year: string | undefined): string => {
     return year ? `- ${year}` : '';

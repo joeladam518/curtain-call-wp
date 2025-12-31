@@ -1,9 +1,8 @@
+import {register} from '@wordpress/data';
 import {registerPlugin} from '@wordpress/plugins';
 import Sidebar from '../components/Sidebar';
-import Index from '../components/BottomDrawer';
-import TheatreCurtains from '../icons/TheatreCurtains';
-// Import the store to ensure it's registered
-import '../stores/relations-store';
+import BottomDrawer from '../components/BottomDrawer';
+import store from '../stores/relations-store';
 
 // Register the attach sidebar panel
 registerPlugin('ccwp-sidebar', {
@@ -12,6 +11,7 @@ registerPlugin('ccwp-sidebar', {
 
 // Register the bottom drawer
 registerPlugin('ccwp-bottom-drawer', {
-    icon: TheatreCurtains,
-    render: Index,
+    render: BottomDrawer,
 });
+
+register(store);

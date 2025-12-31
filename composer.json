@@ -36,7 +36,7 @@
     "scripts": {
         "lint": "mago lint",
         "format": "mago format",
-        "analyse": "mago analyse",
+        "analyze": "mago analyse",
         "guard": "mago guard",
         "plugin-install": "cd plugin && composer install",
         "plugin-update": "cd plugin && composer update",

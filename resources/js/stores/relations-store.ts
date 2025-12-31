@@ -1,6 +1,6 @@
-import {createReduxStore, register} from '@wordpress/data';
+import {createReduxStore} from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import {useDispatch as useWpDispatch, useSelect as useWpSelect} from '@wordpress/data';
+import {useDispatch as useWpDispatch} from '@wordpress/data';
 import CastCrewData from '../data/CastCrewData';
 import ProductionData from '../data/ProductionData';
 import MemberType from '../enums/MemberType';
@@ -251,17 +251,17 @@ export type RelationsStoreSelectors = {
 // Create and register the store
 export const STORE_NAME = 'ccwp/relations';
 
-export const relationsStore = createReduxStore(STORE_NAME, {
+const relationsStore = createReduxStore(STORE_NAME, {
     reducer,
     actions,
     selectors,
 });
+
+export const useDispatch = () => useWpDispatch(relationsStore) as RelationsStoreActions;
 
 declare module '@wordpress/data' {
     function dispatch(key: 'ccwp/relations'): RelationsStoreActions;
     function select(key: 'ccwp/relations'): RelationsStoreSelectors;
 }
 
-export const useDispatch = () => useWpDispatch(relationsStore) as RelationsStoreActions;
-
-register(relationsStore);
+export default relationsStore;

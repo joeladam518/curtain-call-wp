@@ -6,10 +6,9 @@ import {type FC, useEffect, useRef, useState} from 'react';
 import PostType from '../../enums/PostType';
 import ChevronDown from '../../icons/ChevronDown';
 import ChevronUp from '../../icons/ChevronUp';
-import {
+import relationsStore, {
     type AttachData,
     type DetachData,
-    relationsStore,
     type RelationsStoreSelectors,
     useDispatch as useRelationsDispatch,
 } from '../../stores/relations-store';

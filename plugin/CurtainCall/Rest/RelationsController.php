@@ -95,7 +95,7 @@ class RelationsController
         /** @var array{production_id: int, cast_and_crew_id: int, type: string, role: string, order: int} $pivotRows */
         $pivotRows = $wpdb->get_results($wpdb->prepare($pivotSql, $params), ARRAY_A) ?: [];
         /** @var Collection<CurtainCallPivot> $pivots */
-        $pivots = collect($pivotRows)->map(fn($row) => new CurtainCallPivot($row));
+        $pivots = collect($pivotRows)->map(static fn($row) => new CurtainCallPivot($row));
 
         // Then get the cast/crew members
         /** @var list<int> $memberIds */
@@ -110,12 +110,12 @@ class RelationsController
             /** @var list<array<string, mixed>> $postRows */
             $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
             /** @var Collection<int, WP_Post> $memberPosts */
-            $memberPosts = collect($postRows)->map(fn($row) => new WP_Post($row))->keyBy('ID');
+            $memberPosts = collect($postRows)->map(static fn($row) => new WP_Post($row))->keyBy('ID');
         }
 
         // glue them together
         $castCrew = $pivots
-            ->map(function(CurtainCallPivot $pivot) use ($memberPosts) {
+            ->map(static function(CurtainCallPivot $pivot) use ($memberPosts) {
                 /** @var WP_Post|null $memberPost */
                 $memberPost = $memberPosts->get($pivot->cast_and_crew_id);
 
@@ -154,7 +154,7 @@ class RelationsController
         /** @var array{production_id: int, cast_and_crew_id: int, type: string, role: string, order: int} $rows */
         $pivotRows = $wpdb->get_results($wpdb->prepare($pivotSql, $params), ARRAY_A) ?: [];
         /** @var Collection<int, CurtainCallPivot> $pivots */
-        $pivots = collect($pivotRows)->map(fn(array $row) => new CurtainCallPivot($row));
+        $pivots = collect($pivotRows)->map(static fn(array $row) => new CurtainCallPivot($row));
 
         // Then get the productions
         /** @var list<int> $productionIds */
@@ -169,12 +169,12 @@ class RelationsController
             /** @var list<array<string, mixed>> $rows */
             $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
             /** @var Collection<int, WP_Post> $productionPosts */
-            $productionPosts = collect($postRows)->map(fn($row) => new WP_Post($row))->keyBy('ID');
+            $productionPosts = collect($postRows)->map(static fn($row) => new WP_Post($row))->keyBy('ID');
         }
 
         // glue them together
         $productions = $pivots
-            ->map(function(CurtainCallPivot $pivot) use ($productionPosts) {
+            ->map(static function(CurtainCallPivot $pivot) use ($productionPosts) {
                 /** @var WP_Post|null $production */
                 $productionPost = $productionPosts->get($pivot->production_id);
 

@@ -5,8 +5,7 @@ import {PluginDocumentSettingPanel, store as editorStore} from '@wordpress/edito
 import {FC, useMemo, useState} from 'react';
 import MemberType from '../enums/MemberType';
 import PostType from '../enums/PostType';
-import {
-    relationsStore,
+import relationsStore, {
     type RelationsStoreSelectors,
     useDispatch as useRelationsDispatch,
 } from '../stores/relations-store';
@@ -140,7 +139,7 @@ const Sidebar: FC = () => {
         <PluginDocumentSettingPanel
             name="ccwp-sidebar-attach"
             title={title}
-            // @ts-ignore
+            // @ts-expect-error TS2322
             initialOpen={true}
         >
             <div

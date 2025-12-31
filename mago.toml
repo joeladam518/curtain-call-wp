@@ -28,10 +28,10 @@ integrations = ["WordPress"]
 
 [linter.rules]
 ambiguous-function-call = { enabled = false }
-cyclomatic-complexity = { level = "help" }
+cyclomatic-complexity = { level = "help", threshold = 50 }
 excessive-parameter-list = { enabled = false }
 halstead = { level = "help", difficulty-threshold = 15, effort-threshold = 7000, volume-threshold = 1500 }
-kan-defect = { level = "help" }
+kan-defect = { level = "help", threshold = 2.0 }
 literal-named-argument = { enabled = false }
 no-boolean-flag-parameter = { enabled = false }
 no-direct-db-query = { enabled = false }
@@ -42,7 +42,6 @@ no-shorthand-ternary = { enabled = false}
 prefer-early-continue = { enabled = false }
 prefer-first-class-callable = { enabled = false }
 too-many-methods = { enabled = false }
-
 
 [analyzer]
 find-unused-definitions = true

@@ -166,7 +166,7 @@ final class AdminProductionMetaboxHooks
                 ->map(
                     static fn(Collection $group) => $group
                         ->sort(
-                            fn(CastAndCrew $a, CastAndCrew $b) => (
+                            static fn(CastAndCrew $a, CastAndCrew $b) => (
                                 [
                                     $a->ccwp_join->custom_order,
                                     $b->name_last

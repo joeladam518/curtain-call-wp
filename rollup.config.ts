@@ -30,6 +30,7 @@ export default defineConfig([
                 '@wordpress/blocks': 'wp.blocks',
                 '@wordpress/components': 'wp.components',
                 '@wordpress/compose': 'wp.compose',
+                '@wordpress/core-data': 'wp.coreData',
                 '@wordpress/data': 'wp.data',
                 '@wordpress/data-controls': 'wp.dataControls',
                 '@wordpress/edit-post': 'wp.editPost',
@@ -38,6 +39,7 @@ export default defineConfig([
                 '@wordpress/i18n': 'wp.i18n',
                 '@wordpress/plugins': 'wp.plugins',
                 '@wordpress/primitives': 'wp.primitives',
+                '@wordpress/rich-text': 'wp.richText',
                 'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
@@ -49,6 +51,7 @@ export default defineConfig([
             "@wordpress/blocks",
             "@wordpress/components",
             "@wordpress/compose",
+            "@wordpress/core-data",
             "@wordpress/data",
             "@wordpress/data-controls",
             "@wordpress/edit-post",
@@ -57,6 +60,7 @@ export default defineConfig([
             "@wordpress/i18n",
             "@wordpress/plugins",
             "@wordpress/primitives",
+            "@wordpress/rich-text",
             "jquery",
             "react",
             "react-dom"
@@ -79,14 +83,14 @@ export default defineConfig([
             }),
             babel({
                 babelHelpers: 'bundled',
-                presets: ['@babel/preset-react'],
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
-                plugins: [
-                    ['@babel/plugin-transform-react-jsx', {
+                presets: [
+                    ['@babel/preset-react', {
+                        runtime: 'classic',
                         pragma: 'wp.element.createElement',
                         pragmaFrag: 'wp.element.Fragment',
                     }]
                 ],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
@@ -108,6 +112,7 @@ export default defineConfig([
                 '@wordpress/blocks': 'wp.blocks',
                 '@wordpress/components': 'wp.components',
                 '@wordpress/compose': 'wp.compose',
+                '@wordpress/core-data': 'wp.coreData',
                 '@wordpress/data': 'wp.data',
                 '@wordpress/data-controls': 'wp.dataControls',
                 '@wordpress/edit-post': 'wp.editPost',
@@ -116,6 +121,7 @@ export default defineConfig([
                 '@wordpress/i18n': 'wp.i18n',
                 '@wordpress/plugins': 'wp.plugins',
                 '@wordpress/primitives': 'wp.primitives',
+                '@wordpress/rich-text': 'wp.richText',
                 'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
@@ -127,6 +133,7 @@ export default defineConfig([
             "@wordpress/blocks",
             "@wordpress/components",
             "@wordpress/compose",
+            "@wordpress/core-data",
             "@wordpress/data",
             "@wordpress/data-controls",
             "@wordpress/edit-post",
@@ -135,6 +142,7 @@ export default defineConfig([
             "@wordpress/i18n",
             "@wordpress/plugins",
             "@wordpress/primitives",
+            "@wordpress/rich-text",
             "jquery",
             "react",
             "react-dom"
@@ -157,14 +165,14 @@ export default defineConfig([
             }),
             babel({
                 babelHelpers: 'bundled',
-                presets: ['@babel/preset-react'],
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
-                plugins: [
-                    ['@babel/plugin-transform-react-jsx', {
+                presets: [
+                    ['@babel/preset-react', {
+                        runtime: 'classic',
                         pragma: 'wp.element.createElement',
                         pragmaFrag: 'wp.element.Fragment',
                     }]
                 ],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
@@ -186,6 +194,7 @@ export default defineConfig([
                 '@wordpress/blocks': 'wp.blocks',
                 '@wordpress/components': 'wp.components',
                 '@wordpress/compose': 'wp.compose',
+                '@wordpress/core-data': 'wp.coreData',
                 '@wordpress/data': 'wp.data',
                 '@wordpress/data-controls': 'wp.dataControls',
                 '@wordpress/edit-post': 'wp.editPost',
@@ -194,6 +203,7 @@ export default defineConfig([
                 '@wordpress/i18n': 'wp.i18n',
                 '@wordpress/plugins': 'wp.plugins',
                 '@wordpress/primitives': 'wp.primitives',
+                '@wordpress/rich-text': 'wp.richText',
                 'jquery': 'jQuery',
                 'react': 'wp.element',
                 'react-dom': 'wp.element',
@@ -205,6 +215,7 @@ export default defineConfig([
             "@wordpress/blocks",
             "@wordpress/components",
             "@wordpress/compose",
+            "@wordpress/core-data",
             "@wordpress/data",
             "@wordpress/data-controls",
             "@wordpress/edit-post",
@@ -213,6 +224,7 @@ export default defineConfig([
             "@wordpress/i18n",
             "@wordpress/plugins",
             "@wordpress/primitives",
+            "@wordpress/rich-text",
             "jquery",
             "react",
             "react-dom"
@@ -235,14 +247,14 @@ export default defineConfig([
             }),
             babel({
                 babelHelpers: 'bundled',
-                presets: ['@babel/preset-react'],
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
-                plugins: [
-                    ['@babel/plugin-transform-react-jsx', {
+                presets: [
+                    ['@babel/preset-react', {
+                        runtime: 'classic',
                         pragma: 'wp.element.createElement',
                         pragmaFrag: 'wp.element.Fragment',
                     }]
                 ],
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),

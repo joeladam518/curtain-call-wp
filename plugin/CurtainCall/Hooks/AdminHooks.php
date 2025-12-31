@@ -271,7 +271,7 @@ final class AdminHooks
         try {
             /** @var list<array<string, mixed>> $productions */
             $productions = collect($castCrew?->getProductions() ?? [])
-                ->sort(fn(Production $a, Production $b) => [$b->date_start, $a->name] <=> [$a->date_start, $b->name])
+                ->sort(static fn(Production $a, Production $b) => [$b->date_start, $a->name] <=> [$a->date_start, $b->name])
                 ->map(static fn(Production $production) => ProductionData::fromProduction($production))
                 ->values()
                 ->toArray();
@@ -364,7 +364,7 @@ final class AdminHooks
                 ->map(
                     static fn(Collection $group) => $group
                         ->sort(
-                            fn(CastAndCrew $a, CastAndCrew $b) => (
+                            static fn(CastAndCrew $a, CastAndCrew $b) => (
                                 [
                                     $a->ccwp_join->custom_order,
                                     $b->name_last
