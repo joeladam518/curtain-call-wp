@@ -1,284 +1,247 @@
-import {FC, useEffect, useMemo, useState} from 'react';
-import apiFetch from '@wordpress/api-fetch';
-import {Button, Notice, ComboboxControl, SelectControl, Spinner, TextControl} from '@wordpress/components';
-import {useSelect} from '@wordpress/data';
+import {Button, ComboboxControl, Notice, SelectControl, Spinner, TextControl} from '@wordpress/components';
+import {useDispatch, useSelect} from '@wordpress/data';
 import {PluginSidebar, store as editorStore} from '@wordpress/editor';
+import {FC, useEffect, useMemo, useState} from 'react';
+import CastCrewData from '../data/CastCrewData';
+import ProductionData from '../data/ProductionData';
 import MemberType from '../enums/MemberType';
+import PostType from '../enums/PostType';
 import Icon from '../icons/TheatreCurtains';
-import {EditorSelectors} from '../types/stores';
+import {STORE_NAME} from '../stores/relations-store';
+import {CastCrewEntity} from '../types/cast-and-crew';
+import {ProductionEntity} from '../types/production';
 
-type Relation = {
-    production_id: number;
-    cast_and_crew_id: number;
+type SidebarState = {
+    targetId: string | number;
     type: MemberType;
-    role?: string;
-    custom_order?: number | null;
-};
+    role: string;
+    order: string;
+    successMessage: string | null;
+}
 
 const Sidebar: FC = () => {
-    const [loading, setLoading] = useState(false);
-    const [relations, setRelations] = useState<Relation[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [newType, setNewType] = useState<MemberType>(MemberType.Cast);
-    const [newTargetId, setNewTargetId] = useState<string>('');
-    const [newRole, setNewRole] = useState<string>('');
-    const [newOrder, setNewOrder] = useState<string>('');
+    const [state, setState] = useState<SidebarState>({
+        targetId: '',
+        type: MemberType.Cast,
+        role: '',
+        order: '0',
+        successMessage: null,
+    });
+    const setTargetId = (id: string | number | null | undefined) => setState(current => ({
+        ...current,
+        targetId: id || ''
+    }));
+    const setType = (type: MemberType) => setState(current => ({...current, type}));
+    const setRole = (role: string) => setState(current => ({...current, role}));
+    const setOrder = (order: string) => setState(current => ({...current, order}));
+    const setSuccessMessage = (message: string | null) => setState(current => ({...current, successMessage: message}));
 
-    // Determine the current post and post type from the editor
-    const postId = useSelect(select => (select(editorStore) as EditorSelectors).getCurrentPostId(), []);
-    const postType = useSelect(select => (select(editorStore) as EditorSelectors).getCurrentPostType(), []);
-    const isProduction = postType === 'ccwp_production';
-    const isCastCrew = postType === 'ccwp_cast_and_crew';
-
-    const core = useSelect(select => select('core'), []);
-    const options = useMemo(() => {
-        if (isProduction) {
-            // Get cast & crew posts
-            const records = core.getEntityRecords(
-                'postType',
-                'ccwp_cast_and_crew',
-                {per_page: 50, _fields: ['id', 'title', 'meta']}
-            ) || [];
-            return (records as any[]).map((r: any) => ({label: r.title?.rendered || `#${r.id}`, value: String(r.id)}));
-        }
-
-        if (isCastCrew) {
-            const records = core.getEntityRecords(
-                'postType',
-                'ccwp_production',
-                {per_page: 50, _fields: ['id', 'title', 'meta']}
-            ) || [];
-            return (records as any[]).map((r: any) => ({label: r.title?.rendered || `#${r.id}`, value: String(r.id)}));
-        }
-
-        return [];
-    }, [core, isProduction, isCastCrew]);
-
-    const attach = async () => {
-        if (!postId || !newTargetId) {
-            return;
-        }
-        const body: any = isProduction
-            ? {
-                production_id: postId,
-                cast_and_crew_id: Number(newTargetId),
-                type: newType,
-                role: newRole,
-                custom_order: newOrder ? Number(newOrder) : undefined,
+    const postId: string | number = useSelect(select => select(editorStore).getCurrentPostId(), []);
+    const postType: PostType = useSelect(select => select(editorStore).getCurrentPostType(), []);
+    const {relations, loading, error} = useSelect(select => {
+        const store = select(STORE_NAME);
+        return {
+            relations: store.getRelations() as ((CastCrewData[]) | (ProductionData[])),
+            loading: store.isLoading() as boolean,
+            error: store.getError() as string | null,
+        };
+    }, []);
+    const {attachCastCrew, attachProduction, fetchCastCrew, fetchProductions} = useDispatch(STORE_NAME);
+    const fetchPostType = useMemo(
+        () => {
+            if (postType === PostType.CastCrew) {
+                return PostType.Production
             }
-            : {
-                production_id: Number(newTargetId),
-                cast_and_crew_id: postId,
-                type: newType,
-                role: newRole,
-                custom_order: newOrder ? Number(newOrder) : undefined,
-            };
-        setLoading(true);
-        setError(null);
-        try {
-            await apiFetch({
-                path: '/ccwp/v1/relations',
-                method: 'POST',
-                data: body,
-                headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
-            });
-            // reload
-            const query: Record<string, string> = {};
-            if (isProduction) {
-                query.production_id = postId.toString();
-            }
-            if (isCastCrew) {
-                query.cast_and_crew_id = postId.toString();
-            }
-            const rows: any = await apiFetch({
-                path: '/ccwp/v1/relations?' + new URLSearchParams(query).toString(),
-                headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
-            });
-            setRelations(rows || []);
-            setNewTargetId('');
-            setNewRole('');
-            setNewOrder('');
-        } catch (e: any) {
-            setError(e?.message || 'Failed to attach');
-        } finally {
-            setLoading(false);
-        }
-    };
 
-    const detach = async (r: Relation) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const qs = new URLSearchParams({
-                production_id: String(r.production_id),
-                cast_and_crew_id: String(r.cast_and_crew_id),
-            }).toString();
-            await apiFetch({
-                path: `/ccwp/v1/relations?${qs}`,
-                method: 'DELETE',
-                headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
-            });
-            setRelations(
-                relations.filter(
-                    x => !(x.production_id === r.production_id && x.cast_and_crew_id === r.cast_and_crew_id)
-                )
-            );
-        } catch (e: any) {
-            setError(e?.message || 'Failed to detach');
-        } finally {
-            setLoading(false);
-        }
-    };
+            if (postType === PostType.Production) {
+                return PostType.CastCrew
+            }
 
-    useEffect(() => {
-        if (!postId) {
+            return undefined;
+        },
+        [postType]
+    );
+    const records = useSelect(
+        select => select('core').getEntityRecords(
+            'postType',
+            fetchPostType,
+            {per_page: -1, _fields: ['id', 'title', 'meta']}
+        ) || [],
+        [fetchPostType]
+    );
+    const options = useMemo(
+        () => {
+            if (fetchPostType === PostType.CastCrew) {
+                return (records as CastCrewEntity[]).map((record: CastCrewEntity) => {
+                    const firstName = record?.meta?._ccwp_cast_crew_name_first || null;
+                    const lastName = record?.meta?._ccwp_cast_crew_name_last || null;
+                    return ({
+                        label: (
+                            `${firstName || ''} ${lastName || ''}`.trim() ||
+                            record.title?.rendered ||
+                            `#${record.id}`
+                        ),
+                        value: String(record.id)
+                    });
+                });
+            }
+
+            if (fetchPostType === PostType.Production) {
+                return (records as ProductionEntity[]).map((record: ProductionEntity) => ({
+                    label: record?.meta?._ccwp_production_name || record?.title?.rendered || `#${record.id}`,
+                    value: String(record.id)
+                }));
+            }
+
+            return [];
+        },
+        [records, fetchPostType]
+    );
+
+    const handleAttach = async () => {
+        if (!postId || !postType || !state.targetId) {
             return;
         }
 
-        setLoading(true);
-        setError(null);
+        setSuccessMessage(null);
 
-        const query: Record<string, string> = {};
-        if (isProduction) {
-            query.production_id = postId.toString();
+        try {
+            if (postType === PostType.CastCrew) {
+                await attachProduction({
+                    productionId: state.targetId,
+                    castcrewId: postId,
+                    type: state.type,
+                    role: state.role,
+                    customOrder: parseInt(state.order, 10) || 0
+                });
+            } else if (postType === PostType.Production) {
+                await attachCastCrew({
+                    productionId: postId,
+                    castcrewId: state.targetId,
+                    type: state.type,
+                    role: state.role,
+                    customOrder: parseInt(state.order, 10) || 0
+                });
+            } else {
+                console.error(`Unsupported post type - "${postType}"`);
+            }
+
+            setTargetId('');
+            setRole('');
+            setOrder('');
+            setSuccessMessage('Successfully attached!');
+            setTimeout(() => setSuccessMessage(null), 3000);
+        } catch (e) {
+            console.error('Error attaching cast crew:', e);
         }
-        if (isCastCrew) {
-            query.cast_and_crew_id = postId.toString();
-        }
+    };
 
-        apiFetch({
-            path: '/ccwp/v1/relations?' + new URLSearchParams(query).toString(),
-            headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
-        })
-            .then((value: unknown) => setRelations((value || []) as Relation[]))
-            .catch((e: any) => setError(e?.message || 'Failed to load relations'))
-            .finally(() => setLoading(false));
-    }, [isCastCrew, isProduction, postId, postType]);
-
-    const title = isProduction ? 'Production Cast & Crew' : 'Attached Productions';
+    const title = postType === PostType.Production ? 'Attach Cast & Crew' : 'Attach to Production';
+    const targetLabel = postType === PostType.Production ? 'Cast/Crew Member' : 'Production';
 
     return (
         <PluginSidebar
-            name="ccwp-sidebar"
+            name="ccwp-sidebar-attach"
             title={title}
             icon={<Icon /> as any}
         >
-            <div>
-                {!!error && <Notice status="error" isDismissible={false}>{error}</Notice>}
-                {loading ? <Spinner /> : (
-                    <div>
-                        <div style={{marginBottom: 12}}>
-                            <SelectControl<MemberType>
-                                label="Type"
-                                value={newType}
-                                options={[
-                                    {label: 'Cast', value: MemberType.Cast},
-                                    {label: 'Crew', value: MemberType.Crew},
-                                ]}
-                                onChange={(v: MemberType) => setNewType(v)}
-                            />
-                            <ComboboxControl
-                                __next40pxDefaultSize
-                                __nextHasNoMarginBottom
-                                label={isProduction ? 'Cast/Crew' : 'Production'}
-                                value={newTargetId}
-                                options={[{label: 'Select…', value: ''}, ...options]}
-                                onChange={(v: string) => setNewTargetId(v)}
-                                help="Search and select an existing post to attach"
-                            />
-                            <TextControl
-                                __next40pxDefaultSize
-                                __nextHasNoMarginBottom
-                                label="Role"
-                                value={newRole}
-                                onChange={setNewRole}
-                            />
-                            <TextControl
-                                __next40pxDefaultSize
-                                __nextHasNoMarginBottom
-                                label="Custom Order"
-                                type="number"
-                                value={newOrder}
-                                onChange={setNewOrder}
-                            />
-                            <Button
-                                variant="primary"
-                                onClick={attach}
-                                disabled={!newTargetId}
-                            >Attach</Button>
-                        </div>
-                        <div>
-                            {relations.length === 0 && <p>No relations yet.</p>}
-                            {relations.map(r => (
-                                <div
-                                    key={`${r.production_id}-${r.cast_and_crew_id}-${r.type}`}
-                                    style={{
-                                        display: 'grid',
-                                        gridTemplateColumns: 'auto 1fr auto',
-                                        gap: 8,
-                                        alignItems: 'center',
-                                        marginBottom: 8,
-                                    }}
-                                >
-                                    <code>{r.type.toUpperCase()}</code>
-                                    <div>
-                                        <div>Production: {r.production_id} | Cast/Crew: {r.cast_and_crew_id}</div>
-                                        <div style={{display: 'flex', gap: 8, marginTop: 6}}>
-                                            <TextControl
-                                                __next40pxDefaultSize
-                                                __nextHasNoMarginBottom
-                                                label="Role"
-                                                value={r.role || ''}
-                                                onChange={(val: string) => setRelations(
-                                                    relations.map(x => x === r ? {...x, role: val} : x)
-                                                )}
-                                            />
-                                            <TextControl
-                                                __next40pxDefaultSize
-                                                __nextHasNoMarginBottom
-                                                label="Order"
-                                                type="number"
-                                                value={typeof r.custom_order === 'number' ? String(r.custom_order) : ''}
-                                                onChange={(val: string) => setRelations(
-                                                    relations.map(
-                                                        x => x === r
-                                                            ? {...x, custom_order: val === '' ? null : Number(val)}
-                                                            : x
-                                                    )
-                                                )}
-                                            />
-                                            <Button
-                                                onClick={async () => {
-                                                    // Persist inline edits via attach upsert
-                                                    await apiFetch({
-                                                        path: '/ccwp/v1/relations',
-                                                        method: 'POST',
-                                                        data: {
-                                                            production_id: r.production_id,
-                                                            cast_and_crew_id: r.cast_and_crew_id,
-                                                            type: r.type,
-                                                            role: r.role,
-                                                            custom_order: r.custom_order,
-                                                        },
-                                                        headers: {'X-WP-Nonce': window.CCWP_SETTINGS?.nonce ?? ''},
-                                                    });
-                                                }}
-                                            >Save</Button>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="secondary"
-                                        isDestructive
-                                        onClick={() => detach(r)}
-                                    >Remove</Button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'stretch',
+                    justifyContent: 'flex-start',
+                    gap: '15px',
+                    padding: '16px',
+                }}
+            >
+                {!!error && (
+                    <Notice status="error" isDismissible={false} style={{marginBottom: '16px'}}>
+                        {error || ''}
+                    </Notice>
                 )}
+
+                {!!state.successMessage && (
+                    <Notice status="success" isDismissible={false} style={{marginBottom: '16px'}}>
+                        {state.successMessage}
+                    </Notice>
+                )}
+
+                {loading && <Spinner />}
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'stretch',
+                        justifyContent: 'flex-start',
+                        gap: '15px',
+                        marginBottom: '12px'
+                    }}
+                >
+                    <p style={{marginBottom: '16px', color: '#757575'}}>
+                        Currently attached: <strong>{relations.length}</strong>
+                    </p>
+
+                    <SelectControl<MemberType>
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                        label="Type"
+                        value={state.type}
+                        options={[
+                            {label: 'Cast', value: MemberType.Cast},
+                            {label: 'Crew', value: MemberType.Crew},
+                        ]}
+                        onChange={setType}
+                    />
+
+                    <ComboboxControl
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                        label={targetLabel}
+                        value={state.targetId.toString()}
+                        options={[{label: 'Select…', value: ''}, ...options]}
+                        onChange={(val: string | null | undefined) => setTargetId(val || '')}
+                        help="Search and select to attach"
+                    />
+
+                    <TextControl
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                        label="Role"
+                        value={state.role}
+                        onChange={setRole}
+                        placeholder="e.g. Hamlet, Director"
+                    />
+
+                    <TextControl
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                        label="Order"
+                        type="number"
+                        value={state.order}
+                        onChange={setOrder}
+                        placeholder="0"
+                    />
+
+                    <Button
+                        variant="primary"
+                        onClick={handleAttach}
+                        disabled={!state.targetId || loading}
+                        style={{width: '100%'}}
+                    >
+                        Attach
+                    </Button>
+                </div>
+
+                <p style={{fontSize: '12px', color: '#757575', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #ddd'}}>
+                    View and edit attached items in the drawer below the editor.
+                </p>
             </div>
         </PluginSidebar>
     );
 };
+
+Sidebar.displayName = 'Sidebar';
 
 export default Sidebar;

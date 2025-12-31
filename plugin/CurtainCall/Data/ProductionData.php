@@ -9,7 +9,7 @@ use CurtainCall\Models\Production;
 final class ProductionData extends Data
 {
     public function __construct(
-        public readonly int|string|null $ID,
+        public readonly int|string|null $id,
         public readonly ?string $name,
         public readonly ?string $dateStart,
         public readonly ?string $dateEnd,
@@ -35,7 +35,7 @@ final class ProductionData extends Data
         $order = (int) ($data['order'] ?? $data['custom_order'] ?? $data['customOrder'] ?? 0);
 
         return new self(
-            ID: $id,
+            id: $id,
             name: $name,
             dateStart: $dateStart,
             dateEnd: $dateEnd,
@@ -51,7 +51,7 @@ final class ProductionData extends Data
         $order = (int) ($production->ccwp_join->custom_order ?? 0);
 
         return new self(
-            ID: $id,
+            id: $id,
             name: $production->name ?: $production->post_title ?: 'Untitled Production',
             dateStart: $production->date_start ?: null,
             dateEnd: $production->date_end ?: null,
@@ -64,7 +64,7 @@ final class ProductionData extends Data
     public function toArray(): array
     {
         return [
-            'ID' => $this->ID,
+            'ID' => $this->id,
             'name' => $this->name,
             'dateStart' => $this->dateStart,
             'dateEnd' => $this->dateEnd,

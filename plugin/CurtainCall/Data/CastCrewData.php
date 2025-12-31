@@ -9,7 +9,7 @@ use CurtainCall\Models\CastAndCrew;
 final class CastCrewData extends Data
 {
     public function __construct(
-        public readonly int|string|null $ID,
+        public readonly int|string|null $id,
         public readonly ?string $firstName,
         public readonly ?string $lastName,
         public readonly ?string $fullName,
@@ -39,7 +39,7 @@ final class CastCrewData extends Data
         $order = (int) ($data['order'] ?? $data['custom_order'] ?? $data['customOrder'] ?? 0);
 
         return new self(
-            ID: $id,
+            id: $id,
             firstName: $firstName,
             lastName: $lastName,
             fullName: $fullName,
@@ -55,7 +55,7 @@ final class CastCrewData extends Data
         $order = (int) ($castCrew->ccwp_join->custom_order ?? 0);
 
         return new self(
-            ID: $id,
+            id: $id,
             firstName: $castCrew->name_first ?: null,
             lastName: $castCrew->name_last ?: null,
             fullName: $castCrew->getFullName() ?: null,
@@ -68,7 +68,7 @@ final class CastCrewData extends Data
     public function toArray(): array
     {
         return [
-            'ID' => $this->ID,
+            'ID' => $this->id,
             'nameFirst' => $this->firstName,
             'nameLast' => $this->lastName,
             'fullName' => $this->fullName,

@@ -90,7 +90,7 @@ abstract class CurtainCallPost implements Arrayable
      * Convert an array structure to a collection of CurtainCall posts
      *
      * @param array $data
-     * @return array|CurtainCallPost[]
+     * @return CurtainCallPost[]
      * @throws Throwable
      */
     public static function toCurtainCallPosts(array $data): array

@@ -91,7 +91,7 @@ final class CurtainCall
     {
         $controller = new AdminHooks();
 
-        add_action('init', [$controller, 'registerJavascript'], 10, 0);
+        // Add the admin setting page
         add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
 
         // Set the title on save

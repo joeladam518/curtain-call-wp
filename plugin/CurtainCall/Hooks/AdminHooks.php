@@ -29,17 +29,24 @@ final class AdminHooks
     private function getPostType(): ?string
     {
         $screen = get_current_screen();
-        $postType = $screen?->post_type;
-
-        if (!$postType && isset($_GET['post_type'])) {
-            $postType = sanitize_text_field($_GET['post_type']);
+        if ($screen?->post_type) {
+            return $screen?->post_type;
         }
 
-        if (!$postType && isset($_GET['post'])) {
-            $postType = get_post_type((int) $_GET['post']);
+        $post = get_post();
+        if ($post?->post_type) {
+            return $post?->post_type;
         }
 
-        return $postType ?: null;
+        if (isset($_GET['post_type'])) {
+            return sanitize_text_field($_GET['post_type']);
+        }
+
+        if (isset($_GET['post'])) {
+            return get_post_type((int) $_GET['post']);
+        }
+
+        return null;
     }
 
     /**
@@ -85,80 +92,39 @@ final class AdminHooks
             return;
         }
 
-        $sidebarHandle = CCWP_PLUGIN_NAME . '_editor_sidebar';
-
-        wp_enqueue_script($sidebarHandle);
-
-        // Provide REST base and nonce to the script
-        wp_localize_script($sidebarHandle, 'CCWP_SETTINGS', [
-            'root' => esc_url_raw(rest_url()),
-            'nonce' => wp_create_nonce('wp_rest'),
-        ]);
-    }
-
-    public function registerJavascript(): void
-    {
         $version = $this->getVersion();
-
-        $productionMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_production_metaboxes';
-        $productionMetaboxesSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-production-metaboxes.js');
-        wp_register_script(
-            $productionMetaboxesHandle,
-            $productionMetaboxesSrc,
-            [
-                'react',
-                'react-dom',
-                'wp-api-fetch',
-                'wp-components',
-                'wp-data',
-                'wp-edit-post',
-                'wp-editor',
-                'wp-element',
-                'wp-i18n',
-                'wp-plugins',
-            ],
-            $version,
-        );
-
-        $castcrewMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_castcrew_metaboxes';
-        $castcrewMetaboxesSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-castcrew-metaboxes.js');
-        wp_register_script(
-            $castcrewMetaboxesHandle,
-            $castcrewMetaboxesSrc,
-            [
-                'react',
-                'react-dom',
-                'wp-api-fetch',
-                'wp-components',
-                'wp-data',
-                'wp-edit-post',
-                'wp-editor',
-                'wp-element',
-                'wp-i18n',
-                'wp-plugins',
-            ],
-            $version,
-        );
-
         $sidebarHandle = CCWP_PLUGIN_NAME . '_editor_sidebar';
         $sidebarSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-sidebar.js');
-        wp_register_script(
+        wp_enqueue_script(
             $sidebarHandle,
             $sidebarSrc,
             [
                 'react',
                 'react-dom',
                 'wp-api-fetch',
+                'wp-blocks',
                 'wp-components',
+                'wp-core-data',
                 'wp-data',
+                'wp-data-controls',
+                'wp-dom-ready',
                 'wp-edit-post',
                 'wp-editor',
                 'wp-element',
+                'wp-hooks',
                 'wp-i18n',
                 'wp-plugins',
+                'wp-primitives',
+                'wp-rich-text',
             ],
-            $version,
+            $version
         );
+
+        // Provide REST base and nonce to the script
+        wp_localize_script($sidebarHandle, 'CCWP_SETTINGS', [
+            'root' => esc_url_raw(rest_url()),
+            'nonce' => wp_create_nonce('wp_rest'),
+        ]);
     }
 
     /**
@@ -233,8 +199,33 @@ final class AdminHooks
     {
         $post = get_post();
 
+        $version = $this->getVersion();
         $castcrewMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_castcrew_metaboxes';
-        wp_enqueue_script($castcrewMetaboxesHandle);
+        $castcrewMetaboxesSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-castcrew-metaboxes.js');
+        wp_enqueue_script(
+            $castcrewMetaboxesHandle,
+            $castcrewMetaboxesSrc,
+            [
+                'react',
+                'react-dom',
+                'wp-api-fetch',
+                'wp-blocks',
+                'wp-components',
+                'wp-core-data',
+                'wp-data',
+                'wp-data-controls',
+                'wp-dom-ready',
+                'wp-edit-post',
+                'wp-editor',
+                'wp-element',
+                'wp-hooks',
+                'wp-i18n',
+                'wp-plugins',
+                'wp-primitives',
+                'wp-rich-text',
+            ],
+            $version
+        );
 
         try {
             /** @var CastAndCrew|null $castCrew */
@@ -304,9 +295,33 @@ final class AdminHooks
     private function enqueueProductionPostScripts(): void
     {
         $post = get_post();
-
+        $version = $this->getVersion();
         $productionMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_production_metaboxes';
-        wp_enqueue_script($productionMetaboxesHandle);
+        $productionMetaboxesSrc = ccwp_plugin_url('assets/admin/curtain-call-wp-production-metaboxes.js');
+        wp_enqueue_script(
+            $productionMetaboxesHandle,
+            $productionMetaboxesSrc,
+            [
+                'react',
+                'react-dom',
+                'wp-api-fetch',
+                'wp-blocks',
+                'wp-components',
+                'wp-core-data',
+                'wp-data',
+                'wp-data-controls',
+                'wp-dom-ready',
+                'wp-edit-post',
+                'wp-editor',
+                'wp-element',
+                'wp-hooks',
+                'wp-i18n',
+                'wp-plugins',
+                'wp-primitives',
+                'wp-rich-text',
+            ],
+            $version,
+        );
 
         try {
             /** @var Production|null $production */

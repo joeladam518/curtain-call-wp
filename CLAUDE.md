@@ -331,3 +331,4 @@ Type checking is split to handle different environments correctly.
 - **Template hierarchy**: Plugin provides fallback templates if theme doesn't override
 - **Pivot operations**: Use model relationship methods, not direct DB queries
 - **Asset enqueuing**: All handled via hook classes, never directly in templates
+- **TypeScript**: Avoid `any` types, prefer explicit types. Avoid type casting if at all possible.
