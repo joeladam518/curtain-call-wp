@@ -38,7 +38,7 @@ export type CastCrewProduction<Type extends MemberType = MemberType> = {
     ID: number;
     dateEnd: string | null;
     dateStart: string | null;
-    fullName: string;
+    name: string;
     order: number;
     role: string | null;
     type: Type;

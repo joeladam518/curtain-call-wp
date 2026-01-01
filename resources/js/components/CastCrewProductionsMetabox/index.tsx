@@ -79,7 +79,7 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
             ID: id,
             dateEnd: null,
             dateStart: null,
-            fullName: option.label,
+            name: option.label,
             order: state.order,
             role: state.role || null,
             type: state.selectedType,
@@ -140,11 +140,11 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
                     options={[{label: 'Select Production', value: '0'}, ...options]}
                     onChange={value => setSelectedProductionId(value || '0')}
                 />
-                <SelectControl
+                <SelectControl<MemberType>
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                     label="Type"
-                    value={state.selectedType}
+                    value={state.selectedType as NoInfer<string> | undefined}
                     options={[
                         {label: 'Cast', value: MemberType.Cast},
                         {label: 'Crew', value: MemberType.Crew},
