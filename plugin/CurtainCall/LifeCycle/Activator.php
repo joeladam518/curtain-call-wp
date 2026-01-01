@@ -15,8 +15,7 @@ class Activator implements LifeCycleHook
 
     protected static function createPluginTables(): void
     {
-        global $wpdb;
-
+        $wpdb = ccwp_get_wpdb();
         $table_name = "{$wpdb->prefix}ccwp_castandcrew_production";
         $charset_collate = $wpdb->get_charset_collate();
 
@@ -28,7 +27,7 @@ class Activator implements LifeCycleHook
             `custom_order` SMALLINT UNSIGNED DEFAULT NULL NULL
         ) {$charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
 }

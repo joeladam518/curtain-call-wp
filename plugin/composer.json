@@ -1,8 +1,11 @@
 {
     "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/collections": "^12.43",
+        "php": "^8.1",
+        "illuminate/collections": "^10.49",
         "nesbot/carbon": "^2.54.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.4.0"
     },
     "config": {
         "optimize-autoloader": true,
@@ -15,6 +18,11 @@
         },
         "files": [
             "functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "files": [
+            "functions-dev.php"
         ]
     },
     "minimum-stability": "dev",

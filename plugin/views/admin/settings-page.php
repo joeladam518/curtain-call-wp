@@ -1,4 +1,10 @@
-<?php if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) die;
+<?php
+
+declare(strict_types=1);
+
+if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
+    die();
+}
 
 // show error/update messages
 settings_errors('ccwp_messages');
@@ -9,14 +15,14 @@ settings_errors('ccwp_messages');
 
     <form action="options.php" method="post">
         <?php
-            // output security fields for the registered setting
-            settings_fields('ccwp-settings');
+        // output security fields for the registered setting
+        settings_fields('ccwp-settings');
 
-            // output setting sections and their fields
-            do_settings_sections('ccwp');
+        // output setting sections and their fields
+        do_settings_sections('ccwp');
 
-            // output save settings button
-            submit_button('Save');
+        // output save settings button
+        submit_button('Save');
         ?>
     </form>
 </div>

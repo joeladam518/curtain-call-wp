@@ -42,7 +42,7 @@ cd "$PLUGIN_DIR" && composer dumpautoload
 
 echo ""
 echo "# Build production assets"
-cd "$REPO_DIR" && npm run prod
+cd "$REPO_DIR" && npm run build
 
 # Copy the plugin to the directory to be zipped
 echo ""

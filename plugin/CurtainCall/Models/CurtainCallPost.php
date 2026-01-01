@@ -6,12 +6,12 @@ namespace CurtainCall\Models;
 
 use CurtainCall\Exceptions\UndefinedPropertyException;
 use CurtainCall\Exceptions\UnsettableException;
-use Illuminate\Contracts\Support\Arrayable;
-use WP_Post;
-use CurtainCall\Models\Traits\HasWordPressPost;
-use CurtainCall\Models\Traits\HasMeta;
 use CurtainCall\Models\Traits\HasAttributes;
+use CurtainCall\Models\Traits\HasMeta;
+use CurtainCall\Models\Traits\HasWordPressPost;
+use Illuminate\Contracts\Support\Arrayable;
 use Throwable;
+use WP_Post;
 use WP_Query;
 
 /**
@@ -51,18 +51,17 @@ abstract class CurtainCallPost implements Arrayable
     use HasMeta;
     use HasWordPressPost;
 
-    const POST_TYPE = 'ccwp_post';
-    const META_PREFIX = '_ccwp_';
+    public const POST_TYPE = 'ccwp_post';
+    public const META_PREFIX = '_ccwp_';
 
-    protected array $image_cache;
+    protected array $image_cache = [];
 
     /**
-     * @param int|WP_Post $post
+     * @param int|string|WP_Post $post
      * @throws Throwable
      */
-    protected function __construct($post)
+    protected function __construct(int|string|WP_Post $post)
     {
-        $this->image_cache = [];
         $this->loadPost($post);
         $this->loadMeta();
     }
@@ -72,7 +71,7 @@ abstract class CurtainCallPost implements Arrayable
      * @return $this
      * @throws Throwable
      */
-    public static function find(int $id)
+    public static function find(int $id): static
     {
         return new static($id);
     }
@@ -82,7 +81,7 @@ abstract class CurtainCallPost implements Arrayable
      * @return $this
      * @throws Throwable
      */
-    public static function make(WP_Post $post)
+    public static function make(WP_Post $post): static
     {
         return new static($post);
     }
@@ -91,7 +90,7 @@ abstract class CurtainCallPost implements Arrayable
      * Convert an array structure to a collection of CurtainCall posts
      *
      * @param array $data
-     * @return array|CurtainCallPost[]
+     * @return CurtainCallPost[]
      * @throws Throwable
      */
     public static function toCurtainCallPosts(array $data): array
@@ -104,7 +103,7 @@ abstract class CurtainCallPost implements Arrayable
             $postData = [];
             $pivotData = [];
             foreach ($datum as $key => $value) {
-                if (in_array($key, $pivotFields)) {
+                if (in_array($key, $pivotFields, true)) {
                     $pivotData[$key] = $value;
                 } else {
                     $postData[$key] = $value;
@@ -112,19 +111,15 @@ abstract class CurtainCallPost implements Arrayable
             }
 
             // Convert $postData to WP_Post
-            $post = new WP_Post((object)$postData);
+            $post = new WP_Post((object) $postData);
 
             // Convert $post to CurtainCallPost and add it to the array
             switch ($post->post_type) {
                 case Production::POST_TYPE:
-                    $posts[] = Production::make($post)->setCurtainCallPostJoin(
-                        new CurtainCallPivot($pivotData)
-                    );
+                    $posts[] = Production::make($post)->setCurtainCallPostJoin(new CurtainCallPivot($pivotData));
                     break;
                 case CastAndCrew::POST_TYPE:
-                    $posts[] = CastAndCrew::make($post)->setCurtainCallPostJoin(
-                        new CurtainCallPivot($pivotData)
-                    );
+                    $posts[] = CastAndCrew::make($post)->setCurtainCallPostJoin(new CurtainCallPivot($pivotData));
                     break;
             }
         }
@@ -141,17 +136,13 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function getFeaturedImage(string $size = 'thumbnail', bool $icon = false): ?array
     {
-        if (empty($this->image_cache[$size])) {
-            $imageSrc = wp_get_attachment_image_src(
-                get_post_thumbnail_id($this->ID),
-                $size,
-                $icon
-            );
+        if (!isset($this->image_cache[$size]) || $this->image_cache[$size] === null) {
+            $imageSrc = wp_get_attachment_image_src(get_post_thumbnail_id($this->ID), $size, $icon);
 
             if ($imageSrc && isset($imageSrc[0])) {
                 $this->image_cache[$size] = [
-                    'url'    => $imageSrc[0],
-                    'width'  => $imageSrc[1] ?? null,
+                    'url' => $imageSrc[0],
+                    'width' => $imageSrc[1] ?? null,
                     'height' => $imageSrc[2] ?? null,
                 ];
             } else {
@@ -168,7 +159,7 @@ abstract class CurtainCallPost implements Arrayable
      * @param CurtainCallPivot $curtainCallPivot
      * @return $this
      */
-    public function setCurtainCallPostJoin(CurtainCallPivot $curtainCallPivot)
+    public function setCurtainCallPostJoin(CurtainCallPivot $curtainCallPivot): static
     {
         $this->setAttribute('ccwp_join', $curtainCallPivot);
 
@@ -190,13 +181,13 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
-     * Get a post property
+     * Get a post-property
      *
      * @param  string $key
      * @return mixed|null
      * @throws UndefinedPropertyException
      */
-    public function __get($key)
+    public function __get(string $key): mixed
     {
         if ($this->isPostAttribute($key)) {
             return $this->wp_post->$key;
@@ -210,21 +201,21 @@ abstract class CurtainCallPost implements Arrayable
             return $this->getAttribute($key);
         }
 
-        throw new UndefinedPropertyException('Undefined property: '. static::class .'::$'. $key);
+        throw new UndefinedPropertyException('Undefined property: ' . static::class . '::$' . $key);
     }
 
     /**
-     * Set a post property
+     * Set a post-property
      *
      * @param string $key
      * @param mixed  $value
      * @return void
-     * @throws UnsettableException;
+     * @throws UnsettableException
      */
-    public function __set($key, $value)
+    public function __set(string $key, mixed $value): void
     {
-        if (in_array($key, ['attributes', 'meta', 'ccwp_meta', 'wp_post', 'wp_post_attributes', 'image_cache'])) {
-            throw new UnsettableException('You can not set the '.$key.' property.');
+        if (in_array($key, ['attributes', 'meta', 'ccwp_meta', 'wp_post', 'wp_post_attributes', 'image_cache'], true)) {
+            throw new UnsettableException('You can not set the ' . $key . ' property.');
         }
 
         if ($this->isPostAttribute($key)) {
@@ -241,13 +232,13 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
-     * Check if a post property is set. This includes wp_post properties,
-     * meta attributes, and attributes.
+     * Check if a post-property is set. This includes wp_post properties,
+     * meta-attributes, and attributes.
      *
      * @param string $key
      * @return bool
      */
-    public function __isset($key)
+    public function __isset(string $key): bool
     {
         if ($this->isPostAttribute($key)) {
             return isset($this->wp_post->$key);
@@ -266,13 +257,21 @@ abstract class CurtainCallPost implements Arrayable
      * @param string $key
      * @return void
      */
-    public function __unset($key)
+    public function __unset(string $key): void
     {
         if ($this->isMetaAttribute($key)) {
             unset($this->meta[$this->getMetaKey($key)]);
         } else {
             unset($this->attributes[$key]);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo(): array
+    {
+        return $this->toArray();
     }
 
     /**

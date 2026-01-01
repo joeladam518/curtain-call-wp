@@ -36,7 +36,7 @@ class View
      */
     public static function path(?string $path = null): string
     {
-        $dirPath = trailingslashit(ccwpPluginPath('views'));
+        $dirPath = trailingslashit(ccwp_plugin_path('views'));
 
         if (!$path) {
             return $dirPath;
@@ -95,6 +95,7 @@ class View
      */
     public function render(): void
     {
+        // @mago-ignore lint:no-unescaped-output
         echo $this->compile();
     }
 
