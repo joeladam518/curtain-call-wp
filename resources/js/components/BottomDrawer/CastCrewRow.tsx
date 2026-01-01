@@ -68,6 +68,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 placeholder="Order"
             />
             <Button
+                __next40pxDefaultSize
                 variant="primary"
                 onClick={() => onSave?.({
                     productionId,
@@ -83,6 +84,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 Save
             </Button>
             <Button
+                __next40pxDefaultSize
                 variant="secondary"
                 isDestructive
                 onClick={() => onRemove?.({

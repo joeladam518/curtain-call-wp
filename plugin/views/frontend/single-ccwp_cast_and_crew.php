@@ -124,16 +124,14 @@ get_header('single');
                                             <?php endif; ?>
 
                                             <div class="production-wrapper">
-                                                <?php if (has_post_thumbnail($production->ID)): ?>
-                                                    <div class="production-poster">
+                                                <div class="production-poster">
+                                                    <?php if (has_post_thumbnail($production->ID)): ?>
                                                         <a href="<?php the_permalink($production->ID); ?>">
-                                                            <?php
-                                                            // @mago-ignore lint:no-unescaped-output
-                                                            echo get_the_post_thumbnail($production->ID, 'full');
-                                                            ?>
+                                                            <?php /* @mago-ignore lint:no-unescaped-output */ ?>
+                                                            <?php echo get_the_post_thumbnail($production->ID, 'full'); ?>
                                                         </a>
-                                                    </div>
-                                                <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </div>
 
                                                 <div class="production-details">
                                                     <div class="production-name">
@@ -144,7 +142,7 @@ get_header('single');
 
                                                     <div class="castcrew-role">
                                                         <p><?php
-                                                        echo esc_html(implode(', ', $rolesByPid[$production->ID]));
+                                                        echo esc_html(implode(', ', $rolesByPid[$production->ID] ?? []));
                                                         ?></p>
                                                     </div>
 

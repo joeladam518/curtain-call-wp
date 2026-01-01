@@ -53,7 +53,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
             <SelectControl<MemberType>
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                value={state.type as NoInfer<string> | undefined}
+                value={state.type}
                 options={[
                     {label: 'Cast', value: MemberType.Cast},
                     {label: 'Crew', value: MemberType.Crew},
@@ -76,6 +76,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 placeholder="Order"
             />
             <Button
+                __next40pxDefaultSize
                 variant="primary"
                 onClick={() => onSave?.({
                     productionId: production.id as string | number,
@@ -91,6 +92,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 Save
             </Button>
             <Button
+                __next40pxDefaultSize
                 variant="secondary"
                 isDestructive
                 onClick={() => onRemove?.({

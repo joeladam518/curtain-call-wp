@@ -185,7 +185,7 @@ const Sidebar: FC = () => {
                         Currently attached: <strong>{relations.length}</strong>
                     </p>
 
-                    <SelectControl
+                    <SelectControl<MemberType>
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                         label="Type"
@@ -194,7 +194,7 @@ const Sidebar: FC = () => {
                             {label: 'Cast', value: MemberType.Cast},
                             {label: 'Crew', value: MemberType.Crew},
                         ]}
-                        onChange={setType}
+                        onChange={type => setType(type as MemberType)}
                     />
 
                     <ComboboxControl
@@ -227,6 +227,7 @@ const Sidebar: FC = () => {
                     />
 
                     <Button
+                        __next40pxDefaultSize
                         variant="primary"
                         onClick={handleAttach}
                         disabled={!state.targetId || isFetching}

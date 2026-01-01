@@ -2,6 +2,7 @@ import {FC, useState} from 'react';
 import {Button, ComboboxControl, SelectControl, TextControl} from '@wordpress/components';
 import MemberType from '../../enums/MemberType';
 import {CastCrewProduction} from '../../types/metaboxes';
+import MetaboxLabelRow from '../MetaboxLabelRow';
 import Row from './Row';
 
 type UpdateData = {
@@ -126,9 +127,10 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
                 className="ccwp-production-castcrew-select-wrap"
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: '2fr 1fr 2fr 1fr auto',
-                    gap: '10px',
+                    gridAutoFlow: 'column',
                     alignItems: 'end',
+                    gridTemplateColumns: '2fr 1fr 2fr 1fr 1fr',
+                    gap: '10px',
                     marginBottom: '20px',
                 }}
             >
@@ -144,7 +146,7 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
                     label="Type"
-                    value={state.selectedType as NoInfer<string> | undefined}
+                    value={state.selectedType}
                     options={[
                         {label: 'Cast', value: MemberType.Cast},
                         {label: 'Crew', value: MemberType.Crew},
@@ -169,61 +171,37 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
                     placeholder="0"
                 />
                 <Button
+                    __next40pxDefaultSize
                     variant="secondary"
                     onClick={() => addProduction()}
-                    style={{marginBottom: '8px'}}
                 >
                     Add Production
                 </Button>
             </div>
 
-            {/* Cast Productions List */}
-            {state.cast.length > 0 && (
-                <>
-                    <h4 style={{marginTop: '25px', marginBottom: '10px'}}>Cast Productions</h4>
-                    <div id="ccwp-cast-crew-cast-wrap">
-                        <div className="ccwp-row label-row">
-                            <div className="ccwp-col name-col">Name</div>
-                            <div className="ccwp-col role-col">Role</div>
-                            <div className="ccwp-col billing-col">Billing</div>
-                            <div className="ccwp-col action-col">&nbsp;</div>
-                        </div>
-                        {state.cast.map((production: CastCrewProduction, index: number) => (
-                            <Row
-                                key={`add_cast_row_${production.ID}_${index}`}
-                                castCrewId={castCrewId}
-                                production={production}
-                                onUpdate={updateProduction}
-                                onRemove={removeProduction}
-                            />
-                        ))}
-                    </div>
-                </>
-            )}
-
-            {/* Crew Productions List */}
-            {state.crew.length > 0 && (
-                <>
-                    <h4 style={{marginTop: '25px', marginBottom: '10px'}}>Crew Productions</h4>
-                    <div id="ccwp-cast-crew-crew-wrap">
-                        <div className="ccwp-row label-row">
-                            <div className="ccwp-col name-col">Name</div>
-                            <div className="ccwp-col role-col">Role</div>
-                            <div className="ccwp-col billing-col">Billing</div>
-                            <div className="ccwp-col action-col">&nbsp;</div>
-                        </div>
-                        {state.crew.map((production: CastCrewProduction, index: number) => (
-                            <Row
-                                key={`add_crew_row_${production.ID}_${index}`}
-                                castCrewId={castCrewId}
-                                production={production}
-                                onUpdate={updateProduction}
-                                onRemove={removeProduction}
-                            />
-                        ))}
-                    </div>
-                </>
-            )}
+            <div id="ccwp-cast-crew-cast-wrap">
+                {(state.cast.length > 0 || state.crew.length > 0) && (
+                    <MetaboxLabelRow type />
+                )}
+                {state.cast.map((production: CastCrewProduction, index: number) => (
+                    <Row
+                        key={`add_cast_row_${production.ID}_${index}`}
+                        castCrewId={castCrewId}
+                        production={production}
+                        onUpdate={updateProduction}
+                        onRemove={removeProduction}
+                    />
+                ))}
+                {state.crew.map((production: CastCrewProduction, index: number) => (
+                    <Row
+                        key={`add_crew_row_${production.ID}_${index}`}
+                        castCrewId={castCrewId}
+                        production={production}
+                        onUpdate={updateProduction}
+                        onRemove={removeProduction}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

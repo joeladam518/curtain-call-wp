@@ -196,7 +196,7 @@ trait HasProductions
         // Delete the to be deleted
         if (is_array($toDeleteIds) && count($toDeleteIds) > 0) {
             foreach ($toDeleteIds as $productionId) {
-                $this->deleteProduction($productionId, $type);
+                $this->deleteProduction((int) $productionId, $type);
             }
         }
     }

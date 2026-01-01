@@ -42,10 +42,21 @@ const Row: FC<RowProps> = ({
             />
             <div
                 className="ccwp-row"
-                style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}
+                style={{
+                    maxWidth: '100%',
+                    width: '100%',
+                    display: 'grid',
+                    gridAutoFlow: 'column',
+                    alignItems: 'center',
+                    gridTemplateColumns: '2fr 2fr 1fr 1fr',
+                    gap: '12px',
+                    marginBottom: '10px'
+                }}
             >
                 <div className="ccwp-col name-col" style={{flex: '1'}}>
-                    <div className="ccwp-castcrew-name"><strong>{member.fullName}</strong></div>
+                    <div className="ccwp-castcrew-name">
+                        <strong>{member.fullName}</strong>
+                    </div>
                 </div>
                 <div className="ccwp-col role-col" style={{flex: '1'}}>
                     <TextControl
@@ -70,6 +81,7 @@ const Row: FC<RowProps> = ({
                 </div>
                 <div className="ccwp-col action-col">
                     <Button
+                        __next40pxDefaultSize
                         isDestructive
                         onClick={() => onRemove?.(member.type, member.ID)}
                     >

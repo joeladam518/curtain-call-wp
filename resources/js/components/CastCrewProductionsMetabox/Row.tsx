@@ -15,13 +15,23 @@ export type RowProps = {
     onRemove?: (type: MemberType, id: number | string) => void;
 };
 
+//width: 100%;
+//display: grid;
+//grid-auto-flow: column;
+//align-items: center;
+//grid-template-columns: 2fr 2fr 1fr auto;
+//gap: 12px;
+//border-radius: 2px;
+//padding: 12px;
+//margin-bottom: 8px;
+
 const Row: FC<RowProps> = ({
     castCrewId,
     production,
     onUpdate,
     onRemove,
 }) => {
-    const inputName = `ccwp_add_${production.type}_to_cast_crew`;
+    const inputName = `ccwp_add_productions_to_${production.type}`;
 
     return (
         <div className="form-group ccwp-production-castcrew-form-group">
@@ -42,10 +52,26 @@ const Row: FC<RowProps> = ({
             />
             <div
                 className="ccwp-row"
-                style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}
+                style={{
+                    maxWidth: '100%',
+                    width: '100%',
+                    display: 'grid',
+                    gridAutoFlow: 'column',
+                    alignItems: 'center',
+                    gridTemplateColumns: '2fr 1fr 2fr 1fr 1fr',
+                    gap: '12px',
+                    marginBottom: '10px'
+                }}
             >
                 <div className="ccwp-col name-col" style={{flex: '1'}}>
-                    <div className="ccwp-production-name"><strong>{production.fullName}</strong></div>
+                    <div className="ccwp-production-name">
+                        <strong>{production.name}</strong>
+                    </div>
+                </div>
+                <div className="ccwp-col type-col" style={{flex: '1'}}>
+                    <div className="ccwp-member-type">
+                        <strong>{production.type}</strong>
+                    </div>
                 </div>
                 <div className="ccwp-col role-col" style={{flex: '1'}}>
                     <TextControl
@@ -70,6 +96,7 @@ const Row: FC<RowProps> = ({
                 </div>
                 <div className="ccwp-col action-col">
                     <Button
+                        __next40pxDefaultSize
                         isDestructive
                         onClick={() => onRemove?.(production.type, production.ID)}
                     >

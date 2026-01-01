@@ -226,8 +226,8 @@ final class AdminCastCrewMetaboxHooks
 
         $castcrew = CastAndCrew::make($post);
 
-        $castData = $_POST['ccwp_add_cast_to_cast_crew'] ?? [];
-        $crewData = $_POST['ccwp_add_crew_to_cast_crew'] ?? [];
+        $castData = $_POST['ccwp_add_productions_to_cast'] ?? [];
+        $crewData = $_POST['ccwp_add_productions_to_crew'] ?? [];
 
         $castcrew->saveProductions('cast', $castData);
         $castcrew->saveProductions('crew', $crewData);

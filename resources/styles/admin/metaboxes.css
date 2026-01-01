@@ -108,40 +108,8 @@
             padding-left: 0;
             padding-right: 0;
 
-            &:not(:first-child) {
-                padding-left: 6px;
-            }
-
-            &:not(:last-child) {
-                padding-right: 6px;
-            }
-
             & input[type="text"] {
                 width: 100%;
-            }
-
-            &.name-col {
-                width: 25%;
-
-                @media (--ccwp-from-sm) {
-                    width: 24%;
-                }
-            }
-
-            &.role-col {
-                width: 25%;
-
-                @media (--ccwp-from-sm) {
-                    width: 32%;
-                }
-            }
-
-            &.billing-col {
-                width: 23%;
-            }
-
-            &.action-col {
-                width: 15%;
             }
         }
 
@@ -149,7 +117,17 @@
             font-size: 14px;
             font-weight: 700;
             line-height: 1;
-            margin-bottom: 1px;
+
+            max-width: 100%;
+            width: 100%;
+            display: grid;
+            grid-auto-flow: column;
+            align-items: center;
+            grid-template-columns: auto;
+            grid-auto-columns: max-content;
+            gap: 12px;
+            border-radius: 2px;
+            margin-bottom: 8px;
         }
     }
 }
@@ -204,41 +182,9 @@
             padding-left: 0;
             padding-right: 0;
 
-            &:not(:first-child) {
-                padding-left: 6px;
-            }
-
-            &:not(:last-child) {
-                padding-right: 6px;
-            }
-
             & input[type="text"],
             & input[type="number"] {
                 width: 100%;
-            }
-
-            &.name-col {
-                width: 25%;
-
-                @media (--ccwp-from-sm) {
-                    width: 24%;
-                }
-            }
-
-            &.role-col {
-                width: 25%;
-
-                @media (--ccwp-from-sm) {
-                    width: 32%;
-                }
-            }
-
-            &.billing-col {
-                width: 23%;
-            }
-
-            &.action-col {
-                width: 15%;
             }
         }
 
@@ -246,7 +192,17 @@
             font-size: 14px;
             font-weight: 700;
             line-height: 1;
-            margin-bottom: 1px;
+
+            max-width: 100%;
+            width: 100%;
+            display: grid;
+            grid-auto-flow: column;
+            align-items: center;
+            grid-template-columns: auto;
+            grid-auto-columns: max-content;
+            gap: 12px;
+            border-radius: 2px;
+            margin-bottom: 8px;
         }
     }
 }
