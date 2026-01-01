@@ -12,11 +12,6 @@
             </div>
         </article>
     <?php endwhile; ?>
-
-    <nav class="pagination">
-        <div class="nav-previous"><?php next_posts_link(__('Older posts', 'curtain-call-basic')); ?></div>
-        <div class="nav-next"><?php previous_posts_link(__('Newer posts', 'curtain-call-basic')); ?></div>
-    </nav>
 <?php else : ?>
     <p><?php _e('No posts found.', 'curtain-call-basic'); ?></p>
 <?php endif; ?>

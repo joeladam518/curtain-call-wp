@@ -8,10 +8,14 @@
 <body <?php body_class(); ?>>
 <header class="site-header" role="banner">
     <div class="container">
-        <p class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a></p>
-        <?php if (get_bloginfo('description')) : ?>
-            <p class="site-description"><?php bloginfo('description'); ?></p>
-        <?php endif; ?>
+        <div class="site-identity">
+            <a class="site-title" href="<?php echo esc_url(home_url('/')); ?>">
+                <?php bloginfo('name'); ?>
+            </a>
+            <?php if (get_bloginfo('description')) : ?>
+                <p class="site-description"><?php bloginfo('description'); ?></p>
+            <?php endif; ?>
+        </div>
         <?php if (has_nav_menu('primary')) : ?>
             <nav class="primary-nav" aria-label="<?php esc_attr_e('Primary', 'curtain-call-basic'); ?>">
                 <?php wp_nav_menu(['theme_location' => 'primary', 'container' => false]); ?>

@@ -3,7 +3,7 @@ Theme Name: Curtain Call Basic
 Theme URI: https://example.com/curtain-call-basic
 Author: Curtain Call
 Author URI: https://joelhaker.com
-Description: A simple dev theme for developing the Curtain Call WP project.
+Description: A simple theme for developing the Curtain Call WP project.
 Version: 1.0.0
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -70,8 +70,31 @@ h3,
 h4,
 h5,
 h6 {
-    /*font-size: inherit;*/
     font-weight: inherit;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h1 {
+    font-size: 2rem;
 }
 
 
@@ -248,25 +271,76 @@ article h2 {
     font-size: 1.75rem;
 }
 
-header.site-header,
-footer.site-footer {
-    padding: 1rem;
+header.site-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: stretch;
+    padding: 1rem 2.25rem;
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.07);
+
+    & > .container {
+        max-width: 1200px;
+        flex: 1 1 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 2rem;
+    }
+
+    & .site-identity {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    & .site-title {
+        width: 100%;
+        width: max-content;
+        display: inline-block;
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    & .site-description {
+        width: 100%;
+        width: max-content;
+        margin: 0.25rem 0 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    & .primary-nav {
+        flex: 1 1 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+
+        & > ul {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+        }
+    }
 }
 
 main.site-main {
     flex-basis: 100%;
     flex-grow: 1;
-    padding: 0 1rem;
-    margin: 2rem auto;
-}
-
-.site-title {
-    font-size: 1.25rem;
+    padding: 1rem;
     margin: 0;
+
+    & > article {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
 }
 
-.site-description {
-    margin: 0.25rem 0 0;
-    color: #666;
-    font-size: 0.95rem;
+footer.site-footer {
+    padding: 1rem;
 }
