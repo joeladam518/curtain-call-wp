@@ -218,15 +218,17 @@ class RelationsController
 
         // Check existing
         $existing = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$table} WHERE production_id=%d AND cast_and_crew_id=%d",
+            "SELECT COUNT(*) FROM {$table} WHERE production_id=%d AND cast_and_crew_id=%d AND type=%s",
             $productionId,
             $castcrewId,
+            $type,
         ));
 
         if ((int) $existing > 0) {
             $wpdb->update($table, $data, [
                 'production_id' => $productionId,
                 'cast_and_crew_id' => $castcrewId,
+                'type' => $type,
             ]);
         } else {
             $wpdb->insert($table, $data);
@@ -246,10 +248,19 @@ class RelationsController
             return new WP_Error('ccwp_invalid_params', 'Invalid parameters', ['status' => 400]);
         }
 
-        $wpdb->delete($table, [
-            'production_id' => $productionId,
-            'cast_and_crew_id' => $castcrewId,
-        ]);
+        $params = ['production_id' => $productionId, 'cast_and_crew_id' => $castcrewId];
+
+        if ($request->has_param('type')) {
+            $type = (string) $request->get_param('type');
+
+            if (!in_array($type, ['cast', 'crew'], true)) {
+                return new WP_Error('ccwp_invalid_params', 'Invalid parameters', ['status' => 400]);
+            }
+
+            $params['type'] = $type;
+        }
+
+        $wpdb->delete($table, $params);
 
         return new WP_REST_Response(['ok' => true], 200);
     }

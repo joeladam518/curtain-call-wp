@@ -53,17 +53,17 @@ const ProductionRow: FC<ProductionRowProps> = ({
             <SelectControl<MemberType>
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                value={state.type}
+                value={state.type as NoInfer<string> | undefined}
                 options={[
                     {label: 'Cast', value: MemberType.Cast},
                     {label: 'Crew', value: MemberType.Crew},
                 ]}
-                onChange={setType}
+                onChange={type => setType(type as MemberType)}
             />
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                value={production.role || ''}
+                value={state.role}
                 onChange={setRole}
                 placeholder="Role"
             />
@@ -96,6 +96,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 onClick={() => onRemove?.({
                     productionId: production.id as string | number,
                     castcrewId,
+                    type: state.type,
                 })}
                 disabled={isBusy}
                 size="small"

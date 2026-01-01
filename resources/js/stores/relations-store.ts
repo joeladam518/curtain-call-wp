@@ -16,6 +16,7 @@ export type AttachData = {
 export type DetachData = {
     productionId: string | number;
     castcrewId: string | number;
+    type?: MemberType;
 };
 
 export type RelationsState = {
@@ -155,6 +156,10 @@ const actions = {
             cast_and_crew_id: props.castcrewId.toString(),
         };
 
+        if (props.type) {
+            query.type = props.type;
+        }
+
         try {
             await apiFetch({
                 path: `/ccwp/v1/relations?${new URLSearchParams(query).toString()}`,
@@ -172,14 +177,18 @@ const actions = {
     detachCastCrew: (props: DetachData) => async ({dispatch, select}: {dispatch: any; select: any}) => {
         await dispatch(actions.detach(props));
         const relations = select.getRelations() as CastCrewData[];
-        const filteredRelations = relations.filter(relation => relation.id !== props.castcrewId);
+        const filteredRelations = props.type
+            ? relations.filter(relation => !(relation.id === props.castcrewId && relation.memberType === props.type))
+            : relations.filter(relation => relation.id !== props.castcrewId);
         dispatch(actions.setRelations(filteredRelations));
     },
 
     detachProduction: (props: DetachData) => async ({dispatch, select}: {dispatch: any; select: any}) => {
         await dispatch(actions.detach(props));
         const relations = select.getRelations() as ProductionData[];
-        const filteredRelations = relations.filter(relation => relation.id !== props.productionId);
+        const filteredRelations = props.type
+            ? relations.filter(relation => !(relation.id === props.productionId && relation.memberType === props.type))
+            : relations.filter(relation => relation.id !== props.productionId);
         dispatch(actions.setRelations(filteredRelations));
     },
 };

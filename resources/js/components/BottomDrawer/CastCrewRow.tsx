@@ -32,7 +32,10 @@ const CastCrewRow: FC<ProductionRowProps> = ({
         role: castcrew.role || '',
         order: castcrew.order ? castcrew.order.toString() : '0',
     });
-    const setRole = (role: string) => setState(current => ({...current, role}));
+    const setRole = (role: string) => {
+        console.log(`setting role for production ${productionId} to castcrew ${castcrew.id} type ${state.type} === ${role}`)
+        setState(current => ({...current, role}));
+    }
     const setOrder = (order: string) => setState(current => ({...current, order}));
     const isBusy = isSaving || isRemoving;
     const hasChanges = useMemo(
@@ -52,7 +55,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                value={castcrew.role || ''}
+                value={state.role}
                 onChange={setRole}
                 placeholder="Role"
             />
@@ -85,6 +88,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 onClick={() => onRemove?.({
                     productionId,
                     castcrewId: castcrew.id as string | number,
+                    type: state.type,
                 })}
                 disabled={isBusy}
                 size="small"

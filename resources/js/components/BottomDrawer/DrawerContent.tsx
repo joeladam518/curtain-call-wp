@@ -23,10 +23,10 @@ type DrawerContentState = {
 
 const DrawerContent: FC = () => {
     const [state, setState] = useState<DrawerContentState>({
-        isCollapsed: false,
+        isCollapsed: false, // Start collapsed, will expand if relations exist
         isSaving: false,
         isRemoving: false,
-        drawerHeight: 400,
+        drawerHeight: 200,
     });
     const setIsCollapsed = (value: boolean) => setState(prevState => ({...prevState, isCollapsed: value}));
     const setIsSaving = (value: boolean) => setState(prevState => ({...prevState, isSaving: value}));
@@ -38,13 +38,21 @@ const DrawerContent: FC = () => {
     const isResizingRef = useRef(false);
     const startYRef = useRef(0);
     const startHeightRef = useRef(0);
+    const hasInitializedRef = useRef(false);
 
     const postId = useSelect(select => select(editorStore).getCurrentPostId(), []) as string | number | null;
     const postType = useSelect(select => select(editorStore).getCurrentPostType(), []) as PostType | null;
     const relations = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getRelations(), []);
     const isFetching = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).isLoading(), []);
     const fetchingError = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getError(), []);
-    const {attachCastCrew, attachProduction, detach, fetchCastCrew, fetchProductions} = useRelationsDispatch();
+    const {
+        attachCastCrew,
+        attachProduction,
+        detachCastCrew,
+        detachProduction,
+        fetchCastCrew,
+        fetchProductions
+    } = useRelationsDispatch();
     const title = postType === PostType.Production ? 'Cast & Crew' : 'Productions';
 
     const fetchRelations = async () => {
@@ -52,7 +60,6 @@ const DrawerContent: FC = () => {
             console.error('Can not fetch relations. Invalid postId or postType');
             return;
         }
-
         try {
             if (postType === PostType.CastCrew) {
                 await fetchProductions(postId);
@@ -91,16 +98,18 @@ const DrawerContent: FC = () => {
             return;
         }
 
-        if (confirm('Are you sure you want to remove this relation?')) {
-            setIsRemoving(true);
+        console.log('Removing relation:', data);
 
-            try {
-                await detach(data);
-            } catch (e) {
-                console.error('Error detaching relation:', e);
-            } finally {
-                setIsRemoving(false);
+        try {
+            if (postType === PostType.CastCrew) {
+                await detachProduction(data);
+            } else if (postType === PostType.Production) {
+                await detachCastCrew(data);
             }
+        } catch (e) {
+            console.error('Error detaching relation:', e);
+        } finally {
+            setIsRemoving(false);
         }
     };
 
@@ -155,6 +164,14 @@ const DrawerContent: FC = () => {
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postId, postType]);
+
+    // Auto-expand drawer on initial load if there are relations
+    useEffect(() => {
+        if (!hasInitializedRef.current && !isFetching && relations.length > 0) {
+            hasInitializedRef.current = true;
+            setIsCollapsed(false);
+        }
+    }, [isFetching, relations.length]);
 
     return (
         <div
