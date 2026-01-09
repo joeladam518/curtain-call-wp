@@ -1,7 +1,9 @@
+import {__} from '@wordpress/i18n';
 import {FC, useMemo} from 'react';
 import CastCrewData from '../../data/CastCrewData';
 import MemberType from '../../enums/MemberType';
 import {AttachData, DetachData} from '../../stores/relations-store';
+import {TEXT_DOMAIN} from '../../utils/constants';
 import CastCrewRow from './CastCrewRow';
 
 type ProductionRelationsProps = {
@@ -29,7 +31,7 @@ const ProductionRelations: FC<ProductionRelationsProps> = ({
             {castMembers.length > 0 && (
                 <div className="ccwp-drawer-section">
                     <h3 className="ccwp-drawer-section-title">
-                        Cast ({castMembers.length})
+                        {__('Cast', TEXT_DOMAIN)} ({castMembers.length})
                     </h3>
                     {castMembers.map((cast, index) => (
                         <CastCrewRow
@@ -48,7 +50,7 @@ const ProductionRelations: FC<ProductionRelationsProps> = ({
             {crewMembers.length > 0 && (
                 <div className="ccwp-drawer-section">
                     <h3 className="ccwp-drawer-section-title">
-                        Crew ({crewMembers.length})
+                        {__('Crew', TEXT_DOMAIN)} ({crewMembers.length})
                     </h3>
                     {crewMembers.map((crew, index) => (
                         <CastCrewRow

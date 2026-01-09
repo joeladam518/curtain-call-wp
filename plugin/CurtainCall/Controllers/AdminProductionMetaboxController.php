@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CurtainCall\Hooks;
+namespace CurtainCall\Controllers;
 
 use CurtainCall\Data\CastCrewData;
 use CurtainCall\Models\CastAndCrew;
@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 use Throwable;
 use WP_Post;
 
-final class AdminProductionMetaboxHooks
+final class AdminProductionMetaboxController
 {
     /**
      * Add the production metaboxes
@@ -169,7 +169,7 @@ final class AdminProductionMetaboxHooks
                             static fn(CastAndCrew $a, CastAndCrew $b) => (
                                 [
                                     $a->ccwp_join->custom_order,
-                                    $b->name_last
+                                    $b->name_last,
                                 ] <=> [
                                     $b->ccwp_join->custom_order,
                                     $a->name_last,

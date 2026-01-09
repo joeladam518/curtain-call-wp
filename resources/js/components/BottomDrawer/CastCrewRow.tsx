@@ -1,8 +1,10 @@
 import {FC, useMemo, useState} from 'react';
 import {Button, TextControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import CastCrewData from '../../data/CastCrewData';
 import MemberType from '../../enums/MemberType';
 import {AttachData, DetachData} from '../../stores/relations-store';
+import {TEXT_DOMAIN} from '../../utils/constants';
 
 export type ProductionRowState = {
     type: MemberType;
@@ -57,7 +59,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 __nextHasNoMarginBottom
                 value={state.role}
                 onChange={setRole}
-                placeholder="Role"
+                placeholder={__('Role', TEXT_DOMAIN)}
             />
             <TextControl
                 __next40pxDefaultSize
@@ -65,7 +67,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 type="number"
                 value={state.order || '0'}
                 onChange={setOrder}
-                placeholder="Order"
+                placeholder={__('Order', TEXT_DOMAIN)}
             />
             <Button
                 __next40pxDefaultSize
@@ -81,7 +83,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 isBusy={isBusy}
                 size="small"
             >
-                Save
+                {__('Save', TEXT_DOMAIN)}
             </Button>
             <Button
                 __next40pxDefaultSize
@@ -95,7 +97,7 @@ const CastCrewRow: FC<ProductionRowProps> = ({
                 disabled={isBusy}
                 size="small"
             >
-                Remove
+                {__('Remove', TEXT_DOMAIN)}
             </Button>
         </div>
     );

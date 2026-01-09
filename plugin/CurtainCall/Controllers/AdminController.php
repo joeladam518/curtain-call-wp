@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CurtainCall\Hooks;
+namespace CurtainCall\Controllers;
 
 use CurtainCall\Data\CastCrewData;
 use CurtainCall\Data\ProductionData;
@@ -10,45 +10,12 @@ use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\Str;
-use CurtainCall\Support\View;
 use Illuminate\Support\Collection;
 use Throwable;
 use WP_Post;
 
-final class AdminHooks
+final class AdminController
 {
-    private string $assetsUrl;
-    private string $assetsPath;
-
-    public function __construct()
-    {
-        $this->assetsUrl = ccwp_plugin_url('assets/admin/');
-        $this->assetsPath = ccwp_plugin_path('assets/admin/');
-    }
-
-    private function getPostType(): ?string
-    {
-        $screen = get_current_screen();
-        if ($screen?->post_type) {
-            return $screen?->post_type;
-        }
-
-        $post = get_post();
-        if ($post?->post_type) {
-            return $post?->post_type;
-        }
-
-        if (isset($_GET['post_type'])) {
-            return sanitize_text_field($_GET['post_type']);
-        }
-
-        if (isset($_GET['post'])) {
-            return get_post_type((int) $_GET['post']);
-        }
-
-        return null;
-    }
-
     /**
      * Register the stylesheets for the admin area.
      * @return void
@@ -56,7 +23,7 @@ final class AdminHooks
     public function enqueueStyles(): void
     {
         $handle = CCWP_PLUGIN_NAME . '_admin_metaboxes';
-        $src = $this->assetsUrl . 'curtain-call-wp-admin.css';
+        $src = ccwp_plugin_url('assets/admin/curtain-call-wp-admin.css');
         $version = $this->getVersion();
 
         wp_enqueue_style($handle, $src, [], $version);
@@ -117,42 +84,15 @@ final class AdminHooks
                 'wp-primitives',
                 'wp-rich-text',
             ],
-            $version
+            $version,
         );
+        wp_set_script_translations($sidebarHandle, CCWP_TEXT_DOMAIN);
 
         // Provide REST base and nonce to the script
         wp_localize_script($sidebarHandle, 'CCWP_SETTINGS', [
             'root' => esc_url_raw(rest_url()),
             'nonce' => wp_create_nonce('wp_rest'),
         ]);
-    }
-
-    /**
-     * @return void
-     */
-    public function addPluginSettingsPage(): void
-    {
-        add_submenu_page(
-            'options-general.php',
-            'Curtain Call WP',
-            __('Curtain Call WP', CCWP_TEXT_DOMAIN),
-            'manage_options',
-            'ccwp-settings',
-            [$this, 'renderPluginSettingsPage'],
-        );
-    }
-
-    /**
-     * @return void
-     * @throws Throwable
-     */
-    public function renderPluginSettingsPage(): void
-    {
-        if (!current_user_can('manage_options')) {
-            return;
-        }
-
-        View::make('admin/settings-page.php')->render();
     }
 
     /**
@@ -224,8 +164,9 @@ final class AdminHooks
                 'wp-primitives',
                 'wp-rich-text',
             ],
-            $version
+            $version,
         );
+        wp_set_script_translations($castcrewMetaboxesHandle, CCWP_TEXT_DOMAIN);
 
         try {
             /** @var CastAndCrew|null $castCrew */
@@ -271,7 +212,15 @@ final class AdminHooks
         try {
             /** @var list<array<string, mixed>> $productions */
             $productions = collect($castCrew?->getProductions() ?? [])
-                ->sort(static fn(Production $a, Production $b) => [$b->date_start, $a->name] <=> [$a->date_start, $b->name])
+                ->sort(static fn(Production $a, Production $b) => (
+                    [
+                        $b->date_start,
+                        $a->name
+                    ] <=> [
+                        $a->date_start,
+                        $b->name
+                    ]
+                ))
                 ->map(static fn(Production $production) => ProductionData::fromProduction($production))
                 ->values()
                 ->toArray();
@@ -322,6 +271,7 @@ final class AdminHooks
             ],
             $version,
         );
+        wp_set_script_translations($productionMetaboxesHandle, CCWP_TEXT_DOMAIN);
 
         try {
             /** @var Production|null $production */
@@ -363,17 +313,15 @@ final class AdminHooks
                 ->groupBy('ccwp_join.type')
                 ->map(
                     static fn(Collection $group) => $group
-                        ->sort(
-                            static fn(CastAndCrew $a, CastAndCrew $b) => (
-                                [
-                                    $a->ccwp_join->custom_order,
-                                    $b->name_last
-                                ] <=> [
-                                    $b->ccwp_join->custom_order,
-                                    $a->name_last,
-                                ]
-                            ),
-                        )
+                        ->sort(static fn(CastAndCrew $a, CastAndCrew $b) => (
+                            [
+                                $a->ccwp_join->custom_order,
+                                $b->name_last,
+                            ] <=> [
+                                $b->ccwp_join->custom_order,
+                                $a->name_last,
+                            ]
+                        ))
                         ->map(static fn(CastAndCrew $member) => CastCrewData::fromCastCrew($member))
                         ->values()
                         ->toArray(),
@@ -393,7 +341,29 @@ final class AdminHooks
     }
 
     /**
-     * Generate a post title for a production post.
+     * Generate a post-title for a cast/crew post.
+     *
+     * @param array<string, mixed> $postArr
+     * @return string
+     */
+    private function getCastCrewPostTitle(array $postArr): string
+    {
+        $titleParts = [];
+        if (isset($postArr['ccwp_name_first'])) {
+            $titleParts[] = $postArr['ccwp_name_first'];
+        }
+
+        if (isset($postArr['ccwp_name_last'])) {
+            $titleParts[] = $postArr['ccwp_name_last'];
+        }
+
+        return empty($titleParts)
+            ? "Untitled Curtain Call Cast/Crew - {$postArr['ID']}"
+            : Str::stripExtraSpaces(implode(' ', $titleParts));
+    }
+
+    /**
+     * Generate a post-title for a production post.
      *
      * @param array<string, mixed> $postArr
      * @return string
@@ -418,25 +388,38 @@ final class AdminHooks
     }
 
     /**
-     * Generate a post title for a cast/crew post.
+     * Get the post-type from the current screen or post.
      *
-     * @param array<string, mixed> $postArr
-     * @return string
+     * @return string|null
      */
-    private function getCastCrewPostTitle(array $postArr): string
+    private function getPostType(): ?string
     {
-        $titleParts = [];
-        if (isset($postArr['ccwp_name_first'])) {
-            $titleParts[] = $postArr['ccwp_name_first'];
+        $screen = get_current_screen();
+
+        if ($screen?->post_type) {
+            return $screen?->post_type;
         }
 
-        if (isset($postArr['ccwp_name_last'])) {
-            $titleParts[] = $postArr['ccwp_name_last'];
+        /** @var WP_Post|array{post_type: string|null}|null $post */
+        $post = get_post();
+
+        if ($post instanceof WP_Post && isset($post->post_type)) {
+            return $post->post_type;
         }
 
-        return empty($titleParts)
-            ? "Untitled Curtain Call Cast/Crew - {$postArr['ID']}"
-            : Str::stripExtraSpaces(implode(' ', $titleParts));
+        if (is_array($post) && isset($post['post_type'])) {
+            return $post['post_type'];
+        }
+
+        if (isset($_GET['post_type'])) {
+            return sanitize_text_field($_GET['post_type']);
+        }
+
+        if (isset($_GET['post'])) {
+            return get_post_type((int) $_GET['post']);
+        }
+
+        return null;
     }
 
     /**

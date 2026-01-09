@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CurtainCall\Hooks;
+namespace CurtainCall\Controllers;
 
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\Production;
@@ -11,17 +11,8 @@ use Illuminate\Support\Arr;
 use WP_Post;
 use WP_Screen;
 
-final class FrontendHooks
+final class FrontendController
 {
-    private string $assetsUrl;
-    private string $assetsPath;
-
-    public function __construct()
-    {
-        $this->assetsUrl = ccwp_plugin_url('assets/frontend/');
-        $this->assetsPath = ccwp_plugin_path('assets/frontend/');
-    }
-
     /**
      * Register the stylesheets for the public-facing side of the site
      *
@@ -29,8 +20,8 @@ final class FrontendHooks
      */
     public function enqueueStyles(): void
     {
-        $fontawesomeSrc = $this->assetsUrl . 'fontawesomefree.css';
-        $frontendSrc = $this->assetsUrl . 'curtain-call-wp-frontend.css';
+        $fontawesomeSrc = ccwp_plugin_url('assets/frontend/fontawesomefree.css');
+        $frontendSrc = ccwp_plugin_url('assets/frontend/curtain-call-wp-frontend.css');
         $version = $this->getVersion();
 
         wp_enqueue_style('fontawesomefree', $fontawesomeSrc, [], $version);
@@ -102,17 +93,7 @@ final class FrontendHooks
     }
 
     /**
-     * Get the version to use for enqueued assets. Debug mode will use a random version to force reloads.
-     *
-     * @return string
-     */
-    private function getVersion(): string
-    {
-        return defined('CCWP_DEBUG') && CCWP_DEBUG === true ? (string) rand() : CCWP_PLUGIN_VERSION;
-    }
-
-    /**
-     * Get the current post type
+     * Get the current post-type
      *
      * @return string|null
      */
@@ -129,12 +110,16 @@ final class FrontendHooks
             return $post['post_type'];
         }
 
-        $screen = get_current_screen();
-
-        if ($screen instanceof WP_Screen && isset($screen->post_type)) {
-            return $screen->post_type;
-        }
-
         return null;
+    }
+
+    /**
+     * Get the version to use for enqueued assets. Debug mode will use a random version to force reloads.
+     *
+     * @return string
+     */
+    private function getVersion(): string
+    {
+        return defined('CCWP_DEBUG') && CCWP_DEBUG === true ? (string) rand() : CCWP_PLUGIN_VERSION;
     }
 }

@@ -34,12 +34,14 @@ final class ProductionData extends Data
         $role = $data['role'] ?? null;
         $order = (int) ($data['order'] ?? $data['custom_order'] ?? $data['customOrder'] ?? 0);
 
+        get_bloginfo('language');
+
         return new self(
             id: $id,
             name: $name,
             dateStart: $dateStart,
             dateEnd: $dateEnd,
-            type: is_string($data['type']) ? $data['type'] : null,
+            type: is_string($type) ? $type : null,
             role: $role,
             order: $order,
         );

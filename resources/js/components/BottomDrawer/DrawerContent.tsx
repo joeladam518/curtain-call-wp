@@ -12,6 +12,7 @@ import relationsStore, {
     type RelationsStoreSelectors,
     useDispatch as useRelationsDispatch,
 } from '../../stores/relations-store';
+import {TEXT_DOMAIN} from '../../utils/constants';
 import Relations from './Relations';
 
 type DrawerContentState = {
@@ -53,7 +54,7 @@ const DrawerContent: FC = () => {
         fetchCastCrew,
         fetchProductions
     } = useRelationsDispatch();
-    const title = postType === PostType.Production ? 'Cast & Crew' : 'Productions';
+    const title = postType === PostType.Production ? __('Cast & Crew', TEXT_DOMAIN) : __('Productions', TEXT_DOMAIN);
 
     const fetchRelations = async () => {
         if (!postId || !postType) {
@@ -180,12 +181,12 @@ const DrawerContent: FC = () => {
             style={{height: state.isCollapsed ? 'auto' : `${state.drawerHeight}px`}}
         >
             <div className="bottom-drawer-header">
-                <Tooltip text={__('Drag to resize')}>
+                <Tooltip text={__('Drag to resize', TEXT_DOMAIN)}>
                     <button
                         className="bottom-drawer-separator"
                         ref={resizeHandleRef}
                         role="separator"
-                        aria-label={__('Drag to resize')}
+                        aria-label={__('Drag to resize', TEXT_DOMAIN)}
                     />
                 </Tooltip>
                 <div className="bottom-drawer-title">
@@ -202,7 +203,7 @@ const DrawerContent: FC = () => {
                     onClick={() => setIsCollapsed(!state.isCollapsed)}
                     aria-expanded={!state.isCollapsed}
                 >
-                    <span className="screen-reader-text">Toggle panel: {title}</span>
+                    <span className="screen-reader-text">{__('Toggle panel:', TEXT_DOMAIN)} {title}</span>
                     {state.isCollapsed ? <ChevronDown /> : <ChevronUp />}
                 </button>
             </div>

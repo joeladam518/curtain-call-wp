@@ -79,21 +79,21 @@ class CastAndCrew extends CurtainCallPost
     public static function getConfig(): array
     {
         return [
-            'description' => 'The Cast and Crew for you productions',
+            'description' => __('The Cast and Crew for your productions', CCWP_TEXT_DOMAIN),
             'labels' => [
-                'name' => _x('Cast and Crew', 'post type general name'),
-                'singular_name' => _x('Cast or Crew', 'post type singular name'),
-                'add_new' => _x('Add New', 'Cast or Crew'),
-                'add_new_item' => __('Add New cast or crew'),
-                'edit_item' => __('Edit cast or crew'),
-                'new_item' => __('New cast or crew'),
-                'all_items' => __('All cast and crew'),
-                'view_item' => __('View cast or crew'),
-                'search_items' => __('Search cast and crew'),
-                'not_found' => __('No cast or crew found'),
-                'not_found_in_trash' => __('No cast or crew found in the Trash'),
+                'name' => _x('Cast and Crew', 'post type general name', CCWP_TEXT_DOMAIN),
+                'singular_name' => _x('Cast or Crew', 'post type singular name', CCWP_TEXT_DOMAIN),
+                'add_new' => _x('Add New', 'Cast or Crew', CCWP_TEXT_DOMAIN),
+                'add_new_item' => __('Add New cast or crew', CCWP_TEXT_DOMAIN),
+                'edit_item' => __('Edit cast or crew', CCWP_TEXT_DOMAIN),
+                'new_item' => __('New cast or crew', CCWP_TEXT_DOMAIN),
+                'all_items' => __('All cast and crew', CCWP_TEXT_DOMAIN),
+                'view_item' => __('View cast or crew', CCWP_TEXT_DOMAIN),
+                'search_items' => __('Search cast and crew', CCWP_TEXT_DOMAIN),
+                'not_found' => __('No cast or crew found', CCWP_TEXT_DOMAIN),
+                'not_found_in_trash' => __('No cast or crew found in the Trash', CCWP_TEXT_DOMAIN),
                 'parent_item_colon' => '',
-                'menu_name' => 'Cast and Crew',
+                'menu_name' => __('Cast and Crew', CCWP_TEXT_DOMAIN),
             ],
             'public' => true,
             'show_in_rest' => true,
@@ -175,20 +175,19 @@ class CastAndCrew extends CurtainCallPost
      */
     public function getBirthPlace(): string
     {
-        $birthplace = '';
         if (isset($this->birthday)) {
             $birthday = Date::toCarbon($this->birthday);
             $birthday = $birthday ? $birthday->toFormattedDateString() : '';
-            $birthplace .= "Born on {$birthday}";
-            if (isset($this->hometown)) {
-                $birthplace .= ' in ' . $this->hometown;
-            }
-            $birthplace .= '.';
-        } elseif (isset($this->hometown)) {
-            $birthplace .= 'Born in ' . $this->hometown . '.';
+            return isset($this->hometown)
+                ? sprintf(__('Born on %1$s in %2$s.', CCWP_TEXT_DOMAIN), $birthday, $this->hometown)
+                : sprintf(__('Born on %s.', CCWP_TEXT_DOMAIN), $birthday);
         }
 
-        return $birthplace;
+        if (isset($this->hometown)) {
+            return sprintf(__('Born in %s.', CCWP_TEXT_DOMAIN), $this->hometown);
+        }
+
+        return "";
     }
 
     /**
@@ -196,11 +195,7 @@ class CastAndCrew extends CurtainCallPost
      */
     public function getFullName(): string
     {
-        if (isset($this->name_last)) {
-            return "{$this->name_first} {$this->name_last}";
-        }
-
-        return $this->name_first;
+        return trim("{$this->name_first} {$this->name_last}");
     }
 
     /**

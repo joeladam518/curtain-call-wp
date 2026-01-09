@@ -1,7 +1,9 @@
 import {FC, useState} from 'react';
 import {Button, ComboboxControl, SelectControl, TextControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import MemberType from '../../enums/MemberType';
 import {CastCrewProduction} from '../../types/metaboxes';
+import {TEXT_DOMAIN} from '../../utils/constants';
 import MetaboxLabelRow from '../MetaboxLabelRow';
 import Row from './Row';
 
@@ -137,34 +139,34 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
                 <ComboboxControl
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
-                    label="Production"
+                    label={__('Production', TEXT_DOMAIN)}
                     value={state.selectedProductionId}
-                    options={[{label: 'Select Production', value: '0'}, ...options]}
+                    options={[{label: __('Select Production', TEXT_DOMAIN), value: '0'}, ...options]}
                     onChange={value => setSelectedProductionId(value || '0')}
                 />
                 <SelectControl<MemberType>
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
-                    label="Type"
+                    label={__('Type', TEXT_DOMAIN)}
                     value={state.selectedType}
                     options={[
-                        {label: 'Cast', value: MemberType.Cast},
-                        {label: 'Crew', value: MemberType.Crew},
+                        {label: __('Cast', TEXT_DOMAIN), value: MemberType.Cast},
+                        {label: __('Crew', TEXT_DOMAIN), value: MemberType.Crew},
                     ]}
                     onChange={value => setSelectedType(value as MemberType)}
                 />
                 <TextControl
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
-                    label="Role"
+                    label={__('Role', TEXT_DOMAIN)}
                     value={state.role}
                     onChange={value => setRole(value)}
-                    placeholder="e.g. Hamlet, Director"
+                    placeholder={__('e.g. Hamlet, Director', TEXT_DOMAIN)}
                 />
                 <TextControl
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
-                    label="Order"
+                    label={__('Order', TEXT_DOMAIN)}
                     type="number"
                     value={state.order}
                     onChange={value => setOrder(parseInt(value, 10) || 0)}
@@ -175,7 +177,7 @@ const CastCrewProductionsMetabox: FC<CastCrewProductionsMetaboxProps> = ({
                     variant="secondary"
                     onClick={() => addProduction()}
                 >
-                    Add Production
+                    {__('Add Production', TEXT_DOMAIN)}
                 </Button>
             </div>
 

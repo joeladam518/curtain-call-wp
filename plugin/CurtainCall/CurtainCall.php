@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace CurtainCall;
 
-use CurtainCall\Blocks\ArchiveBlocks;
-use CurtainCall\Hooks\AdminCastCrewMetaboxHooks;
-use CurtainCall\Hooks\AdminHooks;
-use CurtainCall\Hooks\AdminProductionMetaboxHooks;
-use CurtainCall\Hooks\FrontendHooks;
-use CurtainCall\Hooks\GlobalHooks;
+use CurtainCall\Controllers\AdminCastCrewMetaboxController;
+use CurtainCall\Controllers\AdminController;
+use CurtainCall\Controllers\AdminProductionMetaboxController;
+use CurtainCall\Controllers\FrontendController;
+use CurtainCall\Controllers\InitController;
+use CurtainCall\Controllers\RelationsRestController;
+use CurtainCall\Controllers\SettingsController;
 use CurtainCall\LifeCycle\Activator;
 use CurtainCall\LifeCycle\Deactivator;
 use CurtainCall\LifeCycle\Uninstaller;
-use CurtainCall\Rest\RelationsController;
 
 final class CurtainCall
 {
@@ -54,10 +54,10 @@ final class CurtainCall
      */
     public function boot(): void
     {
-        $this->loadGlobalHooks();
+        $this->registerLocales();
+        $this->loadInitHooks();
+        $this->loadSettingsHooks();
         $this->loadAdminHooks();
-        $this->loadCastCrewMetaboxHooks();
-        $this->loadProductionMetaboxHooks();
         $this->loadFrontendHooks();
     }
 
@@ -66,20 +66,22 @@ final class CurtainCall
      *
      * @return void
      */
-    private function loadGlobalHooks(): void
+    private function loadInitHooks(): void
     {
-        $controller = new GlobalHooks();
+        $initController = new InitController();
+        add_action('init', [$initController, 'createProductionPostType'], 10, 0);
+        add_action('init', [$initController, 'createProductionSeasonsTaxonomy'], 10, 0);
+        add_action('init', [$initController, 'createCastAndCrewPostType'], 10, 0);
+        add_action('init', [$initController, 'registerCastCrewMeta'], 10, 0);
+        add_action('init', [$initController, 'registerProductionMeta'], 10, 0);
+        add_action('rest_api_init', [RelationsRestController::class, 'registerRoutes'], 10, 0);
+    }
 
-        add_action('admin_init', [$controller, 'addPluginSettings'], 10, 0);
-
-        add_action('init', [$controller, 'createProductionPostType'], 10, 0);
-        add_action('init', [$controller, 'createProductionSeasonsTaxonomy'], 10, 0);
-        add_action('init', [$controller, 'createCastAndCrewPostType'], 10, 0);
-        add_action('init', [$controller, 'registerCastCrewMeta'], 10, 0);
-        add_action('init', [$controller, 'registerProductionMeta'], 10, 0);
-
-        add_action('init', [ArchiveBlocks::class, 'register'], 10, 0);
-        add_action('rest_api_init', [RelationsController::class, 'registerRoutes'], 10, 0);
+    private function loadSettingsHooks(): void
+    {
+        $controller = new SettingsController();
+        add_action('admin_init', [$controller, 'registerSettings'], 10, 0);
+        add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
     }
 
     /**
@@ -89,38 +91,21 @@ final class CurtainCall
      */
     private function loadAdminHooks(): void
     {
-        $controller = new AdminHooks();
+        $adminCastCrewMetaboxController = new AdminCastCrewMetaboxController();
+        add_action('add_meta_boxes', [$adminCastCrewMetaboxController, 'addMetaboxes'], 10, 0);
+        add_action('save_post_ccwp_cast_and_crew', [$adminCastCrewMetaboxController, 'saveDetailsMeta'], 10, 3);
+        add_action('save_post_ccwp_cast_and_crew', [$adminCastCrewMetaboxController, 'saveAddProductions'], 10, 3);
 
-        // Add the admin setting page
-        add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
+        $adminProductionMetaboxController = new AdminProductionMetaboxController();
+        add_action('add_meta_boxes', [$adminProductionMetaboxController, 'addMetaboxes'], 10, 0);
+        add_action('save_post_ccwp_production', [$adminProductionMetaboxController, 'saveDetailsMeta'], 10, 3);
+        add_action('save_post_ccwp_production', [$adminProductionMetaboxController, 'saveAddCastCrew'], 10, 3);
 
-        // Set the title on save
-        add_filter('wp_insert_post_data', [$controller, 'setTitleOnPostSave'], 10, 3);
-
-        // Enqueue scripts and styles for the admin
-        add_action('admin_enqueue_scripts', [$controller, 'enqueueStyles'], 10, 0);
-        add_action('admin_enqueue_scripts', [$controller, 'enqueueScripts'], 10, 0);
-
-        // Block editor-only assets
-        add_action('enqueue_block_editor_assets', [$controller, 'enqueueEditorAssets'], 10, 0);
-    }
-
-    private function loadCastCrewMetaboxHooks(): void
-    {
-        $controller = new AdminCastCrewMetaboxHooks();
-
-        add_action('add_meta_boxes', [$controller, 'addMetaboxes'], 10, 0);
-        add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveDetailsMeta'], 10, 3);
-        add_action('save_post_ccwp_cast_and_crew', [$controller, 'saveAddProductions'], 10, 3);
-    }
-
-    private function loadProductionMetaboxHooks(): void
-    {
-        $controller = new AdminProductionMetaboxHooks();
-
-        add_action('add_meta_boxes', [$controller, 'addMetaboxes'], 10, 0);
-        add_action('save_post_ccwp_production', [$controller, 'saveDetailsMeta'], 10, 3);
-        add_action('save_post_ccwp_production', [$controller, 'saveAddCastCrew'], 10, 3);
+        $adminController = new AdminController();
+        add_filter('wp_insert_post_data', [$adminController, 'setTitleOnPostSave'], 10, 3);
+        add_action('admin_enqueue_scripts', [$adminController, 'enqueueStyles'], 10, 0);
+        add_action('admin_enqueue_scripts', [$adminController, 'enqueueScripts'], 10, 0);
+        add_action('enqueue_block_editor_assets', [$adminController, 'enqueueEditorAssets'], 10, 0);
     }
 
     /**
@@ -130,12 +115,9 @@ final class CurtainCall
      */
     private function loadFrontendHooks(): void
     {
-        $controller = new FrontendHooks();
-
+        $controller = new FrontendController();
         add_filter('single_template', [$controller, 'loadSingleTemplates'], 10, 3);
         add_filter('archive_template', [$controller, 'loadArchiveTemplates'], 10, 3);
-
-        // Enqueue scripts and styles for the frontend
         add_action('wp_enqueue_scripts', [$controller, 'enqueueStyles'], 10, 0);
     }
 

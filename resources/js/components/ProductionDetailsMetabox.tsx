@@ -1,6 +1,8 @@
 import {FC, useState} from 'react';
 import {TextControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import useHasPostTitle from '../hooks/useHasPostTitle';
+import {TEXT_DOMAIN} from '../utils/constants';
 import {dateToFormat} from '../utils/dates';
 import {updatePostTitle} from '../utils/post';
 import DatePickerControl from './DatePickerControl';
@@ -65,11 +67,11 @@ const ProductionDetailsMetabox: FC<ProductionDetailsMetaboxProps> = ({initialDet
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Production Name"
+                label={__('Production Name', TEXT_DOMAIN)}
                 value={state.name}
                 onChange={setName}
                 name="ccwp_production_name"
-                help="*Required. The production's name could be different than the post's title."
+                help={__("*Required. The production's name could be different than the post's title.", TEXT_DOMAIN)}
             />
             <div
                 style={{
@@ -81,13 +83,13 @@ const ProductionDetailsMetabox: FC<ProductionDetailsMetaboxProps> = ({initialDet
                 }}
             >
                 <DatePickerControl
-                    label="Production Dates - Openening*"
+                    label={__('Production Dates - Opening*', TEXT_DOMAIN)}
                     name="ccwp_date_start"
                     onChange={setStartDate}
                     value={state.startDate}
                 />
                 <DatePickerControl
-                    label="Production Dates - Closing*"
+                    label={__('Production Dates - Closing*', TEXT_DOMAIN)}
                     name="ccwp_date_end"
                     onChange={setEndDate}
                     value={state.endDate}
@@ -96,29 +98,29 @@ const ProductionDetailsMetabox: FC<ProductionDetailsMetaboxProps> = ({initialDet
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Show Times"
+                label={__('Show Times', TEXT_DOMAIN)}
                 value={state.showTimes}
                 onChange={setShowTimes}
                 name="ccwp_show_times"
-                help="Example: Thurs-Fri 7:30pm - Sat & Sun 3:30pm & 8pm"
+                help={__('Example: Thurs-Fri 7:30pm - Sat & Sun 3:30pm & 8pm', TEXT_DOMAIN)}
             />
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="URL for Online Ticket Sales"
+                label={__('URL for Online Ticket Sales', TEXT_DOMAIN)}
                 value={state.ticketUrl}
                 onChange={setTicketUrl}
                 name="ccwp_ticket_url"
-                help='The "Default Tickets Url" will be used if no value is provided here.'
+                help={__('The "Default Tickets Url" will be used if no value is provided here.', TEXT_DOMAIN)}
             />
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Venue"
+                label={__('Venue', TEXT_DOMAIN)}
                 value={state.venue}
                 onChange={setVenue}
                 name="ccwp_venue"
-                help="Where the show was performed."
+                help={__('Where the show was performed.', TEXT_DOMAIN)}
             />
         </div>
     );

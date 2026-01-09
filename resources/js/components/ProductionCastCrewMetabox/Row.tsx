@@ -1,7 +1,9 @@
 import {Button, TextControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import {FC} from 'react';
 import MemberType from '../../enums/MemberType';
 import {ProductionCastCrew} from '../../types/metaboxes';
+import {TEXT_DOMAIN} from '../../utils/constants';
 
 type UpdateData = {
     role?: string;
@@ -65,7 +67,7 @@ const Row: FC<RowProps> = ({
                         value={member.role || ''}
                         onChange={val => onUpdate?.(member.type, member.ID, {role: val})}
                         name={`${inputName}[${member.ID}][role]`}
-                        placeholder="role"
+                        placeholder={__('role', TEXT_DOMAIN)}
                     />
                 </div>
                 <div className="ccwp-col billing-col" style={{flex: '0 0 100px'}}>
@@ -76,7 +78,7 @@ const Row: FC<RowProps> = ({
                         value={member.order || 0}
                         onChange={val => onUpdate?.(member.type, member.ID, {order: parseInt(val, 10)})}
                         name={`${inputName}[${member.ID}][custom_order]`}
-                        placeholder="order"
+                        placeholder={__('order', TEXT_DOMAIN)}
                     />
                 </div>
                 <div className="ccwp-col action-col">
@@ -85,7 +87,7 @@ const Row: FC<RowProps> = ({
                         isDestructive
                         onClick={() => onRemove?.(member.type, member.ID)}
                     >
-                        Delete
+                        {__('Delete', TEXT_DOMAIN)}
                     </Button>
                 </div>
             </div>

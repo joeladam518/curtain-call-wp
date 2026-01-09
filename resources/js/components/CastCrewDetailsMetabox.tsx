@@ -1,6 +1,8 @@
 import {FC, useState} from 'react';
 import {TextControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import useHasPostTitle from '../hooks/useHasPostTitle';
+import {TEXT_DOMAIN} from '../utils/constants';
 import {dateToFormat} from '../utils/dates';
 import {updatePostTitle} from '../utils/post';
 import DatePickerControl from './DatePickerControl';
@@ -52,19 +54,16 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="First Name*"
+                label={__('First Name*', TEXT_DOMAIN)}
                 value={state.name_first}
                 onChange={setFirstName}
                 name="ccwp_name_first"
-                help={
-                    '*Required. These fields are used to auto-generate the post title with ' +
-                    "the cast or crew member's full name."
-                }
+                help={__("*Required. These fields are used to auto-generate the post title with the cast or crew member's full name.", TEXT_DOMAIN)}
             />
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Last Name*"
+                label={__('Last Name*', TEXT_DOMAIN)}
                 value={state.name_last}
                 onChange={setLastName}
                 name="ccwp_name_last"
@@ -72,17 +71,14 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Title*"
+                label={__('Title*', TEXT_DOMAIN)}
                 value={state.self_title}
                 onChange={setTitle}
                 name="ccwp_self_title"
-                help={
-                    '*Required. If the cast or crew member has many roles across different productions, ' +
-                    'try to use the one they identify with the most. Ex. Director, Actor, Choreographer, etc.'
-                }
+                help={__('*Required. If the cast or crew member has many roles across different productions, try to use the one they identify with the most. Ex. Director, Actor, Choreographer, etc.', TEXT_DOMAIN)}
             />
             <DatePickerControl
-                label="Birthday"
+                label={__('Birthday', TEXT_DOMAIN)}
                 name="ccwp_birthday"
                 onChange={setBirthday}
                 value={state.birthday}
@@ -90,7 +86,7 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Hometown"
+                label={__('Hometown', TEXT_DOMAIN)}
                 value={state.hometown}
                 onChange={setHometown}
                 name="ccwp_hometown"
@@ -98,7 +94,7 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Website Link"
+                label={__('Website Link', TEXT_DOMAIN)}
                 value={state.website_link}
                 onChange={setWebsiteLink}
                 name="ccwp_website_link"
@@ -106,7 +102,7 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Facebook Link"
+                label={__('Facebook Link', TEXT_DOMAIN)}
                 value={state.facebook_link}
                 onChange={setFacebookLink}
                 name="ccwp_facebook_link"
@@ -114,7 +110,7 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Twitter Link"
+                label={__('Twitter Link', TEXT_DOMAIN)}
                 value={state.twitter_link}
                 onChange={setTwitterLink}
                 name="ccwp_twitter_link"
@@ -122,7 +118,7 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Instagram Link"
+                label={__('Instagram Link', TEXT_DOMAIN)}
                 value={state.instagram_link}
                 onChange={setInstagramLink}
                 name="ccwp_instagram_link"
@@ -130,11 +126,11 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
             <TextControl
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
-                label="Fun Fact"
+                label={__('Fun Fact', TEXT_DOMAIN)}
                 value={state.fun_fact}
                 onChange={setFunFact}
                 name="ccwp_fun_fact"
-                help="This should be kept to one sentence."
+                help={__('This should be kept to one sentence.', TEXT_DOMAIN)}
             />
         </div>
     );

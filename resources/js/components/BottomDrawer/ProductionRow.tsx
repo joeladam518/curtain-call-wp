@@ -1,8 +1,10 @@
 import {Button, SelectControl, TextControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import {FC, useMemo, useState} from 'react';
 import ProductionData from '../../data/ProductionData';
 import MemberType from '../../enums/MemberType';
 import {AttachData, DetachData} from '../../stores/relations-store';
+import {TEXT_DOMAIN} from '../../utils/constants';
 
 export type ProductionRowState = {
     order: string;
@@ -55,8 +57,8 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 __nextHasNoMarginBottom
                 value={state.type}
                 options={[
-                    {label: 'Cast', value: MemberType.Cast},
-                    {label: 'Crew', value: MemberType.Crew},
+                    {label: __('Cast', TEXT_DOMAIN), value: MemberType.Cast},
+                    {label: __('Crew', TEXT_DOMAIN), value: MemberType.Crew},
                 ]}
                 onChange={type => setType(type as MemberType)}
             />
@@ -65,7 +67,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 __nextHasNoMarginBottom
                 value={state.role}
                 onChange={setRole}
-                placeholder="Role"
+                placeholder={__('Role', TEXT_DOMAIN)}
             />
             <TextControl
                 __next40pxDefaultSize
@@ -73,7 +75,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 type="number"
                 value={state.order || '0'}
                 onChange={setOrder}
-                placeholder="Order"
+                placeholder={__('Order', TEXT_DOMAIN)}
             />
             <Button
                 __next40pxDefaultSize
@@ -89,7 +91,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 isBusy={isBusy}
                 size="small"
             >
-                Save
+                {__('Save', TEXT_DOMAIN)}
             </Button>
             <Button
                 __next40pxDefaultSize
@@ -103,7 +105,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 disabled={isBusy}
                 size="small"
             >
-                Remove
+                {__('Remove', TEXT_DOMAIN)}
             </Button>
         </div>
     );

@@ -45,7 +45,10 @@ class Production extends CurtainCallPost
     public static function getConfig(): array
     {
         return [
-            'description' => 'Displays your theatre company\'s productions and their relevant data',
+            'description' => __(
+                'Displays your theatre company\'s productions and their relevant data',
+                CCWP_TEXT_DOMAIN,
+            ),
             'labels' => [
                 'name' => __('Productions', CCWP_TEXT_DOMAIN),
                 'singular_name' => __('Production', CCWP_TEXT_DOMAIN),
@@ -59,7 +62,7 @@ class Production extends CurtainCallPost
                 'not_found' => __('No productions found', CCWP_TEXT_DOMAIN),
                 'not_found_in_trash' => __('No productions found in the Trash', CCWP_TEXT_DOMAIN),
                 'parent_item_colon' => '',
-                'menu_name' => 'Productions',
+                'menu_name' => __('Productions', CCWP_TEXT_DOMAIN),
             ],
             'public' => true,
             'show_in_rest' => true,
@@ -240,44 +243,44 @@ class Production extends CurtainCallPost
      */
     public function getFormattedShowDates(): string
     {
-        $chrono_state = $this->getChronologicalState();
-        $start_date = Date::toCarbon($this->date_start);
-        $end_date = Date::toCarbon($this->date_end);
         $now = Carbon::now();
+        $chronologicalState = $this->getChronologicalState();
+        $startDate = Date::toCarbon($this->date_start);
+        $endDate = Date::toCarbon($this->date_end);
 
-        $start_date_format = 'F jS';
-        $end_date_format = '';
+        $startDateFormat = 'F jS';
+        $endDateFormat = '';
 
-        if ($chrono_state === 'past' || $start_date?->format('Y') !== $now->format('Y')) {
+        if ($chronologicalState === 'past' || $startDate?->format('Y') !== $now->format('Y')) {
             // Don't show the start date year if both dates are in the same year
-            if ($start_date?->format('Y') !== $end_date?->format('Y')) {
-                $start_date_format .= ', Y';
+            if ($startDate?->format('Y') !== $endDate?->format('Y')) {
+                $startDateFormat .= ', Y';
             }
         }
 
         // Don't show the end date month if both dates are in the same month
-        if ($start_date?->format('F') !== $end_date?->format('F')) {
-            $end_date_format .= 'F ';
+        if ($startDate?->format('F') !== $endDate?->format('F')) {
+            $endDateFormat .= 'F ';
         }
 
-        $end_date_format .= 'jS';
+        $endDateFormat .= 'jS';
 
         // End date only gets a year if it's in the past or doesn't match the current year
-        if ($chrono_state === 'past' || $end_date?->format('Y') !== $now?->format('Y')) {
-            $end_date_format .= ', Y';
+        if ($chronologicalState === 'past' || $endDate?->format('Y') !== $now?->format('Y')) {
+            $endDateFormat .= ', Y';
         }
 
-        /** @var string $formatted_dates */
-        $formatted_dates = $start_date?->format($start_date_format);
-        /** @var string $formatted_end_date */
-        $formatted_end_date = $end_date?->format($end_date_format);
+        /** @var string $formattedDates */
+        $formattedDates = $startDate?->format($startDateFormat);
+        /** @var string $formattedEndDate */
+        $formattedEndDate = $endDate?->format($endDateFormat);
 
         // Only show one date if the dates are identical
-        if ($formatted_dates && $formatted_end_date && $formatted_dates !== $formatted_end_date) {
-            $formatted_dates .= ' - ' . $formatted_end_date;
+        if ($formattedDates && $formattedEndDate && $formattedDates !== $formattedEndDate) {
+            $formattedDates .= ' - ' . $formattedEndDate;
         }
 
-        return $formatted_dates;
+        return $formattedDates;
     }
 
     /**
@@ -297,12 +300,7 @@ class Production extends CurtainCallPost
         /** @var string|false|null $url */
         $url = get_option('ccwp_default_ticket_url', null);
 
-        // get_option() can return false even if the default is null
-        if (!$url) {
-            return null;
-        }
-
-        return $url;
+        return $url ?: null;
     }
 
     /**

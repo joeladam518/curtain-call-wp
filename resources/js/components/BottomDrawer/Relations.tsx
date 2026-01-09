@@ -1,9 +1,11 @@
 import {Spinner} from '@wordpress/components';
+import {__, sprintf} from '@wordpress/i18n';
 import {FC} from 'react';
 import CastCrewData from '../../data/CastCrewData';
 import ProductionData from '../../data/ProductionData';
 import PostType from '../../enums/PostType';
 import {AttachData, DetachData} from '../../stores/relations-store';
+import {TEXT_DOMAIN} from '../../utils/constants';
 import CastCrewRelations from './CastCrewRelations';
 import ProductionRelations from './ProductionRelations';
 
@@ -39,7 +41,11 @@ const Relations: FC<RelationsProps> = ({
     if (!relations || relations.length === 0) {
         return (
             <p className="ccwp-drawer-empty-message">
-                No {(title || 'relations').toLowerCase()} attached yet. Use the sidebar to attach.
+                {sprintf(
+                    /* translators: %s: the type of relation (e.g., "cast", "crew", "productions") */
+                    __('No %s attached yet. Use the sidebar to attach.', TEXT_DOMAIN),
+                    (title || __('relations', TEXT_DOMAIN)).toLowerCase()
+                )}
             </p>
         );
     }
@@ -47,7 +53,7 @@ const Relations: FC<RelationsProps> = ({
     if (!postId) {
         return (
             <p className="ccwp-drawer-empty-message">
-                Invalid Post Id
+                {__('Invalid Post Id', TEXT_DOMAIN)}
             </p>
         );
     }
@@ -80,7 +86,7 @@ const Relations: FC<RelationsProps> = ({
 
     return (
         <p className="ccwp-drawer-empty-message">
-            Invalid Post Type
+            {__('Invalid Post Type', TEXT_DOMAIN)}
         </p>
     );
 };

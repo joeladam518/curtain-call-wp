@@ -15,7 +15,6 @@ if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
 
 // Computed for this partial
 $production_permalink = get_post_permalink($production->ID) ?: '';
-$production_thumbnail_html = get_the_post_thumbnail($production->getPost(), 'full');
 $production_excerpt = get_the_excerpt($production->getPost());
 $ticket_url = $production->getTicketUrl();
 ?>
@@ -23,11 +22,11 @@ $ticket_url = $production->getTicketUrl();
 <div class="productions-directory-row">
     <div class="production-poster">
         <?php if (has_post_thumbnail()): ?>
-            <a href="<?php echo esc_attr($production_permalink); ?>">
-                <?php
-                // @mago-ignore lint:no-unescaped-output
-                echo $production_thumbnail_html;
-                ?>
+            <a href="<?php echo esc_url($production_permalink); ?>">
+            <?php
+            // @mago-ignore lint:no-unescaped-output
+            echo get_the_post_thumbnail($production->getPost(), 'full');
+            ?>
             </a>
         <?php endif; ?>
     </div>
@@ -35,26 +34,28 @@ $ticket_url = $production->getTicketUrl();
     <div class="production-details">
         <div class="production-name-container">
             <h3 class="production-name">
-                <a href="<?php echo esc_attr($production_permalink); ?>">
+                <a href="<?php echo esc_url($production_permalink); ?>">
                     <?php echo esc_html($production->name); ?>
                 </a>
             </h3>
             <?php if (isset($ticket_url)): ?>
-                <a href="<?php echo esc_attr($ticket_url); ?>" class="ccwp-btn" target="_blank">Get Tickets</a>
+                <a href="<?php echo esc_url($ticket_url); ?>" class="ccwp-btn" target="_blank">
+                    <?php esc_html_e('Get Tickets', CCWP_TEXT_DOMAIN); ?>
+                </a>
             <?php endif; ?>
         </div>
 
         <div class="ccwp-container">
             <?php if ($chronological_state === 'current'): ?>
                 <div>
-                    <span class="now-showing">Now Showing</span>
+                    <span class="now-showing"><?php esc_html_e('Now Showing', CCWP_TEXT_DOMAIN); ?></span>
             <?php endif; ?>
 
             <span class="production-dates">
-                <?php
-                // @mago-ignore lint:no-unescaped-output
-                echo $production->getFormattedShowDates();
-                ?>
+            <?php
+            // @mago-ignore lint:no-unescaped-output
+            echo $production->getFormattedShowDates();
+            ?>
             </span>
 
             <?php if ($chronological_state === 'current'): ?>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CurtainCall\Rest;
+namespace CurtainCall\Controllers;
 
 use CurtainCall\Data\CastCrewData;
 use CurtainCall\Data\ProductionData;
@@ -15,16 +15,14 @@ use WP_Post;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class RelationsController
+final class RelationsRestController extends RestController
 {
-    public const NAMESPACE = 'ccwp/v1';
-
     public static function registerRoutes(): void
     {
-        register_rest_route(static::NAMESPACE, '/relations', [
+        register_rest_route(self::NAMESPACE, '/relations', [
             [
                 'methods' => 'POST',
-                'callback' => [static::class, 'attach'],
+                'callback' => [self::class, 'attach'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'cast_and_crew_id' => ['type' => 'integer', 'required' => true],
@@ -36,7 +34,7 @@ class RelationsController
             ],
             [
                 'methods' => 'DELETE',
-                'callback' => [static::class, 'detach'],
+                'callback' => [self::class, 'detach'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => true],
@@ -45,10 +43,10 @@ class RelationsController
             ],
         ]);
 
-        register_rest_route(static::NAMESPACE, '/relations/cast-crew', [
+        register_rest_route(self::NAMESPACE, '/relations/cast-crew', [
             [
                 'methods' => 'GET',
-                'callback' => [static::class, 'getCastCrew'],
+                'callback' => [self::class, 'getCastCrew'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'production_id' => ['type' => 'integer', 'required' => false],
@@ -57,10 +55,10 @@ class RelationsController
             ],
         ]);
 
-        register_rest_route(static::NAMESPACE, '/relations/productions', [
+        register_rest_route(self::NAMESPACE, '/relations/productions', [
             [
                 'methods' => 'GET',
-                'callback' => [static::class, 'getProductions'],
+                'callback' => [self::class, 'getProductions'],
                 'permission_callback' => static fn() => current_user_can('edit_posts'),
                 'args' => [
                     'cast_crew_id' => ['type' => 'integer', 'required' => false],
@@ -72,7 +70,8 @@ class RelationsController
     public static function getCastCrew(WP_REST_Request $request): WP_REST_Response
     {
         $wpdb = ccwp_get_wpdb();
-        $table = $wpdb->prefix . 'ccwp_castandcrew_production';
+        $table = $wpdb->prefix . CurtainCallPivot::TABLE_NAME;
+        $castCrewPostType = CastAndCrew::POST_TYPE;
         $where = [];
         $params = [];
 
@@ -104,9 +103,12 @@ class RelationsController
         $memberPosts = collect();
 
         if (count($memberIds) > 0) {
-            $postSql = "SELECT *
-            FROM {$wpdb->posts}
-            WHERE `ID` IN (" . implode(',', $memberIds) . ") AND `post_type` = 'ccwp_cast_and_crew'";
+            $postSql = "
+                SELECT *
+                FROM {$wpdb->posts}
+                WHERE `ID` IN (" . implode(',', $memberIds) . ")
+                AND `post_type` = '{$castCrewPostType}'
+            ";
             /** @var list<array<string, mixed>> $postRows */
             $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
             /** @var Collection<int, WP_Post> $memberPosts */
@@ -115,7 +117,7 @@ class RelationsController
 
         // glue them together
         $castCrew = $pivots
-            ->map(static function(CurtainCallPivot $pivot) use ($memberPosts) {
+            ->map(static function (CurtainCallPivot $pivot) use ($memberPosts) {
                 /** @var WP_Post|null $memberPost */
                 $memberPost = $memberPosts->get($pivot->cast_and_crew_id);
 
@@ -137,7 +139,8 @@ class RelationsController
     public static function getProductions(WP_REST_Request $request): WP_REST_Response
     {
         $wpdb = ccwp_get_wpdb();
-        $table = $wpdb->prefix . 'ccwp_castandcrew_production';
+        $table = $wpdb->prefix . CurtainCallPivot::TABLE_NAME;
+        $productionPostType = Production::POST_TYPE;
         $where = [];
         $params = [];
 
@@ -163,9 +166,12 @@ class RelationsController
         $productionPosts = collect();
 
         if (count($productionIds) > 0) {
-            $postSql = "SELECT *
+            $postSql = "
+                SELECT *
                 FROM {$wpdb->posts}
-                WHERE `ID` IN (" . implode(',', $productionIds) . ") AND `post_type` = 'ccwp_production'";
+                WHERE `ID` IN (" . implode(',', $productionIds) . ")
+                AND `post_type` = '{$productionPostType}'
+            ";
             /** @var list<array<string, mixed>> $rows */
             $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
             /** @var Collection<int, WP_Post> $productionPosts */
@@ -174,7 +180,7 @@ class RelationsController
 
         // glue them together
         $productions = $pivots
-            ->map(static function(CurtainCallPivot $pivot) use ($productionPosts) {
+            ->map(static function (CurtainCallPivot $pivot) use ($productionPosts) {
                 /** @var WP_Post|null $production */
                 $productionPost = $productionPosts->get($pivot->production_id);
 
@@ -196,7 +202,7 @@ class RelationsController
     public static function attach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $wpdb = ccwp_get_wpdb();
-        $table = $wpdb->prefix . 'ccwp_castandcrew_production';
+        $table = $wpdb->prefix . CurtainCallPivot::TABLE_NAME;
         $productionId = (int) $request->get_param('production_id');
         $castcrewId = (int) $request->get_param('cast_and_crew_id');
         $type = (string) $request->get_param('type');
@@ -240,7 +246,7 @@ class RelationsController
     public static function detach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $wpdb = ccwp_get_wpdb();
-        $table = $wpdb->prefix . 'ccwp_castandcrew_production';
+        $table = $wpdb->prefix . CurtainCallPivot::TABLE_NAME;
         $productionId = (int) $request->get_param('production_id');
         $castcrewId = (int) $request->get_param('cast_and_crew_id');
 

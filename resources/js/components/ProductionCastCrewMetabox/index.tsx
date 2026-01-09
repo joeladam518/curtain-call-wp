@@ -1,7 +1,9 @@
 import {FC, useState} from 'react';
 import {Button, ComboboxControl} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import MemberType from '../../enums/MemberType';
 import {ProductionCastCrew} from '../../types/metaboxes';
+import {TEXT_DOMAIN} from '../../utils/constants';
 import MetaboxLabelRow from '../MetaboxLabelRow';
 import Row from './Row';
 
@@ -125,9 +127,9 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     <ComboboxControl
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
-                        label="Add Cast"
+                        label={__('Add Cast', TEXT_DOMAIN)}
                         value={state.selectedCastId}
-                        options={[{label: 'Select Cast', value: '0'}, ...options]}
+                        options={[{label: __('Select Cast', TEXT_DOMAIN), value: '0'}, ...options]}
                         onChange={value => setSelectedCastId(value || '0')}
                     />
                 </div>
@@ -136,7 +138,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     variant="secondary"
                     onClick={() => addMember(MemberType.Cast)}
                 >
-                    Add Cast
+                    {__('Add Cast', TEXT_DOMAIN)}
                 </Button>
             </div>
             {state.cast.length > 0 && (
@@ -170,9 +172,9 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                 <ComboboxControl
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
-                    label="Add Crew"
+                    label={__('Add Crew', TEXT_DOMAIN)}
                     value={state.selectedCrewId}
-                    options={[{label: 'Select Crew', value: '0'}, ...options]}
+                    options={[{label: __('Select Crew', TEXT_DOMAIN), value: '0'}, ...options]}
                     onChange={value => setSelectedCrewId(value || '0')}
                 />
                 <Button
@@ -180,7 +182,7 @@ const ProductionCastCrewMetabox: FC<ProductionCastCrewMetaboxProps> = ({
                     variant="secondary"
                     onClick={() => addMember(MemberType.Crew)}
                 >
-                    Add Crew
+                    {__('Add Crew', TEXT_DOMAIN)}
                 </Button>
             </div>
             {state.crew.length > 0 && (

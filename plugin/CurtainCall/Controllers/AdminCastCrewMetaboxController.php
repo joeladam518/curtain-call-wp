@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CurtainCall\Hooks;
+namespace CurtainCall\Controllers;
 
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Support\Date;
@@ -10,7 +10,7 @@ use CurtainCall\Support\View;
 use Throwable;
 use WP_Post;
 
-final class AdminCastCrewMetaboxHooks
+final class AdminCastCrewMetaboxController
 {
     /**
      * Add the Cast and crew met boxes
@@ -188,7 +188,12 @@ final class AdminCastCrewMetaboxHooks
         $castcrew = CastAndCrew::make($post);
 
         View::make('admin/castcrew-productions-metabox.php', [
-            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_add_productions_to_cast_crew_box_nonce', true, false),
+            'wp_nonce' => wp_nonce_field(
+                basename(__FILE__),
+                'ccwp_add_productions_to_cast_crew_box_nonce',
+                true,
+                false,
+            ),
             'post' => $post,
             'metabox' => $metabox,
             'castcrew' => $castcrew,

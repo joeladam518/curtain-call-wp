@@ -2,9 +2,11 @@ import {Button, ComboboxControl, Notice, SelectControl, Spinner, TextControl} fr
 import {useSelect} from '@wordpress/data';
 import {store as coreStore} from '@wordpress/core-data';
 import {PluginDocumentSettingPanel, store as editorStore} from '@wordpress/editor';
+import {__} from '@wordpress/i18n';
 import {FC, useMemo, useState} from 'react';
 import MemberType from '../enums/MemberType';
 import PostType from '../enums/PostType';
+import {TEXT_DOMAIN} from '../utils/constants';
 import relationsStore, {
     type RelationsStoreSelectors,
     useDispatch as useRelationsDispatch,
@@ -125,15 +127,15 @@ const Sidebar: FC = () => {
             setTargetId('');
             setRole('');
             setOrder('');
-            setSuccessMessage('Successfully attached!');
+            setSuccessMessage(__('Successfully attached!', TEXT_DOMAIN));
             setTimeout(() => setSuccessMessage(null), 3000);
         } catch (e) {
             console.error('Error attaching cast crew:', e);
         }
     };
 
-    const title = postType === PostType.Production ? 'Attach Cast & Crew' : 'Attach Productions';
-    const targetLabel = postType === PostType.Production ? 'Cast/Crew Member' : 'Production';
+    const title = postType === PostType.Production ? __('Attach Cast & Crew', TEXT_DOMAIN) : __('Attach Productions', TEXT_DOMAIN);
+    const targetLabel = postType === PostType.Production ? __('Cast/Crew Member', TEXT_DOMAIN) : __('Production', TEXT_DOMAIN);
 
     return (
         <PluginDocumentSettingPanel
@@ -182,17 +184,17 @@ const Sidebar: FC = () => {
                     }}
                 >
                     <p style={{marginBottom: '16px', color: '#757575'}}>
-                        Currently attached: <strong>{relations.length}</strong>
+                        {__('Currently attached:', TEXT_DOMAIN)} <strong>{relations.length}</strong>
                     </p>
 
                     <SelectControl<MemberType>
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
-                        label="Type"
+                        label={__('Type', TEXT_DOMAIN)}
                         value={state.type}
                         options={[
-                            {label: 'Cast', value: MemberType.Cast},
-                            {label: 'Crew', value: MemberType.Crew},
+                            {label: __('Cast', TEXT_DOMAIN), value: MemberType.Cast},
+                            {label: __('Crew', TEXT_DOMAIN), value: MemberType.Crew},
                         ]}
                         onChange={type => setType(type as MemberType)}
                     />
@@ -202,24 +204,24 @@ const Sidebar: FC = () => {
                         __nextHasNoMarginBottom
                         label={targetLabel}
                         value={state.targetId.toString()}
-                        options={[{label: 'Select…', value: ''}, ...options]}
+                        options={[{label: __('Select…', TEXT_DOMAIN), value: ''}, ...options]}
                         onChange={(val: string | null | undefined) => setTargetId(val || '')}
-                        help="Search and select to attach"
+                        help={__('Search and select to attach', TEXT_DOMAIN)}
                     />
 
                     <TextControl
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
-                        label="Role"
+                        label={__('Role', TEXT_DOMAIN)}
                         value={state.role}
                         onChange={setRole}
-                        placeholder="e.g. Hamlet, Director"
+                        placeholder={__('e.g. Hamlet, Director', TEXT_DOMAIN)}
                     />
 
                     <TextControl
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
-                        label="Order"
+                        label={__('Order', TEXT_DOMAIN)}
                         type="number"
                         value={state.order}
                         onChange={setOrder}
@@ -233,7 +235,7 @@ const Sidebar: FC = () => {
                         disabled={!state.targetId || isFetching}
                         style={{width: '100%'}}
                     >
-                        Attach
+                        {__('Attach', TEXT_DOMAIN)}
                     </Button>
                 </div>
 
@@ -246,7 +248,7 @@ const Sidebar: FC = () => {
                         borderTop: '1px solid #ddd',
                     }}
                 >
-                    View and edit attached items in the drawer below the editor.
+                    {__('View and edit attached items in the drawer below the editor.', TEXT_DOMAIN)}
                 </p>
             </div>
         </PluginDocumentSettingPanel>
