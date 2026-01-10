@@ -79,8 +79,8 @@ final class AdminCastCrewMetaboxController
     {
         // Verify meta box nonce
         if (
-            !isset($_POST['ccwp_cast_and_crew_details_box_nonce'])
-            || !wp_verify_nonce($_POST['ccwp_cast_and_crew_details_box_nonce'], basename(__FILE__))
+            !isset($_POST['ccwp_cast_and_crew_details_box_nonce']) ||
+            !wp_verify_nonce($_POST['ccwp_cast_and_crew_details_box_nonce'], basename(__FILE__))
         ) {
             return;
         }
@@ -213,8 +213,8 @@ final class AdminCastCrewMetaboxController
     {
         // Verify meta box nonce
         if (
-            !isset($_POST['ccwp_add_productions_to_cast_crew_box_nonce'])
-            || !wp_verify_nonce($_POST['ccwp_add_productions_to_cast_crew_box_nonce'], basename(__FILE__))
+            !isset($_POST['ccwp_add_productions_to_cast_crew_box_nonce']) ||
+            !wp_verify_nonce($_POST['ccwp_add_productions_to_cast_crew_box_nonce'], basename(__FILE__))
         ) {
             return;
         }

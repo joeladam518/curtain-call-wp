@@ -16,7 +16,8 @@ final class ProductionData extends Data
         public readonly ?string $type,
         public readonly ?string $role,
         public readonly ?int $order = 0,
-    ) {}
+    ) {
+    }
 
     public static function fromArray(array $data): self
     {

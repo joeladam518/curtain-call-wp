@@ -16,7 +16,8 @@ final class CastCrewData extends Data
         public readonly ?string $role,
         public readonly ?string $type,
         public readonly ?int $order = 0,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string, mixed> $data
