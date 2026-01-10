@@ -16,12 +16,13 @@ trait HasCastAndCrew
     /**
      * @param string $type
      * @return array
+     * @throws Throwable
      * @global wpdb $wpdb
      */
     public function getCastCrewIds(string $type = 'both'): array
     {
-        global $wpdb;
-
+        $wpdb = ccwp_get_wpdb();
+        $pivotTableName = CurtainCallPivot::getTableNameWithAlias();
         $query = Query::raw([
             Query::select([
                 'ccwp_join.production_id',
@@ -29,9 +30,9 @@ trait HasCastAndCrew
                 'ccwp_join.type',
             ]),
             "FROM `{$wpdb->posts}` AS `production_posts`",
-            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            'INNER JOIN ' . $pivotTableName . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
             "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
-            "WHERE `production_posts`.`ID` = %d",
+            'WHERE `production_posts`.`ID` = %d',
             Query::wherePivotType($type, 'AND'),
         ]);
 
@@ -42,18 +43,19 @@ trait HasCastAndCrew
             return [];
         }
 
-        $ids = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
+        $ids = Arr::map($castcrew, static fn($member) => $member['cast_and_crew_id'] ?? null);
 
         return array_unique(array_filter($ids));
     }
 
     /**
-     * @return array
+     * @return array<int, string>
+     * @throws Throwable
      * @global wpdb $wpdb
      */
     public function getCastCrewNames(): array
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $query = Query::raw([
             Query::select([
@@ -86,16 +88,16 @@ trait HasCastAndCrew
      */
     public function getCastAndCrew(string $type = 'both'): array
     {
-        global $wpdb;
-
+        $wpdb = ccwp_get_wpdb();
+        $pivotTableName = CurtainCallPivot::getTableNameWithAlias();
         $query = Query::raw([
-            "SELECT " . Query::selectCastAndCrew(),
+            'SELECT ' . Query::selectCastAndCrew(),
             "FROM `{$wpdb->posts}` AS `production_posts`",
-            "INNER JOIN ". CurtainCallPivot::getTableNameWithAlias() ." ON `production_posts`.`ID` = `ccwp_join`.`production_id`",
+            'INNER JOIN ' . $pivotTableName . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
             "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
-            "WHERE `production_posts`.`ID` = %d",
+            'WHERE `production_posts`.`ID` = %d',
             Query::wherePivotType($type, 'AND'),
-            "ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC;"
+            'ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC;',
         ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
@@ -112,6 +114,7 @@ trait HasCastAndCrew
      * @param string $type
      * @param array $castcrew
      * @return void
+     * @throws Throwable
      */
     public function saveCastAndCrew(string $type, array $castcrew = []): void
     {
@@ -119,32 +122,26 @@ trait HasCastAndCrew
 
         $newIds = [];
         if (!empty($castcrew)) {
-            $newIds = Arr::map($castcrew, fn($member) => $member['cast_and_crew_id'] ?? null);
+            $newIds = Arr::map($castcrew, static fn($member) => $member['cast_and_crew_id'] ?? null);
             $newIds = array_filter($newIds);
         }
 
         // insert / update the production's castcrew
         if (count($newIds) > 0) {
             foreach ($castcrew as $member) {
-                $castcrewId = is_numeric($member['cast_and_crew_id'])
-                    ? (int) $member['cast_and_crew_id']
-                    : null;
-                $role = !empty($member['role'])
-                    ? sanitize_text_field($member['role'])
-                    : null;
-                $order = is_numeric($member['custom_order'])
-                    ? (int) $member['custom_order']
-                    : null;
+                $castcrewId = is_numeric($member['cast_and_crew_id']) ? (int) $member['cast_and_crew_id'] : null;
+                $role = !empty($member['role']) ? sanitize_text_field($member['role']) : null;
+                $order = is_numeric($member['custom_order']) ? (int) $member['custom_order'] : null;
 
                 if (!$castcrewId) {
                     continue;
                 }
 
-                if (in_array($member['cast_and_crew_id'], $currentIds)) {
-                    # if in both $newIds and $currentIds, update
+                if (in_array($member['cast_and_crew_id'], $currentIds, true)) {
+                    // if in both $newIds and $currentIds, update
                     $this->updateCastCrew($castcrewId, $type, $role, $order);
                 } else {
-                    # if in $newIds but not in $currentIds, insert
+                    // if in $newIds but not in $currentIds, insert
                     $this->insertCastCrew($castcrewId, $type, $role, $order);
                 }
             }
@@ -161,7 +158,7 @@ trait HasCastAndCrew
 
         // Delete the to be deleted
         if (is_array($toDeleteIds) && count($toDeleteIds) > 0) {
-            # if in the current c/c array but not in the to be saved array delete
+            // if in the current c/c array but not in the to be saved array delete
             foreach ($toDeleteIds as $castcrewId) {
                 $this->deleteCastCrew($castcrewId, $type);
             }
@@ -178,23 +175,27 @@ trait HasCastAndCrew
      */
     protected function insertCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
-        $wpdb->insert(CurtainCallPivot::getTableName(), [
-            // Data to be inserted
-            'production_id'    => $this->ID,
-            'cast_and_crew_id' => $id,
-            'type'             => $type,
-            'role'             => $role,
-            'custom_order'     => $customOrder,
-        ], [
-            // Format of data to be inserted
-            '%d',
-            '%d',
-            '%s',
-            '%s',
-            '%d',
-        ]);
+        $wpdb->insert(
+            CurtainCallPivot::getTableName(),
+            [
+                // Data to be inserted
+                'production_id' => $this->ID,
+                'cast_and_crew_id' => $id,
+                'type' => $type,
+                'role' => $role,
+                'custom_order' => $customOrder,
+            ],
+            [
+                // Format of data to be inserted
+                '%d',
+                '%d',
+                '%s',
+                '%s',
+                '%d',
+            ],
+        );
 
         $wpdb->flush();
     }
@@ -209,27 +210,33 @@ trait HasCastAndCrew
      */
     protected function updateCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
-        $wpdb->update(CurtainCallPivot::getTableName(), [
-            // Data to be updated
-            'role'         => $role,
-            'custom_order' => $customOrder,
-        ], [
-            // Where Clauses
-            'production_id'    => $this->ID,
-            'cast_and_crew_id' => $id,
-            'type'             => $type,
-        ], [
-            // Format of the data to be inserted
-            '%s',
-            '%d',
-        ], [
-            // Formatting of where clause data
-            '%d',
-            '%d',
-            '%s',
-        ]);
+        $wpdb->update(
+            CurtainCallPivot::getTableName(),
+            [
+                // Data to be updated
+                'role' => $role,
+                'custom_order' => $customOrder,
+            ],
+            [
+                // Where Clauses
+                'production_id' => $this->ID,
+                'cast_and_crew_id' => $id,
+                'type' => $type,
+            ],
+            [
+                // Format of the data to be inserted
+                '%s',
+                '%d',
+            ],
+            [
+                // Formatting of where clause data
+                '%d',
+                '%d',
+                '%s',
+            ],
+        );
 
         $wpdb->flush();
     }
@@ -242,19 +249,23 @@ trait HasCastAndCrew
      */
     protected function deleteCastCrew(int $id, string $type): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
-        $wpdb->delete(CurtainCallPivot::getTableName(), [
-            // Where Clauses
-            'production_id'    => $this->ID,
-            'cast_and_crew_id' => $id,
-            'type'             => $type,
-        ], [
-            // Format of where clauses data
-            '%d',
-            '%d',
-            '%s',
-        ]);
+        $wpdb->delete(
+            CurtainCallPivot::getTableName(),
+            [
+                // Where Clauses
+                'production_id' => $this->ID,
+                'cast_and_crew_id' => $id,
+                'type' => $type,
+            ],
+            [
+                // Format of where clauses data
+                '%d',
+                '%d',
+                '%s',
+            ],
+        );
 
         $wpdb->flush();
     }

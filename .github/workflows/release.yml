@@ -1,8 +1,14 @@
 name: 'curtaincallwp-release'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 on:
   push:
     tags:
       - "v*.*.*"
+env:
+  PHP_VERSION: 8.1
+  NODE_VERSION: 22
 
 jobs:
   release:
@@ -15,33 +21,22 @@ jobs:
         # tag == with v
         # version == without v
         run: |
-          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
-          echo ::set-output name=version::${GITHUB_REF#refs/tags/v}
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
-      - name: Cache Composer
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - uses: actions/cache@v2
+      - name: Install php
+        uses: ./.github/actions/php_install
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          php-version: ${{ env.PHP_VERSION }}
+          composer-flags: --no-dev
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Install Node
+        uses: ./.github/actions/node_install
         with:
-          php-version: '7.4'
-          extensions: bcmath, curl, dom, gd, json, libxml, mbstring, mysql, pcntl, pdo_mysql, zip
-          coverage: none
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Build
         shell: bash
@@ -51,7 +46,7 @@ jobs:
         run: ./scripts/build.sh
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           draft: true
           prerelease: true
