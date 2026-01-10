@@ -65,6 +65,7 @@ class View
                 if (!empty($this->data)) {
                     extract($this->data, EXTR_OVERWRITE);
                 }
+
                 include $path;
             })($this->templatePath());
 
@@ -73,6 +74,7 @@ class View
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
+
             throw $e;
         }
     }
