@@ -187,7 +187,7 @@ class CastAndCrew extends CurtainCallPost
             return sprintf(__('Born in %s.', CCWP_TEXT_DOMAIN), $this->hometown);
         }
 
-        return "";
+        return '';
     }
 
     /**
