@@ -9,6 +9,7 @@ use CurtainCall\Data\ProductionData;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Models\Production;
+use CurtainCall\Support\Query;
 use Illuminate\Support\Collection;
 use WP_Error;
 use WP_Post;
@@ -103,12 +104,12 @@ final class RelationsRestController extends RestController
         $memberPosts = collect();
 
         if (count($memberIds) > 0) {
-            $postSql = "
-                SELECT *
-                FROM {$wpdb->posts}
-                WHERE `ID` IN (" . implode(',', $memberIds) . ")
-                AND `post_type` = '{$castCrewPostType}'
-            ";
+            $postSql = Query::raw([
+                'SELECT *',
+                "FROM `{$wpdb->posts}`",
+                "WHERE `ID` IN (" . implode(',', $memberIds) . ")",
+                "AND `post_type` = '{$castCrewPostType}'",
+            ]);
             /** @var list<array<string, mixed>> $postRows */
             $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
             /** @var Collection<int, WP_Post> $memberPosts */
@@ -166,12 +167,12 @@ final class RelationsRestController extends RestController
         $productionPosts = collect();
 
         if (count($productionIds) > 0) {
-            $postSql = "
-                SELECT *
-                FROM {$wpdb->posts}
-                WHERE `ID` IN (" . implode(',', $productionIds) . ")
-                AND `post_type` = '{$productionPostType}'
-            ";
+            $postSql = Query::raw([
+                'SELECT *',
+                "FROM `{$wpdb->posts}`",
+                "WHERE `ID` IN (" . implode(',', $productionIds) . ")",
+                "AND `post_type` = '{$productionPostType}'",
+            ]);
             /** @var list<array<string, mixed>> $rows */
             $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
             /** @var Collection<int, WP_Post> $productionPosts */
