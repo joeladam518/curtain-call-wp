@@ -22,7 +22,7 @@ trait HasCastAndCrew
     public function getCastCrewIds(string $type = 'both'): array
     {
         $wpdb = ccwp_get_wpdb();
-
+        $pivotTableName = CurtainCallPivot::getTableNameWithAlias();
         $query = Query::raw([
             Query::select([
                 'ccwp_join.production_id',
@@ -30,9 +30,7 @@ trait HasCastAndCrew
                 'ccwp_join.type',
             ]),
             "FROM `{$wpdb->posts}` AS `production_posts`",
-            'INNER JOIN '
-                . CurtainCallPivot::getTableNameWithAlias()
-                . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
+            'INNER JOIN ' . $pivotTableName . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
             "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
             'WHERE `production_posts`.`ID` = %d',
             Query::wherePivotType($type, 'AND'),
@@ -91,13 +89,11 @@ trait HasCastAndCrew
     public function getCastAndCrew(string $type = 'both'): array
     {
         $wpdb = ccwp_get_wpdb();
-
+        $pivotTableName = CurtainCallPivot::getTableNameWithAlias();
         $query = Query::raw([
             'SELECT ' . Query::selectCastAndCrew(),
             "FROM `{$wpdb->posts}` AS `production_posts`",
-            'INNER JOIN '
-                . CurtainCallPivot::getTableNameWithAlias()
-                . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
+            'INNER JOIN ' . $pivotTableName . ' ON `production_posts`.`ID` = `ccwp_join`.`production_id`',
             "INNER JOIN `{$wpdb->posts}` AS `castcrew_posts` ON `castcrew_posts`.`ID` = `ccwp_join`.`cast_and_crew_id`",
             'WHERE `production_posts`.`ID` = %d',
             Query::wherePivotType($type, 'AND'),
