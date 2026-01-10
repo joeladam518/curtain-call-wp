@@ -6,7 +6,7 @@ use CurtainCall\Models\Production;
 use CurtainCall\Support\View;
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die();
+    die;
 }
 
 get_header();

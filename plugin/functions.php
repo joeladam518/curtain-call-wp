@@ -5,7 +5,7 @@ declare(strict_types=1);
 use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die();
+    die;
 }
 
 if (!function_exists('ccwp_plugin_path')) {

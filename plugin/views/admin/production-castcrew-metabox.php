@@ -5,7 +5,7 @@ declare(strict_types=1);
 use CurtainCall\Models\CastAndCrew;
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die();
+    die;
 }
 
 /**

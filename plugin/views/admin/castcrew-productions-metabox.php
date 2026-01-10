@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die();
+    die;
 }
 
 /**

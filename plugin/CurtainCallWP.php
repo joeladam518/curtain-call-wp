@@ -18,7 +18,7 @@ declare(strict_types=1);
  */
 
 if (!defined('ABSPATH')) {
-    die();
+    die;
 }
 
 define('CCWP_PLUGIN_NAME', 'CurtainCallWP');

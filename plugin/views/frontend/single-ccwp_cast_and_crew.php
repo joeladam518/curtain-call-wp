@@ -6,7 +6,7 @@ use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Support\Str;
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
-    die();
+    die;
 }
 
 get_header('single');
