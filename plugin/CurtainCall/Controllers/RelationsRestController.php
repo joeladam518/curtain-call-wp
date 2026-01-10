@@ -107,7 +107,7 @@ final class RelationsRestController extends RestController
             $postSql = Query::raw([
                 'SELECT *',
                 "FROM `{$wpdb->posts}`",
-                "WHERE `ID` IN (" . implode(',', $memberIds) . ")",
+                'WHERE `ID` IN (' . implode(',', $memberIds) . ')',
                 "AND `post_type` = '{$castCrewPostType}'",
             ]);
             /** @var list<array<string, mixed>> $postRows */
@@ -170,7 +170,7 @@ final class RelationsRestController extends RestController
             $postSql = Query::raw([
                 'SELECT *',
                 "FROM `{$wpdb->posts}`",
-                "WHERE `ID` IN (" . implode(',', $productionIds) . ")",
+                'WHERE `ID` IN (' . implode(',', $productionIds) . ')',
                 "AND `post_type` = '{$productionPostType}'",
             ]);
             /** @var list<array<string, mixed>> $rows */
