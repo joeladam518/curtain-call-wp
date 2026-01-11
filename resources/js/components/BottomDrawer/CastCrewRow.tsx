@@ -35,9 +35,8 @@ const CastCrewRow: FC<ProductionRowProps> = ({
         order: castcrew.order ? castcrew.order.toString() : '0',
     });
     const setRole = (role: string) => {
-        console.log(`setting role for production ${productionId} to castcrew ${castcrew.id} type ${state.type} === ${role}`)
         setState(current => ({...current, role}));
-    }
+    };
     const setOrder = (order: string) => setState(current => ({...current, order}));
     const isBusy = isSaving || isRemoving;
     const hasChanges = useMemo(

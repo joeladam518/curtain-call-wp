@@ -16,7 +16,7 @@ const getYear = (start: string | null | undefined, end: string | null | undefine
     } catch {
         return undefined;
     }
-}
+};
 
 const formatYear = (year: string | undefined): string => {
     return year ? `- ${year}` : '';

@@ -60,6 +60,7 @@ final class CurtainCall
      */
     public function boot(): void
     {
+
         $this->registerLocales();
         $this->loadInitHooks();
         $this->loadSettingsHooks();

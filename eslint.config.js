@@ -17,6 +17,7 @@ export default tseslint.config(
             '.rollup.cache/ ',
             'docker/',
             'node_modules/',
+            '.wordpress/',
             'public/',
             'plugin/',
             'vendor/',

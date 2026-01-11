@@ -3,11 +3,11 @@ import {FC} from 'react';
 import {TEXT_DOMAIN} from '../utils/constants';
 
 type MetaboxLabelRowProps = {
-    type?: boolean
-}
+    type?: boolean;
+};
 
 const MetaboxLabelRow: FC<MetaboxLabelRowProps> = ({
-    type = false
+    type = false,
 }) => {
     return (
         <div
@@ -20,8 +20,8 @@ const MetaboxLabelRow: FC<MetaboxLabelRowProps> = ({
             <div className="ccwp-col billing-col">{__('Billing', TEXT_DOMAIN)}</div>
             <div className="ccwp-col action-col">&nbsp;</div>
         </div>
-    )
-}
+    );
+};
 
 MetaboxLabelRow.displayName = 'MetaboxLabelRow';
 

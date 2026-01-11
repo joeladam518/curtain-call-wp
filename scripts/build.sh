@@ -33,8 +33,8 @@ fi
 
 echo ""
 echo "# Install dependencies"
-composer run build
-npm install
+cd "$PLUGIN_DIR" && composer run build
+cd "$REPO_DIR" && npm install
 
 echo ""
 echo "# Refresh the autoload files"

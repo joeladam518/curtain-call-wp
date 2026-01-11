@@ -134,8 +134,12 @@ const Sidebar: FC = () => {
         }
     };
 
-    const title = postType === PostType.Production ? __('Attach Cast & Crew', TEXT_DOMAIN) : __('Attach Productions', TEXT_DOMAIN);
-    const targetLabel = postType === PostType.Production ? __('Cast/Crew Member', TEXT_DOMAIN) : __('Production', TEXT_DOMAIN);
+    const title = postType === PostType.Production
+        ? __('Attach Cast & Crew', TEXT_DOMAIN)
+        : __('Attach Productions', TEXT_DOMAIN);
+    const targetLabel = postType === PostType.Production
+        ? __('Cast/Crew Member', TEXT_DOMAIN)
+        : __('Production', TEXT_DOMAIN);
 
     return (
         <PluginDocumentSettingPanel

@@ -5,15 +5,16 @@ php-version = "8.1.0"
 [source]
 workspace = "."
 paths = [
-    "./plugin/functions.php",
-    "./plugin/CurtainCallWP.php",
-    "./plugin/CurtainCall/**/*.php",
-    "./plugin/views/**/*.php"
+    "./functions.php",
+    "./functions-dev.php",
+    "./CurtainCallWP.php",
+    "./CurtainCall/**/*.php",
+    "./views/**/*.php"
 ]
 includes = [
     "./vendor",
     "./plugin/vendor",
-    "./public/**/*.php"
+    "../.wordpress/**/*.php"
 ]
 excludes = []
 

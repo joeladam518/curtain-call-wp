@@ -52,7 +52,7 @@ const DrawerContent: FC = () => {
         detachCastCrew,
         detachProduction,
         fetchCastCrew,
-        fetchProductions
+        fetchProductions,
     } = useRelationsDispatch();
     const title = postType === PostType.Production ? __('Cast & Crew', TEXT_DOMAIN) : __('Productions', TEXT_DOMAIN);
 
@@ -98,8 +98,6 @@ const DrawerContent: FC = () => {
             console.error('Can not remove relation. Invalid postId or postType');
             return;
         }
-
-        console.log('Removing relation:', data);
 
         try {
             if (postType === PostType.CastCrew) {

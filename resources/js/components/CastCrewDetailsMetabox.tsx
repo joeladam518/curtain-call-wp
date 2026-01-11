@@ -58,7 +58,11 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
                 value={state.name_first}
                 onChange={setFirstName}
                 name="ccwp_name_first"
-                help={__("*Required. These fields are used to auto-generate the post title with the cast or crew member's full name.", TEXT_DOMAIN)}
+                help={__(
+                    '*Required. ' +
+                    "These fields are used to auto-generate the post title with the cast or crew member's full name.",
+                    TEXT_DOMAIN
+                )}
             />
             <TextControl
                 __next40pxDefaultSize
@@ -75,7 +79,12 @@ const CastCrewDetailsMetabox: FC<CastCrewDetailsMetaboxProps> = ({initialDetails
                 value={state.self_title}
                 onChange={setTitle}
                 name="ccwp_self_title"
-                help={__('*Required. If the cast or crew member has many roles across different productions, try to use the one they identify with the most. Ex. Director, Actor, Choreographer, etc.', TEXT_DOMAIN)}
+                help={__(
+                    '*Required. ' +
+                    'If the cast or crew member has many roles across different productions, ' +
+                    'try to use the one they identify with the most. Ex. Director, Actor, Choreographer, etc.',
+                    TEXT_DOMAIN
+                )}
             />
             <DatePickerControl
                 label={__('Birthday', TEXT_DOMAIN)}

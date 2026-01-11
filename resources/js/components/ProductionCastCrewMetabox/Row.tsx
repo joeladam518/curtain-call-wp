@@ -52,7 +52,7 @@ const Row: FC<RowProps> = ({
                     alignItems: 'center',
                     gridTemplateColumns: '2fr 2fr 1fr 1fr',
                     gap: '12px',
-                    marginBottom: '10px'
+                    marginBottom: '10px',
                 }}
             >
                 <div className="ccwp-col name-col" style={{flex: '1'}}>
