@@ -126,11 +126,14 @@ final class RelationsRestController extends RestController
                     return null;
                 }
 
-                $member = CastAndCrew::make($memberPost)->setCurtainCallPostJoin($pivot);
+                $member = CastAndCrew::make($memberPost)->setPivot($pivot);
 
                 return CastCrewData::fromCastCrew($member);
             })
             ->filter()
+            ->sort(static fn(CastCrewData $a, CastCrewData $b) => (
+                [$a->order, $a->lastName] <=> [$b->order, $b->lastName]
+            ))
             ->values()
             ->toArray();
 
@@ -162,7 +165,7 @@ final class RelationsRestController extends RestController
 
         // Then get the productions
         /** @var list<int> $productionIds */
-        $productionIds = $pivots->pluck('production_id')->values()->toArray();
+        $productionIds = $pivots->pluck('production_id')->unique()->values()->toArray();
         /** @var Collection<int, WP_Post> $productionPosts */
         $productionPosts = collect();
 
@@ -189,11 +192,14 @@ final class RelationsRestController extends RestController
                     return null;
                 }
 
-                $production = Production::make($productionPost)->setCurtainCallPostJoin($pivot);
+                $production = Production::make($productionPost)->setPivot($pivot);
 
                 return ProductionData::fromProduction($production);
             })
             ->filter()
+            ->sort(fn(ProductionData $a, ProductionData $b) => (
+                [$b->dateStart, $a->name] <=> [$a->dateStart, $b->name]
+            ))
             ->values()
             ->toArray();
 

@@ -100,47 +100,19 @@ trait HasProductions
         ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
-        $productions = $wpdb->get_results($sql, ARRAY_A);
+        $rows = $wpdb->get_results($sql, ARRAY_A);
 
-        if (count($productions) === 0) {
+        if (!$rows) {
             return [];
         }
 
-        /** @var Production[] $productions */
-        $productions = static::toCurtainCallPosts($productions);
-
-        usort($productions, static function (Production $productionA, Production $productionB) {
-            if ($productionA->hasStartDate() && !$productionB->hasStartDate()) {
-                return -1;
-            } elseif ($productionB->hasStartDate() && !$productionA->hasStartDate()) {
-                return 1;
-            } else {
-                $startDateA = Date::toCarbon($productionA->date_start);
-                $startDateA = $startDateA ? $startDateA->endOfDay() : null;
-                $startDateB = Date::toCarbon($productionB->date_start);
-                $startDateB = $startDateB ? $startDateB->endOfDay() : null;
-
-                if (isset($startDateA, $startDateB)) {
-                    if ($startDateA->lt($startDateB)) {
-                        return 1;
-                    } elseif ($startDateA->gt($startDateB)) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                } else {
-                    if ($startDateA === null && $startDateB !== null) {
-                        return -1;
-                    } elseif ($startDateA !== null && $startDateB === null) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            }
-        });
-
-        return $productions;
+        return collect($rows)
+            ->map(static fn($row) => Production::fromArray($row))
+            ->sort(static fn(Production $a, Production $b) => (
+                [$b->date_start, $a->name] <=> [$a->date_start, $b->name]
+            ))
+            ->values()
+            ->all();
     }
 
     /**

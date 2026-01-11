@@ -154,7 +154,7 @@ class CastAndCrew extends CurtainCallPost
                 continue;
             }
 
-            $role = $production->ccwp_join->role;
+            $role = $production->ccwp_join?->role;
 
             if (!$role) {
                 continue;

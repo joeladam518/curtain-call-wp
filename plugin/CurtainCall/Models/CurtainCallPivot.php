@@ -79,8 +79,7 @@ class CurtainCallPivot implements Arrayable
      */
     public static function isField(string $value): bool
     {
-        $field = static::stripPrefix($value);
-        return in_array($field, static::$fields, true);
+        return in_array($value, static::$fields, true);
     }
 
     /**
@@ -99,12 +98,10 @@ class CurtainCallPivot implements Arrayable
     public function load(array $data): void
     {
         foreach ($data as $key => $value) {
-            if (!static::isField($key)) {
-                continue;
+            $field = static::stripPrefix($key);
+            if (static::isField($field)) {
+                $this->setAttribute($field, $value);
             }
-
-            $key = static::stripPrefix($key);
-            $this->setAttribute($key, $value);
         }
     }
 
@@ -146,7 +143,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array{production_id: int, cast_and_crew_id: int, type: string, role: string, custom_order: string}
      */
     public function toArray(): array
     {
@@ -154,7 +151,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array{production_id: int, cast_and_crew_id: int, type: string, role: string, custom_order: string}
      */
     public function __debugInfo(): array
     {

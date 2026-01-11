@@ -25,8 +25,6 @@ get_header('single');
             'crew' => $production->getCastAndCrew('crew'),
         ];
         $ticketLink = $production->getTicketUrl();
-        // Production photo gallery
-        $gallery = get_post_gallery();
         ?>
         <div class="ccwp-main">
             <div class="ccwp-main-content-container">
@@ -84,13 +82,7 @@ get_header('single');
                             <div class="ccwp-row mb-4">
                                 <?php if (!empty($production->post_content)): ?>
                                     <div class="ccwp-post-content show-summary">
-                                        <?php
-                                        // @mago-ignore lint:no-unescaped-output
-                                        echo apply_filters(
-                                            'the_content',
-                                            ccwp_strip_short_code_gallery(get_the_content()),
-                                        );
-                                        ?>
+                                        <?php ccwp_the_content_without_gallery(); ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -98,10 +90,7 @@ get_header('single');
                         <!-- Production images -->
                         <?php if (!empty($gallery)): ?>
                             <div class="ccwp-post-photo-gallery ccwp-production-photo-gallery">
-                                <?php
-                                // @mago-ignore lint:no-unescaped-output
-                                echo $gallery;
-                                ?>
+                                <?php ccwp_the_post_gallery(); ?>
                             </div>
                         <?php endif; ?>
                     </section>
@@ -117,14 +106,10 @@ get_header('single');
                                             <div class="castcrew-wrapper">
                                                 <?php if (has_post_thumbnail($castcrewMember->ID)): ?>
                                                     <div class="castcrew-headshot">
-                                                        <a href="<?php the_permalink($castcrewMember->ID); ?>">
-                                                            <?php
-                                                            // @mago-ignore lint:no-unescaped-output
-                                                            echo
-                                                                get_the_post_thumbnail($castcrewMember->ID, 'thumbnail')
-                                                            ;
-                                                            ?>
-                                                        </a>
+                                                        <a href="<?php the_permalink($castcrewMember->ID); ?>"><?php
+                                                            /* @mago-ignore lint:no-unescaped-output */
+                                                            echo $castcrewMember->getImage();
+                                                        ?></a>
                                                     </div>
                                                 <?php endif; ?>
                                                 <div class="castcrew-details">
@@ -134,7 +119,7 @@ get_header('single');
                                                         </a>
                                                     </div>
                                                     <div class="castcrew-role">
-                                                        <p><?php echo esc_html($castcrewMember->ccwp_join->role); ?></p>
+                                                        <p><?php echo esc_html($castcrewMember->ccwp_join->role ?? ''); ?></p>
                                                     </div>
                                                 </div>
                                             </div>

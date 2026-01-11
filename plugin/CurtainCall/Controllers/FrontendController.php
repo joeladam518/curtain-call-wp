@@ -9,7 +9,6 @@ use CurtainCall\Models\Production;
 use CurtainCall\Support\View;
 use Illuminate\Support\Arr;
 use WP_Post;
-use WP_Screen;
 
 final class FrontendController
 {

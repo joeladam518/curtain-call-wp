@@ -60,8 +60,8 @@ final class CastCrewData extends Data
             firstName: $castCrew->name_first ?: null,
             lastName: $castCrew->name_last ?: null,
             fullName: $castCrew->getFullName() ?: null,
-            role: $castCrew->ccwp_join->role ?: null,
-            type: $castCrew->ccwp_join->type ?: null,
+            role: $castCrew->ccwp_join?->role ?: null,
+            type: $castCrew->ccwp_join?->type ?: null,
             order: $order,
         );
     }

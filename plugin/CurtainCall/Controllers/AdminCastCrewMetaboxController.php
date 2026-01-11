@@ -50,20 +50,22 @@ final class AdminCastCrewMetaboxController
      */
     public function renderDetailsMetabox(WP_Post $post, array $metabox): void
     {
+        try {
+            $castcrew = CastAndCrew::make($post);
+        } catch (Throwable) {
+            $castcrew = null;
+        }
+
         View::make('admin/castcrew-details-metabox.php', [
-            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_cast_and_crew_details_box_nonce', true, false),
+            'wp_nonce' => wp_nonce_field(
+                basename(__FILE__),
+                'ccwp_cast_and_crew_details_box_nonce',
+                true,
+                false
+            ),
             'post' => $post,
             'metabox' => $metabox,
-            'name_first' => ccwp_get_custom_field('_ccwp_cast_crew_name_first', $post->ID),
-            'name_last' => ccwp_get_custom_field('_ccwp_cast_crew_name_last', $post->ID),
-            'self_title' => ccwp_get_custom_field('_ccwp_cast_crew_self_title', $post->ID),
-            'birthday' => ccwp_get_custom_field('_ccwp_cast_crew_birthday', $post->ID),
-            'hometown' => ccwp_get_custom_field('_ccwp_cast_crew_hometown', $post->ID),
-            'website_link' => ccwp_get_custom_field('_ccwp_cast_crew_website_link', $post->ID),
-            'facebook_link' => ccwp_get_custom_field('_ccwp_cast_crew_facebook_link', $post->ID),
-            'instagram_link' => ccwp_get_custom_field('_ccwp_cast_crew_instagram_link', $post->ID),
-            'twitter_link' => ccwp_get_custom_field('_ccwp_cast_crew_twitter_link', $post->ID),
-            'fun_fact' => ccwp_get_custom_field('_ccwp_cast_crew_fun_fact', $post->ID),
+            'castcrew' => $castcrew,
         ])->render();
     }
 
@@ -86,6 +88,7 @@ final class AdminCastCrewMetaboxController
         }
 
         // Don't auto save these fields
+        // @mago-ignore analysis:redundant-logical-operation
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
@@ -185,7 +188,11 @@ final class AdminCastCrewMetaboxController
      */
     public function renderAddProductionsMetabox(WP_Post $post, array $metabox): void
     {
-        $castcrew = CastAndCrew::make($post);
+        try {
+            $castcrew = CastAndCrew::make($post);
+        } catch (Throwable) {
+            $castcrew = null;
+        }
 
         View::make('admin/castcrew-productions-metabox.php', [
             'wp_nonce' => wp_nonce_field(
@@ -220,6 +227,7 @@ final class AdminCastCrewMetaboxController
         }
 
         // Don't auto save these fields
+        // @mago-ignore analysis:redundant-logical-operation
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
@@ -231,7 +239,9 @@ final class AdminCastCrewMetaboxController
 
         $castcrew = CastAndCrew::make($post);
 
+        /** @var list<array<string, mixed>> $castData */
         $castData = $_POST['ccwp_add_productions_to_cast'] ?? [];
+        /** @var list<array<string, mixed>> $crewData */
         $crewData = $_POST['ccwp_add_productions_to_crew'] ?? [];
 
         $castcrew->saveProductions('cast', $castData);

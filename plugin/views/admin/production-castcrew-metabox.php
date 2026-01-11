@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use CurtainCall\Models\CastAndCrew;
+use CurtainCall\Models\Production;
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die;
@@ -12,9 +12,7 @@ if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
  * @var string $wp_nonce
  * @var WP_Post $post
  * @var array $metabox
- * @var array $options
- * @var array|CastAndCrew[] $cast_members
- * @var array|CastAndCrew[] $crew_members
+ * @var Production|null $production
  */
 
 // @mago-ignore lint:no-unescaped-output

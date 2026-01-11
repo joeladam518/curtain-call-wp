@@ -84,7 +84,6 @@ final class InitController
      */
     public function registerProductionMeta(): void
     {
-        // Production meta
         $productionMeta = [
             'name' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],
             'date_start' => ['type' => 'string', 'sanitize' => 'sanitize_text_field'],

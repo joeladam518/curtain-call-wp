@@ -202,6 +202,7 @@ final class AdminController
                     'label' => $production->name,
                     'value' => (string) $production->ID,
                 ])
+                ->sortBy('label')
                 ->values()
                 ->all();
         } catch (Throwable) {
@@ -212,17 +213,6 @@ final class AdminController
         try {
             /** @var list<array<string, mixed>> $productions */
             $productions = collect($castCrew?->getProductions() ?? [])
-                ->sort(
-                    static fn(Production $a, Production $b) => (
-                        [
-                            $b->date_start,
-                            $a->name,
-                        ] <=> [
-                            $a->date_start,
-                            $b->name,
-                        ]
-                    ),
-                )
                 ->map(static fn(Production $production) => ProductionData::fromProduction($production))
                 ->values()
                 ->toArray();
@@ -302,6 +292,7 @@ final class AdminController
             /** @var array<int, array{label: string, value: string}> $options */
             $options = collect($production?->getCastCrewNames() ?? [])
                 ->map(static fn(string $name, string|int $id) => ['label' => $name, 'value' => (string) $id])
+                ->sortBy('label')
                 ->values()
                 ->all();
         } catch (Throwable) {
@@ -312,26 +303,11 @@ final class AdminController
         try {
             /** @var array<string, array<string, mixed>> $members */
             $members = collect($production?->getCastAndCrew() ?? [])
-                ->groupBy('ccwp_join.type')
-                ->map(
-                    static fn(Collection $group) => $group
-                        ->sort(
-                            static fn(CastAndCrew $a, CastAndCrew $b) => (
-                                [
-                                    $a->ccwp_join->custom_order,
-                                    $b->name_last,
-                                ] <=> [
-                                    $b->ccwp_join->custom_order,
-                                    $a->name_last,
-                                ]
-                            ),
-                        )
-                        ->map(static fn(CastAndCrew $member) => CastCrewData::fromCastCrew($member))
-                        ->values()
-                        ->toArray(),
-                )
+                ->map(static fn(CastAndCrew $member) => CastCrewData::fromCastCrew($member))
+                ->groupBy('type')
+                ->map(static fn(Collection $group) => $group->values()->toArray())
                 ->toArray();
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
             /** @var array<string, array<string, mixed>> $members */
             $members = [];
         }

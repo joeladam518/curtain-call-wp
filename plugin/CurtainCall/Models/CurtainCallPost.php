@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models;
 
+use CurtainCall\Data\ImageData;
+use CurtainCall\Data\ProductionData;
+use CurtainCall\Exceptions\PostNotFoundException;
 use CurtainCall\Exceptions\UndefinedPropertyException;
 use CurtainCall\Exceptions\UnsettableException;
 use CurtainCall\Models\Traits\HasAttributes;
 use CurtainCall\Models\Traits\HasMeta;
 use CurtainCall\Models\Traits\HasWordPressPost;
 use Illuminate\Contracts\Support\Arrayable;
-use Throwable;
+use InvalidArgumentException;
 use WP_Post;
 use WP_Query;
 
 /**
- * @property-read int    $ID
+ * @property-read int $ID
  * @property-read string $post_author
  * @property-read string $post_date
  * @property-read string $post_date_gmt
@@ -32,9 +35,9 @@ use WP_Query;
  * @property-read string $post_modified
  * @property-read string $post_modified_gmt
  * @property-read string $post_content_filtered
- * @property-read int    $post_parent
+ * @property-read int $post_parent
  * @property-read string $guid
- * @property-read int    $menu_order
+ * @property-read int $menu_order
  * @property-read string $post_type
  * @property-read string $post_mime_type
  * @property-read string $comment_count
@@ -43,7 +46,8 @@ use WP_Query;
  * @property-read string $page_template
  * @property-read string $post_category
  * @property-read string $tags_input
- * @property-read CurtainCallPivot $ccwp_join
+ * @property-read CurtainCallPivot|null $ccwp_join
+ * @implements Arrayable<string, mixed>
  */
 abstract class CurtainCallPost implements Arrayable
 {
@@ -54,32 +58,86 @@ abstract class CurtainCallPost implements Arrayable
     public const POST_TYPE = 'ccwp_post';
     public const META_PREFIX = '_ccwp_';
 
-    protected array $image_cache = [];
-
     /**
-     * @param int|string|WP_Post $post
-     * @throws Throwable
+     * @param WP_Post $post
      */
-    protected function __construct(int|string|WP_Post $post)
+    final protected function __construct(WP_Post $post)
     {
-        $this->loadPost($post);
+        $this->setPost($post);
         $this->loadMeta();
     }
 
     /**
-     * @param int $id
-     * @return $this
-     * @throws Throwable
+     * @param int|string $id - post id (int or numeric string)
+     * @return static
+     * @throws InvalidArgumentException
+     * @throws PostNotFoundException
      */
-    public static function find(int $id): static
+    public static function find(int|string $id): static
     {
-        return new static($id);
+        if (!is_numeric($id)) {
+            throw new InvalidArgumentException('Post id must be numeric');
+        }
+
+        $query = new WP_Query([
+            'post_type' => static::POST_TYPE,
+            'p' => (int) $id,
+            'posts_per_page' => 1,
+        ]);
+
+        $post = $query->have_posts() ? $query->posts[0] : null;
+
+        if (!($post instanceof WP_Post)) {
+            throw new PostNotFoundException("Failed to fetch post. (id: {$id}, type: " . static::POST_TYPE . ')');
+        }
+
+        return new static($post);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return static
+     * @throws InvalidArgumentException
+     */
+    public static function fromArray(array $data): static
+    {
+        $postData = [];
+        $pivotData = [];
+        foreach ($data as $key => $value) {
+            if (static::isPostAttribute($key)) {
+                $postData[$key] = $value;
+                continue;
+            }
+            $strippedKey = CurtainCallPivot::stripPrefix($key);
+            if (CurtainCallPivot::isField($strippedKey)) {
+                $pivotData[$strippedKey] = $value;
+            }
+        }
+
+        if (!$postData) {
+            throw new InvalidArgumentException('Post data cannot be empty');
+        }
+
+        if (!isset($postData['ID'])) {
+            throw new InvalidArgumentException('Post data must contain an ID');
+        }
+
+        if (!isset($postData['post_type']) || $postData['post_type'] !== static::POST_TYPE) {
+            throw new InvalidArgumentException('Post data must be of type ' . static::POST_TYPE);
+        }
+
+        $model = static::make(new WP_Post((object) $postData));
+
+        if ($pivotData) {
+            $model->setPivot(new CurtainCallPivot($pivotData));
+        }
+
+        return $model;
     }
 
     /**
      * @param WP_Post $post
-     * @return $this
-     * @throws Throwable
+     * @return static
      */
     public static function make(WP_Post $post): static
     {
@@ -87,70 +145,70 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
-     * Convert an array structure to a collection of CurtainCall posts
-     *
-     * @param array $data
+     * @param list<WP_Post|object|array<string, mixed>> $posts
      * @return CurtainCallPost[]
-     * @throws Throwable
      */
-    public static function toCurtainCallPosts(array $data): array
+    public static function toCurtainCallPosts(array $posts): array
     {
-        $posts = [];
-        $pivotFields = CurtainCallPivot::getFields(true);
+        /** @var CurtainCallPost[] $models */
+        $models = collect($posts)
+            ->map(static function (array|object $post): ?CurtainCallPost {
+                /** @var array<string, mixed> $data */
+                $data = is_object($post) ? get_object_vars($post) : $post;
+                return match ($data['post_type']) {
+                    CastAndCrew::POST_TYPE => CastAndCrew::fromArray($data),
+                    Production::POST_TYPE => Production::fromArray($data),
+                    default => null,
+                };
+            })
+            ->filter()
+            ->values()
+            ->all();
 
-        foreach ($data as $datum) {
-            // Separate CurtainCallPivot data from WP_Post data
-            $postData = [];
-            $pivotData = [];
-            foreach ($datum as $key => $value) {
-                if (in_array($key, $pivotFields, true)) {
-                    $pivotData[$key] = $value;
-                } else {
-                    $postData[$key] = $value;
-                }
-            }
-
-            // Convert $postData to WP_Post
-            $post = new WP_Post((object) $postData);
-
-            // Convert $post to CurtainCallPost and add it to the array
-            switch ($post->post_type) {
-                case Production::POST_TYPE:
-                    $posts[] = Production::make($post)->setCurtainCallPostJoin(new CurtainCallPivot($pivotData));
-                    break;
-                case CastAndCrew::POST_TYPE:
-                    $posts[] = CastAndCrew::make($post)->setCurtainCallPostJoin(new CurtainCallPivot($pivotData));
-                    break;
-            }
-        }
-
-        return $posts;
+        return $models;
     }
 
     /**
-     * Retrieves an image data to for the attachment.
+     * Retrieves the post's image data.
      *
      * @param string $size
      * @param bool $icon
-     * @return array|null
+     * @return ImageData|null
      */
-    public function getFeaturedImage(string $size = 'thumbnail', bool $icon = false): ?array
+    public function getImageSource(string $size = 'thumbnail', bool $icon = false): ?ImageData
     {
-        if (!isset($this->image_cache[$size]) || $this->image_cache[$size] === null) {
-            $imageSrc = wp_get_attachment_image_src(get_post_thumbnail_id($this->ID), $size, $icon);
+        $image_id = get_post_thumbnail_id($this->ID) ?: null;
 
-            if ($imageSrc && isset($imageSrc[0])) {
-                $this->image_cache[$size] = [
-                    'url' => $imageSrc[0],
-                    'width' => $imageSrc[1] ?? null,
-                    'height' => $imageSrc[2] ?? null,
-                ];
-            } else {
-                $this->image_cache[$size] = null;
-            }
+        if (!$image_id) {
+            return null;
         }
 
-        return $this->image_cache[$size];
+        $image = wp_get_attachment_image_src($image_id, $size, $icon);
+
+        if (!is_array($image)) {
+            return null;
+        }
+
+        /** @var string $src */
+        $src = $image[0];
+        /** @var int|null $width */
+        $width = $image[1] ?? null;
+        /** @var int|null $height */
+        $height = $image[2] ?? null;
+
+        return new ImageData($src, $width, $height);
+    }
+
+    /**
+     * Retrieves the post's thumbnail.
+     *
+     * @param string $size
+     * @param array|string $attr
+     * @return string
+     */
+    public function getImage(string $size = 'thumbnail', array|string $attr = ''): string
+    {
+        return get_the_post_thumbnail($this->ID, $size, $attr);
     }
 
     /**
@@ -159,7 +217,7 @@ abstract class CurtainCallPost implements Arrayable
      * @param CurtainCallPivot $curtainCallPivot
      * @return $this
      */
-    public function setCurtainCallPostJoin(CurtainCallPivot $curtainCallPivot): static
+    public function setPivot(CurtainCallPivot $curtainCallPivot): static
     {
         $this->setAttribute('ccwp_join', $curtainCallPivot);
 
@@ -169,10 +227,11 @@ abstract class CurtainCallPost implements Arrayable
     /**
      * Convert the post to an array.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
+        /** @var array<string, mixed> $data */
         $data = isset($this->wp_post) ? $this->wp_post->to_array() : [];
         $data['attributes'] = $this->attributesToArray();
         $data['meta'] = $this->meta;
@@ -214,7 +273,7 @@ abstract class CurtainCallPost implements Arrayable
      */
     public function __set(string $key, mixed $value): void
     {
-        if (in_array($key, ['attributes', 'meta', 'ccwp_meta', 'wp_post', 'wp_post_attributes', 'image_cache'], true)) {
+        if (in_array($key, ['attributes', 'meta', 'ccwp_meta', 'wp_post'], true)) {
             throw new UnsettableException('You can not set the ' . $key . ' property.');
         }
 

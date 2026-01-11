@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use CurtainCall\Models\Production;
+
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die;
 }
@@ -10,12 +12,7 @@ if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
  * @var string $wp_nonce
  * @var WP_Post $post
  * @var array $metabox
- * @var string $name
- * @var string $date_start
- * @var string $date_end
- * @var string $show_times
- * @var string $ticket_url
- * @var string $venue
+ * @var Production|null $production
  */
 
 // @mago-ignore lint:no-unescaped-output

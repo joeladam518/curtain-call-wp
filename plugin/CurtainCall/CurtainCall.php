@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall;
 
+use CurtainCall\Models\CurtainCallPost;
 use CurtainCall\Controllers\AdminCastCrewMetaboxController;
 use CurtainCall\Controllers\AdminController;
 use CurtainCall\Controllers\AdminProductionMetaboxController;
@@ -17,6 +18,11 @@ use CurtainCall\LifeCycle\Uninstaller;
 
 final class CurtainCall
 {
+    private function __construct()
+    {
+        CurtainCallPost::setPostAttributes();
+    }
+
     /**
      * Register the plugin's life cycle hooks
      *
@@ -71,9 +77,9 @@ final class CurtainCall
         $initController = new InitController();
         add_action('init', [$initController, 'createProductionPostType'], 10, 0);
         add_action('init', [$initController, 'createProductionSeasonsTaxonomy'], 10, 0);
+        add_action('init', [$initController, 'registerProductionMeta'], 10, 0);
         add_action('init', [$initController, 'createCastAndCrewPostType'], 10, 0);
         add_action('init', [$initController, 'registerCastCrewMeta'], 10, 0);
-        add_action('init', [$initController, 'registerProductionMeta'], 10, 0);
         add_action('rest_api_init', [RelationsRestController::class, 'registerRoutes'], 10, 0);
     }
 

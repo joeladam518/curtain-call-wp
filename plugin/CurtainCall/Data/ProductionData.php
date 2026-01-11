@@ -58,8 +58,8 @@ final class ProductionData extends Data
             name: $production->name ?: $production->post_title ?: 'Untitled Production',
             dateStart: $production->date_start ?: null,
             dateEnd: $production->date_end ?: null,
-            type: $production->ccwp_join->type ?: null,
-            role: $production->ccwp_join->role ?: null,
+            type: $production->ccwp_join?->type ?: null,
+            role: $production->ccwp_join?->role ?: null,
             order: $order,
         );
     }

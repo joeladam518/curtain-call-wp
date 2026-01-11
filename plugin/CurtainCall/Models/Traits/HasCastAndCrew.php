@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models\Traits;
 
+use CurtainCall\Data\CastCrewData;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Support\Query;
@@ -82,8 +83,7 @@ trait HasCastAndCrew
 
     /**
      * @param string $type
-     * @return array|CastAndCrew[]
-     * @global wpdb $wpdb
+     * @return CastCrewData[]
      * @throws Throwable
      */
     public function getCastAndCrew(string $type = 'both'): array
@@ -101,13 +101,19 @@ trait HasCastAndCrew
         ]);
 
         $sql = $wpdb->prepare($query, $this->ID);
-        $castcrew = $wpdb->get_results($sql, ARRAY_A);
+        $rows = $wpdb->get_results($sql, ARRAY_A);
 
-        if (count($castcrew) === 0) {
+        if (!$rows) {
             return [];
         }
 
-        return static::toCurtainCallPosts($castcrew);
+        return collect($rows)
+            ->map(static fn($row) => CastAndCrew::fromArray($row))
+            ->sort(fn(CastAndCrew $a, CastAndCrew $b) => (
+                [$a->ccwp_join->custom_order ?? 0, $a->name_last] <=> [$b->ccwp_join->custom_order ?? 0, $b->name_last]
+            ))
+            ->values()
+            ->all();
     }
 
     /**

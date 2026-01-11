@@ -136,7 +136,7 @@ get_header('single');
                                                 <?php if (has_post_thumbnail($production->ID)): ?>
                                                     <a href="<?php the_permalink($production->ID); ?>"><?php
                                                     /* @mago-ignore lint:no-unescaped-output */
-                                                    echo get_the_post_thumbnail($production->ID, 'full');
+                                                    echo $production->getImage('full');
                                                     ?></a>
                                                 <?php endif; ?>
                                             </div>

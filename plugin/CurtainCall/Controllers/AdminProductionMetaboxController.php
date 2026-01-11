@@ -55,16 +55,22 @@ final class AdminProductionMetaboxController
      */
     public function renderDetailsMetabox(WP_Post $post, array $metabox): void
     {
+        try {
+            $production = Production::make($post);
+        } catch (Throwable) {
+            $production = null;
+        }
+
         View::make('admin/production-details-metabox.php', [
-            'wp_nonce' => wp_nonce_field(basename(__FILE__), 'ccwp_production_details_box_nonce', true, false),
+            'wp_nonce' => wp_nonce_field(
+                basename(__FILE__),
+                'ccwp_production_details_box_nonce',
+                true,
+                false
+            ),
             'post' => $post,
             'metabox' => $metabox,
-            'name' => ccwp_get_custom_field('_ccwp_production_name', $post->ID),
-            'date_start' => ccwp_get_custom_field('_ccwp_production_date_start', $post->ID),
-            'date_end' => ccwp_get_custom_field('_ccwp_production_date_end', $post->ID),
-            'show_times' => ccwp_get_custom_field('_ccwp_production_show_times', $post->ID),
-            'ticket_url' => ccwp_get_custom_field('_ccwp_production_ticket_url', $post->ID),
-            'venue' => ccwp_get_custom_field('_ccwp_production_venue', $post->ID),
+            'production' => $production,
         ])->render();
     }
 
@@ -87,6 +93,7 @@ final class AdminProductionMetaboxController
         }
 
         // Don't auto save these fields
+        // @mago-ignore analysis:redundant-logical-operation
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
@@ -153,43 +160,9 @@ final class AdminProductionMetaboxController
     public function renderAddCastCrewMetabox(WP_Post $post, array $metabox): void
     {
         try {
-            /** @var Production $production */
             $production = Production::make($post);
         } catch (Throwable) {
             $production = null;
-        }
-
-        try {
-            /** @var array<string, array<string, mixed>> $members */
-            $members = collect($production?->getCastAndCrew() ?? [])
-                ->groupBy('ccwp_join.type')
-                ->map(
-                    static fn(Collection $group) => $group
-                        ->sort(
-                            static fn(CastAndCrew $a, CastAndCrew $b) => (
-                                [
-                                    $a->ccwp_join->custom_order,
-                                    $b->name_last,
-                                ] <=> [
-                                    $b->ccwp_join->custom_order,
-                                    $a->name_last,
-                                ]
-                            ),
-                        )
-                        ->map(static fn(CastAndCrew $member) => CastCrewData::fromCastCrew($member))
-                        ->values()
-                        ->toArray(),
-                )
-                ->toArray();
-        } catch (Throwable) {
-            /** @var array<string, array<string, mixed>> $members */
-            $members = [];
-        }
-
-        try {
-            $options = $production->getCastCrewNames();
-        } catch (Throwable) {
-            $options = [];
         }
 
         View::make('admin/production-castcrew-metabox.php', [
@@ -201,9 +174,7 @@ final class AdminProductionMetaboxController
             ),
             'post' => $post,
             'metabox' => $metabox,
-            'options' => $options,
-            'cast_members' => $members['cast'] ?? [],
-            'crew_members' => $members['crew'] ?? [],
+            'production' => $production,
         ])->render();
     }
 
@@ -225,6 +196,7 @@ final class AdminProductionMetaboxController
         }
 
         // Return if autosave
+        // @mago-ignore analysis:redundant-logical-operation
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
             return;
         }
