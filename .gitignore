@@ -11,9 +11,9 @@ vendor/
 /curtaincallwp*.zip
 
 # Dev data excludes
-/public/*
-!/public/.gitkeep
-/data/
+/.wordpress/
+!/.wordpress/.gitkeep
+!/.wordpress/.gitignore
 
 # environment
 .env
