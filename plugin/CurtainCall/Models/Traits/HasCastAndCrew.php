@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models\Traits;
 
-
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Support\Query;
@@ -12,6 +11,9 @@ use Illuminate\Support\Arr;
 use Throwable;
 use wpdb;
 
+/**
+ * @property-read int $ID
+ */
 trait HasCastAndCrew
 {
     /**
@@ -37,14 +39,16 @@ trait HasCastAndCrew
             Query::wherePivotType($type, 'AND'),
         ]);
 
+        /** @var string $sql */
         $sql = $wpdb->prepare($query, $this->ID);
+        /** @var list<array<string, mixed>> $castcrew */
         $castcrew = $wpdb->get_results($sql, ARRAY_A);
 
         if (count($castcrew) === 0) {
             return [];
         }
 
-        $ids = Arr::map($castcrew, static fn($member) => $member['cast_and_crew_id'] ?? null);
+        $ids = Arr::map($castcrew, static fn(array $member) => $member['cast_and_crew_id'] ?? null);
 
         return array_unique(array_filter($ids));
     }
@@ -71,7 +75,9 @@ trait HasCastAndCrew
             'ORDER BY `castcrew_posts`.`post_title`',
         ]);
 
+        /** @var string $sql */
         $sql = $wpdb->prepare($query, 'ccwp_cast_and_crew', 'publish');
+        /** @var list<array<string, mixed>> $names */
         $names = $wpdb->get_results($sql, ARRAY_A);
 
         if (count($names) === 0) {
@@ -83,7 +89,7 @@ trait HasCastAndCrew
 
     /**
      * @param string $type
-     * @return CastAndCrew[]
+     * @return array<int, CastAndCrew>
      * @throws Throwable
      */
     public function getCastAndCrew(string $type = 'both'): array
@@ -100,7 +106,9 @@ trait HasCastAndCrew
             'ORDER BY `ccwp_join`.`custom_order` DESC, `castcrew_posts`.`post_title` ASC;',
         ]);
 
+        /** @var string $sql */
         $sql = $wpdb->prepare($query, $this->ID);
+        /** @var list<array<string, mixed>> $rows */
         $rows = $wpdb->get_results($sql, ARRAY_A);
 
         if (!$rows) {
@@ -108,17 +116,19 @@ trait HasCastAndCrew
         }
 
         return collect($rows)
-            ->map(static fn($row) => CastAndCrew::fromArray($row))
-            ->sort(static fn(CastAndCrew $a, CastAndCrew $b) => (
-                [$a->getJoinOrder(), $a->name_last] <=> [$b->getJoinOrder(), $b->name_last]
-            ))
+            ->map(static fn(array $row) => CastAndCrew::fromArray($row))
+            ->sort(
+                static fn(CastAndCrew $a, CastAndCrew $b) => (
+                    [$a->getJoinOrder(), $a->name_last] <=> [$b->getJoinOrder(), $b->name_last]
+                ),
+            )
             ->values()
             ->all();
     }
 
     /**
      * @param string $type
-     * @param array $castcrew
+     * @param list<array<string, mixed>> $castcrew
      * @return void
      * @throws Throwable
      */
@@ -126,22 +136,30 @@ trait HasCastAndCrew
     {
         $currentIds = $this->getCastCrewIds($type);
 
+        /** @var list<int> $newIds */
         $newIds = [];
         if (!empty($castcrew)) {
-            $newIds = Arr::map($castcrew, static fn($member) => $member['cast_and_crew_id'] ?? null);
+            $newIds = Arr::map($castcrew, static fn(array $member) => $member['cast_and_crew_id'] ?? null);
             $newIds = array_filter($newIds);
         }
 
         // insert / update the production's castcrew
         if (count($newIds) > 0) {
             foreach ($castcrew as $member) {
-                $castcrewId = is_numeric($member['cast_and_crew_id']) ? (int) $member['cast_and_crew_id'] : null;
-                $role = !empty($member['role']) ? sanitize_text_field($member['role']) : null;
-                $order = is_numeric($member['custom_order']) ? (int) $member['custom_order'] : null;
+                $castcrewId = is_numeric($member['cast_and_crew_id'])
+                    ? (int) $member['cast_and_crew_id']
+                    : null;
 
                 if (!$castcrewId) {
                     continue;
                 }
+
+                $role = isset($member['role']) && is_string($member['role'])
+                    ? sanitize_text_field($member['role'])
+                    : null;
+                $order = isset($member['custom_order']) && is_numeric($member['custom_order'])
+                    ? (int) $member['custom_order']
+                    : null;
 
                 if (in_array($member['cast_and_crew_id'], $currentIds, true)) {
                     // if in both $newIds and $currentIds, update
@@ -154,16 +172,18 @@ trait HasCastAndCrew
         }
 
         // Determine the production's castcrew to be deleted
-        if (!empty($currentIds) && !empty($newIds)) {
-            $toDeleteIds = array_values(array_diff($currentIds, $newIds));
-        } elseif (!empty($currentIds) && empty($newIds)) {
-            $toDeleteIds = $currentIds;
-        } else {
-            $toDeleteIds = [];
+        /** @var list<int> $toDeleteIds */
+        $toDeleteIds = [];
+        if (!empty($currentIds)) {
+            if (empty($newIds)) {
+                $toDeleteIds = $currentIds;
+            } else {
+                $toDeleteIds = array_values(array_diff($currentIds, $newIds));
+            }
         }
 
         // Delete the to be deleted
-        if (is_array($toDeleteIds) && count($toDeleteIds) > 0) {
+        if (count($toDeleteIds) > 0) {
             // if in the current c/c array but not in the to be saved array delete
             foreach ($toDeleteIds as $castcrewId) {
                 $this->deleteCastCrew($castcrewId, $type);
@@ -177,7 +197,7 @@ trait HasCastAndCrew
      * @param string|null $role
      * @param int|null $customOrder
      * @return void
-     * @global wpdb $wpdb
+     * @throws Throwable
      */
     protected function insertCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
@@ -212,7 +232,7 @@ trait HasCastAndCrew
      * @param string|null $role
      * @param int|null $customOrder
      * @return void
-     * @global wpdb $wpdb
+     * @throws Throwable
      */
     protected function updateCastCrew(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
@@ -251,7 +271,7 @@ trait HasCastAndCrew
      * @param int $id
      * @param string $type
      * @return void
-     * @global wpdb $wpdb
+     * @throws Throwable
      */
     protected function deleteCastCrew(int $id, string $type): void
     {

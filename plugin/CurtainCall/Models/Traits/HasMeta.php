@@ -6,6 +6,10 @@ namespace CurtainCall\Models\Traits;
 
 use Illuminate\Support\Arr;
 
+/**
+ * @property-read int $ID
+ * @method void __unset(string $key)
+ */
 trait HasMeta
 {
     /** @var array<string, mixed> */

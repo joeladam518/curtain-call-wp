@@ -23,7 +23,7 @@ get_header('single');
     /** @var array{cast: CastAndCrew[], crew: CastAndCrew[]} $productionCastCrew */
     $productionCastCrew = collect($production->getCastAndCrew())
         ->groupBy('ccwp_join.type')
-        ->map(fn (Collection $grouped) => $grouped->values()->all())
+        ->map(fn(Collection $grouped) => $grouped->values()->all())
         ->all();
     $ticketLink = $production->getTicketUrl();
     ?>

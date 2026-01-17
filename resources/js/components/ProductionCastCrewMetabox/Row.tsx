@@ -75,8 +75,8 @@ const Row: FC<RowProps> = ({
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                         type="number"
-                        value={member.order || 0}
-                        onChange={val => onUpdate?.(member.type, member.ID, {order: parseInt(val, 10)})}
+                        value={member.order ?? ''}
+                        onChange={val => onUpdate?.(member.type, member.ID, {order: val === '' ? undefined : parseInt(val, 10)})}
                         name={`${inputName}[${member.ID}][custom_order]`}
                         placeholder={__('order', TEXT_DOMAIN)}
                     />

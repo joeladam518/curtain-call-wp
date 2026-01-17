@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace CurtainCall\Controllers;
 
-
-
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\View;
-
 use Throwable;
 use WP_Post;
 
@@ -66,7 +63,7 @@ final class AdminProductionMetaboxController
                 basename(__FILE__),
                 'ccwp_production_details_box_nonce',
                 true,
-                false
+                false,
             ),
             'post' => $post,
             'metabox' => $metabox,
@@ -212,7 +209,6 @@ final class AdminProductionMetaboxController
         /** @var array<string, mixed> $production_crew */
         $production_crew = !empty($_POST['ccwp_add_crew_to_production']) ? $_POST['ccwp_add_crew_to_production'] : [];
 
-        /** @var Production $production */
         $production = Production::make($post);
         $production->saveCastAndCrew('cast', $production_cast);
         $production->saveCastAndCrew('crew', $production_crew);

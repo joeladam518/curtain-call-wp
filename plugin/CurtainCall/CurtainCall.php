@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace CurtainCall;
 
-use CurtainCall\Models\CurtainCallPost;
 use CurtainCall\Controllers\AdminCastCrewMetaboxController;
 use CurtainCall\Controllers\AdminController;
 use CurtainCall\Controllers\AdminProductionMetaboxController;
@@ -15,6 +14,7 @@ use CurtainCall\Controllers\SettingsController;
 use CurtainCall\LifeCycle\Activator;
 use CurtainCall\LifeCycle\Deactivator;
 use CurtainCall\LifeCycle\Uninstaller;
+use CurtainCall\Models\CurtainCallPost;
 
 final class CurtainCall
 {
@@ -60,7 +60,6 @@ final class CurtainCall
      */
     public function boot(): void
     {
-
         $this->registerLocales();
         $this->loadInitHooks();
         $this->loadSettingsHooks();

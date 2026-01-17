@@ -4,25 +4,29 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models;
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
 use CurtainCall\Models\Traits\HasAttributes;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Arr;
 use wpdb;
 
 /**
- * @property int    $production_id
- * @property int    $cast_and_crew_id
+ * @property int $production_id
+ * @property int $cast_and_crew_id
  * @property string $type
  * @property string $role
  * @property string $custom_order -> numeric
+ * @implements Arrayable<string, mixed>
  */
 class CurtainCallPivot implements Arrayable
 {
     use HasAttributes;
 
-    const TABLE_NAME = 'ccwp_castandcrew_production';
-    const TABLE_ALIAS = 'ccwp_join';
-    const ATTRIBUTE_PREFIX = self::TABLE_ALIAS . '_';
+    /** @var string */
+    public const TABLE_NAME = 'ccwp_castandcrew_production';
+    /** @var string */
+    public const TABLE_ALIAS = 'ccwp_join';
+    /** @var string */
+    public const ATTRIBUTE_PREFIX = self::TABLE_ALIAS . '_';
 
     protected static ?string $table;
     protected static ?string $tableWithAlias;
@@ -36,14 +40,17 @@ class CurtainCallPivot implements Arrayable
         'custom_order',
     ];
 
-    public function __construct(array $data = [])
+    /**
+     * @param array<string, mixed> $data
+     */
+    final public function __construct(array $data = [])
     {
         $this->load($data);
     }
 
     /**
      * @param bool $withPrefix
-     * @return array|string[]
+     * @return array<int, string>
      */
     public static function getFields(bool $withPrefix = false): array
     {
@@ -51,12 +58,15 @@ class CurtainCallPivot implements Arrayable
             return static::$fields;
         }
 
-        return Arr::map(static::$fields, static fn($field) => static::ATTRIBUTE_PREFIX . $field);
+        return collect(static::$fields)
+            ->map(static fn(string $field) => static::ATTRIBUTE_PREFIX . $field)
+            ->all();
     }
 
     /**
      * @global wpdb $wpdb
      * @return string
+     * @throws WordpressDbInstanceNotFoundException
      */
     public static function getTableName(): string
     {
@@ -67,6 +77,7 @@ class CurtainCallPivot implements Arrayable
 
     /**
      * @return string
+     * @throws WordpressDbInstanceNotFoundException
      */
     public static function getTableNameWithAlias(): string
     {
@@ -92,7 +103,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return void
      */
     public function load(array $data): void
@@ -143,7 +154,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @return array{production_id: int, cast_and_crew_id: int, type: string, role: string, custom_order: string}
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -151,7 +162,7 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @return array{production_id: int, cast_and_crew_id: int, type: string, role: string, custom_order: string}
+     * @return array<string, mixed>
      */
     public function __debugInfo(): array
     {

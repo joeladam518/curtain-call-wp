@@ -20,7 +20,7 @@ get_header();
                 <h2><?php esc_html_e('Sorry!', CCWP_TEXT_DOMAIN); ?></h2>
                 <p><?php esc_html_e(
                     'There are currently no productions in our directory. Please check back soon!',
-                    CCWP_TEXT_DOMAIN
+                    CCWP_TEXT_DOMAIN,
                 ); ?></p>
             </div>
         <?php else: ?>

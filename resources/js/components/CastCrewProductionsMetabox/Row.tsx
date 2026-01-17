@@ -90,8 +90,8 @@ const Row: FC<RowProps> = ({
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                         type="number"
-                        value={production.order || 0}
-                        onChange={val => onUpdate?.(production.type, production.ID, {order: parseInt(val, 10)})}
+                        value={production.order ?? ''}
+                        onChange={val => onUpdate?.(production.type, production.ID, {order: val === '' ? undefined : parseInt(val, 10)})}
                         name={`${inputName}[${production.ID}][custom_order]`}
                         placeholder={__('order', TEXT_DOMAIN)}
                     />

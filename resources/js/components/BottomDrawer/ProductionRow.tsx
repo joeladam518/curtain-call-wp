@@ -32,7 +32,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
     const [state, setState] = useState<ProductionRowState>({
         type: (production.memberType as MemberType) || MemberType.Cast,
         role: production.role || '',
-        order: production.order ? production.order.toString() : '0',
+        order: production.order ? production.order.toString() : '',
     });
     const setType = (type: MemberType) => setState(current => ({...current, type}));
     const setRole = (role: string) => setState(current => ({...current, role}));
@@ -73,7 +73,7 @@ const ProductionRow: FC<ProductionRowProps> = ({
                 __next40pxDefaultSize
                 __nextHasNoMarginBottom
                 type="number"
-                value={state.order || '0'}
+                value={state.order}
                 onChange={setOrder}
                 placeholder={__('Order', TEXT_DOMAIN)}
             />

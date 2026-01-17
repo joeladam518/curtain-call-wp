@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 
 trait HasAttributes
 {
-    /** @var array<array-key, mixed> $this->attributes */
+    /** @var array<string, mixed> $this->attributes */
     protected array $attributes = [];
 
     /**

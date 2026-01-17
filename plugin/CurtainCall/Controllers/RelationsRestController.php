@@ -11,6 +11,7 @@ use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Query;
 use Illuminate\Support\Collection;
+use Throwable;
 use WP_Error;
 use WP_Post;
 use WP_REST_Request;
@@ -68,6 +69,9 @@ final class RelationsRestController extends RestController
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public static function getCastCrew(WP_REST_Request $request): WP_REST_Response
     {
         $wpdb = ccwp_get_wpdb();
@@ -91,11 +95,12 @@ final class RelationsRestController extends RestController
         }
 
         // Get the pivot rows
-        $pivotSql = "SELECT * FROM {$table}" . (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where));
-        /** @var array{production_id: int, cast_and_crew_id: int, type: string, role: string, order: int} $pivotRows */
-        $pivotRows = $wpdb->get_results($wpdb->prepare($pivotSql, $params), ARRAY_A) ?: [];
-        /** @var Collection<CurtainCallPivot> $pivots */
-        $pivots = collect($pivotRows)->map(static fn($row) => new CurtainCallPivot($row));
+        $pivotSql = "SELECT * FROM {$table} WHERE " . implode(' AND ', $where);
+        $preparedSql = $wpdb->prepare($pivotSql, $params);
+        /** @var list<array<string, mixed>> $pivotRows */
+        $pivotRows = $preparedSql ? ($wpdb->get_results($preparedSql, ARRAY_A) ?: []) : [];
+        /** @var Collection<int, CurtainCallPivot> $pivots */
+        $pivots = collect($pivotRows)->map(static fn(array $row) => new CurtainCallPivot($row));
 
         // Then get the cast/crew members
         /** @var list<int> $memberIds */
@@ -110,16 +115,15 @@ final class RelationsRestController extends RestController
                 'WHERE `ID` IN (' . implode(',', $memberIds) . ')',
                 "AND `post_type` = '{$castCrewPostType}'",
             ]);
-            /** @var list<array<string, mixed>> $postRows */
-            $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
+            /** @var list<object> $postRows */
+            $postRows = $wpdb->get_results($postSql) ?: [];
             /** @var Collection<int, WP_Post> $memberPosts */
-            $memberPosts = collect($postRows)->map(static fn($row) => new WP_Post($row))->keyBy('ID');
+            $memberPosts = collect($postRows)->map(static fn(object $row) => new WP_Post($row))->keyBy('ID');
         }
 
         // glue them together
         $castCrew = $pivots
             ->map(static function (CurtainCallPivot $pivot) use ($memberPosts) {
-                /** @var WP_Post|null $memberPost */
                 $memberPost = $memberPosts->get($pivot->cast_and_crew_id);
 
                 if (!$memberPost) {
@@ -131,15 +135,18 @@ final class RelationsRestController extends RestController
                 return CastCrewData::fromCastCrew($member);
             })
             ->filter()
-            ->sort(static fn(CastCrewData $a, CastCrewData $b) => (
-                [$a->order, $a->lastName] <=> [$b->order, $b->lastName]
-            ))
+            ->sort(
+                static fn(CastCrewData $a, CastCrewData $b) => [$a->order, $a->lastName] <=> [$b->order, $b->lastName],
+            )
             ->values()
             ->toArray();
 
         return new WP_REST_Response($castCrew, 200);
     }
 
+    /**
+     * @throws Throwable
+     */
     public static function getProductions(WP_REST_Request $request): WP_REST_Response
     {
         $wpdb = ccwp_get_wpdb();
@@ -157,9 +164,10 @@ final class RelationsRestController extends RestController
         $params[] = (int) $castcrewId;
 
         // Get the pivot rows
-        $pivotSql = "SELECT * FROM {$table}" . (empty($where) ? '' : ' WHERE ' . implode(' AND ', $where));
-        /** @var array{production_id: int, cast_and_crew_id: int, type: string, role: string, order: int} $rows */
-        $pivotRows = $wpdb->get_results($wpdb->prepare($pivotSql, $params), ARRAY_A) ?: [];
+        $pivotSql = "SELECT * FROM {$table} WHERE " . implode(' AND ', $where);
+        $preparedSql = $wpdb->prepare($pivotSql, $params);
+        /** @var list<array<string, mixed>> $pivotRows */
+        $pivotRows = $preparedSql ? ($wpdb->get_results($preparedSql, ARRAY_A) ?: []) : [];
         /** @var Collection<int, CurtainCallPivot> $pivots */
         $pivots = collect($pivotRows)->map(static fn(array $row) => new CurtainCallPivot($row));
 
@@ -176,10 +184,10 @@ final class RelationsRestController extends RestController
                 'WHERE `ID` IN (' . implode(',', $productionIds) . ')',
                 "AND `post_type` = '{$productionPostType}'",
             ]);
-            /** @var list<array<string, mixed>> $rows */
-            $postRows = $wpdb->get_results($wpdb->prepare($postSql, $params)) ?: [];
+            /** @var list<object> $postRows */
+            $postRows = $wpdb->get_results($postSql) ?: [];
             /** @var Collection<int, WP_Post> $productionPosts */
-            $productionPosts = collect($postRows)->map(static fn($row) => new WP_Post($row))->keyBy('ID');
+            $productionPosts = collect($postRows)->map(static fn(object $row) => new WP_Post($row))->keyBy('ID');
         }
 
         // glue them together
@@ -197,15 +205,20 @@ final class RelationsRestController extends RestController
                 return ProductionData::fromProduction($production);
             })
             ->filter()
-            ->sort(static fn(ProductionData $a, ProductionData $b) => (
-                [$b->dateStart, $a->name] <=> [$a->dateStart, $b->name]
-            ))
+            ->sort(
+                static fn(ProductionData $a, ProductionData $b) => (
+                    [$b->dateStart, $a->name] <=> [$a->dateStart, $b->name]
+                ),
+            )
             ->values()
             ->toArray();
 
         return new WP_REST_Response($productions, 200);
     }
 
+    /**
+     * @throws Throwable
+     */
     public static function attach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $wpdb = ccwp_get_wpdb();
@@ -230,12 +243,14 @@ final class RelationsRestController extends RestController
         ];
 
         // Check existing
-        $existing = $wpdb->get_var($wpdb->prepare(
+        /** @var string $sql */
+        $sql = $wpdb->prepare(
             "SELECT COUNT(*) FROM {$table} WHERE production_id=%d AND cast_and_crew_id=%d AND type=%s",
             $productionId,
             $castcrewId,
             $type,
-        ));
+        );
+        $existing = $wpdb->get_var($sql);
 
         if ((int) $existing > 0) {
             $wpdb->update($table, $data, [
@@ -250,6 +265,9 @@ final class RelationsRestController extends RestController
         return new WP_REST_Response(['ok' => true], 200);
     }
 
+    /**
+     * @throws Throwable
+     */
     public static function detach(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
         $wpdb = ccwp_get_wpdb();

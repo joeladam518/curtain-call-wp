@@ -53,7 +53,9 @@ abstract class CurtainCallPost implements Arrayable
     use HasMeta;
     use HasWordPressPost;
 
+    /** @var string */
     public const POST_TYPE = 'ccwp_post';
+    /** @var string */
     public const META_PREFIX = '_ccwp_';
 
     /**
@@ -85,7 +87,7 @@ abstract class CurtainCallPost implements Arrayable
 
         $post = $query->have_posts() ? $query->posts[0] : null;
 
-        if (!($post instanceof WP_Post)) {
+        if (!$post instanceof WP_Post) {
             throw new PostNotFoundException("Failed to fetch post. (id: {$id}, type: " . static::POST_TYPE . ')');
         }
 
@@ -147,7 +149,6 @@ abstract class CurtainCallPost implements Arrayable
      * @return WP_Query
      */
     abstract public static function getPosts(array $additionalArgs = []): WP_Query;
-
 
     /**
      * @param WP_Post $post

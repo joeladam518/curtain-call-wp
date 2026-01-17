@@ -30,7 +30,7 @@ class Query
         $query = Arr::wrap($query);
 
         return collect($query)
-            ->map(fn ($q) => trim($q))
+            ->map(static fn($q) => trim($q))
             ->filter()
             ->implode(' ');
     }

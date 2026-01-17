@@ -61,7 +61,7 @@ final class AdminCastCrewMetaboxController
                 basename(__FILE__),
                 'ccwp_cast_and_crew_details_box_nonce',
                 true,
-                false
+                false,
             ),
             'post' => $post,
             'metabox' => $metabox,

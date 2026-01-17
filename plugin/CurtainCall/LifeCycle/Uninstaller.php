@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall\LifeCycle;
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Models\Production;
@@ -11,6 +12,10 @@ use CurtainCall\Support\Query;
 
 class Uninstaller implements LifeCycleHook
 {
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     public static function run(): void
     {
         $wpdb = ccwp_get_wpdb();
@@ -27,6 +32,11 @@ class Uninstaller implements LifeCycleHook
         flush_rewrite_rules(false);
     }
 
+    /**
+     * @param string $postType
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deletePosts(string $postType): void
     {
         $wpdb = ccwp_get_wpdb();
@@ -36,6 +46,10 @@ class Uninstaller implements LifeCycleHook
         $wpdb->query($sql);
     }
 
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deletePostMeta(): void
     {
         $wpdb = ccwp_get_wpdb();
@@ -48,6 +62,11 @@ class Uninstaller implements LifeCycleHook
         $wpdb->query($sql);
     }
 
+    /**
+     * @param string $table
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deleteTable(string $table): void
     {
         $wpdb = ccwp_get_wpdb();
@@ -57,6 +76,11 @@ class Uninstaller implements LifeCycleHook
         $wpdb->query($sql);
     }
 
+    /**
+     * @param string $taxonomy
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deleteTaxonomy(string $taxonomy): void
     {
         $wpdb = ccwp_get_wpdb();

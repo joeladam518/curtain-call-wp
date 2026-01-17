@@ -25,7 +25,9 @@ class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
 
+    /** @var string */
     public const POST_TYPE = 'ccwp_cast_and_crew';
+    /** @var string */
     public const META_PREFIX = '_ccwp_cast_crew_';
 
     /**

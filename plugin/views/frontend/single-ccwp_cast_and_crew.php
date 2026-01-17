@@ -46,9 +46,7 @@ get_header('single');
                     <?php endif; ?>
 
                     <div class="castcrew-profile">
-                        <h1 class="ccwp-page-heading"
-                            <?php echo esc_html($fullName); ?>
-                        </h1>
+                        <h1 class="ccwp-page-heading"><?php echo esc_html($fullName); ?></h1>
 
                         <?php if (isset($castcrew->self_title)): ?>
                             <h3 class="castcrew-title">
@@ -77,7 +75,7 @@ get_header('single');
                         <?php if (isset($castcrew->website_link) || $castcrew->hasSocialMedia()): ?>
                             <h4 class="connect-with-castcrew"><?php printf(
                                 __('Connect with %s!', CCWP_TEXT_DOMAIN),
-                                esc_html($castcrew->name_first)
+                                esc_html($castcrew->name_first),
                             ); ?></h4>
                         <?php endif; ?>
 

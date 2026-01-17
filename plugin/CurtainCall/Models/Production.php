@@ -23,9 +23,12 @@ class Production extends CurtainCallPost
 {
     use HasCastAndCrew;
 
-    const POST_TYPE = 'ccwp_production';
-    const META_PREFIX = '_ccwp_production_';
-    const SEASONS_TAXONOMY = 'ccwp_production_seasons';
+    /** @var string */
+    public const POST_TYPE = 'ccwp_production';
+    /** @var string */
+    public const META_PREFIX = '_ccwp_production_';
+    /** @var string */
+    public const SEASONS_TAXONOMY = 'ccwp_production_seasons';
 
     /**
      * @var list<string>

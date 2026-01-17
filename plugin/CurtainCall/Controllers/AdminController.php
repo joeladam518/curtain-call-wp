@@ -102,9 +102,9 @@ final class AdminController
      *       is extremely important that we return as early as possible if the data doesn't
      *       belong to a ccwp post.
      *
-     * @param array $data
-     * @param array $postArr
-     * @return array
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $postArr
+     * @return array<string, mixed>
      */
     public function setTitleOnPostSave(array $data, array $postArr): array
     {
@@ -137,6 +137,7 @@ final class AdminController
      */
     private function enqueueCastCrewPostScripts(): void
     {
+        /** @var WP_Post|null $post */
         $post = get_post();
 
         $version = $this->getVersion();
@@ -169,13 +170,13 @@ final class AdminController
         wp_set_script_translations($castcrewMetaboxesHandle, CCWP_TEXT_DOMAIN);
 
         try {
-            /** @var CastAndCrew|null $castCrew */
             $castCrew = $post ? CastAndCrew::make($post) : null;
         } catch (Throwable) {
             $castCrew = null;
         }
 
         if ($castCrew) {
+            /** @var string|null $birthday */
             $birthday = ccwp_get_custom_field('_ccwp_cast_crew_birthday', $castCrew->ID);
             $castCrewDetails = [
                 'ID' => $castCrew->ID,
@@ -195,8 +196,10 @@ final class AdminController
         }
 
         try {
+            /** @var WP_Post[] $posts */
+            $posts = Production::getPosts()->posts;
             /** @var array<int, array{label: string, value: string}> $options */
-            $options = collect(Production::getPosts()->posts)
+            $options = collect($posts)
                 ->map(static fn(WP_Post $post) => Production::make($post))
                 ->map(static fn(Production $production) => [
                     'label' => $production->name,
@@ -235,6 +238,7 @@ final class AdminController
      */
     private function enqueueProductionPostScripts(): void
     {
+        /** @var WP_Post|null $post */
         $post = get_post();
         $version = $this->getVersion();
         $productionMetaboxesHandle = CCWP_PLUGIN_NAME . '_admin_production_metaboxes';
@@ -266,7 +270,6 @@ final class AdminController
         wp_set_script_translations($productionMetaboxesHandle, CCWP_TEXT_DOMAIN);
 
         try {
-            /** @var Production|null $production */
             $production = $post ? Production::make($post) : null;
         } catch (Throwable) {
             $production = null;
@@ -328,12 +331,14 @@ final class AdminController
      */
     private function getCastCrewPostTitle(array $postArr): string
     {
+        /** @var list<string> $titleParts */
         $titleParts = [];
-        if (isset($postArr['ccwp_name_first'])) {
+
+        if (isset($postArr['ccwp_name_first']) && is_string($postArr['ccwp_name_first'])) {
             $titleParts[] = $postArr['ccwp_name_first'];
         }
 
-        if (isset($postArr['ccwp_name_last'])) {
+        if (isset($postArr['ccwp_name_last']) && is_string($postArr['ccwp_name_last'])) {
             $titleParts[] = $postArr['ccwp_name_last'];
         }
 
@@ -350,10 +355,12 @@ final class AdminController
      */
     private function getProductionPostTitle(array $postArr): string
     {
+        /** @var list<string> $titleParts */
         $titleParts = [];
-        if (isset($postArr['ccwp_production_name'])) {
+
+        if (isset($postArr['ccwp_production_name']) && is_string($postArr['ccwp_production_name'])) {
             $titleParts[] = $postArr['ccwp_production_name'];
-            if (isset($postArr['ccwp_date_start'])) {
+            if (isset($postArr['ccwp_date_start']) && is_string($postArr['ccwp_date_start'])) {
                 $dateStart = Date::toCarbon($postArr['ccwp_date_start']);
                 if ($dateStart) {
                     $titleParts[] = '-';

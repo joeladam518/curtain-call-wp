@@ -8,7 +8,7 @@ on:
       - "v*.*.*"
 env:
   PHP_VERSION: 8.1
-  NODE_VERSION: 22
+  NODE_VERSION: 24
 
 jobs:
   release:

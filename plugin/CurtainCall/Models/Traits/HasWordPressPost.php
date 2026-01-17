@@ -44,13 +44,13 @@ trait HasWordPressPost
 
     public function getExcerpt(): string
     {
-        return get_the_excerpt($this->wp_post);
+        return get_the_excerpt($this->wp_post) ?: '';
     }
 
     public function theExcerpt(): void
     {
         /* @mago-ignore lint:no-unescaped-output */
-        echo apply_filters( 'the_excerpt', $this->getExcerpt() );
+        echo apply_filters('the_excerpt', $this->getExcerpt());
     }
 
     /**
@@ -70,7 +70,7 @@ trait HasWordPressPost
      */
     public function getPermalink(): string
     {
-        return get_permalink($this->wp_post);
+        return get_permalink($this->wp_post) ?: '';
     }
 
     /**
@@ -146,7 +146,7 @@ trait HasWordPressPost
      */
     public function getGallery(): string
     {
-        return get_post_gallery($this->wp_post);
+        return get_post_gallery($this->wp_post) ?: '';
     }
 
     /**
@@ -179,7 +179,7 @@ trait HasWordPressPost
      */
     public function getContent(?string $moreLinkText = null, bool $stripTeaser = false): string
     {
-        return get_the_content($moreLinkText, $stripTeaser, $this->wp_post);
+        return get_the_content($moreLinkText, $stripTeaser, $this->wp_post) ?: '';
     }
 
     /**
@@ -236,6 +236,7 @@ trait HasWordPressPost
      *
      * @param WP_Post $post
      * @return $this
+     * @throws InvalidArgumentException
      */
     protected function setPost(WP_Post $post): static
     {

@@ -17,7 +17,12 @@ final class SettingsController
      */
     public function registerSettings(): void
     {
-        add_settings_section('ccwp_default_links', __('Links', CCWP_TEXT_DOMAIN), null, 'ccwp');
+        add_settings_section(
+            'ccwp_default_links',
+            __('Links', CCWP_TEXT_DOMAIN),
+            [$this, 'renderLinksSectionHeader'],
+            'ccwp',
+        );
 
         register_setting('ccwp-settings', 'ccwp_default_ticket_url', [
             'type' => 'string',
@@ -25,7 +30,7 @@ final class SettingsController
                 'The default tickets url to use if no production ticket url is defined.',
                 CCWP_TEXT_DOMAIN,
             ),
-            'sanitize_callback' => static fn($value) => esc_url_raw($value, ['http', 'https']),
+            'sanitize_callback' => static fn(string $value) => esc_url_raw($value, ['http', 'https']),
             'show_in_rest' => false,
             'default' => null,
         ]);
@@ -77,6 +82,11 @@ final class SettingsController
         View::make('admin/settings-page.php')->render();
     }
 
+    public function renderLinksSectionHeader(): void
+    {
+        // do nothing
+    }
+
     /**
      * Generic function to render a simple text field on the settings page
      *
@@ -86,8 +96,10 @@ final class SettingsController
      */
     public function renderTextField(array $args): void
     {
+        /** @var string|null $name */
         $name = Arr::get($args, 'input-name');
-        $optionValue = get_option($name, null);
+        /** @var string|null $optionValue */
+        $optionValue = $name ? get_option($name, null) : null;
 
         View::make('admin/text-field.php', [
             'name' => $name,

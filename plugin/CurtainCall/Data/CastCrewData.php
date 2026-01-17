@@ -32,7 +32,7 @@ final class CastCrewData extends Data
         /** @var string|null $lastName */
         $lastName = $data['lastName'] ?? $data['name_last'] ?? $data['last_name'] ?? $data['nameLast'] ?? null;
         /** @var string|null $fullName */
-        $fullName = $data['fullName'] ?? $data['full_name'] ?? trim($firstName . ' ' . $lastName);
+        $fullName = $data['fullName'] ?? $data['full_name'] ?? trim(($firstName ?? '') . ' ' . ($lastName ?? ''));
         /** @var string|null $role */
         $role = $data['role'] ?? null;
         /** @var string|null $type */
@@ -53,7 +53,7 @@ final class CastCrewData extends Data
     public static function fromCastCrew(CastAndCrew $castCrew): self
     {
         return new self(
-            id: is_numeric($castCrew->ID) ? (int) $castCrew->ID : null,
+            id: $castCrew->ID,
             firstName: $castCrew->name_first ?: null,
             lastName: $castCrew->name_last ?: null,
             fullName: $castCrew->getFullName() ?: null,

@@ -22,7 +22,7 @@ $ticketUrl = $production->getTicketUrl();
     <div class="production-poster">
         <?php if ($production->hasImage()): ?>
             <a href="<?php $production->thePermalink(); ?>">
-                <?php $production->getImage('full'); ?>
+                <?php $production->theImage('full'); ?>
             </a>
         <?php endif; ?>
     </div>
@@ -49,8 +49,8 @@ $ticketUrl = $production->getTicketUrl();
 
             <span class="production-dates">
             <?php
-                // @mago-ignore lint:no-unescaped-output
-                echo $production->getFormattedShowDates();
+            // @mago-ignore lint:no-unescaped-output
+            echo $production->getFormattedShowDates();
             ?>
             </span>
 

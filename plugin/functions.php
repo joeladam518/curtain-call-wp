@@ -12,7 +12,7 @@ if (!function_exists('ccwp_get_custom_field')) {
     /**
      * @param string $field_name
      * @param int|null $post_id
-     * @return mixed
+     * @return string|false|null
      */
     function ccwp_get_custom_field(string $field_name, ?int $post_id = null): mixed
     {

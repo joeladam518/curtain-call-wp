@@ -49,7 +49,7 @@ final class ProductionData extends Data
     public static function fromProduction(Production $production): self
     {
         return new self(
-            id: is_numeric($production->ID) ? (int) $production->ID : null,
+            id: $production->ID,
             name: $production->name ?: $production->post_title ?: 'Untitled Production',
             dateStart: $production->date_start ?: null,
             dateEnd: $production->date_end ?: null,

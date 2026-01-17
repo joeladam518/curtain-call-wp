@@ -11,11 +11,14 @@ use Illuminate\Support\Arr;
 use Throwable;
 use wpdb;
 
+/**
+ * @property-read int $ID
+ */
 trait HasProductions
 {
     /**
      * @param string $type
-     * @return array
+     * @return list<int>
      * @throws Throwable
      * @global wpdb $wpdb
      */
@@ -36,16 +39,19 @@ trait HasProductions
             Query::wherePivotType($type, 'AND'),
         ]);
 
+        /** @var string $sql */
         $sql = $wpdb->prepare($query, $this->ID);
+        /** @var list<array<string, mixed>> $productions */
         $productions = $wpdb->get_results($sql, ARRAY_A);
 
         if (count($productions) === 0) {
             return [];
         }
 
-        $ids = Arr::map($productions, static fn($production) => $production['production_id'] ?? null);
+        $ids = Arr::map($productions, static fn(array $production) => $production['production_id'] ?? null);
 
-        return array_unique(array_filter($ids));
+        /** @var list<int> $result */
+        return array_values(array_unique(array_filter($ids)));
     }
 
     /**
@@ -70,18 +76,21 @@ trait HasProductions
             'ORDER BY `production_posts`.`post_title`',
         ]);
 
+        /** @var string $sql */
         $sql = $wpdb->prepare($query, 'ccwp_production', 'publish');
+        /** @var list<array<string, mixed>> $names */
         $names = $wpdb->get_results($sql, ARRAY_A);
 
         if (count($names) === 0) {
             return [];
         }
 
+        /** @var array<int, string> $result */
         return array_column($names, 'post_title', 'ID');
     }
 
     /**
-     * @return Production[]
+     * @return array<int, Production>
      * @throws Throwable
      * @global wpdb $wpdb
      */
@@ -98,25 +107,26 @@ trait HasProductions
             'ORDER BY `production_posts`.`post_title`;',
         ]);
 
+        /** @var string $sql */
         $sql = $wpdb->prepare($query, $this->ID);
+        /** @var list<array<string, mixed>> $rows */
         $rows = $wpdb->get_results($sql, ARRAY_A);
 
         if (!$rows) {
             return [];
         }
 
+        /** @var array<int, Production> $result */
         return collect($rows)
-            ->map(static fn($row) => Production::fromArray($row))
-            ->sort(static fn(Production $a, Production $b) => (
-                [$b->date_start, $a->name] <=> [$a->date_start, $b->name]
-            ))
+            ->map(static fn(array $row) => Production::fromArray($row))
+            ->sort(static fn(Production $a, Production $b) => [$b->date_start, $a->name] <=> [$a->date_start, $b->name])
             ->values()
             ->all();
     }
 
     /**
      * @param string $type
-     * @param array $productions
+     * @param list<array<string, mixed>> $productions
      * @return void
      * @throws Throwable
      */
@@ -124,22 +134,30 @@ trait HasProductions
     {
         $currentIds = $this->getProductionIds($type);
 
+        /** @var list<int> $newIds */
         $newIds = [];
         if (!empty($productions)) {
-            $newIds = Arr::map($productions, static fn($production) => $production['production_id'] ?? null);
+            $newIds = Arr::map($productions, static fn(array $production) => $production['production_id'] ?? null);
             $newIds = array_filter($newIds);
         }
 
         // insert / update the productions
         if (count($newIds) > 0) {
             foreach ($productions as $production) {
-                $productionId = is_numeric($production['production_id']) ? (int) $production['production_id'] : null;
-                $role = !empty($production['role']) ? sanitize_text_field($production['role']) : null;
-                $order = is_numeric($production['custom_order']) ? (int) $production['custom_order'] : null;
+                $productionId = is_numeric($production['production_id'])
+                    ? (int) $production['production_id']
+                    : null;
 
                 if (!$productionId) {
                     continue;
                 }
+
+                $role = isset($production['role']) && is_string($production['role'])
+                    ? sanitize_text_field($production['role'])
+                    : null;
+                $order = isset($production['custom_order']) && is_numeric($production['custom_order'])
+                    ? (int) $production['custom_order']
+                    : null;
 
                 if (in_array($production['production_id'], $currentIds, true)) {
                     // if in both $newIds and $currentIds, update
@@ -152,18 +170,20 @@ trait HasProductions
         }
 
         // Determine the productions to be deleted
-        if (!empty($currentIds) && !empty($newIds)) {
-            $toDeleteIds = array_values(array_diff($currentIds, $newIds));
-        } elseif (!empty($currentIds) && empty($newIds)) {
-            $toDeleteIds = $currentIds;
-        } else {
-            $toDeleteIds = [];
+        /** @var list<int> $toDeleteIds */
+        $toDeleteIds = [];
+        if (!empty($currentIds)) {
+            if (empty($newIds)) {
+                $toDeleteIds = $currentIds;
+            } else {
+                $toDeleteIds = array_values(array_diff($currentIds, $newIds));
+            }
         }
 
         // Delete the to be deleted
-        if (is_array($toDeleteIds) && count($toDeleteIds) > 0) {
+        if (count($toDeleteIds) > 0) {
             foreach ($toDeleteIds as $productionId) {
-                $this->deleteProduction((int) $productionId, $type);
+                $this->deleteProduction($productionId, $type);
             }
         }
     }
@@ -174,7 +194,7 @@ trait HasProductions
      * @param string|null $role
      * @param int|null $customOrder
      * @return void
-     * @global wpdb $wpdb
+     * @throws Throwable
      */
     protected function insertProduction(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
@@ -209,7 +229,7 @@ trait HasProductions
      * @param string|null $role
      * @param int|null $customOrder
      * @return void
-     * @global wpdb $wpdb
+     * @throws Throwable
      */
     protected function updateProduction(int $id, string $type, ?string $role, ?int $customOrder = null): void
     {
@@ -248,7 +268,7 @@ trait HasProductions
      * @param int $id
      * @param string $type
      * @return void
-     * @global wpdb $wpdb
+     * @throws Throwable
      */
     protected function deleteProduction(int $id, string $type): void
     {

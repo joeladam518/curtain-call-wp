@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace CurtainCall\LifeCycle;
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
+
 class Activator implements LifeCycleHook
 {
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     public static function run(): void
     {
         static::createPluginTables();
@@ -13,6 +19,10 @@ class Activator implements LifeCycleHook
         flush_rewrite_rules(false);
     }
 
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function createPluginTables(): void
     {
         $wpdb = ccwp_get_wpdb();
