@@ -62,7 +62,6 @@ final class CurtainCall
     {
         $this->registerLocales();
         $this->loadInitHooks();
-        $this->loadSettingsHooks();
         $this->loadAdminHooks();
         $this->loadFrontendHooks();
     }
@@ -83,13 +82,6 @@ final class CurtainCall
         add_action('rest_api_init', [RelationsRestController::class, 'registerRoutes'], 10, 0);
     }
 
-    private function loadSettingsHooks(): void
-    {
-        $controller = new SettingsController();
-        add_action('admin_init', [$controller, 'registerSettings'], 10, 0);
-        add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
-    }
-
     /**
      * Register all the hooks related to the admin area functionality of the plugin.
      *
@@ -97,6 +89,10 @@ final class CurtainCall
      */
     private function loadAdminHooks(): void
     {
+        $controller = new SettingsController();
+        add_action('admin_init', [$controller, 'registerSettings'], 10, 0);
+        add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
+
         $adminCastCrewMetaboxController = new AdminCastCrewMetaboxController();
         add_action('add_meta_boxes', [$adminCastCrewMetaboxController, 'addMetaboxes'], 10, 0);
         add_action('save_post_ccwp_cast_and_crew', [$adminCastCrewMetaboxController, 'saveDetailsMeta'], 10, 3);
