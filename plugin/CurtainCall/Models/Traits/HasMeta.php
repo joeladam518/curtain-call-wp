@@ -14,7 +14,7 @@ trait HasMeta
     protected array $ccwp_meta = [];
 
     /**
-     * @return array<string, list<mixed>>
+     * @return array<string, list<string>>
      */
     protected function fetchAllMeta(): array
     {
@@ -31,13 +31,13 @@ trait HasMeta
     }
 
     /**
-     * @return list<mixed>
+     * @return list<string>
      */
     protected function getAllMeta(): array
     {
         $meta = $this->fetchAllMeta();
 
-        return Arr::map($meta, static fn($item) => $item[0] ?? null);
+        return Arr::map($meta, static fn(array $item) => $item[0] ?? null);
     }
 
     /**

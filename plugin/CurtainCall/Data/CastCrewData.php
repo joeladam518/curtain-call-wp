@@ -52,17 +52,14 @@ final class CastCrewData extends Data
 
     public static function fromCastCrew(CastAndCrew $castCrew): self
     {
-        $id = is_numeric($castCrew->ID) ? (int) $castCrew->ID : null;
-        $order = (int) ($castCrew->ccwp_join->custom_order ?? 0);
-
         return new self(
-            id: $id,
+            id: is_numeric($castCrew->ID) ? (int) $castCrew->ID : null,
             firstName: $castCrew->name_first ?: null,
             lastName: $castCrew->name_last ?: null,
             fullName: $castCrew->getFullName() ?: null,
-            role: $castCrew->ccwp_join?->role ?: null,
-            type: $castCrew->ccwp_join?->type ?: null,
-            order: $order,
+            role: $castCrew->getJoinRole(),
+            type: $castCrew->getJoinType(),
+            order: $castCrew->getJoinOrder(),
         );
     }
 

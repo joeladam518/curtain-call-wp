@@ -13,12 +13,21 @@ final class ImageData extends Data
     ) {
     }
 
-    public static function fromArray(array $data): Data
+    /**
+     * @param array<string, mixed> $data
+     * @return self
+     */
+    public static function fromArray(array $data): self
     {
+        /** @var string $src */
+        $src = $data['src'] ?? '';
+        $width = isset($data['width']) && is_numeric($data['width']) ? (int) $data['width'] : null;
+        $height = isset($data['height']) && is_numeric($data['height']) ? (int) $data['height'] : null;
+
         return new self(
-            src: $data['src'],
-            width: (int) $data['width'] ?? null,
-            height: (int) $data['height'] ?? null,
+            src: $src,
+            width: $width,
+            height: $height,
         );
     }
 

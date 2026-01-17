@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models;
 
-use CurtainCall\Data\ImageData;
-use CurtainCall\Data\ProductionData;
 use CurtainCall\Exceptions\PostNotFoundException;
 use CurtainCall\Exceptions\UndefinedPropertyException;
 use CurtainCall\Exceptions\UnsettableException;
@@ -136,6 +134,22 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
+     * Get the config array used when creating a WP custom post type
+     *
+     * @return array
+     */
+    abstract public static function getConfig(): array;
+
+    /**
+     * Query for Posts
+     *
+     * @param array $additionalArgs
+     * @return WP_Query
+     */
+    abstract public static function getPosts(array $additionalArgs = []): WP_Query;
+
+
+    /**
      * @param WP_Post $post
      * @return static
      */
@@ -145,70 +159,39 @@ abstract class CurtainCallPost implements Arrayable
     }
 
     /**
-     * @param list<WP_Post|object|array<string, mixed>> $posts
-     * @return CurtainCallPost[]
+     * Get the post's join order
+     *
+     * @return int
      */
-    public static function toCurtainCallPosts(array $posts): array
+    public function getJoinOrder(): int
     {
-        /** @var CurtainCallPost[] $models */
-        $models = collect($posts)
-            ->map(static function (array|object $post): ?CurtainCallPost {
-                /** @var array<string, mixed> $data */
-                $data = is_object($post) ? get_object_vars($post) : $post;
-                return match ($data['post_type']) {
-                    CastAndCrew::POST_TYPE => CastAndCrew::fromArray($data),
-                    Production::POST_TYPE => Production::fromArray($data),
-                    default => null,
-                };
-            })
-            ->filter()
-            ->values()
-            ->all();
+        $order = $this->ccwp_join?->custom_order ?: null;
 
-        return $models;
+        if (!is_numeric($order)) {
+            return 0;
+        }
+
+        return (int) $order;
     }
 
     /**
-     * Retrieves the post's image data.
+     * Get the post's role
      *
-     * @param string $size
-     * @param bool $icon
-     * @return ImageData|null
+     * @return string|null
      */
-    public function getImageSource(string $size = 'thumbnail', bool $icon = false): ?ImageData
+    public function getJoinRole(): ?string
     {
-        $image_id = get_post_thumbnail_id($this->ID) ?: null;
-
-        if (!$image_id) {
-            return null;
-        }
-
-        $image = wp_get_attachment_image_src($image_id, $size, $icon);
-
-        if (!is_array($image)) {
-            return null;
-        }
-
-        /** @var string $src */
-        $src = $image[0];
-        /** @var int|null $width */
-        $width = $image[1] ?? null;
-        /** @var int|null $height */
-        $height = $image[2] ?? null;
-
-        return new ImageData($src, $width, $height);
+        return $this->ccwp_join?->role ?: null;
     }
 
     /**
-     * Retrieves the post's thumbnail.
+     * Get the post's type (cast or crew)
      *
-     * @param string $size
-     * @param array|string $attr
-     * @return string
+     * @return string|null
      */
-    public function getImage(string $size = 'thumbnail', array|string $attr = ''): string
+    public function getJoinType(): ?string
     {
-        return get_the_post_thumbnail($this->ID, $size, $attr);
+        return $this->ccwp_join?->type ?: null;
     }
 
     /**
@@ -332,19 +315,4 @@ abstract class CurtainCallPost implements Arrayable
     {
         return $this->toArray();
     }
-
-    /**
-     * Get the config array used when creating a WP custom post type
-     *
-     * @return array
-     */
-    abstract public static function getConfig(): array;
-
-    /**
-     * Query for Posts
-     *
-     * @param array $additionalArgs
-     * @return WP_Query
-     */
-    abstract public static function getPosts(array $additionalArgs = []): WP_Query;
 }

@@ -6,7 +6,6 @@ namespace CurtainCall\Models\Traits;
 
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Models\Production;
-use CurtainCall\Support\Date;
 use CurtainCall\Support\Query;
 use Illuminate\Support\Arr;
 use Throwable;

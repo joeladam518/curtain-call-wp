@@ -14,19 +14,15 @@ if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
  */
 
 // Computed for this partial
-$production_permalink = get_post_permalink($production->ID) ?: '';
-$production_excerpt = get_the_excerpt($production->getPost());
-$ticket_url = $production->getTicketUrl();
+$productionExcerpt = $production->getExcerpt();
+$ticketUrl = $production->getTicketUrl();
 ?>
 
 <div class="productions-directory-row">
     <div class="production-poster">
-        <?php if (has_post_thumbnail()): ?>
-            <a href="<?php echo esc_url($production_permalink); ?>">
-            <?php
-            // @mago-ignore lint:no-unescaped-output
-            echo get_the_post_thumbnail($production->getPost(), 'full');
-            ?>
+        <?php if ($production->hasImage()): ?>
+            <a href="<?php $production->thePermalink(); ?>">
+                <?php $production->getImage('full'); ?>
             </a>
         <?php endif; ?>
     </div>
@@ -34,12 +30,12 @@ $ticket_url = $production->getTicketUrl();
     <div class="production-details">
         <div class="production-name-container">
             <h3 class="production-name">
-                <a href="<?php echo esc_url($production_permalink); ?>">
+                <a href="<?php $production->thePermalink(); ?>">
                     <?php echo esc_html($production->name); ?>
                 </a>
             </h3>
-            <?php if (isset($ticket_url)): ?>
-                <a href="<?php echo esc_url($ticket_url); ?>" class="ccwp-btn" target="_blank">
+            <?php if (isset($ticketUrl)): ?>
+                <a href="<?php echo esc_url($ticketUrl); ?>" class="ccwp-btn" target="_blank">
                     <?php esc_html_e('Get Tickets', CCWP_TEXT_DOMAIN); ?>
                 </a>
             <?php endif; ?>
@@ -53,8 +49,8 @@ $ticket_url = $production->getTicketUrl();
 
             <span class="production-dates">
             <?php
-            // @mago-ignore lint:no-unescaped-output
-            echo $production->getFormattedShowDates();
+                // @mago-ignore lint:no-unescaped-output
+                echo $production->getFormattedShowDates();
             ?>
             </span>
 
@@ -80,9 +76,9 @@ $ticket_url = $production->getTicketUrl();
             <?php endif; ?>
         </div>
 
-        <?php if (!empty($production_excerpt)): ?>
+        <?php if (!empty($productionExcerpt)): ?>
             <div class="production-excerpt">
-                <?php echo esc_html($production_excerpt); ?>
+                <?php echo esc_html($productionExcerpt); ?>
             </div>
         <?php endif; ?>
     </div>

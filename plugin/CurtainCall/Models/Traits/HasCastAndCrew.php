@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models\Traits;
 
-use CurtainCall\Data\CastCrewData;
+
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Support\Query;
@@ -83,7 +83,7 @@ trait HasCastAndCrew
 
     /**
      * @param string $type
-     * @return CastCrewData[]
+     * @return CastAndCrew[]
      * @throws Throwable
      */
     public function getCastAndCrew(string $type = 'both'): array
@@ -109,8 +109,8 @@ trait HasCastAndCrew
 
         return collect($rows)
             ->map(static fn($row) => CastAndCrew::fromArray($row))
-            ->sort(fn(CastAndCrew $a, CastAndCrew $b) => (
-                [$a->ccwp_join->custom_order ?? 0, $a->name_last] <=> [$b->ccwp_join->custom_order ?? 0, $b->name_last]
+            ->sort(static fn(CastAndCrew $a, CastAndCrew $b) => (
+                [$a->getJoinOrder(), $a->name_last] <=> [$b->getJoinOrder(), $b->name_last]
             ))
             ->values()
             ->all();

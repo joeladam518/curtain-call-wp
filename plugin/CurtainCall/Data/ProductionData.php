@@ -35,8 +35,6 @@ final class ProductionData extends Data
         $role = $data['role'] ?? null;
         $order = (int) ($data['order'] ?? $data['custom_order'] ?? $data['customOrder'] ?? 0);
 
-        get_bloginfo('language');
-
         return new self(
             id: $id,
             name: $name,
@@ -50,17 +48,14 @@ final class ProductionData extends Data
 
     public static function fromProduction(Production $production): self
     {
-        $id = is_numeric($production->ID) ? (int) $production->ID : null;
-        $order = (int) ($production->ccwp_join->custom_order ?? 0);
-
         return new self(
-            id: $id,
+            id: is_numeric($production->ID) ? (int) $production->ID : null,
             name: $production->name ?: $production->post_title ?: 'Untitled Production',
             dateStart: $production->date_start ?: null,
             dateEnd: $production->date_end ?: null,
-            type: $production->ccwp_join?->type ?: null,
-            role: $production->ccwp_join?->role ?: null,
-            order: $order,
+            type: $production->getJoinType(),
+            role: $production->getJoinRole(),
+            order: $production->getJoinOrder(),
         );
     }
 

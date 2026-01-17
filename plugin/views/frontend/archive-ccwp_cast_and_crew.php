@@ -25,13 +25,10 @@ get_header();
         <?php if (!$query->have_posts()): ?>
             <div class="ccwp-container">
                 <h2><?php esc_html_e('Sorry!', CCWP_TEXT_DOMAIN); ?></h2>
-                <p>
-                    <?php esc_html_e(
-                        'There are currently no cast or crew members in our directory. ',
-                        CCWP_TEXT_DOMAIN,
-                    ); ?>
-                    <?php esc_html_e('Please check back soon!', CCWP_TEXT_DOMAIN); ?></p>
-                </p>
+                <p><?php esc_html_e(
+                    'There are currently no cast or crew members in our directory. Please check back soon!',
+                    CCWP_TEXT_DOMAIN,
+                ); ?></p>
             </div>
         <?php else: ?>
             <div class="ccwp-alphabet-navigation">
@@ -50,9 +47,7 @@ get_header();
                     $query->the_post();
                     /** @var WP_Post $post */
                     $post = get_post();
-                    /** @var CastAndCrew $castcrew */
                     $castcrew = CastAndCrew::make($post);
-                    $castcrew_permalink = get_post_permalink($castcrew->getPost()) ?: '';
                     ?>
                     <?php if ($castcrew->post_status === 'publish' && isset($castcrew->name_last)): ?>
                         <?php $currentAlphaIndex = Str::firstLetter($castcrew->name_last, 'upper'); ?>
@@ -67,19 +62,16 @@ get_header();
                         <?php endif; ?>
 
                         <div class="castcrew-wrapper">
-                            <?php if (has_post_thumbnail($castcrew->getPost())): ?>
+                            <?php if ($castcrew->hasImage()): ?>
                                 <div class="castcrew-headshot">
-                                    <a href="<?php echo esc_url($castcrew_permalink); ?>">
-                                    <?php
-                                    // @mago-ignore lint:no-unescaped-output
-                                    echo get_the_post_thumbnail($castcrew->getPost(), 'thumbnail');
-                                    ?>
+                                    <a href="<?php $castcrew->thePermalink(); ?>">
+                                        <?php $castcrew->theImage(); ?>
                                     </a>
                                 </div>
                             <?php endif; ?>
                             <div class="castcrew-details">
                                 <h3 class="castcrew-name">
-                                    <a href="<?php echo esc_url($castcrew_permalink); ?>">
+                                    <a href="<?php $castcrew->thePermalink(); ?>">
                                         <?php echo esc_html($castcrew->getFullName()); ?>
                                     </a>
                                 </h3>
@@ -90,13 +82,12 @@ get_header();
                         </div>
 
                         <?php $previousAlphaIndex = $currentAlphaIndex; ?>
-                    <?php endif; // content is visible ?>
-                <?php endwhile; // while loop ?>
+                    <?php endif; ?>
+                <?php endwhile; ?>
             </div>
-        <?php endif; // have_posts ?>
+        <?php endif; ?>
     </div>
 </div>
 
 <?php
-
 get_footer();

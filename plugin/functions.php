@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
 
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
@@ -79,54 +78,5 @@ if (!function_exists('ccwp_plugin_url')) {
         $urlPath = plugin_dir_url(__FILE__);
 
         return trim("{$urlPath}{$path}");
-    }
-}
-
-if (!function_exists('ccwp_the_content_without_gallery')) {
-    /**
-     * Output the post's content without the gallery shortcode
-     *
-     * @return void
-     */
-    function ccwp_the_content_without_gallery(): void
-    {
-        $content = get_the_content();
-
-        /** @var string[][] $matches */
-        $matches = [];
-        preg_match_all('~' . get_shortcode_regex() . '~s', $content, $matches, PREG_SET_ORDER);
-        if ($matches) {
-            foreach ($matches as $shortcode) {
-                if (count($shortcode) === 3 && $shortcode[2] === 'gallery') {
-                    $pos = strpos($content, $shortcode[0]);
-                    if ($pos !== false) {
-                        $content = substr_replace($content, '', $pos, strlen($shortcode[0]));
-                    }
-                }
-            }
-        }
-
-        /** @var string $content */
-        $content = apply_filters('the_content', $content);
-        $content = str_replace(']]>', ']]&gt;', $content);
-
-        // @mago-ignore lint:no-unescaped-output
-        echo $content;
-    }
-}
-
-if (!function_exists('ccwp_the_post_gallery')) {
-    /**
-     * Output the post's gallery shortcode
-     *
-     * @return void
-     */
-    function ccwp_the_post_gallery(): void
-    {
-        /** @var string $gallery */
-        $gallery = get_post_gallery();
-
-        // @mago-ignore lint:no-unescaped-output
-        echo $gallery;
     }
 }

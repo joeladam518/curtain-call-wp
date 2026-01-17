@@ -197,7 +197,7 @@ final class RelationsRestController extends RestController
                 return ProductionData::fromProduction($production);
             })
             ->filter()
-            ->sort(fn(ProductionData $a, ProductionData $b) => (
+            ->sort(static fn(ProductionData $a, ProductionData $b) => (
                 [$b->dateStart, $a->name] <=> [$a->dateStart, $b->name]
             ))
             ->values()

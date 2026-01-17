@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace CurtainCall\Controllers;
 
-use CurtainCall\Data\CastCrewData;
-use CurtainCall\Models\CastAndCrew;
+
+
 use CurtainCall\Models\Production;
 use CurtainCall\Support\Date;
 use CurtainCall\Support\View;
-use Illuminate\Support\Collection;
+
 use Throwable;
 use WP_Post;
 

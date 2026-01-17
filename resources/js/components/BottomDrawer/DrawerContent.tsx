@@ -27,7 +27,7 @@ const DrawerContent: FC = () => {
         isCollapsed: false, // Start collapsed, will expand if relations exist
         isSaving: false,
         isRemoving: false,
-        drawerHeight: 200,
+        drawerHeight: 150,
     });
     const setIsCollapsed = (value: boolean) => setState(prevState => ({...prevState, isCollapsed: value}));
     const setIsSaving = (value: boolean) => setState(prevState => ({...prevState, isSaving: value}));
@@ -134,7 +134,7 @@ const DrawerContent: FC = () => {
             }
 
             const deltaY = startYRef.current - e.clientY;
-            const newHeight = Math.min(Math.max(startHeightRef.current + deltaY, 200), 800);
+            const newHeight = Math.min(Math.max(startHeightRef.current + deltaY, 150), 800);
             setDrawerHeight(newHeight);
         };
 
