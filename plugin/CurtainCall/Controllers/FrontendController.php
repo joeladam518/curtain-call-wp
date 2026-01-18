@@ -25,6 +25,79 @@ final class FrontendController
 
         wp_enqueue_style('fontawesomefree', $fontawesomeSrc, [], $version);
         wp_enqueue_style(CCWP_PLUGIN_NAME, $frontendSrc, [], $version);
+
+        $customCss = $this->generateCustomColorCss();
+        if (!empty($customCss)) {
+            wp_add_inline_style(CCWP_PLUGIN_NAME, $customCss);
+        }
+    }
+
+    /**
+     * Generate custom CSS based on color settings
+     *
+     * @return string
+     */
+    private function generateCustomColorCss(): string
+    {
+        /** @var string $linkHighlight */
+        $linkHighlight = get_option('ccwp_color_link_highlight', '');
+        /** @var string $buttonBg */
+        $buttonBg = get_option('ccwp_color_button_background', '');
+        /** @var string $buttonText */
+        $buttonText = get_option('ccwp_color_button_text', '');
+        /** @var string[] $cssVars */
+        $cssVars = [];
+
+        if (!empty($linkHighlight)) {
+            $cssVars[] = '--ccwp-link-highlight: ' . $linkHighlight;
+        }
+
+        if (!empty($buttonBg)) {
+            $cssVars[] = '--ccwp-button-background-color: ' . $buttonBg;
+        }
+
+        if (!empty($buttonText)) {
+            $cssVars[] = '--ccwp-button-text-color: ' . $buttonText;
+        }
+
+        if (empty($cssVars)) {
+            return '';
+        }
+
+        return ':root { ' . implode('; ', $cssVars) . '; }';
+    }
+
+    /**
+     * Determine if a hex color is dark based on relative luminance
+     *
+     * Uses the WCAG relative luminance formula to determine if a color
+     * is dark (returns true) or light (returns false).
+     *
+     * @param string $hex The hex color to check
+     * @return bool True if the color is dark, false if light
+     */
+    private function isColorDark(string $hex): bool
+    {
+        $hex = ltrim($hex, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2)) / 255;
+        $g = hexdec(substr($hex, 2, 2)) / 255;
+        $b = hexdec(substr($hex, 4, 2)) / 255;
+
+        // Apply gamma correction (sRGB to linear)
+        $r = $r <= 0.03928 ? $r / 12.92 : (($r + 0.055) / 1.055) ** 2.4;
+        $g = $g <= 0.03928 ? $g / 12.92 : (($g + 0.055) / 1.055) ** 2.4;
+        $b = $b <= 0.03928 ? $b / 12.92 : (($b + 0.055) / 1.055) ** 2.4;
+
+        // Calculate relative luminance
+        $luminance = 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+
+        // Return true if dark (luminance < 0.5)
+        return $luminance < 0.5;
     }
 
     /**

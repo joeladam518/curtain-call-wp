@@ -241,6 +241,30 @@ class Production extends CurtainCallPost
     }
 
     /**
+     * @return bool
+     */
+    public function isPast(): bool
+    {
+        return $this->getChronologicalState() === 'past';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCurrent(): bool
+    {
+        return $this->getChronologicalState() === 'current';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFuture(): bool
+    {
+        return $this->getChronologicalState() === 'future';
+    }
+
+    /**
      * @return string
      * @throws Throwable
      */
@@ -291,10 +315,6 @@ class Production extends CurtainCallPost
      */
     public function getTicketUrl(): ?string
     {
-        if ($this->getChronologicalState() === 'past') {
-            return null;
-        }
-
         if ($this->ticket_url) {
             return $this->ticket_url;
         }

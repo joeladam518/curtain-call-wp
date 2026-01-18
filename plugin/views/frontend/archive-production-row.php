@@ -34,7 +34,7 @@ $ticketUrl = $production->getTicketUrl();
                     <?php echo esc_html($production->name); ?>
                 </a>
             </h3>
-            <?php if (isset($ticketUrl)): ?>
+            <?php if ($chronological_state !== 'past' && !empty($ticketUrl)): ?>
                 <a href="<?php echo esc_url($ticketUrl); ?>" class="ccwp-btn" target="_blank">
                     <?php esc_html_e('Get Tickets', CCWP_TEXT_DOMAIN); ?>
                 </a>

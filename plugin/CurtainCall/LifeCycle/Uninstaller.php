@@ -29,6 +29,9 @@ class Uninstaller implements LifeCycleHook
 
         delete_option('ccwp_db_version');
         delete_option('ccwp_default_ticket_url');
+        delete_option('ccwp_color_link_highlight');
+        delete_option('ccwp_color_button_background');
+        delete_option('ccwp_color_button_text');
         flush_rewrite_rules(false);
     }
 

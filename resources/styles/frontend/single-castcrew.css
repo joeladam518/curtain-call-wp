@@ -59,7 +59,7 @@ body.single-ccwp_cast_and_crew  {
 
                     &:hover {
                         text-decoration: none;
-                        color: var(--ccwp-yellow);
+                        color: var(--ccwp-link-highlight);
                     }
                 }
             }
@@ -76,7 +76,7 @@ body.single-ccwp_cast_and_crew  {
                     }
 
                     &:hover {
-                        color: var(--ccwp-yellow);
+                        color: var(--ccwp-link-highlight);
                         text-decoration: none;
                     }
                 }
@@ -139,10 +139,9 @@ body.single-ccwp_cast_and_crew  {
                     a {
                         font-size: var(--ccwp-size-7);
                         text-decoration: none;
-                        color: var(--ccwp-black);
 
                         &:hover {
-                            color: var(--ccwp-red);
+                            color: var(--ccwp-link-highlight);
                         }
                     }
                 }

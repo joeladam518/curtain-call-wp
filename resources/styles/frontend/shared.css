@@ -54,7 +54,7 @@ body.post-type-archive-ccwp_production {
             text-decoration: none;
 
             &:hover {
-                color: var(--ccwp-red);
+                color: var(--ccwp-link-highlight);
             }
         }
 
@@ -76,12 +76,21 @@ body.post-type-archive-ccwp_production {
 
     & .ccwp-btn {
         display: block;
-        width: 120px;
-        background-color: var(--ccwp-red);
-        color: var(--ccwp-white);
+        width: auto;
+        background-color: var(--ccwp-button-background-color);
+        color: var(--ccwp-button-text-color);
         text-align: center;
         text-decoration: none;
-        padding: 5px 0;
+        padding: 7px 12px;
         border-radius: 3px;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--ccwp-button-background-color) 85%, black);
+        }
+
+        &:active {
+            background-color: color-mix(in srgb, var(--ccwp-button-background-color) 75%, black);
+        }
     }
 }

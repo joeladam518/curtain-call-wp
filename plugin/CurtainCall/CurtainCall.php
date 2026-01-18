@@ -89,9 +89,11 @@ final class CurtainCall
      */
     private function loadAdminHooks(): void
     {
-        $controller = new SettingsController();
-        add_action('admin_init', [$controller, 'registerSettings'], 10, 0);
-        add_action('admin_menu', [$controller, 'addPluginSettingsPage'], 10, 0);
+        $settingsController = new SettingsController();
+        add_action('admin_init', [$settingsController, 'registerSettings'], 10, 0);
+        add_action('admin_menu', [$settingsController, 'addPluginSettingsPage'], 10, 0);
+        add_action('admin_enqueue_scripts', [$settingsController, 'enqueueStyles'], 10, 0);
+        add_action('admin_enqueue_scripts', [$settingsController, 'enqueueScripts'], 10, 0);
 
         $adminCastCrewMetaboxController = new AdminCastCrewMetaboxController();
         add_action('add_meta_boxes', [$adminCastCrewMetaboxController, 'addMetaboxes'], 10, 0);

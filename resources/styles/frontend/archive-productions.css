@@ -52,8 +52,17 @@ body.post-type-archive-ccwp_production {
         & .production-name {
             margin-top: 0;
             margin-block-start: 0;
-            margin-right: 30px;
+            margin-right: 20px;
             margin-bottom: 0;
+
+            a {
+                font-size: var(--ccwp-size-6);
+                text-decoration: none;
+
+                &:hover {
+                    color: var(--ccwp-link-highlight);
+                }
+            }
         }
 
         & .production-dates {

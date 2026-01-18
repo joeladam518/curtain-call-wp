@@ -14,7 +14,7 @@ body.post-type-archive-ccwp_cast_and_crew {
             text-decoration: none;
 
             &:hover {
-                color: var(--ccwp-red);
+                color: var(--ccwp-link-highlight);
                 text-decoration: none;
             }
         }
@@ -70,7 +70,7 @@ body.post-type-archive-ccwp_cast_and_crew {
             text-decoration: none;
 
             &:hover {
-                color: var(--ccwp-red);
+                color: var(--ccwp-link-highlight);
                 text-decoration: none;
             }
         }

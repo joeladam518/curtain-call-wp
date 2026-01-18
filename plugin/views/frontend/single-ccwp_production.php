@@ -59,14 +59,16 @@ get_header('single');
                                     <?php echo esc_html($productionName); ?>
                                 </h1>
                                 <div class="show-dates-container">
-                                    <?php if ($production->getChronologicalState() === 'current'): ?>
-                                        <div class="now-showing-label"><?php _e('Now Showing', CCWP_TEXT_DOMAIN); ?></div>
+                                    <?php if ($production->isCurrent()): ?>
+                                        <div class="now-showing-label">
+                                            <?php _e('Now Showing', CCWP_TEXT_DOMAIN); ?>
+                                        </div>
                                     <?php endif; ?>
                                     <div class="ccwp-row">
                                         <div class="show-dates">
                                             <?php echo esc_html($production->getFormattedShowDates()); ?>
                                         </div>
-                                        <?php if ($ticketLink): ?>
+                                        <?php if (!$production->isPast() && !empty($ticketLink)): ?>
                                             <a class="ccwp-btn" href="<?php echo esc_url($ticketLink); ?>" target="_blank">
                                                 <?php _e('Get Tickets', CCWP_TEXT_DOMAIN); ?>
                                             </a>

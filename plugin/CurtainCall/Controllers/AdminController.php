@@ -18,6 +18,7 @@ final class AdminController
 {
     /**
      * Register the stylesheets for the admin area.
+     *
      * @return void
      */
     public function enqueueStyles(): void
@@ -31,6 +32,7 @@ final class AdminController
 
     /**
      * Register the JavaScript for the admin area.
+     *
      * @return void
      */
     public function enqueueScripts(): void
