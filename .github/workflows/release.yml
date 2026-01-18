@@ -30,6 +30,7 @@ jobs:
       - name: Install php
         uses: ./.github/actions/php_install
         with:
+          directory: './plugin'
           php-version: ${{ env.PHP_VERSION }}
           composer-flags: --no-dev
 
