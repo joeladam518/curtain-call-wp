@@ -17,16 +17,6 @@ export type RowProps = {
     onRemove?: (type: MemberType, id: number | string) => void;
 };
 
-//width: 100%;
-//display: grid;
-//grid-auto-flow: column;
-//align-items: center;
-//grid-template-columns: 2fr 2fr 1fr auto;
-//gap: 12px;
-//border-radius: 2px;
-//padding: 12px;
-//margin-bottom: 8px;
-
 const Row: FC<RowProps> = ({
     castCrewId,
     production,
@@ -91,7 +81,11 @@ const Row: FC<RowProps> = ({
                         __nextHasNoMarginBottom
                         type="number"
                         value={production.order ?? ''}
-                        onChange={val => onUpdate?.(production.type, production.ID, {order: val === '' ? undefined : parseInt(val, 10)})}
+                        onChange={val => onUpdate?.(
+                            production.type,
+                            production.ID,
+                            {order: val === '' ? undefined : parseInt(val, 10)}
+                        )}
                         name={`${inputName}[${production.ID}][custom_order]`}
                         placeholder={__('order', TEXT_DOMAIN)}
                     />
