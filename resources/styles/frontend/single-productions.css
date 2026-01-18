@@ -1,0 +1,143 @@
+/* CCWP Single production page */
+body.single-ccwp_production {
+    article {
+        .ccwp-production-info-section {
+            margin-bottom: 30px;
+        }
+
+        .show-info {
+            color: var(--ccwp-black);
+
+            .show-dates-container {
+                color: var(--ccwp-black);
+                margin-bottom: 8px;
+
+                .now-showing-label {
+                    line-height: 1;
+                    font-size: 1.25em;
+                    margin-right: 0;
+                    color: var(--ccwp-light-grey);
+                    font-weight: bold;
+                    margin-bottom: 4px;
+                }
+
+                .ccwp-row {
+                    display: flex;
+                    flex-flow: row wrap;
+                    align-items: center;
+                }
+
+                .show-dates {
+                    display: inline-block;
+                    font-size: 1em;
+                    font-weight: bold;
+                    line-height: 1;
+                    margin-right: 8px;
+                }
+
+                .ccwp-btn {
+                    display: inline-block;
+                }
+            }
+
+            .show-times {
+                line-height: 1.2;
+                margin-bottom: 8px;
+            }
+
+            .show-venue {
+                line-height: 1.2;
+                margin-bottom: 8px;
+            }
+        }
+
+        .show-summary {
+            max-width: 800px;
+        }
+
+        .ccwp-directory-section {
+            padding: 30px 0;
+            border-top: 1px solid rgb(0 0 0 / 12%);
+        }
+
+        .production-cast-list,
+        .production-crew-list {
+            margin-bottom: 20px;
+
+            h2 {
+                margin-bottom: 20px;
+            }
+
+            .ccwp-container {
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: flex-start;
+            }
+
+            .castcrew-wrapper {
+                display: flex;
+                flex-flow: row nowrap;
+                flex-basis: 100%;
+                margin-bottom: 16px;
+
+                @media (--ccwp-from-sm) {
+                    flex-basis: 50%;
+                }
+            }
+
+            .castcrew-headshot {
+                flex-basis: 150px;
+                flex-shrink: 0;
+                margin-right: 16px;
+            }
+
+            .castcrew-details {
+                flex-grow: 1;
+
+                .castcrew-name {
+                    font-size: var(--ccwp-size-6);
+                    line-height: 1;
+                    margin-bottom: 8px;
+
+                    a {
+                        text-decoration: none;
+                        color: var(--ccwp-black);
+
+                        &:hover {
+                            color: var(--ccwp-link-highlight);
+                        }
+                    }
+                }
+
+                .castcrew-role {
+                    font-size: var(--ccwp-size-5);
+                    line-height: 1;
+                }
+            }
+        }
+
+
+        &.has-post-thumbnail {
+            .ccwp-production-poster {
+                max-width: 100%;
+                width: auto;
+                padding-right: 0;
+                padding-bottom: 16px;
+
+                @media (--ccwp-from-sm) {
+                    max-width: 40%;
+                    padding-right: 16px;
+                    padding-bottom: 0;
+                }
+            }
+
+            .show-info {
+                width: 100%;
+
+                @media (--ccwp-from-sm) {
+                    width: 60%;
+                }
+            }
+        }
+    }
+}

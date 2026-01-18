@@ -33,8 +33,8 @@ fi
 
 echo ""
 echo "# Install dependencies"
-composer run build
-npm install
+cd "$PLUGIN_DIR" && composer run build
+cd "$REPO_DIR" && npm install
 
 echo ""
 echo "# Refresh the autoload files"
@@ -42,7 +42,7 @@ cd "$PLUGIN_DIR" && composer dumpautoload
 
 echo ""
 echo "# Build production assets"
-cd "$REPO_DIR" && npm run prod
+cd "$REPO_DIR" && npm run build
 
 # Copy the plugin to the directory to be zipped
 echo ""

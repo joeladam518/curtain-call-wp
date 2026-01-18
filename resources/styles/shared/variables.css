@@ -1,0 +1,77 @@
+/* Sizing */
+:root {
+    --ccwp-size-0: 0;
+    --ccwp-size-A: 0.125rem; /* 2px */
+    --ccwp-size-1: 0.25rem;  /* 4px */
+    --ccwp-size-1A: 0.375rem; /* 6px */
+    --ccwp-size-2: 0.5rem;   /* 8px */
+    --ccwp-size-2A: 0.625rem; /* 10px */
+    --ccwp-size-3: 0.75rem;  /* 12px */
+    --ccwp-size-3A: 0.875rem; /* 14px */
+    --ccwp-size-4: 1rem;    /* 16px */
+    --ccwp-size-5: 1.25rem; /* 20px */
+    --ccwp-size-6: 1.5rem;  /* 24px */
+    --ccwp-size-7: 1.75rem; /* 28px */
+    --ccwp-size-8: 2rem;    /* 32px */
+    --ccwp-size-9: 2.25rem; /* 36px */
+    --ccwp-size-10: 2.5rem;  /* 40px */
+    --ccwp-size-11: 2.75rem; /* 44px */
+    --ccwp-size-12: 3rem;    /* 48px */
+    --ccwp-size-13: 3.25rem; /* 52px */
+    --ccwp-size-14: 3.5rem;  /* 56px */
+    --ccwp-size-15: 3.75rem; /* 60px */
+    --ccwp-size-16: 4rem;    /* 64px */
+    --ccwp-size-17: 4.25rem; /* 68px */
+    --ccwp-size-18: 4.5rem;  /* 72px */
+    --ccwp-size-19: 4.75rem; /* 76px */
+    --ccwp-size-20: 5rem;    /* 80px */
+    --ccwp-size-21: 5.25rem; /* 84px */
+    --ccwp-size-22: 5.5rem;  /* 88px */
+    --ccwp-size-23: 5.75rem; /* 92px */
+    --ccwp-size-24: 6rem;    /* 96px */
+    --ccwp-size-28: 7rem;    /* 112px */
+    --ccwp-size-29: 7.25rem; /* 116px */
+    --ccwp-size-32: 8rem;    /* 128px */
+    --ccwp-size-36: 9rem;    /* 144px */
+    --ccwp-size-40: 10rem;   /* 160px */
+    --ccwp-size-44: 11rem;   /* 176px */
+    --ccwp-size-48: 12rem;   /* 192px */
+    --ccwp-size-52: 13rem;   /* 208px */
+    --ccwp-size-56: 14rem;   /* 224px */
+    --ccwp-size-60: 15rem;   /* 240px */
+    --ccwp-size-64: 16rem;   /* 256px */
+
+    /* Breakpoints min */
+    --ccwp-br-xs-min: 528px;
+    --ccwp-br-sm-min: 769px; /* 761px */
+    --ccwp-br-md-min: 1024px;
+    --ccwp-br-lg-min: 1216px;
+    --ccwp-br-xl-min: 1408px;
+
+    /* Breakpoints max */
+    --ccwp-br-ss-max: 527px; /* ss = super small */
+    --ccwp-br-xs-max: 768px;
+    --ccwp-br-sm-max: 1023px;
+    --ccwp-br-md-max: 1215px;
+    --ccwp-br-lg-max: 1407px;
+
+    /* Fly Zones */
+    --ccwp-basezone: 0;
+    --ccwp-flyzone-1: 500;
+    --ccwp-flyzone-2: 1000;
+    --ccwp-flyzone-3: 1500;
+
+    /* Colors */
+    --ccwp-white: rgb(255 255 255);
+    --ccwp-black: rgb(0 0 0);
+
+    --ccwp-light-grey: rgb(190 190 190);
+    --ccwp-medium-grey: rgb(132 132 132);
+    --ccwp-dark-grey: rgb(65 65 65);
+
+    --ccwp-link-highlight: rgb(231 76 60);
+    --ccwp-button-background-color: rgb(231 76 60);
+    --ccwp-button-text-color: rgb(255 255 255);
+
+    --ccwp-text: rgb(17 17 17);
+}

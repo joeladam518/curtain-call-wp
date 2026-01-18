@@ -11,29 +11,39 @@ class Query
 {
     protected static ?string $selectProductionCache = null;
     protected static ?string $selectCastAndCrewCache = null;
+    /** @var list<string>|null */
     protected static ?array $selectPivotCache = null;
 
     /**
      * Stitch together a bunch of query parts
      *
-     * @param array|string[]|string|null $query
+     * @param string[]|string|null $query
      * @return string
      */
-    public static function raw($query): string
+    public static function raw(array|string|null $query): string
     {
+        if (is_null($query)) {
+            return '';
+        }
+
+        /** @var string[] $query */
         $query = Arr::wrap($query);
 
-        return implode(' ', Arr::map($query, fn($part) => trim($part)));
+        return collect($query)
+            ->map(static fn($q) => trim($q))
+            ->filter()
+            ->implode(' ');
     }
 
     /**
-     * @param array $fields
+     * @param list<string> $fields
      * @param bool $prependSelect
      * @return string
      */
     public static function select(array $fields = [], bool $prependSelect = true): string
     {
-        $fields = Arr::map($fields, function ($field) {
+        /** @var string[] $fields */
+        $fields = Arr::map($fields, static function (string $field) {
             $field = str_replace('`', '', $field);
             return static::backtickField($field);
         });
@@ -70,7 +80,7 @@ class Query
     }
 
     /**
-     * @return array
+     * @return list<string>
      */
     protected static function selectPivotFields(): array
     {
@@ -96,17 +106,13 @@ class Query
      */
     public static function wherePivotType(string $type = 'both', string $clause = 'WHERE'): string
     {
-        $alias = '`'.CurtainCallPivot::TABLE_ALIAS.'`';
+        $alias = '`' . CurtainCallPivot::TABLE_ALIAS . '`';
 
-        switch ($type) {
-            case 'cast':
-                return " {$clause} {$alias}.`type` = 'cast' ";
-            case 'crew':
-                return " {$clause} {$alias}.`type` = 'crew' ";
-            case 'both':
-            default:
-                return " {$clause} ({$alias}.`type` = 'cast' OR {$alias}.`type` = 'crew') ";
-        }
+        return match ($type) {
+            'cast' => " {$clause} {$alias}.`type` = 'cast' ",
+            'crew' => " {$clause} {$alias}.`type` = 'crew' ",
+            default => " {$clause} ({$alias}.`type` = 'cast' OR {$alias}.`type` = 'crew') ",
+        };
     }
 
     /**
@@ -119,7 +125,8 @@ class Query
         $field = trim($parts[0]);
         $alias = trim($parts[1] ?? '');
 
-        $fieldParts = Arr::map(explode('.', $field), function ($part) {
+        /** @var string[] $fieldParts */
+        $fieldParts = Arr::map(explode('.', $field), static function ($part) {
             if ($part === '*') {
                 return $part;
             }

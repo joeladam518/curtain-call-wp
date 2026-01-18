@@ -6,12 +6,62 @@ namespace CurtainCall\Models\Traits;
 
 use Illuminate\Support\Arr;
 
+/**
+ * @property-read int $ID
+ * @method void __unset(string $key)
+ */
 trait HasMeta
 {
-    /** @var array */
-    protected $meta = [];
-    /** @var array|string[] */
-    protected $ccwp_meta = [];
+    /** @var array<string, mixed> */
+    protected array $meta = [];
+    /** @var list<string> */
+    protected array $ccwp_meta = [];
+
+    /**
+     * @return array<string, list<string>>
+     */
+    protected function fetchAllMeta(): array
+    {
+        return get_post_meta($this->ID);
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    protected function fetchMeta(string $key): mixed
+    {
+        return get_post_meta($this->ID, $this->getMetaKey($key), true) ?: null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function getAllMeta(): array
+    {
+        $meta = $this->fetchAllMeta();
+
+        return Arr::map($meta, static fn(array $item) => $item[0] ?? null);
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    protected function getMeta(string $key): mixed
+    {
+        $metaKey = $this->getMetaKey($key);
+
+        if (array_key_exists($metaKey, $this->meta)) {
+            return $this->meta[$metaKey];
+        }
+
+        $metaValue = $this->fetchMeta($key);
+
+        $this->setMeta($key, $metaValue);
+
+        return $metaValue;
+    }
 
     /**
      * @param string $key
@@ -32,7 +82,7 @@ trait HasMeta
      */
     protected function isCCWPMeta(string $key): bool
     {
-        return in_array($key, $this->ccwp_meta);
+        return in_array($key, $this->ccwp_meta, true);
     }
 
     /**
@@ -45,57 +95,17 @@ trait HasMeta
             return true;
         }
 
-        if (array_key_exists($key, $this->meta)) {
-            return true;
-        }
-
         return metadata_exists('post', $this->ID, $this->getMetaKey($key));
     }
 
     /**
      * @return $this
      */
-    protected function loadMeta()
+    protected function loadMeta(): static
     {
-        $this->meta = Arr::map($this->fetchAllMeta(), fn($item) => $item[0] ?? null);
+        $this->meta = $this->getAllMeta();
 
         return $this;
-    }
-
-    /**
-     * @param string $key
-     * @return false|mixed
-     */
-    protected function fetchMeta(string $key)
-    {
-        return get_post_meta($this->ID, $this->getMetaKey($key), true);
-    }
-
-    /**
-     * @return array
-     */
-    protected function fetchAllMeta(): array
-    {
-        return get_post_meta($this->ID);
-    }
-
-    /**
-     * @param string $key
-     * @return mixed
-     */
-    protected function getMeta(string $key)
-    {
-        $metaKey = $this->getMetaKey($key);
-
-        if (array_key_exists($metaKey, $this->meta)) {
-            return $this->meta[$metaKey];
-        }
-
-        $metaValue = $this->fetchMeta($key);
-
-        $this->setMeta($key, $metaValue);
-
-        return $metaValue;
     }
 
     /**
@@ -103,7 +113,7 @@ trait HasMeta
      * @param mixed  $value
      * @return $this
      */
-    protected function setMeta(string $key, $value)
+    protected function setMeta(string $key, mixed $value): static
     {
         $this->meta[$this->getMetaKey($key)] = $value;
 
@@ -111,22 +121,23 @@ trait HasMeta
     }
 
     /**
-     * @param  string $key
-     * @param  mixed  $value
+     * @param string $key
      * @return bool
      */
-    public function updateMeta(string $key, $value): bool
+    public function deleteMeta(string $key): bool
     {
-        if ($result = update_post_meta($this->ID, $this->getMetaKey($key), $value)) {
-            $this->setMeta($key, $value);
+        $result = delete_post_meta($this->ID, $this->getMetaKey($key));
+
+        if ($result) {
+            $this->__unset($key);
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
      * Restricted to only updating ccwp postmeta fields
-     * true  = something in the meta array was created or updated
+     * true = something in the meta array was created or updated
      * false = nothing was created or updated. It doesn't mean something went wrong.
      *
      * @return bool
@@ -135,8 +146,8 @@ trait HasMeta
     {
         $updated = false;
         foreach ($this->meta as $key => $value) {
-            if (preg_match('~^'.static::META_PREFIX.'([_a-zA-Z0-9]+)$~', $key)) {
-                if (update_post_meta($this->ID, $key, sanitize_text_field((string)$value)) === true) {
+            if (preg_match('~^' . static::META_PREFIX . '([_a-zA-Z0-9]+)$~', $key)) {
+                if (update_post_meta($this->ID, $key, sanitize_text_field((string) $value)) === true) {
                     $updated = true;
                 }
             }
@@ -146,15 +157,18 @@ trait HasMeta
     }
 
     /**
-     * @param string $key
+     * @param  string $key
+     * @param  mixed  $value
      * @return bool
      */
-    public function deleteMeta(string $key): bool
+    public function updateMeta(string $key, mixed $value): bool
     {
-        if ($result = delete_post_meta($this->ID, $this->getMetaKey($key))) {
-            $this->__unset($key);
+        $result = update_post_meta($this->ID, $this->getMetaKey($key), $value);
+
+        if ($result) {
+            $this->setMeta($key, $value);
         }
 
-        return $result;
+        return (bool) $result;
     }
 }

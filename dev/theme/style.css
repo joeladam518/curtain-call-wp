@@ -1,0 +1,362 @@
+/*
+Theme Name: Curtain Call Basic
+Theme URI: https://example.com/curtain-call-basic
+Author: Curtain Call
+Author URI: https://joelhaker.com
+Description: A simple theme for developing the Curtain Call WP project.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: curtain-call-basic
+Tags: blog, one-column, accessibility-ready
+*/
+
+*,
+*:before,
+*:after,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+/* Basic resets and typography */
+html {
+    line-height: 1.4;
+    -webkit-text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    tab-size: 4;
+    font-size: 16px;
+    font-weight: normal;
+    font-family: Roboto, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: stretch;
+    color: #222;
+    min-height: 100vh;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+}
+
+abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: inherit;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+h5 {
+    font-size: 1.125rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+
+a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+p {
+    margin-bottom: .75rem;
+}
+
+p a {
+    color: #16598f;
+    text-decoration: none;
+}
+
+p a:hover {
+    color: #113450;
+    text-decoration: underline;
+}
+
+
+b,
+strong {
+    font-weight: bold;
+}
+
+small {
+    font-size: 80%;
+}
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.5em;
+}
+
+table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+}
+
+:-moz-focusring {
+    outline: auto;
+}
+
+progress {
+    vertical-align: baseline;
+}
+
+ol,
+ul,
+menu {
+    list-style: none;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+    display: block; /* 1 */
+    vertical-align: middle; /* 2 */
+}
+
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+button,
+input,
+select,
+optgroup,
+textarea,
+::file-selector-button {
+    font: inherit; /* 1 */
+    font-feature-settings: inherit; /* 1 */
+    font-variation-settings: inherit; /* 1 */
+    letter-spacing: inherit; /* 1 */
+    color: inherit; /* 1 */
+    border-radius: 0; /* 2 */
+    background-color: transparent; /* 3 */
+    opacity: 1; /* 4 */
+}
+
+:where(select:is([multiple], [size])) optgroup {
+    font-weight: bold;
+}
+
+:where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+}
+
+::file-selector-button {
+    margin-inline-end: 4px;
+}
+
+::placeholder {
+    opacity: 1;
+}
+
+@supports (not (-webkit-appearance: -apple-pay-button)) /* Not Safari */ or
+  (contain-intrinsic-size: 1px) /* Safari 17+ */ {
+    ::placeholder {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
+    }
+}
+
+textarea {
+    resize: vertical;
+}
+
+::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+::-webkit-date-and-time-value {
+    min-height: 1lh; /* 1 */
+    text-align: inherit; /* 2 */
+}
+
+::-webkit-datetime-edit {
+    display: inline-flex;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+}
+
+::-webkit-datetime-edit,
+::-webkit-datetime-edit-year-field,
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-hour-field,
+::-webkit-datetime-edit-minute-field,
+::-webkit-datetime-edit-second-field,
+::-webkit-datetime-edit-millisecond-field,
+::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+}
+
+::-webkit-calendar-picker-indicator {
+    line-height: 1;
+}
+
+button,
+input:where([type='button'], [type='reset'], [type='submit']),
+::file-selector-button {
+    appearance: button;
+}
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+    height: auto;
+}
+
+[hidden]:where(:not([hidden='until-found'])) {
+    display: none !important;
+}
+
+article {
+    margin-bottom: 2rem;
+}
+
+article h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+}
+
+header.site-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: stretch;
+    padding: 1rem 2.25rem;
+    box-shadow: 0 0 5px 1px rgb(0 0 0 / 20%);
+
+    & > .container {
+        max-width: 1200px;
+        flex: 1 1 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 2rem;
+    }
+
+    & .site-identity {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: stretch;
+    }
+
+    & .site-title {
+        width: 100%;
+        width: max-content;
+        display: inline-block;
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    & .site-description {
+        width: 100%;
+        width: max-content;
+        margin: 0.25rem 0 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    & .primary-nav {
+        flex: 1 1 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+
+        & > ul {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1rem;
+        }
+    }
+}
+
+main.site-main {
+    flex-basis: 100%;
+    flex-grow: 1;
+    padding: 1rem;
+    margin: 0;
+
+    & > article {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+
+footer.site-footer {
+    padding: 1rem;
+}

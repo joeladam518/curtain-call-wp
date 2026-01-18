@@ -10,26 +10,30 @@ use CurtainCall\Support\Str;
 use WP_Query;
 
 /**
- * @property string $name_first'
- * @property string $name_last'
- * @property string $self_title'
- * @property string $birthday'
- * @property string $hometown'
- * @property string $website_link'
- * @property string $facebook_link'
- * @property string $twitter_link'
- * @property string $instagram_link'
+ * @property string $name_first
+ * @property string $name_last
+ * @property string $self_title
+ * @property string $birthday
+ * @property string $hometown
+ * @property string $website_link
+ * @property string $facebook_link
+ * @property string $twitter_link
+ * @property string $instagram_link
  * @property string $fun_fact
  */
 class CastAndCrew extends CurtainCallPost
 {
     use HasProductions;
 
-    const POST_TYPE = 'ccwp_cast_and_crew';
-    const META_PREFIX = '_ccwp_cast_crew_';
+    /** @var string */
+    public const POST_TYPE = 'ccwp_cast_and_crew';
+    /** @var string */
+    public const META_PREFIX = '_ccwp_cast_crew_';
 
-    /** @var array|string[] */
-    protected $ccwp_meta = [
+    /**
+     * @var list<string>
+     */
+    protected array $ccwp_meta = [
         'name_first',
         'name_last',
         'self_title',
@@ -48,6 +52,7 @@ class CastAndCrew extends CurtainCallPost
      */
     public static function getAlphaIndexes(WP_Query $query): array
     {
+        /** @var string[] $alphaIndexes */
         $alphaIndexes = [];
 
         if (!$query->have_posts()) {
@@ -56,7 +61,11 @@ class CastAndCrew extends CurtainCallPost
 
         while ($query->have_posts()) {
             $query->the_post();
-            if ($lastName = getCustomField('_ccwp_cast_crew_name_last')) {
+
+            /** @var string|null $lastName */
+            $lastName = ccwp_get_custom_field('_ccwp_cast_crew_name_last');
+
+            if ($lastName) {
                 $alphaIndexes[] = Str::firstLetter($lastName, 'upper');
             }
         }
@@ -72,38 +81,40 @@ class CastAndCrew extends CurtainCallPost
     public static function getConfig(): array
     {
         return [
-            'description' => 'The Cast and Crew for you productions',
+            'description' => __('The Cast and Crew for your productions', CCWP_TEXT_DOMAIN),
             'labels' => [
-                'name'               => _x('Cast and Crew', 'post type general name'),
-                'singular_name'      => _x('Cast or Crew', 'post type singular name'),
-                'add_new'            => _x('Add New', 'Cast or Crew'),
-                'add_new_item'       => __('Add New cast or crew'),
-                'edit_item'          => __('Edit cast or crew'),
-                'new_item'           => __('New cast or crew'),
-                'all_items'          => __('All cast and crew'),
-                'view_item'          => __('View cast or crew'),
-                'search_items'       => __('Search cast and crew'),
-                'not_found'          => __('No cast or crew found'),
-                'not_found_in_trash' => __('No cast or crew found in the Trash'),
-                'parent_item_colon'  => '',
-                'menu_name'          => 'Cast and Crew',
+                'name' => _x('Cast and Crew', 'post type general name', CCWP_TEXT_DOMAIN),
+                'singular_name' => _x('Cast or Crew', 'post type singular name', CCWP_TEXT_DOMAIN),
+                'add_new' => _x('Add New', 'Cast or Crew', CCWP_TEXT_DOMAIN),
+                'add_new_item' => __('Add New cast or crew', CCWP_TEXT_DOMAIN),
+                'edit_item' => __('Edit cast or crew', CCWP_TEXT_DOMAIN),
+                'new_item' => __('New cast or crew', CCWP_TEXT_DOMAIN),
+                'all_items' => __('All cast and crew', CCWP_TEXT_DOMAIN),
+                'view_item' => __('View cast or crew', CCWP_TEXT_DOMAIN),
+                'search_items' => __('Search cast and crew', CCWP_TEXT_DOMAIN),
+                'not_found' => __('No cast or crew found', CCWP_TEXT_DOMAIN),
+                'not_found_in_trash' => __('No cast or crew found in the Trash', CCWP_TEXT_DOMAIN),
+                'parent_item_colon' => '',
+                'menu_name' => __('Cast and Crew', CCWP_TEXT_DOMAIN),
             ],
-            'public'            => true,
-            'menu_position'     => 6,
+            'public' => true,
+            'show_in_rest' => true,
+            'menu_position' => 6,
             'show_in_nav_menus' => true,
-            'has_archive'       => true,
+            'has_archive' => true,
             'supports' => [
                 'title',
                 'editor',
                 'thumbnail',
+                'custom-fields',
             ],
             'taxonomies' => [
                 'ccwp_cast_crew_productions',
             ],
             'rewrite' => [
-                'slug'       => 'cast-and-crew',
+                'slug' => 'cast-and-crew',
                 'with_front' => true,
-                'feeds'      => false,
+                'feeds' => false,
             ],
         ];
     }
@@ -122,25 +133,40 @@ class CastAndCrew extends CurtainCallPost
                 'post',
             ],
             'post_status' => 'publish',
-            'meta_key'    => '_ccwp_cast_crew_name_last',
-            'orderby'     => 'meta_value',
-            'order'       => 'ASC',
-            'nopaging'    => true,
+            'meta_key' => '_ccwp_cast_crew_name_last',
+            'orderby' => 'meta_value',
+            'order' => 'ASC',
+            'nopaging' => true,
         ], $additionalArgs));
     }
 
     /**
-     * @param array|Production[] $productions
-     * @return array
+     * @param Production[] $productions
+     * @return array<int, string[]>
      */
     public static function rolesByProductionId(array $productions): array
     {
+        /** @var array<int, string[]> $rolesById */
         $rolesById = [];
+
         foreach ($productions as $production) {
-            if (!isset($rolesById[$production->ID])) {
-                $rolesById[$production->ID] = [];
+            $id = $production->ID;
+
+            if (!$id) {
+                continue;
             }
-            $rolesById[$production->ID][] = $production->ccwp_join->role;
+
+            $role = $production->getJoinRole();
+
+            if (!$role) {
+                continue;
+            }
+
+            if (!isset($rolesById[$id])) {
+                $rolesById[$id] = [];
+            }
+
+            $rolesById[$id][] = $role;
         }
 
         return $rolesById;
@@ -151,20 +177,19 @@ class CastAndCrew extends CurtainCallPost
      */
     public function getBirthPlace(): string
     {
-        $birthplace = '';
         if (isset($this->birthday)) {
             $birthday = Date::toCarbon($this->birthday);
             $birthday = $birthday ? $birthday->toFormattedDateString() : '';
-            $birthplace .= "Born on {$birthday}";
-            if (isset($this->hometown)) {
-                $birthplace .= ' in ' . $this->hometown;
-            }
-            $birthplace .= '.';
-        } elseif (isset($this->hometown)) {
-            $birthplace .= 'Born in ' . $this->hometown . '.';
+            return isset($this->hometown)
+                ? sprintf(__('Born on %1$s in %2$s.', CCWP_TEXT_DOMAIN), $birthday, $this->hometown)
+                : sprintf(__('Born on %s.', CCWP_TEXT_DOMAIN), $birthday);
         }
 
-        return $birthplace;
+        if (isset($this->hometown)) {
+            return sprintf(__('Born in %s.', CCWP_TEXT_DOMAIN), $this->hometown);
+        }
+
+        return '';
     }
 
     /**
@@ -172,11 +197,7 @@ class CastAndCrew extends CurtainCallPost
      */
     public function getFullName(): string
     {
-        if (isset($this->name_last)) {
-            return "{$this->name_first} {$this->name_last}";
-        }
-
-        return $this->name_first;
+        return trim("{$this->name_first} {$this->name_last}");
     }
 
     /**
@@ -184,6 +205,6 @@ class CastAndCrew extends CurtainCallPost
      */
     public function hasSocialMedia(): bool
     {
-        return isset($this->facebook_link) || isset($this->instagram_link) || isset($this->twitter_link);
+        return $this->facebook_link || $this->instagram_link || $this->twitter_link;
     }
 }

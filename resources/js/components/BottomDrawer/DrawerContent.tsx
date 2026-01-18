@@ -1,0 +1,236 @@
+import {Notice, Tooltip} from '@wordpress/components';
+import {useSelect} from '@wordpress/data';
+import {store as editorStore} from '@wordpress/editor';
+import {__} from '@wordpress/i18n';
+import {type FC, useEffect, useRef, useState} from 'react';
+import PostType from '../../enums/PostType';
+import ChevronDown from '../../icons/ChevronDown';
+import ChevronUp from '../../icons/ChevronUp';
+import relationsStore, {
+    type AttachData,
+    type DetachData,
+    type RelationsStoreSelectors,
+    useDispatch as useRelationsDispatch,
+} from '../../stores/relations-store';
+import {TEXT_DOMAIN} from '../../utils/constants';
+import Relations from './Relations';
+
+type DrawerContentState = {
+    isCollapsed: boolean;
+    isSaving: boolean;
+    isRemoving: boolean;
+    drawerHeight: number;
+};
+
+const DrawerContent: FC = () => {
+    const [state, setState] = useState<DrawerContentState>({
+        isCollapsed: false, // Start collapsed, will expand if relations exist
+        isSaving: false,
+        isRemoving: false,
+        drawerHeight: 150,
+    });
+    const setIsCollapsed = (value: boolean) => setState(prevState => ({...prevState, isCollapsed: value}));
+    const setIsSaving = (value: boolean) => setState(prevState => ({...prevState, isSaving: value}));
+    const setIsRemoving = (value: boolean) => setState(prevState => ({...prevState, isRemoving: value}));
+    const setDrawerHeight = (value: number) => setState(prevState => ({...prevState, drawerHeight: value}));
+
+    const drawerRef = useRef<HTMLDivElement | null>(null);
+    const resizeHandleRef = useRef<HTMLButtonElement | null>(null);
+    const isResizingRef = useRef(false);
+    const startYRef = useRef(0);
+    const startHeightRef = useRef(0);
+    const hasInitializedRef = useRef(false);
+
+    const postId = useSelect(select => select(editorStore).getCurrentPostId(), []) as string | number | null;
+    const postType = useSelect(select => select(editorStore).getCurrentPostType(), []) as PostType | null;
+    const relations = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getRelations(), []);
+    const isFetching = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).isLoading(), []);
+    const fetchingError = useSelect(select => (select(relationsStore) as RelationsStoreSelectors).getError(), []);
+    const {
+        attachCastCrew,
+        attachProduction,
+        detachCastCrew,
+        detachProduction,
+        fetchCastCrew,
+        fetchProductions,
+    } = useRelationsDispatch();
+    const title = postType === PostType.Production ? __('Cast & Crew', TEXT_DOMAIN) : __('Productions', TEXT_DOMAIN);
+
+    const fetchRelations = async () => {
+        if (!postId || !postType) {
+            console.error('Can not fetch relations. Invalid postId or postType');
+            return;
+        }
+        try {
+            if (postType === PostType.CastCrew) {
+                await fetchProductions(postId);
+            } else if (postType === PostType.Production) {
+                await fetchCastCrew(postId);
+            }
+        } catch (e) {
+            console.error('Error fetching relations:', e);
+        }
+    };
+
+    const handleSave = async (data: AttachData) => {
+        if (!postId || !postType) {
+            console.error('Can not save relation. Invalid postId or postType');
+            return;
+        }
+
+        setIsSaving(true);
+
+        try {
+            if (postType === PostType.CastCrew) {
+                await attachProduction(data);
+            } else if (postType === PostType.Production) {
+                await attachCastCrew(data);
+            }
+        } catch (e) {
+            console.error('Error updating relation:', e);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleRemove = async (data: DetachData) => {
+        if (!postId || !postType) {
+            console.error('Can not remove relation. Invalid postId or postType');
+            return;
+        }
+
+        try {
+            if (postType === PostType.CastCrew) {
+                await detachProduction(data);
+            } else if (postType === PostType.Production) {
+                await detachCastCrew(data);
+            }
+        } catch (e) {
+            console.error('Error detaching relation:', e);
+        } finally {
+            setIsRemoving(false);
+        }
+    };
+
+    // Handle resize
+    useEffect(() => {
+        const handleMouseDown = (e: MouseEvent) => {
+            if (resizeHandleRef.current && !resizeHandleRef.current.contains(e.target as Node)) {
+                return;
+            }
+
+            isResizingRef.current = true;
+            startYRef.current = e.clientY;
+            startHeightRef.current = state.drawerHeight;
+
+            e.preventDefault();
+            document.body.style.cursor = 'ns-resize';
+            document.body.style.userSelect = 'none';
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isResizingRef.current) {
+                return;
+            }
+
+            const deltaY = startYRef.current - e.clientY;
+            const newHeight = Math.min(Math.max(startHeightRef.current + deltaY, 150), 800);
+            setDrawerHeight(newHeight);
+        };
+
+        const handleMouseUp = () => {
+            if (isResizingRef.current) {
+                isResizingRef.current = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        };
+
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousedown', handleMouseDown);
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [state.drawerHeight]);
+
+    useEffect(() => {
+        if (postId && postType) {
+            fetchRelations().then();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [postId, postType]);
+
+    // Auto-expand drawer on initial load if there are relations
+    useEffect(() => {
+        if (!hasInitializedRef.current && !isFetching && relations.length > 0) {
+            hasInitializedRef.current = true;
+            setIsCollapsed(false);
+        }
+    }, [isFetching, relations.length]);
+
+    return (
+        <div
+            ref={drawerRef}
+            className={`ccwp-bottom-drawer${state.isCollapsed ? ' closed' : ''}`}
+            style={{height: state.isCollapsed ? 'auto' : `${state.drawerHeight}px`}}
+        >
+            <div className="bottom-drawer-header">
+                <Tooltip text={__('Drag to resize', TEXT_DOMAIN)}>
+                    <button
+                        className="bottom-drawer-separator"
+                        ref={resizeHandleRef}
+                        role="separator"
+                        aria-label={__('Drag to resize', TEXT_DOMAIN)}
+                    />
+                </Tooltip>
+                <div className="bottom-drawer-title">
+                    <span>{title}</span>
+                    {relations.length > 0 && (
+                        <span className="ccwp-drawer-count-badge">
+                            {relations.length}
+                        </span>
+                    )}
+                </div>
+                <button
+                    type="button"
+                    className="drawer-toggle"
+                    onClick={() => setIsCollapsed(!state.isCollapsed)}
+                    aria-expanded={!state.isCollapsed}
+                >
+                    <span className="screen-reader-text">{__('Toggle panel:', TEXT_DOMAIN)} {title}</span>
+                    {state.isCollapsed ? <ChevronDown /> : <ChevronUp />}
+                </button>
+            </div>
+            {state.isCollapsed ? (
+                <div className="bottom-drawer-content" />
+            ) : (
+                <div className="bottom-drawer-content">
+                    {!!fetchingError && (
+                        <Notice status="error" isDismissible={false}>
+                            {fetchingError}
+                        </Notice>
+                    )}
+                    <Relations
+                        isFetching={isFetching}
+                        isRemoving={state.isRemoving}
+                        isSaving={state.isSaving}
+                        onRemove={handleRemove}
+                        onSave={handleSave}
+                        postId={postId}
+                        postType={postType as PostType}
+                        relations={relations}
+                        title={title}
+                    />
+                </div>
+            )}
+        </div>
+    );
+};
+
+DrawerContent.displayName = 'DrawerContent';
+
+export default DrawerContent;

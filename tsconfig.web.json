@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "target": "ES2020",
+        "lib": ["DOM", "DOM.Iterable", "ES2020"],
+        "module": "ESNext",
+        "jsx": "preserve",
+        "jsxImportSource": "react",
+        "strict": true,
+        "noImplicitAny": true,
+        "declaration": false,
+        "declarationMap": false,
+        "moduleResolution": "bundler",
+        "composite": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@js": ["./resources/js"],
+            "@styles": ["./resources/styles"],
+            "@images": ["./resources/images"]
+        },
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.tsx",
+        "resources/js/**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "plugin",
+        "public",
+        ".wordpress",
+        "vendor",
+    ]
+}

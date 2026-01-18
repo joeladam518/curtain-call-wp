@@ -2,16 +2,18 @@
 .mariadb/
 node_modules/
 vendor/
+.rollup.cache/
 
 # folders used in build
 /CurtainCallWP
+/curtaincallwp
 /curtaincallwp.zip
 /curtaincallwp*.zip
 
 # Dev data excludes
-/public/*
-!/public/.gitkeep
-/data/
+/.wordpress/
+!/.wordpress/.gitkeep
+!/.wordpress/.gitignore
 
 # environment
 .env

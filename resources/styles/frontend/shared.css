@@ -1,0 +1,96 @@
+body {
+    --ccwp-main-padding-top: 20px;
+    --ccwp-main-container-max-width: 1240px;
+    --ccwp-main-container-padding-top: 0;
+    --ccwp-main-container-padding-x: 20px;
+}
+
+body.single-ccwp_cast_and_crew,
+body.single-ccwp_production,
+body.post-type-archive-ccwp_cast_and_crew,
+body.post-type-archive-ccwp_production {
+    & * {
+        box-sizing: border-box;
+    }
+
+    & h1, & h2, & h3, & h4, & h5, & h6 {
+        &:before {
+            content:none;
+        }
+        &:after {
+            content: none;
+        }
+    }
+
+    & .ccwp-main {
+        width: 100%;
+        padding-top: var(--ccwp-main-padding-top);
+        padding-right: 0;
+        padding-bottom: 0;
+        padding-left: 0;
+    }
+
+    & .ccwp-main-content-container {
+        width: auto;
+        max-width: var(--ccwp-main-container-max-width);
+        padding-top: var(--ccwp-main-container-padding-top);
+        padding-right: var(--ccwp-main-container-padding-x);
+        padding-left: var(--ccwp-main-container-padding-x);
+        margin: 0 auto;
+    }
+
+    & .ccwp-breadcrumbs {
+        margin-bottom: 20px;
+
+        & .ccwp-breadcrumb,
+        & .ccwp-breadcrumb-spacer {
+            display: inline-block;
+            padding: 0;
+            margin: 0
+        }
+
+        & a.ccwp-breadcrumb {
+            color: var(--ccwp-text);
+            text-decoration: none;
+
+            &:hover {
+                color: var(--ccwp-link-highlight);
+            }
+        }
+
+        & span.ccwp-breadcrumb {
+            color: inherit;
+        }
+
+        & .ccwp-breadcrumb-spacer {
+            margin: 0 4px;
+        }
+    }
+
+    & .ccwp-page-heading {
+        margin-top: 0;
+        margin-block-start: 0;
+        line-height: 1;
+        margin-bottom: 16px;
+    }
+
+    & .ccwp-btn {
+        display: block;
+        width: auto;
+        background-color: var(--ccwp-button-background-color);
+        color: var(--ccwp-button-text-color);
+        text-align: center;
+        text-decoration: none;
+        padding: 7px 12px;
+        border-radius: 3px;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--ccwp-button-background-color) 85%, black);
+        }
+
+        &:active {
+            background-color: color-mix(in srgb, var(--ccwp-button-background-color) 75%, black);
+        }
+    }
+}

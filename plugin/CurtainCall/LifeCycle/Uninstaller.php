@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CurtainCall\LifeCycle;
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
 use CurtainCall\Models\CastAndCrew;
 use CurtainCall\Models\CurtainCallPivot;
 use CurtainCall\Models\Production;
@@ -11,9 +12,13 @@ use CurtainCall\Support\Query;
 
 class Uninstaller implements LifeCycleHook
 {
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     public static function run(): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         static::deleteTable(CurtainCallPivot::getTableName());
         static::deletePosts(CastAndCrew::POST_TYPE);
@@ -24,21 +29,33 @@ class Uninstaller implements LifeCycleHook
 
         delete_option('ccwp_db_version');
         delete_option('ccwp_default_ticket_url');
+        delete_option('ccwp_color_link_highlight');
+        delete_option('ccwp_color_button_background');
+        delete_option('ccwp_color_button_text');
         flush_rewrite_rules(false);
     }
 
+    /**
+     * @param string $postType
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deletePosts(string $postType): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = "DELETE FROM `{$wpdb->posts}` WHERE `post_type` = '{$postType}';";
 
         $wpdb->query($sql);
     }
 
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deletePostMeta(): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = Query::raw([
             "DELETE FROM `{$wpdb->postmeta}`",
@@ -48,18 +65,28 @@ class Uninstaller implements LifeCycleHook
         $wpdb->query($sql);
     }
 
+    /**
+     * @param string $table
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deleteTable(string $table): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = "DROP TABLE IF EXISTS {$table};";
 
         $wpdb->query($sql);
     }
 
+    /**
+     * @param string $taxonomy
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function deleteTaxonomy(string $taxonomy): void
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
         $sql = Query::raw("
             DELETE FROM `{$wpdb->terms}`

@@ -1,0 +1,15 @@
+.ccwp-settings-page {
+    .ccwp-form-help-text {
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 7px 0 16px;
+        color: rgb(0 0 0 / 50%);
+
+        & p {
+            margin-top: 0;
+            margin-left: 1px;
+            margin-right: 1px;
+            margin-bottom: 0;
+        }
+    }
+}

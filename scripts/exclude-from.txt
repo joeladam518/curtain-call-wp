@@ -1,3 +1,4 @@
+- .tinkerwell
 - .phpintel
 - .AppleDouble
 - .DS_Store
@@ -24,8 +25,11 @@
 - .idea/
 - .mariadb/
 - .vagrant/
+- .rollup.cache/
 - docker/
 - node_modules/
-- public/
 - resources/
 - scripts/
+- functions-dev.php
+- wp-config.php
+- mago.toml

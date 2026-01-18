@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace CurtainCall\LifeCycle;
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
+
 class Activator implements LifeCycleHook
 {
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     public static function run(): void
     {
         static::createPluginTables();
@@ -13,10 +19,13 @@ class Activator implements LifeCycleHook
         flush_rewrite_rules(false);
     }
 
+    /**
+     * @return void
+     * @throws WordpressDbInstanceNotFoundException
+     */
     protected static function createPluginTables(): void
     {
-        global $wpdb;
-
+        $wpdb = ccwp_get_wpdb();
         $table_name = "{$wpdb->prefix}ccwp_castandcrew_production";
         $charset_collate = $wpdb->get_charset_collate();
 
@@ -28,7 +37,7 @@ class Activator implements LifeCycleHook
             `custom_order` SMALLINT UNSIGNED DEFAULT NULL NULL
         ) {$charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
     }
 }

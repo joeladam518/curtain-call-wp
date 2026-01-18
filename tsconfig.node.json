@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "allowImportingTsExtensions": true,
+        "composite": true,
+        "lib": ["esnext"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "baseUrl": ".",
+        "paths": {
+            "@js": ["./resources/js"],
+            "@styles": ["./resources/styles"],
+            "@images": ["./resources/images"]
+        },
+        "target": "ESNext",
+        "types": [
+            "node",
+        ]
+    },
+    "include": [
+        "cp-fontawesome.*",
+        "rollup.config.*",
+    ]
+}

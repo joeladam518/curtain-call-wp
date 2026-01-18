@@ -1,0 +1,124 @@
+/* Productions Directory */
+body.post-type-archive-ccwp_production {
+    .productions-directory-row {
+        display: flex;
+        flex-flow: column nowrap;
+        margin-bottom: 45px;
+
+        @media (--ccwp-from-sm) {
+            flex-flow: row wrap;
+        }
+    }
+
+    .production-poster {
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 100%;
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 15px;
+
+        & img {
+            width: auto;
+            height: auto;
+            max-height: 250px;
+            margin: 0 auto;
+        }
+
+        @media (--ccwp-from-sm) {
+            flex-basis: 50%;
+            padding-right: 50px;
+            margin-bottom: 0;
+        }
+    }
+
+    .production-details {
+        flex-basis: 50%;
+        flex-grow: 1;
+        flex-shrink: 0;
+
+        & .now-showing {
+            font-size: 1.25em;
+            font-weight: bold;
+        }
+
+        & .production-name-container {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        & .production-name {
+            margin-top: 0;
+            margin-block-start: 0;
+            margin-right: 20px;
+            margin-bottom: 0;
+
+            a {
+                font-size: var(--ccwp-size-6);
+                text-decoration: none;
+
+                &:hover {
+                    color: var(--ccwp-link-highlight);
+                }
+            }
+        }
+
+        & .production-dates {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--ccwp-black);
+        }
+
+        & .production-times {
+            display: block;
+            color: var(--ccwp-black);
+        }
+
+        & .production-venue {
+            color: var(--ccwp-black);
+        }
+    }
+
+    .ccwp-current-productions-section {
+        margin-bottom: 75px;
+
+        & .production-poster {
+            flex-basis: 100%;
+
+            & img {
+                max-height: 250px;
+            }
+        }
+    }
+
+    .ccwp-future-productions-section {
+        margin-bottom: 75px;
+
+        & > h2 {
+            color: var(--ccwp-black);
+            text-align: left;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgb(0 0 0 / 10%);
+            margin-bottom: 35px;
+        }
+    }
+
+    .ccwp-past-productions-section {
+        margin-bottom: 75px;
+
+        & > h2 {
+            background-color: rgb(132 132 132 / 60%);
+            color: var(--ccwp-white);
+            text-align: center;
+            padding: 20px 0;
+            margin: 0 -16px 50px;
+
+            @media (--ccwp-from-sm) {
+                margin: 0 -16px 25px;
+            }
+        }
+    }
+}

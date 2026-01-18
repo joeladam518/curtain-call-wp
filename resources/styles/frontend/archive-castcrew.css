@@ -1,0 +1,84 @@
+/* Cast and Crew */
+body.post-type-archive-ccwp_cast_and_crew {
+    .ccwp-alphabet-navigation {
+        font-size: 18px;
+        line-height: 1.4;
+        margin-bottom: 32px;
+
+        & a, & span {
+            padding: 0 5px;
+        }
+
+        & a {
+            color: var(--ccwp-black);
+            text-decoration: none;
+
+            &:hover {
+                color: var(--ccwp-link-highlight);
+                text-decoration: none;
+            }
+        }
+
+        & span {
+            color: rgb(0 0 0 / 30%);
+        }
+    }
+
+    .ccwp-alphabet-header {
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1.2;
+        text-transform: none;
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .ccwp-alphabet-container{
+        & .ccwp-row {
+            justify-content: center;
+
+            @media (--ccwp-from-xs) {
+                justify-content: flex-start;
+            }
+        }
+    }
+
+    .castcrew-wrapper {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        flex-basis: 232px;
+        flex-shrink: 0;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: 32px;
+    }
+
+    .castcrew-headshot {
+        text-align: center;
+    }
+
+    .castcrew-details {
+        text-align: center;
+    }
+
+    .castcrew-name {
+        line-height: 1.4;
+        margin: 0;
+
+        & a {
+            text-decoration: none;
+
+            &:hover {
+                color: var(--ccwp-link-highlight);
+                text-decoration: none;
+            }
+        }
+    }
+
+    .castcrew-self-title {
+        line-height: 1.6;
+        color: rgb(0 0 0 / 50%);
+        margin-bottom: 10px;
+    }
+}

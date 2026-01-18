@@ -22,5 +22,8 @@ bash "${SCRIPTS_DIR}/clearcache.sh"
 # build assets
 npm run dev
 
+# ensure mount directories exist
+mkdir -p .wordpress .mariadb
+
 # build the container
 docker-compose up -d --build

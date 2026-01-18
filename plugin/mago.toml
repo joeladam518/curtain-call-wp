@@ -1,0 +1,127 @@
+# Welcome to Mago!
+# For full documentation, see https://mago.carthage.software/tools/overview
+php-version = "8.1.0"
+
+[source]
+workspace = "."
+paths = [
+    "./functions.php",
+    "./functions-dev.php",
+    "./CurtainCallWP.php",
+    "./CurtainCall/**/*.php",
+    "./views/**/*.php"
+]
+includes = [
+    "./vendor",
+    "./plugin/vendor",
+    "../.wordpress"
+]
+excludes = []
+
+[formatter]
+print-width = 120
+tab-width = 4
+use-tabs = false
+end-of-line = "lf"
+single-quote = true
+trailing-comma = true
+remove-trailing-close-tag = true
+control-brace-style = "SameLine"
+closure-brace-style = "SameLine"
+function-brace-style = "NextLine"
+method-brace-style = "NextLine"
+classlike-brace-style = "NextLine"
+inline-empty-control-braces = false
+inline-empty-closure-braces = true
+inline-empty-function-braces = false
+inline-empty-method-braces = false
+inline-empty-constructor-braces = false
+inline-empty-classlike-braces = true
+inline-empty-anonymous-class-braces = false
+method-chain-breaking-style = "NextLine"
+first-method-chain-on-new-line = false
+preserve-breaking-member-access-chain = true
+preserve-breaking-argument-list = true
+preserve-breaking-array-like = true
+preserve-breaking-parameter-list = true
+preserve-breaking-attribute-list = true
+preserve-breaking-conditional-expression = true
+break-promoted-properties-list = true
+line-before-binary-operator = false
+always-break-named-arguments-list = false
+always-break-attribute-named-argument-lists = false
+array-table-style-alignment = false
+align-assignment-like = false
+sort-uses = true
+sort-class-methods = false
+separate-use-types = false
+expand-use-groups = true
+null-type-hint = "question"
+parentheses-around-new-in-member-access = true
+parentheses-in-new-expression = true
+parentheses-in-exit-and-die = false
+parentheses-in-attribute = false
+space-before-arrow-function-parameter-list-parenthesis = false
+space-before-closure-parameter-list-parenthesis = true
+space-before-hook-parameter-list-parenthesis = false
+space-before-closure-use-clause-parenthesis = true
+space-after-cast-unary-prefix-operators = true
+space-after-reference-unary-prefix-operator = false
+space-after-error-control-unary-prefix-operator = false
+space-after-logical-not-unary-prefix-operator = false
+space-after-bitwise-not-unary-prefix-operator = false
+space-after-increment-unary-prefix-operator = false
+space-after-decrement-unary-prefix-operator = false
+space-after-additive-unary-prefix-operator = false
+space-around-concatenation-binary-operator = true
+space-around-assignment-in-declare = false
+space-within-grouping-parenthesis = false
+empty-line-after-control-structure = false
+empty-line-after-opening-tag = false
+empty-line-after-declare = true
+empty-line-after-namespace = true
+empty-line-after-use = true
+empty-line-after-symbols = true
+empty-line-between-same-symbols = false
+empty-line-after-class-like-constant = false
+empty-line-after-trait-use = false
+empty-line-after-property = false
+empty-line-after-method = true
+empty-line-before-return = false
+empty-line-before-dangling-comments = false
+separate-class-like-members = false
+
+[linter]
+integrations = ["WordPress"]
+
+[linter.rules]
+ambiguous-function-call = { enabled = false }
+cyclomatic-complexity = { level = "help", threshold = 50 }
+excessive-parameter-list = { enabled = false }
+halstead = { level = "help", difficulty-threshold = 15, effort-threshold = 7000, volume-threshold = 1500 }
+kan-defect = { level = "help", threshold = 2.0 }
+literal-named-argument = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
+no-direct-db-query = { enabled = false }
+no-else-clause = { enabled = false }
+no-empty = { enabled = false }
+no-redundant-file = { enabled = false }
+no-shorthand-ternary = { enabled = false}
+prefer-early-continue = { enabled = false }
+prefer-first-class-callable = { enabled = false }
+too-many-methods = { enabled = false }
+
+[analyzer]
+ignore = ["mixed-assignment", "string-member-selector"]
+find-unused-definitions = true
+find-unused-expressions = true
+analyze-dead-code = true
+memoize-properties = true
+allow-possibly-undefined-array-keys = true
+check-throws = true
+check-missing-override = true
+find-unused-parameters = true
+strict-list-index-checks = true
+no-boolean-literal-comparison = false
+check-missing-type-hints = false
+register-super-globals = true

@@ -4,31 +4,35 @@ declare(strict_types=1);
 
 namespace CurtainCall\Models;
 
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
 use CurtainCall\Models\Traits\HasAttributes;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Arr;
 use wpdb;
 
 /**
- * @property int    $production_id
- * @property int    $cast_and_crew_id
+ * @property int $production_id
+ * @property int $cast_and_crew_id
  * @property string $type
  * @property string $role
- * @property int    $custom_order
+ * @property string $custom_order -> numeric
+ * @implements Arrayable<string, mixed>
  */
 class CurtainCallPivot implements Arrayable
 {
     use HasAttributes;
 
-    const TABLE_NAME  = 'ccwp_castandcrew_production';
-    const TABLE_ALIAS = 'ccwp_join';
-    const ATTRIBUTE_PREFIX =  self::TABLE_ALIAS . '_';
+    /** @var string */
+    public const TABLE_NAME = 'ccwp_castandcrew_production';
+    /** @var string */
+    public const TABLE_ALIAS = 'ccwp_join';
+    /** @var string */
+    public const ATTRIBUTE_PREFIX = self::TABLE_ALIAS . '_';
 
     protected static ?string $table;
     protected static ?string $tableWithAlias;
 
-    /** @var array|string[] */
-    protected static $fields = [
+    /** @var list<string> */
+    protected static array $fields = [
         'production_id',
         'cast_and_crew_id',
         'type',
@@ -36,14 +40,17 @@ class CurtainCallPivot implements Arrayable
         'custom_order',
     ];
 
-    public function __construct(array $data = [])
+    /**
+     * @param array<string, mixed> $data
+     */
+    final public function __construct(array $data = [])
     {
         $this->load($data);
     }
 
     /**
      * @param bool $withPrefix
-     * @return array|string[]
+     * @return array<int, string>
      */
     public static function getFields(bool $withPrefix = false): array
     {
@@ -51,26 +58,30 @@ class CurtainCallPivot implements Arrayable
             return static::$fields;
         }
 
-        return Arr::map(static::$fields, fn($field) => static::ATTRIBUTE_PREFIX . $field);
+        return collect(static::$fields)
+            ->map(static fn(string $field) => static::ATTRIBUTE_PREFIX . $field)
+            ->all();
     }
 
     /**
      * @global wpdb $wpdb
      * @return string
+     * @throws WordpressDbInstanceNotFoundException
      */
     public static function getTableName(): string
     {
-        global $wpdb;
+        $wpdb = ccwp_get_wpdb();
 
-        return static::$table ??= $wpdb->prefix.static::TABLE_NAME;
+        return static::$table ??= $wpdb->prefix . static::TABLE_NAME;
     }
 
     /**
      * @return string
+     * @throws WordpressDbInstanceNotFoundException
      */
     public static function getTableNameWithAlias(): string
     {
-        return static::$tableWithAlias ??= '`'.static::getTableName().'` AS `'.static::TABLE_ALIAS.'`';
+        return static::$tableWithAlias ??= '`' . static::getTableName() . '` AS `' . static::TABLE_ALIAS . '`';
     }
 
     /**
@@ -79,8 +90,7 @@ class CurtainCallPivot implements Arrayable
      */
     public static function isField(string $value): bool
     {
-        $field = static::stripPrefix($value);
-        return in_array($field, static::$fields);
+        return in_array($value, static::$fields, true);
     }
 
     /**
@@ -89,19 +99,19 @@ class CurtainCallPivot implements Arrayable
      */
     public static function stripPrefix(string $field): string
     {
-        return preg_replace('~^'.static::ATTRIBUTE_PREFIX.'~', '', $field);
+        return preg_replace('~^' . static::ATTRIBUTE_PREFIX . '~', '', $field);
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return void
      */
     public function load(array $data): void
     {
         foreach ($data as $key => $value) {
-            if (static::isField($key)) {
-                $key = static::stripPrefix($key);
-                $this->setAttribute($key, $value);
+            $field = static::stripPrefix($key);
+            if (static::isField($field)) {
+                $this->setAttribute($field, $value);
             }
         }
     }
@@ -144,10 +154,18 @@ class CurtainCallPivot implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
         return $this->attributes;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function __debugInfo(): array
+    {
+        return $this->toArray();
     }
 }

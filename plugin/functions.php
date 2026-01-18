@@ -1,16 +1,64 @@
 <?php
+
+declare(strict_types=1);
+
+use CurtainCall\Exceptions\WordpressDbInstanceNotFoundException;
+
 if (!defined('ABSPATH') || !defined('CCWP_PLUGIN_PATH')) {
     die;
 }
 
-if (!function_exists('ccwpPluginPath')) {
+if (!function_exists('ccwp_get_custom_field')) {
+    /**
+     * @param string $field_name
+     * @param int|null $post_id
+     * @return string|false|null
+     */
+    function ccwp_get_custom_field(string $field_name, ?int $post_id = null): mixed
+    {
+        if ($post_id) {
+            return get_post_meta($post_id, $field_name, true);
+        }
+
+        $id = get_the_ID();
+
+        if ($id === false) {
+            return null;
+        }
+
+        return get_post_meta($id, $field_name, true);
+    }
+}
+
+if (!function_exists('ccwp_get_wpdb')) {
+    /**
+     * Get the global wpdb object
+     *
+     * @return wpdb
+     * @throws WordpressDbInstanceNotFoundException
+     */
+    function ccwp_get_wpdb(): wpdb
+    {
+        /** @var wpdb|null $wpdb */
+        // @mago-ignore lint:no-global analysis:no-global
+        $wpdb = $GLOBALS['wpdb'] ?? null;
+
+        if (!$wpdb) {
+            throw new WordpressDbInstanceNotFoundException();
+        }
+
+        return $wpdb;
+    }
+}
+
+if (!function_exists('ccwp_plugin_path')) {
     /**
      * Return the plugin dir path
      *
      * @param string $path
      * @return string
      */
-    function ccwpPluginPath(string $path = ''): string
+    function ccwp_plugin_path(string $path = ''): string
     {
         $dirPath = plugin_dir_path(__FILE__);
 
@@ -18,126 +66,17 @@ if (!function_exists('ccwpPluginPath')) {
     }
 }
 
-if (!function_exists('ccwpPluginUrl')) {
+if (!function_exists('ccwp_plugin_url')) {
     /**
      * Return the plugin dir url
      *
      * @param string $path
      * @return string
      */
-    function ccwpPluginUrl(string $path = ''): string
+    function ccwp_plugin_url(string $path = ''): string
     {
         $urlPath = plugin_dir_url(__FILE__);
 
         return trim("{$urlPath}{$path}");
-    }
-}
-
-if (!function_exists('ccwpStripShortCodeGallery')) {
-    /**
-     * @param string $content
-     * @return string
-     */
-    function ccwpStripShortCodeGallery(string $content): string
-    {
-        preg_match_all('~'.get_shortcode_regex().'~s', $content, $matches, PREG_SET_ORDER);
-
-        if (!empty($matches)) {
-            foreach ($matches as $shortcode) {
-                if ('gallery' === $shortcode[2]) {
-                    $pos = strpos($content, $shortcode[0]);
-                    if ($pos !== false) {
-                        return substr_replace($content, '', $pos, strlen($shortcode[0]));
-                    }
-                }
-            }
-        }
-
-        return $content;
-    }
-}
-
-if (!function_exists('getCustomField')) {
-    /**
-     * @param string   $field_name
-     * @param int|null $post_id
-     * @return mixed
-     */
-    function getCustomField(string $field_name, ?int $post_id = null)
-    {
-        if ($post_id) {
-            return get_post_meta($post_id, $field_name, true);
-        }
-
-        return get_post_meta(get_the_ID(), $field_name, true);
-    }
-}
-
-if (defined('CCWP_DEBUG') && CCWP_DEBUG) {
-    if (!function_exists('fnln')) {
-        /**
-         * Return the file name and line number from where this function was called
-         * in a pretty format. Mainly for log messaging.
-         *
-         * @param bool $return
-         * @return string|void
-         */
-        function fnln(bool $return = false)
-        {
-            $backtrace = debug_backtrace()[0];
-            $out = basename($backtrace['file']) . ' (#' . $backtrace['line'] . ') ';
-
-            if ($return) {
-                return $out;
-            }
-
-            echo $out;
-        }
-    }
-
-    if (!function_exists("pr")) {
-        /**
-         * Debug print:
-         * print_r() a data structure to the output buffer inside pre tags.
-         *
-         * @param  mixed   $obj The data structure to be dumped... (string, array, stdClass etc.)
-         * @param  boolean $exit If true, exit after outputting.
-         * @return void
-         */
-        function pr($obj, bool $exit = false): void
-        {
-            ob_start();
-            print_r($obj);
-            $out = htmlspecialchars(ob_get_contents());
-            ob_end_clean();
-            $out = '<pre>' . $out . '</pre>' . PHP_EOL;
-            echo $out;
-            if ($exit) {
-                exit;
-            }
-        }
-    }
-
-    if (!function_exists("dmp")) {
-        /**
-         * Debug dump:
-         * var_dump() a data structure to the output buffer inside pre tags.
-         *
-         * @param  mixed   $obj The data structure to be dumped... (string, array, stdClass etc.)
-         * @param  boolean $exit $exit If true, exit after outputting.
-         * @return void
-         */
-        function dmp($obj, bool $exit = false): void
-        {
-            ob_start();
-            var_dump($obj);
-            $out = ob_get_contents();
-            ob_end_clean();
-            $out = '<pre>' . $out . '</pre>' . PHP_EOL;
-            echo $out;
-            if ($exit) {
-                exit;
-            }
-        }
     }
 }
