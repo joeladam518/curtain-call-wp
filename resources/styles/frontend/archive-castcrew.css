@@ -63,10 +63,12 @@ body.post-type-archive-ccwp_cast_and_crew {
     }
 
     .castcrew-name {
-        line-height: 1.4;
         margin: 0;
 
         & a {
+            font-size: var(--ccwp-size-7);
+            line-height: 1.4;
+            color: var(--ccwp-castcrew-name-color);
             text-decoration: none;
 
             &:hover {

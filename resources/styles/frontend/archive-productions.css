@@ -56,7 +56,9 @@ body.post-type-archive-ccwp_production {
             margin-bottom: 0;
 
             a {
-                font-size: var(--ccwp-size-6);
+                font-size: var(--ccwp-size-7);
+                line-height: 1.4;
+                color: var(--ccwp-production-name-color);
                 text-decoration: none;
 
                 &:hover {

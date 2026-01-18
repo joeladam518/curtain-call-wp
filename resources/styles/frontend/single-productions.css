@@ -95,13 +95,13 @@ body.single-ccwp_production {
                 flex-grow: 1;
 
                 .castcrew-name {
-                    font-size: var(--ccwp-size-6);
-                    line-height: 1;
                     margin-bottom: 8px;
 
                     a {
+                        font-size: var(--ccwp-size-6);
+                        line-height: 1.4;
                         text-decoration: none;
-                        color: var(--ccwp-black);
+                        color: var(--ccwp-castcrew-name-color);
 
                         &:hover {
                             color: var(--ccwp-link-highlight);
