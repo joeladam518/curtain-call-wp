@@ -62,18 +62,15 @@
   --ccwp-flyzone-3: 1500;
 
   /* Colors */
-  --ccwp-white: rgb(255,255,255);
-  --ccwp-black: rgb(0,0,0);
+  --ccwp-white: rgb(255 255 255);
+  --ccwp-black: rgb(0 0 0);
 
-  --ccwp-light-grey: rgb(190,190,190);
-  --ccwp-medium-grey: rgb(132,132,132);
-  --ccwp-dark-grey: rgb(65,65,65);
+  --ccwp-light-grey: rgb(190 190 190);
+  --ccwp-medium-grey: rgb(132 132 132);
+  --ccwp-dark-grey: rgb(65 65 65);
 
-  --ccwp-red: rgb(231,76,60);
-  --ccwp-yellow: rgb(241,196,15);
+  --ccwp-red: rgb(231 76 60);
+  --ccwp-yellow: rgb(241 196 15);
 
-  --ccwp-text: rgb(17,17,17);
-
-  /* Borders */
-  --ccwp-border-normal: 1px solid rgb(0 0 0 / 15%);
+  --ccwp-text: rgb(17 17 17);
 }

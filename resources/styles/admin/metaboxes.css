@@ -30,7 +30,7 @@
     }
 
     .ccwp-form-help-text {
-        color: rgba(0, 0, 0, .5);
+        color: rgb(0 0 0 / 50%);
 
         & p {
             margin-top: -5px;

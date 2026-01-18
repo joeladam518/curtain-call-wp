@@ -85,7 +85,7 @@ body.single-ccwp_cast_and_crew  {
 
         .ccwp-directory-section {
             padding: 30px 0;
-            border-top: var(--ccwp-border-normal);
+            border-top: 1px solid rgb(0 0 0 / 12%);
         }
 
         .castcrew-production-list {

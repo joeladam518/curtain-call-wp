@@ -20,7 +20,7 @@ body.post-type-archive-ccwp_cast_and_crew {
         }
 
         & span {
-            color: rgba(0, 0, 0, .3);
+            color: rgb(0 0 0 / 30%);
         }
     }
 
@@ -78,7 +78,7 @@ body.post-type-archive-ccwp_cast_and_crew {
 
     .castcrew-self-title {
         line-height: 1.6;
-        color: rgba(0, 0, 0, .5);
+        color: rgb(0 0 0 / 50%);
         margin-bottom: 10px;
     }
 }

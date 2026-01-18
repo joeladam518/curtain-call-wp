@@ -92,7 +92,7 @@ body.post-type-archive-ccwp_production {
             color: var(--ccwp-black);
             text-align: left;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, .1);
+            border-bottom: 1px solid rgb(0 0 0 / 10%);
             margin-bottom: 35px;
         }
     }
@@ -101,7 +101,7 @@ body.post-type-archive-ccwp_production {
         margin-bottom: 75px;
 
         & > h2 {
-            background-color: rgba(132, 132, 132, .6);
+            background-color: rgb(132 132 132 / 60%);
             color: var(--ccwp-white);
             text-align: center;
             padding: 20px 0;
