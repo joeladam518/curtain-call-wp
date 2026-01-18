@@ -11,34 +11,7 @@ class Str
      */
     public static function alphabet(): array
     {
-        return [
-            'A',
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
-            'T',
-            'U',
-            'V',
-            'W',
-            'X',
-            'Y',
-            'Z',
-        ];
+        return range('A', 'Z');
     }
 
     /**
@@ -82,7 +55,7 @@ class Str
     }
 
     /**
-     * Strip the protocol from a url
+     * Strip the protocol from the url
      *
      * @param string $url
      * @return string
@@ -96,7 +69,7 @@ class Str
      * @param string $string
      * @param int $start
      * @param int|null $length
-     * @return false|string
+     * @return string
      */
     public static function substr(string $string, int $start, ?int $length = null)
     {

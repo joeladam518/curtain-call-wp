@@ -34,7 +34,7 @@ get_header();
             <div class="ccwp-alphabet-navigation">
                 <?php foreach (Str::alphabet() as $letter): ?>
                     <?php if (in_array($letter, $alphaIndexes, true)): ?>
-                        <a href="#<?php echo esc_url($letter); ?>"><?php echo esc_html($letter); ?></a>
+                        <a href="#<?php echo esc_attr($letter); ?>"><?php echo esc_html($letter); ?></a>
                     <?php else: ?>
                         <span><?php echo esc_html($letter); ?></span>
                     <?php endif; ?>
@@ -49,7 +49,7 @@ get_header();
                     $post = get_post();
                     $castcrew = CastAndCrew::make($post);
                     ?>
-                    <?php if ($castcrew->post_status === 'publish' && isset($castcrew->name_last)): ?>
+                    <?php if (isset($castcrew->name_last)): ?>
                         <?php $currentAlphaIndex = Str::firstLetter($castcrew->name_last, 'upper'); ?>
                         <?php if ($currentAlphaIndex !== $previousAlphaIndex): ?>
                             <?php if ($previousAlphaIndex !== null): ?>

@@ -75,5 +75,5 @@
   --ccwp-text: rgb(17,17,17);
 
   /* Borders */
-  --ccwp-border-normal: 1px solid rgba(0, 0, 0, 0.1);
+  --ccwp-border-normal: 1px solid rgb(0 0 0 / 15%);
 }
