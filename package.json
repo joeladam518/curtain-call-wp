@@ -5,10 +5,8 @@
     "type": "module",
     "license": "MIT",
     "scripts": {
-        "dev": "NODE_ENV=development rollup -c --watch",
+        "dev": "NODE_ENV=development rollup -c",
         "build": "NODE_ENV=production rollup -c",
-        "build:dev": "NODE_ENV=development rollup -c",
-        "build:prod": "NODE_ENV=production rollup -c",
         "typecheck": "npm run typecheck:node && npm run typecheck:web",
         "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
         "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",

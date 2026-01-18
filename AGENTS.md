@@ -28,10 +28,8 @@ cp .env.example .env
 
 ### Frontend Assets (JavaScript/CSS)
 ```bash
-npm run dev          # Watch mode - rebuilds on file changes
-npm run build        # Production build - compiles all assets
-npm run build:dev    # Development build (no minification)
-npm run build:prod   # Production build (explicit, same as build)
+npm run dev          # Development build (no minification, with sourcemaps)
+npm run build        # Production build (minified)
 npm run typecheck    # TypeScript type checking (both node and web configs)
 npm run lint         # ESLint code checking (resources/js)
 ```
@@ -287,9 +285,8 @@ ccwp_get_custom_field(string $field_name, ?int $post_id = null): mixed
 ### Modifying Frontend Assets
 
 1. Edit source files in `resources/js/` or `resources/styles/`
-2. Run `npm run dev` for watch mode during development
-3. Run `npm run build` before committing
-4. Never edit files in `plugin/assets/` directly (they're overwritten)
+2. Run `npm run dev` for development builds, `npm run build` for production
+3. Never edit files in `plugin/assets/` directly (they're overwritten)
 
 ### PHP Code Standards
 
